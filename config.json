@@ -1,0 +1,32 @@
+{
+    "SimpleTokenFoundation": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
+    "ValueChain": {
+        "Rpc": "http://127.0.0.1:8545",
+        "SimpleToken": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
+        "Stake": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01"
+    },
+    "UtilityChain": {
+        "Rpc": "http://127.0.0.1:8545"
+    },
+    "Members": [
+        {
+            "Name": "ACMEcorp",
+            "Decimals": 2,
+            "Symbol": "ACME",
+            "ChainId": "0x00",
+            "Route": "/acme",
+            "ApiAuth": {
+                "users": {
+                    "acme": "acmesecret"
+                }
+            },
+            "Reserve": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
+            "ERC20": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
+            "Callback": "https://acmecorp.com/call-back/simple-token/transaction",
+            "CallbackAuth": {
+                "user": "*******",
+                "pass": "*******"
+            }
+        }
+    ]
+}
