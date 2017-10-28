@@ -8,7 +8,11 @@ logs
 *.log
 
 # contracts are git submodules
-contracts
+contracts/openst-protocol
+contracts/simpletoken
+
+# exclude geth poa data
+test/st-poa
 
 # Runtime data
 pids
