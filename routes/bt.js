@@ -37,8 +37,8 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
     RP.post({url: callbackUrl, json: true, body: body, auth: callbackAuth}, err => err ? console.error(err) : {} );
   }
 
-  router.get('/bank', function(req, res, next) {
-    res.json({data: erc20._bank});
+  router.get('/reserve', function(req, res, next) {
+    res.json({data: erc20._reserve});
   });
 
   router.get('/name', function(req, res, next) {
@@ -135,21 +135,6 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
     Promise.resolve(erc20.allowance(owner, spender))
       .then(value => {
         res.json({data: value});
-      })
-      .catch(next);
-  });
-
-  router.get('/cashout', function(req, res, next) {
-    const sender = req.query.sender;
-    //const to = req.query.to || sender;
-    const value = Number(req.query.value);
-
-    const tag = "cashout";
-    Promise.resolve(erc20.transfer(sender, erc20._bank, value))
-      .then(txid => {
-        const log = {from: sender, to: erc20._bank, value: value, tag: tag, txid: txid};
-        res.json({data: txid});
-        addTransaction(log);
       })
       .catch(next);
   });

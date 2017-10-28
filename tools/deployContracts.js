@@ -35,6 +35,7 @@ function deployMember(member) {
         })
         .then(uuid => {
             console.log(" uuid =", uuid);
+            member.UUID = uuid;
         });
 }
 

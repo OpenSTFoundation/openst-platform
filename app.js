@@ -12,8 +12,8 @@ const BT = require('./routes/bt');
 
 const Config = require('./config.json');
 
-const BrandedTokenJson = require("./contracts/BrandedToken.json");
-const BrandedTokenContract = BrandedTokenJson.contracts['BrandedToken.sol:BrandedToken'];
+const BrandedTokenJson = require("./contracts/UtilityToken.json");
+const BrandedTokenContract = BrandedTokenJson.contracts['UtilityToken.sol:UtilityToken'];
 
 const NDEBUG = process.env.npm_package_scripts_start === undefined;
 
