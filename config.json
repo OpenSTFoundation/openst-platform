@@ -3,17 +3,19 @@
     "ValueChain": {
         "Rpc": "http://127.0.0.1:8545",
         "SimpleToken": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
-        "Stake": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01"
+        "Stake": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
+        "Admin": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01"
     },
     "UtilityChain": {
-        "Rpc": "http://127.0.0.1:8545"
+        "Rpc": "http://127.0.0.1:8546"
     },
     "Members": [
         {
             "Name": "ACMEcorp",
-            "Decimals": 2,
+            "Decimals": 18,
             "Symbol": "ACME",
-            "ChainId": "0x00",
+            "ChainId": "0x0000000000000000000000000000000000000000000000000000000000000000",
+            "ConversionRate": 10,
             "Route": "/acme",
             "ApiAuth": {
                 "users": {

@@ -8,6 +8,7 @@
     "lint": "node node_modules/eslint/bin/eslint.js ."
   },
   "dependencies": {
+    "bignumber.js": "^4.1.0",
     "body-parser": "~1.15.2",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",

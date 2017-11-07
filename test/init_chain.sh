@@ -1,10 +1,15 @@
 #!/bin/sh
 
-DATADIR=./st-poa
+DATADIRVALUE=./st-poa-value
+DATADIRUTILITY=./st-poa-utility
 
-mkdir -p "$DATADIR"
+mkdir -p "$DATADIRVALUE"
+mkdir -p "$DATADIRUTILITY"
 
-rm -r "$DATADIR/geth/chaindata"
+rm -rf "$DATADIRVALUE/geth"
+rm -rf "$DATADIRUTILITY/geth"
 
-geth --datadir "$DATADIR" init poa-genesis.json
+
+geth --datadir "$DATADIRVALUE" init poa-genesis-value.json
+geth --datadir "$DATADIRUTILITY" init poa-genesis-utility.json
 
