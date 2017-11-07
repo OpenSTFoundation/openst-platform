@@ -19,9 +19,10 @@ COIN="ACME"
 curljson "/$COIN/symbol"
 curljson "/$COIN/name"
 curljson "/$COIN/decimals"
-RESERVE=`curljson /$COIN/reserve | egrep -oi '0x[0-9a-f]+'`
-curljson "/$COIN/approve?sender=$RESERVE&spender=$ADDR&value=11"
-# {"data":true}
-curljson "/$COIN/transferFrom?sender=$ADDR&from=$RESERVE&to=$ADDR2&value=11"
-# {"data":"0x..."}
+BANK=`curljson /$COIN/reserve | egrep -oi '0x[0-9a-f]+'`
+curljson "/$COIN/approve?sender=$BANK&spender=$ADDR&value=11"
+# {"data": "e8576eea-6ad7-4c1c-bfba-a439b26be242"}
+curljson "/$COIN/transferFrom?sender=$ADDR&from=$BANK&to=$ADDR2&value=11"
+# # {"data":"0x..."}
 curljson "/$COIN/log?owner=$ADDR2"
+
