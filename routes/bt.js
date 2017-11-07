@@ -4,6 +4,7 @@ const RP = require('request');
 
 const ERC20 = require('../lib/erc20contract');
 const Stake = require('../lib/stakeContract');
+const BigNumber = require('bignumber.js');
 
 
 /** Construct a new route for a specific BT.
@@ -41,6 +42,13 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
     RP.post({url: callbackUrl, json: true, body: body, auth: callbackAuth}, err => err ? console.error(err) : {} );
   }
 
+  function toBigNumberWei( value ) {
+    value = Number( value );
+    Assert.strictEqual( isNaN( value ), false, `value must be of type 'Number'`);
+    const weiValue = web3.utils.toWei( value,"ether");
+    return new BigNumber( weiValue );
+  }
+
   router.get('/reserve', function(req, res, next) {
     res.json({data: erc20._reserve});
   });
@@ -54,8 +62,10 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
   });
 
   router.get('/symbol', function(req, res, next) {
+
     Promise.resolve(erc20.symbol())
       .then(value => {
+        console.log("value",value);
         res.json({data: value});
       })
       .catch(next);
@@ -72,7 +82,8 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
   router.get('/totalSupply', function(req, res, next) {
     Promise.resolve(erc20.totalSupply())
       .then(value => {
-        res.json({data: value});
+        var _val = web3.utils.fromWei( value, "ether" ).toString();
+        res.json({data: _val});
       })
       .catch(next);
   });
@@ -93,13 +104,11 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
     const value = Number(req.query.value);
     const tag = req.query.tag || "transfer";
 
-    const weiValue = web3.utils.toWei( value,"ether");
-    // console.log("to",to, " type", typeof to);
-    // console.log("sender",sender, " type", typeof sender);
+    const bigWeiValue = toBigNumberWei( value );
 
-    Promise.resolve(erc20.transfer(sender, to, weiValue))
+    Promise.resolve(erc20.transfer(sender, to, bigWeiValue))
       .then(txid => {
-        const log = {from: sender, to: to, value: weiValue, tag: tag, txid: txid};
+        const log = {from: sender, to: to, value: bigWeiValue, tag: tag, txid: txid};
         res.json({data: txid});
         addTransaction(log);
       })
@@ -113,9 +122,12 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
     const value = Number(req.query.value);
     const tag = req.query.tag || "transferFrom";
 
-    Promise.resolve(erc20.transferFrom(sender, from, to, value))
+    const bigWeiValue = toBigNumberWei( value );
+    console.log("bigWeiValue", bigWeiValue);
+
+    Promise.resolve(erc20.transferFrom(sender, from, to, bigWeiValue))
       .then(txid => {
-        const log = {from: from, to: to, value: value, tag: tag, txid: txid};
+        const log = {from: from, to: to, value: bigWeiValue, tag: tag, txid: txid};
         res.json({data: txid});
         addTransaction(log);
       })
@@ -128,9 +140,11 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
     const value = Number(req.query.value);
     const tag = req.query.tag || "approve";
 
-    Promise.resolve(erc20.approve(sender, spender, value))
+    const bigWeiValue = toBigNumberWei( value );
+
+    Promise.resolve(erc20.approve(sender, spender, bigWeiValue))
       .then(txid => {
-        const log = {sender: sender, to: spender, value: value, tag: tag, txid: txid};
+        const log = {sender: sender, to: spender, value: bigWeiValue, tag: tag, txid: txid};
         res.json({data: txid});
         addTransaction(log);
       })
@@ -143,7 +157,8 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
 
     Promise.resolve(erc20.allowance(owner, spender))
       .then(value => {
-        res.json({data: value});
+        var _val = web3.utils.fromWei( value, "ether" ).toString();
+        res.json({data: _val});
       })
       .catch(next);
   });
@@ -151,12 +166,14 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
   router.get('/cashout', function(req, res, next) {
     const sender = req.query.sender;
     //const to = req.query.to || sender;
+
     const value = Number(req.query.value);
+    const bigWeiValue = toBigNumberWei( value );
 
     const tag = "cashout";
-    Promise.resolve(erc20.transfer(sender, erc20._reserve, value))
+    Promise.resolve(erc20.transfer(sender, erc20._reserve, bigWeiValue))
       .then(txid => {
-        const log = {from: sender, to: erc20._reserve, value: value, tag: tag, txid: txid};
+        const log = {from: sender, to: erc20._reserve, value: bigWeiValue, tag: tag, txid: txid};
         res.json({data: txid});
         addTransaction(log);
       })
@@ -168,9 +185,9 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
     res.json({data: auditLog[owner] || []});
   });
 
-  router.get('/getAllTxDetails', function(req, res, next) { 
-    res.json( erc20.getAllTxDetails() );
-  });
+  // router.get('/getAllTxDetails', function(req, res, next) { 
+  //   res.json( erc20.getAllTxDetails() );
+  // });
 
   return router;
 }

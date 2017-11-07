@@ -83,28 +83,32 @@ const showTransferEventDescription = function ( result ) {
 
 const showMintingIntentDeclaredDescription = function ( result ) {
   var returnValues = result.returnValues;
+  var displayInfo = getDisplayForAddress( returnValues._staker );
   console.log("\x1b[33mEvent Description ");
   console.log("Event:\t\t", result.event.replaceAll("MintingIntentDeclared", replaceBy) );
   console.log("Account:\t\t", getDisplayForAddress( returnValues._uuid ).displayName );
-  console.log("Staker:\t\t", getDisplayForAddress( returnValues._staker ).displayName );
+  console.log("Staker:\t\t", displayInfo.displayName );
   console.log("Amount [ST]:\t\t", toST(returnValues._amountST) );
-  console.log("Amount [PC]:\t\t", toST(returnValues._amountUT) );
+  console.log("Amount [" + displayInfo.symbol + "]:\t\t", toST(returnValues._amountUT) );
   console.log("Minting Intent Hash:\t", returnValues._mintingIntentHash);
-  console.log("Description: Staking Intent Declared by Pepo Company for minting " + toST( returnValues._amountUT ) + " PepoCoin"); 
+  console.log("Description: Staking Intent Declared by " + displayInfo.displayName + " for minting " + toST( returnValues._amountUT ) + " " + displayInfo.symbol ); 
   console.log( "\x1b[0m" );
 };
 const showStakedDescription = function ( result ) {
   var returnValues = result.returnValues;
+  var displayInfo = getDisplayForAddress( returnValues._staker );
+
   console.log("\x1b[33mEvent Description ");
   console.log("Event:\t\t", result.event);
   console.log("Staker:\t\t", getDisplayForAddress( returnValues._staker ).displayName );
   console.log("Amount [ST]:\t\t", toST(returnValues._amountST) );
-  console.log("Amount [PC]:\t\t", toST(returnValues._amountUT) );
+  console.log("Amount [" + displayInfo.symbol + "]:\t\t", toST(returnValues._amountUT) );
+  
   console.log("Description: " 
-    + getDisplayForAddress( returnValues._staker ).displayName 
+    + displayInfo.displayName 
     + " has staked " + toST(returnValues._amountST) + " [ST] " 
-    + " to mint " + toST(returnValues._amountUT )
-    + " PepoCoin"
+    + " to mint " + toST(returnValues._amountUT ) + " "
+    + displayInfo.symbol
   );
   console.log( "\x1b[0m" );
 }
@@ -120,7 +124,8 @@ const displayMap = {};
   displayMap[ _key.toLowerCase() ] = {
     isKnown: true,
     configKey: "SimpleTokenFoundation",
-    displayName: "SimpleToken Foundation"
+    displayName: "SimpleToken Foundation",
+    symbol: "ST"
   };
 
   Config.Members.forEach( function ( Member ) {
@@ -129,21 +134,24 @@ const displayMap = {};
     displayMap[ _key.toLowerCase() ] = {
       isKnown: true,
       configKey: "Reserve",
-      displayName: "Pepo"
+      displayName: "Reserve",
+      symbol: Member.Symbol
     };
 
     _key = Member.ERC20;
     displayMap[ _key.toLowerCase() ] = {
       isKnown: true,
       configKey: "ERC20",
-      displayName: name + " " + "(ERC20)"
+      displayName: name + " " + "(ERC20)",
+      symbol: Member.Symbol
     };
 
     _key = Member.UUID;
     displayMap[ _key.toLowerCase() ] = {
       isKnown: true,
       configKey: "UUID",
-      displayName: name
+      displayName: name,
+      symbol: Member.Symbol
     };
 
   });
@@ -153,7 +161,8 @@ const displayMap = {};
     displayMap[ _key.toLowerCase() ] = { 
       isKnown: true,
       configKey: configKey,
-      displayName: configKey
+      displayName: configKey,
+      symbol: "[NA]"
     }
   });
 
@@ -166,7 +175,8 @@ const getDisplayForAddress = function ( address ) {
   return displayMap[ address ] || {
     isKnown: false,
     configKey: "NA", 
-    displayName: ""
+    displayName: "",
+    symbol: "[NA]"
   };
 };
 

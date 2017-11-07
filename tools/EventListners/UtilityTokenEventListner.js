@@ -66,7 +66,7 @@ const showMintedEventDescription = function ( result ) {
   console.log("Amount:\t\t", toST( returnValues._amount ) );
   console.log("Balance:\t", toST(returnValues._balance) );
   console.log("Total Supply:\t", toST(returnValues._totalSupply) );
-  console.log("Description: Pepo Company signed to accept newly minted PepoCoin"); 
+  console.log("Description: ACMEcorp Company signed to accept newly minted ACME"); 
   console.log( "\x1b[0m" );
 
 };
@@ -77,7 +77,7 @@ const showMintingIntentConfirmedDescription = function ( result ) {
   console.log("Event:\t\t", result.event);
   console.log("Account:\t\t", getDisplayForAddress( returnValues._uuid ).displayName );
   console.log("Minting Intent Hash:\t", returnValues._mintingIntentHash);
-  console.log("Description: OpenST Foundation confirmed the minting intent of Pepo Company"); 
+  console.log("Description: OpenST Foundation confirmed the minting intent of ACMEcorp"); 
   console.log( "\x1b[0m" );
 }
 
@@ -98,11 +98,11 @@ const showTransferEventDescription = function ( result ) {
   console.log("Event:\t\t", result.event);
   console.log("From:\t\t" , fromDisplayInfo.displayName);
   console.log("To:\t\t", toDisplayInfo.displayName);
-  console.log("Amount:\t\t", toST(_value) , "[PC]");
+  console.log("Amount:\t\t", toST(_value) , "[ACME]");
   if ( !fromDisplayInfo.isKnown && !toDisplayInfo.isKnown ) {
-    description = "Pepo User upvoted a message and transferred "+ toST(_value) +" PepoCoin to the author";
+    description = "ACMEcorp User upvoted a message and transferred "+ toST(_value) +" ACME to the author";
   } else if ( fromDisplayInfo.isKnown && !toDisplayInfo.isKnown ) {
-    description = "Pepo Company granted Pepo User with "+ toST(_value) +"[PC] PepoCoin";
+    description = "ACMEcorp Company granted ACMEcorp User with "+ toST(_value) +" ACME";
   }
 
   description.length && console.log("Description:\t", description);
@@ -119,7 +119,8 @@ const displayMap = {};
   displayMap[ _key.toLowerCase() ] = {
     isKnown: true,
     configKey: "SimpleTokenFoundation",
-    displayName: "SimpleToken Foundation"
+    displayName: "SimpleToken Foundation",
+    symbol: "ST"
   };
 
   Config.Members.forEach( function ( Member ) {
@@ -128,21 +129,24 @@ const displayMap = {};
     displayMap[ _key.toLowerCase() ] = {
       isKnown: true,
       configKey: "Reserve",
-      displayName: name + " " + "Company"
+      displayName: name + " " + "Company",
+      symbol: Member.Symbol
     };
 
     _key = Member.ERC20;
     displayMap[ _key.toLowerCase() ] = {
       isKnown: true,
       configKey: "ERC20",
-      displayName: name + " " + "(ERC20)"
+      displayName: name + " " + "(ERC20)",
+      symbol: Member.Symbol
     };
 
     _key = Member.UUID;
     displayMap[ _key.toLowerCase() ] = {
       isKnown: true,
       configKey: "UUID",
-      displayName: name
+      displayName: name,
+      symbol: Member.Symbol
     };
 
   });
@@ -152,7 +156,8 @@ const displayMap = {};
     displayMap[ _key.toLowerCase() ] = { 
       isKnown: true,
       configKey: configKey,
-      displayName: configKey
+      displayName: configKey,
+      symbol: "[NA]"
     }
   });
 
@@ -165,7 +170,7 @@ const getDisplayForAddress = function ( address ) {
   return displayMap[ address ] || {
     isKnown: false,
     configKey: "NA", 
-    displayName: "Pepo User (" + address + ")"
+    displayName: "ACME USER (" + address + ")"
   };
 };
 
