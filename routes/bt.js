@@ -5,12 +5,16 @@ const RP = require('request');
 const ERC20 = require('../lib/erc20contract');
 const Stake = require('../lib/stakeContract');
 
+
 /** Construct a new route for a specific BT.
  * @param {object} erc20 The ERC20 token to manage.
  * @param {string} callbackUrl The callback URL for confirmed transactions.
  * @param {object?} callbackAuth Optional authentication object for callback requests.
  */
 module.exports = function(erc20, callbackUrl, callbackAuth) {
+  const Web3 = require('web3'); // eslint-disable-line
+  const web3 = new Web3(); // eslint-disable-line
+
   Assert.ok(erc20 instanceof ERC20, `erc20 must be an instance of ERC20`);
   Assert.strictEqual(typeof callbackUrl, 'string', `callbackUrl must be of type 'string'`);
 
@@ -77,7 +81,8 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
     const owner = req.query.owner;
     Promise.resolve(erc20.balanceOf(owner))
       .then(value => {
-        res.json({data: value});
+        var _val = web3.utils.fromWei( value, "ether" ).toString();
+        res.json({data: _val});
       })
       .catch(next);
   });
@@ -88,9 +93,13 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
     const value = Number(req.query.value);
     const tag = req.query.tag || "transfer";
 
-    Promise.resolve(erc20.transfer(sender, to, value))
+    const weiValue = web3.utils.toWei( value,"ether");
+    // console.log("to",to, " type", typeof to);
+    // console.log("sender",sender, " type", typeof sender);
+
+    Promise.resolve(erc20.transfer(sender, to, weiValue))
       .then(txid => {
-        const log = {from: sender, to: to, value: value, tag: tag, txid: txid};
+        const log = {from: sender, to: to, value: weiValue, tag: tag, txid: txid};
         res.json({data: txid});
         addTransaction(log);
       })
@@ -139,9 +148,28 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
       .catch(next);
   });
 
+  router.get('/cashout', function(req, res, next) {
+    const sender = req.query.sender;
+    //const to = req.query.to || sender;
+    const value = Number(req.query.value);
+
+    const tag = "cashout";
+    Promise.resolve(erc20.transfer(sender, erc20._reserve, value))
+      .then(txid => {
+        const log = {from: sender, to: erc20._reserve, value: value, tag: tag, txid: txid};
+        res.json({data: txid});
+        addTransaction(log);
+      })
+      .catch(next);
+  });
+
   router.get('/log', function(req, res, next) {
     const owner = req.query.owner;
     res.json({data: auditLog[owner] || []});
+  });
+
+  router.get('/getAllTxDetails', function(req, res, next) { 
+    res.json( erc20.getAllTxDetails() );
   });
 
   return router;
