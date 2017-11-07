@@ -163,23 +163,6 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
       .catch(next);
   });
 
-  router.get('/cashout', function(req, res, next) {
-    const sender = req.query.sender;
-    //const to = req.query.to || sender;
-
-    const value = Number(req.query.value);
-    const bigWeiValue = toBigNumberWei( value );
-
-    const tag = "cashout";
-    Promise.resolve(erc20.transfer(sender, erc20._reserve, bigWeiValue))
-      .then(txid => {
-        const log = {from: sender, to: erc20._reserve, value: bigWeiValue, tag: tag, txid: txid};
-        res.json({data: txid});
-        addTransaction(log);
-      })
-      .catch(next);
-  });
-
   router.get('/log', function(req, res, next) {
     const owner = req.query.owner;
     res.json({data: auditLog[owner] || []});

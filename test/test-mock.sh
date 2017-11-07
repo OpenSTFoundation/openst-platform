@@ -23,8 +23,6 @@ BANK=`curljson /$COIN/reserve | egrep -oi '0x[0-9a-f]+'`
 curljson "/$COIN/approve?sender=$BANK&spender=$ADDR&value=11"
 # {"data": "e8576eea-6ad7-4c1c-bfba-a439b26be242"}
 curljson "/$COIN/transferFrom?sender=$ADDR&from=$BANK&to=$ADDR2&value=11"
-# # {"data":9999978}
-curljson "/$COIN/cashout?sender=$ADDR2&value=11"
 # # {"data":"0x..."}
 curljson "/$COIN/log?owner=$ADDR2"
 
