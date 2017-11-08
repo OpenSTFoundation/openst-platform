@@ -22,6 +22,8 @@ OpenST Platform is a network of open utility chains, where Simple Token is stake
 
 Milestone 1 : OpenST Platform v0.9 (7 November 2017)
 
+[demo instructions](test/README.md)
+
 Milestone 2 : OpenST Platform v1.0 (Q1 2018)
 
 Milestone 3 : Public Launch of Initial Member Companies (Q2 2018)
