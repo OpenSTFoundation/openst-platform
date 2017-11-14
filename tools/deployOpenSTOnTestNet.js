@@ -13,10 +13,10 @@ const CONSOLE_RESET = "\x1b[0m";
 const ERR_PRE = "\x1b[31m ERROR ::"; //Error. (RED)
 const INFO_PRE = "\x1b[33m  "; //Info (YELLOW)
 const WIN_PRE = "\x1b[32m...ok"; //Success (GREEN)
-const STEP_PRE = "===========================\n\x1b[34mStep:"; //Step Description (BLUE)
+const STEP_PRE = "======================================================\n\x1b[34mStep:"; //Step Description (BLUE)
 
 const MIN_FUND = (new BigNumber( 10 )).toPower( 18 );
-const _registrarName = "Admin";
+const _registrarName = "Registrar";
 const _registrarAddress = Config.ValueChain.Admin;
 var ST = null;
 
@@ -92,14 +92,27 @@ function validateSimpleTokenFoundation() {
     logError( "Invalid SimpleTokenFoundation address" );
     catchAndExit( reason );
   })
-  .then(balance => {
-    logInfo("Balance of SimpleTokenFoundation =", balance);
-    logInfo("Unlocking SimpleTokenFoundation");
+  .then( balance => {
+    logInfo("ValueChain Balance of SimpleTokenFoundation =", balance);
+    logInfo("Unlocking SimpleTokenFoundation on ValueChain");
     return Geth.ValueChain.eth.personal.unlockAccount( Config.SimpleTokenFoundation );
   })
   .catch( reason =>  {
     logError( "Failed to unlock SimpleTokenFoundation" );
     catchAndExit( reason );
+  })
+  .then( _ => {
+    logInfo("Fetching UtilityChain Balance of SimpleTokenFoundation");
+    return Geth.UtilityChain.eth.getBalance(Config.SimpleTokenFoundation)
+    .catch( reason =>  {
+      logError( "Invalid SimpleTokenFoundation address" );
+      catchAndExit( reason );
+    })
+    .then( balance => {
+      logInfo("UtilityChain Balance of SimpleTokenFoundation =", balance);
+      logInfo("Unlocking SimpleTokenFoundation on UtilityChain");
+      return Geth.UtilityChain.eth.personal.unlockAccount( Config.SimpleTokenFoundation );
+    })
   })
   .then(_ => {
     logWin("SimpleTokenFoundation validated");
@@ -110,31 +123,44 @@ function validateSimpleTokenFoundation() {
 function validateRegistrar() {
   logStep( "Validating",_registrarName );
   logInfo(_registrarName, "@", _registrarAddress );
+  logInfo("Fetching",_registrarName,"balance on ValueChain");
   return Geth.ValueChain.eth.getBalance( _registrarAddress )
-  .catch( reason =>  {
-    logError( "Invalid",_registrarName ,"address" );
-    catchAndExit( reason );
-  })
-  .then(balance => {
-    logInfo(_registrarName, "balance =", balance);
-    logInfo("Unlocking", _registrarName);
-    return Geth.ValueChain.eth.personal.unlockAccount( _registrarAddress );
-  })
-  .catch( reason =>  {
-    logError( "Failed to unlock", _registrarName );
-    catchAndExit( reason );
-  })
-  .then(_ =>{
-    logInfo("Unlocking SimpleTokenFoundation");
-    return Geth.ValueChain.eth.personal.unlockAccount( Config.SimpleTokenFoundation );
-  })
-  .catch( reason =>  {
-    logError( "Failed to unlock SimpleTokenFoundation" );
-    catchAndExit( reason );
-  })
-  .then(_ => {
-    return fundAddress(_registrarAddress, _registrarName);
-  });
+    .catch( reason =>  {
+      logError( "Invalid",_registrarName ,"address" );
+      catchAndExit( reason );
+    })
+    .then(balance => {
+      logInfo(_registrarName, "balance =", balance);
+      logInfo("Unlocking", _registrarName, "on ValueChain");
+      return Geth.ValueChain.eth.personal.unlockAccount( _registrarAddress );
+    })
+    .catch( reason =>  {
+      logError( "Failed to unlock", _registrarName );
+      catchAndExit( reason );
+    })
+    .then( _ => {
+      logInfo("Fetching",_registrarName,"balance on UtilityChain");
+      return Geth.UtilityChain.eth.getBalance( _registrarAddress )
+      .catch( reason =>  {
+        logError( "Invalid",_registrarName ,"address" );
+        catchAndExit( reason );
+      })
+      .then(balance => {
+        logInfo(_registrarName, "balance =", balance);
+        logInfo("Unlocking", _registrarName, "on UtilityChain");
+        return Geth.ValueChain.eth.personal.unlockAccount( _registrarAddress );
+      })
+      .catch( reason =>  {
+        logError( "Failed to unlock", _registrarName );
+        catchAndExit( reason );
+      })
+    })
+    .then(_ =>{
+      return fundAddressOnValueChain(_registrarAddress, _registrarName)
+      .then(_ =>{
+        return fundAddressOnUtilityChain(_registrarAddress, _registrarName);
+      });
+    });
 }
 function initST( deployMeta ) {
   if ( ST ) {
@@ -151,8 +177,6 @@ function initST( deployMeta ) {
 }
 function setSimpleTokenRegistrar( deployMeta ) {
   logStep( "Set SimpleToken Contract",_registrarName )
-
-  const _registrarAddress = Config.ValueChain.Admin;
 
   initST( deployMeta );
 
@@ -281,51 +305,65 @@ function finalizeSimpleTokenContract( deployMeta ) {
 }
 
 function fundAllMembers() {
+  logStep("Funding all Members");
   return Promise.all( Config.Members.map( fundMember ) );
 }
 
 function fundMember( member ) {
-    return fundAddress(member.Reserve, member.Name);
+    return fundAddressOnValueChain(member.Reserve, member.Name)
+      .then(_ =>{
+        return fundAddressOnUtilityChain(member.Reserve, member.Name);
+      });
 }
+function fundAddress(Chain, chainName, accountAddress, addressName ) {
+  logInfo("Unlock",addressName,"on",chainName);
+  return Chain.eth.personal.unlockAccount(accountAddress)
+  .then( _ => {
+    logInfo("Fetch",addressName,"balance on",chainName);
+    return Chain.eth.getBalance( accountAddress )
+      .catch( reason =>  {
+        logError("Failed to fund ", addressName);
+        catchAndExit( reason );
+      })
+      .then(balance => {
+        logInfo(addressName, "has", balance,"on",chainName);
 
-function fundAddress( accountAddress, addressName ) {
-    return Geth.ValueChain.eth.getBalance( accountAddress )
-    .catch( reason =>  {
-      logError("Failed to fund ", addressName);
-      catchAndExit( reason );
-    })
-    .then(balance => {
-      logInfo(addressName, "has", balance);
+        const bigBalance = new BigNumber( balance );
+        //See how many funds are needed.
+        const diff = MIN_FUND.minus( bigBalance );
 
-      const bigBalance = new BigNumber( balance );
-      //See how many funds are needed.
-      const diff = MIN_FUND.minus( bigBalance );
-
-      if ( diff.greaterThan( 0 ) ) {
-        return Geth.ValueChain.eth.personal.unlockAccount(Config.SimpleTokenFoundation)
-        .catch( reason =>  {
-          logError("Failed to deploy unlockAccount SimpleTokenFoundation on ValueChain");
-          catchAndExit( reason );
-        })
-        .then(_ => {
-          //Transfer the funds.
-          return Geth.ValueChain.eth.sendTransaction({
-            from: Config.SimpleTokenFoundation, 
-            to: accountAddress, 
-            value: diff.toString( 10 ) 
-          })
+        if ( diff.greaterThan( 0 ) ) {
+          return Chain.eth.personal.unlockAccount(Config.SimpleTokenFoundation)
           .catch( reason =>  {
-            logError("Failed to transfer funds to ", addressName);
+            logError("Failed to deploy unlockAccount SimpleTokenFoundation on", chainName);
             catchAndExit( reason );
           })
-          .then( _ => {
-            logWin(addressName,"has been transfered",diff.toString( 10 ) );
+          .then(_ => {
+            //Transfer the funds.
+            return Chain.eth.sendTransaction({
+              from: Config.SimpleTokenFoundation, 
+              to: accountAddress, 
+              value: diff.toString( 10 ) 
+            })
+            .catch( reason =>  {
+              logError("Failed to transfer funds to ", addressName, "on", chainName);
+              catchAndExit( reason );
+            })
+            .then( _ => {
+              logWin(addressName,"has been transfered",diff.toString( 10 ),"on", chainName );
+            });
           });
-        });
-      } else {
-        logWin(addressName,"has sufficient funds");
-      }
+        } else {
+          logWin(addressName,"has sufficient funds on", chainName);
+        }
+      });
     });
+}
+function fundAddressOnValueChain( accountAddress, addressName ) {
+  return fundAddress(Geth.ValueChain,"ValueChain", accountAddress, addressName);
+}
+function fundAddressOnUtilityChain( accountAddress, addressName ) {
+  return fundAddress(Geth.UtilityChain,"UtilityChain", accountAddress, addressName);
 }
 
 
@@ -344,7 +382,6 @@ function updateConfig() {
     logWin("Config updated.");
   });
 }
-
 
 
 //Self Executing Function.
