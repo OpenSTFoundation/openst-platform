@@ -1,3 +1,14 @@
+"use strict";
+/*
+ *   Contract Deployment Script for local setup. 
+ * * Author: Rachin Kapoor
+ * * Date: 12/10/2017
+ * * Description: This script deploys SimpleToken & Staking Contracts, funds members & other actors.
+ * * WARNING: Do not deploy on MainNet.  
+ * * Reviewed by:
+ * * 
+ */
+
 const FS = require('fs');
 const Path = require('path');
 const BigNumber = require('bignumber.js');
