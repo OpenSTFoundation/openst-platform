@@ -6,17 +6,24 @@
  * * Date: 05/11/2017
  * * Reviewed by: 
  */
-const BigNumber = require('bignumber.js');
+const BigNumber = require('bignumber.js')
+      ,Web3 = require("web3")
+;
 
-const Web3 = require("web3")
-      ,reqPrefix = "../.."
+
+const reqPrefix = "../.."
+      ,coreConstants = require(reqPrefix + '/config/core_constants')
+      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDRESS
+      ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDRESS
+      ,SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLETOKEN_CONTRACT_ADDRESS
+      ,STAKE_CONTRACT = coreConstants.OST_STAKE_CONTRACT_ADDRESS
       ,Config = require( reqPrefix + "/config.json")
       ,Geth = require(reqPrefix + "/lib/geth")
-      ,web3WsProvider = new Web3( "ws://localhost:18546" ) /* UtilityChain WebSocket Address */
+      ,web3WsProvider = new Web3( coreConstants.OST_GETH_UTILITY_CHAIN_WS_PROVIDER  )
       ,contractAbiJson = require(reqPrefix + "/contracts/UtilityToken.json")
       ,contractAbi = JSON.parse( contractAbiJson.contracts["UtilityToken.sol:UtilityToken"].abi )
-      // ,abiDecoder = require('abi-decoder')
 ;
+
 
 
 
@@ -115,20 +122,40 @@ const displayMap = {};
 (function () {
   var _key;
 
-  _key = Config.SimpleTokenFoundation;
+  _key = FOUNDATION;
   displayMap[ _key.toLowerCase() ] = {
     isKnown: true,
-    configKey: "SimpleTokenFoundation",
     displayName: "SimpleToken Foundation",
     symbol: "ST"
   };
+
+  _key = REGISTRAR;
+  displayMap[ _key.toLowerCase() ] = {
+    isKnown: true,
+    displayName: "Registrar",
+    symbol: "[NA]"
+  };
+
+  _key = SIMPLETOKEN_CONTRACT;
+  displayMap[ _key.toLowerCase() ] = {
+    isKnown: true,
+    displayName: "SimpleTokenContract",
+    symbol: "[NA]"
+  };  
+
+  _key = STAKE_CONTRACT;
+  displayMap[ _key.toLowerCase() ] = {
+    isKnown: true,
+    displayName: "StakingContract",
+    symbol: "[NA]"
+  };
+
 
   Config.Members.forEach( function ( Member ) {
     var name = Member.Name;
     _key = Member.Reserve;
     displayMap[ _key.toLowerCase() ] = {
       isKnown: true,
-      configKey: "Reserve",
       displayName: name + " " + "Company",
       symbol: Member.Symbol
     };
@@ -136,7 +163,6 @@ const displayMap = {};
     _key = Member.ERC20;
     displayMap[ _key.toLowerCase() ] = {
       isKnown: true,
-      configKey: "ERC20",
       displayName: name + " " + "(ERC20)",
       symbol: Member.Symbol
     };
@@ -144,23 +170,11 @@ const displayMap = {};
     _key = Member.UUID;
     displayMap[ _key.toLowerCase() ] = {
       isKnown: true,
-      configKey: "UUID",
       displayName: name,
       symbol: Member.Symbol
     };
 
   });
-
-  Object.keys( Config.ValueChain ).forEach( function(configKey ) {
-    _key = Config.ValueChain[ configKey ];
-    displayMap[ _key.toLowerCase() ] = { 
-      isKnown: true,
-      configKey: configKey,
-      displayName: configKey,
-      symbol: "[NA]"
-    }
-  });
-
 
 })();
 
@@ -183,13 +197,15 @@ const bindBrandedTokenEvents = function() {
           ,contract = new web3WsProvider.eth.Contract(contractAbi, memberContractAddress)
           ,callback = generateEventCallback( memberName, memberColorCode)
     ;
+    contract.setProvider( web3WsProvider.currentProvider );
     contract.events.allEvents({} , callback);
     lastCallback = callback;
   });
 };
 
 bindBrandedTokenEvents();
-// // Test MintingIntentConfirmed
+
+// Test MintingIntentConfirmed
 // lastCallback( null, {
 //   "address": "0xA99bf87ea3F515B046683c7e205c1E296D199d55",
 //   "blockNumber": 521979,

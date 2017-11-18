@@ -319,6 +319,7 @@ function listenToUtilityToken( member, mintingIntentHash ) {
           ,contractAbi = JSON.parse( ContractJson.contracts["UtilityToken.sol:UtilityToken"].abi )
           ,contract = new utilityChain.eth.Contract( contractAbi, contractAddress )
     ;
+    contract.setProvider( utilityChain.currentProvider );
     return contract;
   })();
 

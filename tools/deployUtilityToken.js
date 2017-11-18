@@ -140,10 +140,8 @@ function deployUtilityToken( member ) {
 
       const FOUNDATION_ADDRESS = coreConstants.OST_FOUNDATION_ADDRESS
             ,contractAddress = coreConstants.OST_STAKE_CONTRACT_ADDRESS
-            ,stakeContract = new StakeContract(FOUNDATION_ADDRESS, Config.ValueChain.Stake)
+            ,stakeContract = new StakeContract(FOUNDATION_ADDRESS, contractAddress)
       ;
-
-      console.log(Config.ValueChain.Stake, contractAddress);
 
       return stakeContract.registerUtilityToken(member.Symbol, member.Name, member.Decimals, member.ConversionRate, member.ChainId, member.Reserve, member.ERC20 );
 

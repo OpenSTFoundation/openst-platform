@@ -52,7 +52,7 @@ function updateFoundationAddress( foundation ) {
 }
 
 function updateAdminAddress( admin ) {
-  Config.ValueChain.Admin = admin;
+  Config.ValueChain.Admin = admin; /* Allowed Usage */
 }
 
 function updateGenesisAlloc( genesis, foundation, value ) {

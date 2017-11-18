@@ -7,23 +7,26 @@
  * * Reviewed by: Sunil
  */
 
-const Web3 = require("web3")
-      ,reqPrefix = "../.."
-      ,Config = require(reqPrefix + "/config.json")
+const reqPrefix = "../.."
+      ,coreConstants = require(reqPrefix + '/config/core_constants')
+      ,Geth = require(reqPrefix + "/lib/geth")
+      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDRESS
+      ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDRESS
+      ,SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLETOKEN_CONTRACT_ADDRESS
+      ,STAKE_CONTRACT = coreConstants.OST_STAKE_CONTRACT_ADDRESS
 ;
 
 
 
 const queryStaking = function () {
   const ContractJson = require( reqPrefix +  "/contracts/Staking.json")
-        ,contractAddress = Config.ValueChain.Stake
+        ,contractAddress = STAKE_CONTRACT
         ,displayName = "Stake"
         ,colorCode = "\x1b[35m"
         ,contractAbi = JSON.parse( ContractJson.contracts["Staking.sol:Staking"].abi )
-        ,Geth = require(reqPrefix + "/lib/geth")
         ,contract = new Geth.ValueChain.eth.Contract(contractAbi, contractAddress)
-        ,_uuid = "0xcf87fc52579cecea336750bbfbb5afcb096d445ee74a1c40cc88f78f7e3025b3"
-        ,_mintingIntentHash = "0x1a4840e3d4b19e248883b3003390224d6f27ecce9e180d33353a02245da246eb"
+        ,_uuid = "0xc015ad07a0ce24998b478572227111e0fb0d8f26fbcb0e6422e7fc15639eb7ac"
+        ,_mintingIntentHash = "0x702eabb3dba5b1a3cef0f60f359281d362653a00deb8177763b420052675c222"
   ;
 
   contract.setProvider(Geth.ValueChain.currentProvider);

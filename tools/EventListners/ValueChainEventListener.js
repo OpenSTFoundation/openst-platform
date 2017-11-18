@@ -6,13 +6,20 @@
  * * Date: 26/10/2017
  * * Reviewed by: Sunil
  */
-const BigNumber = require('bignumber.js');
-
-const Web3 = require("web3")
-      ,reqPrefix = "../.."
-      ,Config = require(reqPrefix + "/config.json")
-      ,web3WsProvider = new Web3( "ws://localhost:18545" ) /* ValueChain WebSocket Address */
+const BigNumber = require('bignumber.js')
+      ,Web3 = require("web3")
 ;
+
+const reqPrefix = "../.."
+      ,coreConstants = require(reqPrefix + '/config/core_constants')
+      ,Config = require(reqPrefix + "/config.json")
+      ,web3WsProvider = new Web3( coreConstants.OST_GETH_VALUE_CHAIN_WS_PROVIDER ) /* ValueChain WebSocket Address */
+      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDRESS
+      ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDRESS
+      ,SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLETOKEN_CONTRACT_ADDRESS
+      ,STAKE_CONTRACT = coreConstants.OST_STAKE_CONTRACT_ADDRESS
+;
+
 
 const toST = function ( num ) {
   var bigNum = new BigNumber( num );
@@ -21,27 +28,20 @@ const toST = function ( num ) {
 };
 
 
-String.prototype.replaceAll = function(search, replacement) {
-    var target = this;
-    return target.replace(new RegExp(search, 'g'), replacement);
-};
-
 const logJSObject = function ( jo , heading ) {
-  console.log("*****\t", heading.replaceAll("MintingIntentDeclared", replaceBy) );
+  console.log("*****\t", heading);
   if ( jo && jo instanceof Object ) {
-    console.log( JSON.stringify(jo, null, 2).replaceAll("MintingIntentDeclared", replaceBy) );
+    console.log( JSON.stringify(jo) );
   } else {
     console.log( jo );
   }
 };
 
-const replaceBy = "StakingIntentDeclared";
-
 const generateEventCallback = function ( displayName, colorCode ) {
   return function( e, res) {
     if ( !res ) { return; }
     const eventName = res.event;
-    console.log("\n" + colorCode + "==== " + displayName + " :: " + eventName.replaceAll("MintingIntentDeclared", replaceBy) + " ====\x1b[0m");
+    console.log("\n" + colorCode + "==== " + displayName + " :: " + eventName + " ====\x1b[0m");
     switch ( eventName ){
       case "Transfer": 
         showTransferEventDescription( res );
@@ -85,7 +85,7 @@ const showMintingIntentDeclaredDescription = function ( result ) {
   var returnValues = result.returnValues;
   var displayInfo = getDisplayForAddress( returnValues._staker );
   console.log("\x1b[33mEvent Description ");
-  console.log("Event:\t\t", result.event.replaceAll("MintingIntentDeclared", replaceBy) );
+  console.log("Event:\t\t", result.event );
   console.log("Account:\t\t", getDisplayForAddress( returnValues._uuid ).displayName );
   console.log("Staker:\t\t", displayInfo.displayName );
   console.log("Amount [ST]:\t\t", toST(returnValues._amountST) );
@@ -120,12 +120,31 @@ const displayMap = {};
 (function () {
   var _key;
 
-  _key = Config.SimpleTokenFoundation;
+  _key = FOUNDATION;
   displayMap[ _key.toLowerCase() ] = {
     isKnown: true,
-    configKey: "SimpleTokenFoundation",
     displayName: "SimpleToken Foundation",
     symbol: "ST"
+  };
+  _key = REGISTRAR;
+  displayMap[ _key.toLowerCase() ] = {
+    isKnown: true,
+    displayName: "Registrar",
+    symbol: "[NA]"
+  };
+
+  _key = SIMPLETOKEN_CONTRACT;
+  displayMap[ _key.toLowerCase() ] = {
+    isKnown: true,
+    displayName: "SimpleTokenContract",
+    symbol: "[NA]"
+  };  
+
+  _key = STAKE_CONTRACT;
+  displayMap[ _key.toLowerCase() ] = {
+    isKnown: true,
+    displayName: "StakingContract",
+    symbol: "[NA]"
   };
 
   Config.Members.forEach( function ( Member ) {
@@ -133,7 +152,6 @@ const displayMap = {};
     _key = Member.Reserve;
     displayMap[ _key.toLowerCase() ] = {
       isKnown: true,
-      configKey: "Reserve",
       displayName: "Reserve",
       symbol: Member.Symbol
     };
@@ -141,7 +159,6 @@ const displayMap = {};
     _key = Member.ERC20;
     displayMap[ _key.toLowerCase() ] = {
       isKnown: true,
-      configKey: "ERC20",
       displayName: name + " " + "(ERC20)",
       symbol: Member.Symbol
     };
@@ -149,21 +166,10 @@ const displayMap = {};
     _key = Member.UUID;
     displayMap[ _key.toLowerCase() ] = {
       isKnown: true,
-      configKey: "UUID",
       displayName: name,
       symbol: Member.Symbol
     };
 
-  });
-
-  Object.keys( Config.ValueChain ).forEach( function(configKey ) {
-    _key = Config.ValueChain[ configKey ];
-    displayMap[ _key.toLowerCase() ] = { 
-      isKnown: true,
-      configKey: configKey,
-      displayName: configKey,
-      symbol: "[NA]"
-    }
   });
 
 
@@ -182,20 +188,21 @@ const getDisplayForAddress = function ( address ) {
 
 const bindStakeEvents = function () {
   const ContractJson = require( reqPrefix +  "/contracts/Staking.json")
-        ,contractAddress = Config.ValueChain.Stake
+        ,contractAddress = STAKE_CONTRACT
         ,displayName = "Stake"
         ,colorCode = "\x1b[35m"
         ,contractAbi = JSON.parse( ContractJson.contracts["Staking.sol:Staking"].abi )
         ,contract = new web3WsProvider.eth.Contract( contractAbi, contractAddress )
         ,callback = generateEventCallback( displayName, colorCode)
   ;
+  contract.setProvider( web3WsProvider.currentProvider );
   contract.events.allEvents({} , callback);
 };
 
 
 const bindSimpleTokenEvents = function () {
   const ContractJson = require( reqPrefix + "/contracts/SimpleToken.json")
-        ,contractAddress = Config.ValueChain.SimpleToken
+        ,contractAddress = SIMPLETOKEN_CONTRACT
         ,displayName = "SimpleToken"
         ,colorCode = "\x1b[36m"
         ,contractAbi = JSON.parse( ContractJson.contracts["SimpleToken.sol:SimpleToken"].abi )

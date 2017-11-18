@@ -25,6 +25,7 @@ const simpleTokenContract = (function () {
         ,contractAbi = JSON.parse( ContractJson.contracts["SimpleToken.sol:SimpleToken"].abi )
         ,contract = new valueChain.eth.Contract( contractAbi, contractAddress )
   ;
+  contract.setProvider( valueChain.currentProvider );
   return contract;
 })();
 
@@ -34,6 +35,7 @@ const stakingContract = (function () {
         ,contractAbi = JSON.parse( ContractJson.contracts["Staking.sol:Staking"].abi )
         ,contract = new valueChain.eth.Contract( contractAbi, contractAddress )
   ;
+  contract.setProvider( valueChain.currentProvider );
   return contract;
 })();
 

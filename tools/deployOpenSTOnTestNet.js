@@ -19,6 +19,18 @@ const Geth = require("../lib/geth");
 
 const SimpleTokenJson = require("../contracts/SimpleToken.json");
 const Config = require(process.argv[2] || '../config.json');
+const coreConstants = require('../config/core_constants')
+      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDRESS
+      ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDRESS
+      ,REGISTRAR_KEY = coreConstants.OST_REGISTRAR_SECRET_KEY
+;
+
+//These addresses may change during the script. So, these should not be const.
+var SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLETOKEN_CONTRACT_ADDRESS
+    ,STAKE_CONTRACT = coreConstants.OST_STAKE_CONTRACT_ADDRESS
+;
+
+
 
 const CONSOLE_RESET = "\x1b[0m";
 const ERR_PRE = "\x1b[31m ERROR ::"; //Error. (RED)
@@ -28,7 +40,6 @@ const STEP_PRE = "======================================================\n\x1b[3
 
 const MIN_FUND = (new BigNumber( 10 )).toPower( 18 );
 const _registrarName = "Registrar";
-const _registrarAddress = Config.ValueChain.Admin;
 var ST = null;
 
 //Method to Log Step Description
@@ -103,8 +114,8 @@ function validateValueChain() {
 //Validate SimpleTokenFoundation Address.
 function validateSimpleTokenFoundation() {
   logStep( "Validating SimpleTokenFoundation" );
-  logInfo("SimpleTokenFoundation @", Config.SimpleTokenFoundation );
-  return Geth.ValueChain.eth.getBalance(Config.SimpleTokenFoundation)
+  logInfo("SimpleTokenFoundation @", FOUNDATION );
+  return Geth.ValueChain.eth.getBalance(FOUNDATION)
   .catch( reason =>  {
     logError( "Invalid SimpleTokenFoundation address" );
     catchAndExit( reason );
@@ -112,7 +123,7 @@ function validateSimpleTokenFoundation() {
   .then( balance => {
     logInfo("ValueChain Balance of SimpleTokenFoundation =", balance);
     logInfo("Unlocking SimpleTokenFoundation on ValueChain");
-    return Geth.ValueChain.eth.personal.unlockAccount( Config.SimpleTokenFoundation );
+    return Geth.ValueChain.eth.personal.unlockAccount( FOUNDATION );
   })
   .catch( reason =>  {
     logError( "Failed to unlock SimpleTokenFoundation" );
@@ -120,7 +131,7 @@ function validateSimpleTokenFoundation() {
   })
   .then( _ => {
     logInfo("Fetching UtilityChain Balance of SimpleTokenFoundation");
-    return Geth.UtilityChain.eth.getBalance(Config.SimpleTokenFoundation)
+    return Geth.UtilityChain.eth.getBalance(FOUNDATION)
     .catch( reason =>  {
       logError( "Invalid SimpleTokenFoundation address" );
       catchAndExit( reason );
@@ -128,7 +139,7 @@ function validateSimpleTokenFoundation() {
     .then( balance => {
       logInfo("UtilityChain Balance of SimpleTokenFoundation =", balance);
       logInfo("Unlocking SimpleTokenFoundation on UtilityChain");
-      return Geth.UtilityChain.eth.personal.unlockAccount( Config.SimpleTokenFoundation );
+      return Geth.UtilityChain.eth.personal.unlockAccount( FOUNDATION );
     })
   })
   .then(_ => {
@@ -139,9 +150,9 @@ function validateSimpleTokenFoundation() {
 //Validate SimpleTokenFoundation Address.
 function validateRegistrar() {
   logStep( "Validating",_registrarName );
-  logInfo(_registrarName, "@", _registrarAddress );
+  logInfo(_registrarName, "@", REGISTRAR );
   logInfo("Fetching",_registrarName,"balance on ValueChain");
-  return Geth.ValueChain.eth.getBalance( _registrarAddress )
+  return Geth.ValueChain.eth.getBalance( REGISTRAR )
     .catch( reason =>  {
       logError( "Invalid",_registrarName ,"address" );
       catchAndExit( reason );
@@ -149,7 +160,7 @@ function validateRegistrar() {
     .then(balance => {
       logInfo(_registrarName, "balance =", balance);
       logInfo("Unlocking", _registrarName, "on ValueChain");
-      return Geth.ValueChain.eth.personal.unlockAccount( _registrarAddress );
+      return Geth.ValueChain.eth.personal.unlockAccount( REGISTRAR, REGISTRAR_KEY );
     })
     .catch( reason =>  {
       logError( "Failed to unlock", _registrarName );
@@ -157,7 +168,7 @@ function validateRegistrar() {
     })
     .then( _ => {
       logInfo("Fetching",_registrarName,"balance on UtilityChain");
-      return Geth.UtilityChain.eth.getBalance( _registrarAddress )
+      return Geth.UtilityChain.eth.getBalance( REGISTRAR )
       .catch( reason =>  {
         logError( "Invalid",_registrarName ,"address" );
         catchAndExit( reason );
@@ -165,7 +176,7 @@ function validateRegistrar() {
       .then(balance => {
         logInfo(_registrarName, "balance =", balance);
         logInfo("Unlocking", _registrarName, "on UtilityChain");
-        return Geth.ValueChain.eth.personal.unlockAccount( _registrarAddress );
+        return Geth.ValueChain.eth.personal.unlockAccount( REGISTRAR, REGISTRAR_KEY );
       })
       .catch( reason =>  {
         logError( "Failed to unlock", _registrarName );
@@ -173,9 +184,9 @@ function validateRegistrar() {
       })
     })
     .then(_ =>{
-      return fundAddressOnValueChain(_registrarAddress, _registrarName)
+      return fundAddressOnValueChain(REGISTRAR, _registrarName)
       .then(_ =>{
-        return fundAddressOnUtilityChain(_registrarAddress, _registrarName);
+        return fundAddressOnUtilityChain(REGISTRAR, _registrarName);
       });
     });
 }
@@ -188,7 +199,7 @@ function initST( deployMeta ) {
 
   //Create an instance of SimpleToken class.
   ST = new SimpleToken({
-    from: Config.SimpleTokenFoundation
+    from: FOUNDATION
   });
   return ST;
 }
@@ -206,14 +217,14 @@ function setSimpleTokenRegistrar( deployMeta ) {
   .then(existing_admin => {
     logInfo("Existing", _registrarName ,"Address", existing_admin);
     var existingAddress = String( existing_admin ).toLowerCase()
-        ,newAddress = String( _registrarAddress ).toLowerCase()
+        ,newAddress = String( REGISTRAR ).toLowerCase()
     ;
     if ( existingAddress === newAddress ) {
       logWin("SimpleToken", _registrarName, " address set");
       return deployMeta;
     }
-    logInfo("Setting", _registrarName ,"Address to", _registrarAddress);
-    return ST.methods.setAdminAddress( _registrarAddress ).send({from: Config.SimpleTokenFoundation })
+    logInfo("Setting", _registrarName ,"Address to", REGISTRAR);
+    return ST.methods.setAdminAddress( REGISTRAR ).send({from: FOUNDATION })
     .catch( reason =>  {
       logError("Failed to set", _registrarName, "Address");
       catchAndExit();
@@ -228,7 +239,7 @@ function setSimpleTokenRegistrar( deployMeta ) {
       })
       .then(existing_admin => {
         var existingAddress = String( existing_admin ).toLowerCase()
-            ,newAddress = String( _registrarAddress ).toLowerCase()
+            ,newAddress = String( REGISTRAR ).toLowerCase()
         ;
         if ( existingAddress === newAddress ) {
           logWin("SimpleToken", _registrarName, " address set");
@@ -245,9 +256,9 @@ function deploySimpleTokenContract() {
   logStep("Deploying SimpleToken Contract on ValueChain");
 
   return Geth.ValueChain.deployContract(
-    Config.SimpleTokenFoundation,
+    FOUNDATION,
     SimpleTokenJson.contracts['SimpleToken.sol:SimpleToken'],
-    Config.ValueChain.SimpleToken
+    SIMPLETOKEN_CONTRACT
   )
   .catch( reason =>  {
     logError("Failed to deploy SimpleToken Contract on ValueChain");
@@ -256,11 +267,11 @@ function deploySimpleTokenContract() {
   .then( simpleToken => {
     logInfo("SimpleToken Contract Deployed @", simpleToken);
     var stakeContractAddress = 0x0;
-    if (simpleToken === Config.ValueChain.SimpleToken) { 
-      stakeContractAddress = Config.ValueChain.Stake;
+    if ( simpleToken === SIMPLETOKEN_CONTRACT ) { 
+      stakeContractAddress = STAKE_CONTRACT;
     } else {
       logInfo("Updated SimpleToken Address in Config");
-      Config.ValueChain.SimpleToken = simpleToken;
+      SIMPLETOKEN_CONTRACT = simpleToken;
     }
     logWin("SimpleToken Contract deployed");
 
@@ -280,8 +291,8 @@ function deployStakeContract( deployMeta ) {
 
   stakeContractAddress && logInfo("Stake Contract Address :", stakeContractAddress);
 
-  const stakeContract = new StakeContract(Config.SimpleTokenFoundation, stakeContractAddress)
-  return new StakeContract(Config.SimpleTokenFoundation, stakeContractAddress).deploy(simpleTokenAddress)
+  const stakeContract = new StakeContract(FOUNDATION, stakeContractAddress)
+  return new StakeContract(FOUNDATION, stakeContractAddress).deploy(simpleTokenAddress)
   .catch( reason =>  {
     logError("Failed to deploy Stake Contract on ValueChain");
     catchAndExit( reason );
@@ -289,18 +300,18 @@ function deployStakeContract( deployMeta ) {
   .then(stake => {
     logInfo("Stake Contract Deployed @", stake);
 
-    if (stake !== Config.ValueChain.Stake) { 
+    if (stake !== STAKE_CONTRACT) { 
       logInfo("Updated Stake Address in Config");
-      Config.ValueChain.Stake = stake;
+      STAKE_CONTRACT = stake;
     }
     logInfo("Stake Contract deployed");
     logInfo("Setting Stake Contract Registrar Address");
-    const stakeContract = new StakeContract(Config.SimpleTokenFoundation, stake)
-    return stakeContract._instance.methods.setAdminAddress( _registrarAddress ).send({from: Config.SimpleTokenFoundation})
+    const stakeContract = new StakeContract(FOUNDATION, stake)
+    return stakeContract._instance.methods.setAdminAddress( REGISTRAR ).send({from: FOUNDATION})
   })
   .then( _ =>{
     logWin("Stake Contract Admin Updated");
-    return Config.ValueChain.Stake;
+    return STAKE_CONTRACT;
   })
 }
 
@@ -310,9 +321,9 @@ function finalizeSimpleTokenContract( deployMeta ) {
   initST( deployMeta )
 
   logInfo("Unlocking", _registrarName);
-  return Geth.ValueChain.eth.personal.unlockAccount( _registrarAddress )
+  return Geth.ValueChain.eth.personal.unlockAccount( REGISTRAR, REGISTRAR_KEY )
   .then( _ => {
-    return ST.methods.finalize().send({from: _registrarAddress})
+    return ST.methods.finalize().send({from: REGISTRAR})
     .then( receipt => {
       if ( ("Finalized") in receipt.events ) {
         logWin("SimpleTokenContract Finalized");
@@ -332,10 +343,20 @@ function fundAllMembers() {
 }
 
 function fundMember( member ) {
-    return fundAddressOnValueChain(member.Reserve, member.Name)
-      .then(_ =>{
-        return fundAddressOnUtilityChain(member.Reserve, member.Name);
-      });
+  const grantInST = new BigNumber( 100000 );
+  const grant = new BigNumber(10).pow( 18 ).mul( grantInST ).toString( 10 );
+  return fundAddressOnValueChain(member.Reserve, member.Name)
+    .then(_ =>{
+      return fundAddressOnUtilityChain(member.Reserve, member.Name);
+    })
+    .then(_ => {
+      logStep("Grant", member.Name, "with" , grantInST.toString( 10 ), "ST");
+      return ST.methods.transfer( member.Reserve, grant.toString( 10 ) ).send({from: FOUNDATION});
+    })
+    .then(_ => {
+      logWin(member.Name, "has been granted with", grantInST.toString( 10 ), "ST");
+    });
+  ;
 }
 function fundAddress(Chain, chainName, accountAddress, addressName ) {
   logInfo("Unlock",addressName,"on",chainName);
@@ -355,7 +376,7 @@ function fundAddress(Chain, chainName, accountAddress, addressName ) {
         const diff = MIN_FUND.minus( bigBalance );
 
         if ( diff.greaterThan( 0 ) ) {
-          return Chain.eth.personal.unlockAccount(Config.SimpleTokenFoundation)
+          return Chain.eth.personal.unlockAccount(FOUNDATION)
           .catch( reason =>  {
             logError("Failed to deploy unlockAccount SimpleTokenFoundation on", chainName);
             catchAndExit( reason );
@@ -363,7 +384,7 @@ function fundAddress(Chain, chainName, accountAddress, addressName ) {
           .then(_ => {
             //Transfer the funds.
             return Chain.eth.sendTransaction({
-              from: Config.SimpleTokenFoundation, 
+              from: FOUNDATION, 
               to: accountAddress, 
               value: diff.toString( 10 ) 
             })
@@ -391,6 +412,8 @@ function fundAddressOnUtilityChain( accountAddress, addressName ) {
 
 function updateConfig() {
   logStep("Updating Config");
+  Config.ValueChain.SimpleToken = SIMPLETOKEN_CONTRACT; /* Allowed Usage */
+  Config.ValueChain.Stake = STAKE_CONTRACT; /* Allowed Usage */
   const json = JSON.stringify(Config, null, 4);
 
   return new Promise( (resolve,reject) => {
