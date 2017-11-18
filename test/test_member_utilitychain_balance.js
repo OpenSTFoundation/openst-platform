@@ -1,10 +1,16 @@
 const Assert = require('assert');
 const Config = require('../config.json');
 const Geth = require('../lib/geth');
+const BigNumber = require('bignumber.js');
 
 /*  check UtilityToken balance of Member Company
     @param {object} Member - Member object from Config. E.g. Config.Members[0]
 */
+const toDisplayST = function ( num ) {
+  var bigNum = new BigNumber( num );
+  var fact = new BigNumber( 10 ).pow( 18 );
+  return bigNum.dividedBy( fact ).toString( 10 ) + " ST";
+}
 
 async function checkMemberBalance( Member ) {
     const MC = Member.Reserve;
@@ -16,7 +22,8 @@ async function checkMemberBalance( Member ) {
 
     const _out = await UtilityTokenContract.methods.balanceOf( MC ).call();
 
-    console.log("_out" , _out);
+
+    console.log("balance" , toDisplayST( _out) );
 }
 
 checkMemberBalance( Config.Members[0] )
