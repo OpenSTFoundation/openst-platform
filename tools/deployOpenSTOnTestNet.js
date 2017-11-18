@@ -69,6 +69,12 @@ function catchAndExit( reason ) {
   process.exit(1);
 }
 
+String.prototype.equalsIgnoreCase = function ( compareWith ) {
+    var _self = this.toLowerCase();
+    var _compareWith = String( compareWith ).toLowerCase();
+    return _self == _compareWith;
+}
+
 //Method to validate ValueChain. Ensures no one 'accidentally' deploys on Mainnet.
 function validateValueChain() {
   logStep( "Validating Value Chain" );
@@ -274,8 +280,8 @@ function deployStakeContract( deployMeta ) {
 
   stakeContractAddress && logInfo("Stake Contract Address :", stakeContractAddress);
 
-  return new StakeContract(Config.SimpleTokenFoundation, stakeContractAddress)
-  .deploy(simpleTokenAddress)
+  const stakeContract = new StakeContract(Config.SimpleTokenFoundation, stakeContractAddress)
+  return new StakeContract(Config.SimpleTokenFoundation, stakeContractAddress).deploy(simpleTokenAddress)
   .catch( reason =>  {
     logError("Failed to deploy Stake Contract on ValueChain");
     catchAndExit( reason );
@@ -287,9 +293,14 @@ function deployStakeContract( deployMeta ) {
       logInfo("Updated Stake Address in Config");
       Config.ValueChain.Stake = stake;
     }
-
-    logWin("Stake Contract deployed");
-    return stake;
+    logInfo("Stake Contract deployed");
+    logInfo("Setting Stake Contract Registrar Address");
+    const stakeContract = new StakeContract(Config.SimpleTokenFoundation, stake)
+    return stakeContract._instance.methods.setAdminAddress( _registrarAddress ).send({from: Config.SimpleTokenFoundation})
+  })
+  .then( _ =>{
+    logWin("Stake Contract Admin Updated");
+    return Config.ValueChain.Stake;
   })
 }
 

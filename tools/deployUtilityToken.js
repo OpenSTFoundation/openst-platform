@@ -9,24 +9,30 @@
  * * Reviewed by:
  * * 
  */
-const FS = require('fs');
-const Path = require('path');
-const BigNumber = require('bignumber.js');
+const FS = require('fs')
+      ,Path = require('path')
+      ,BigNumber = require('bignumber.js')
+      ,UtilityToken = require('../lib/bt')
+      ,StakeContract = require('../lib/stakeContract')
+      ,Geth = require("../lib/geth")
+      ,logger = require("./helpers/CustomConsoleLogger")
+      ,Config = require(process.argv[2] || '../config.json')
+      ,coreConstants = require('../config/core_constants')
+      ,REGISTRAR_ADDRESS = coreConstants.OST_REGISTRAR_ADDRESS
+      ,REGISTRAR_KEY = coreConstants.OST_REGISTRAR_SECRET_KEY || ""
+      ,readline = require('readline')
+      ,UC = "UtilityChain"
+      ,UC_MAIN_NET_ID = 1410
+;
 
-const SimpleToken = require('../lib/simpleTokenContract');
-const UtilityToken = require('../lib/bt');
-const StakeContract = require('../lib/stakeContract');
-const Geth = require("../lib/geth");
-const logger = require("./helpers/CustomConsoleLogger");
-const Config = require(process.argv[2] || '../config.json');
+var is_uc_main_net = false;
 
-const VC = "ValueChain";
-const UC = "UtilityChain";
-const UC_MAIN_NET_ID = 1410; //To Do: Read from Config
-const is_uc_main_net = true;
 
 //Method to display the exception reason and exit.
 function catchAndExit( reason ) {
+  if ( reason ){
+
+  }
   reason && console.log( reason );
   process.exit(1);
 }
@@ -38,7 +44,7 @@ function validateUtilityChain() {
   return Geth.UtilityChain.eth.net.getId(function (error, result) {
     //Ensure UtilityChain is not on MainNet. networkId should NOT be UC_MAIN_NET_ID.
     if ( result == UC_MAIN_NET_ID ) {
-        logger.warn(UC, "is connected to networkId", UC_MAIN_NET_ID ,"(SimpleToken Mainnet)");
+        logger.warn(UC, "is connected to networkId", UC_MAIN_NET_ID ,"(", UC ,"Mainnet)");
         is_uc_main_net = true;
     }
   })
@@ -55,9 +61,6 @@ function validateUtilityChain() {
   });
 }
 
-function validateMember( member ) {
-  return 
-}
 function describeMember( member ) {
   logger.step("Describing Member Config.", ( is_uc_main_net ? "Please Confirm these details." : "" ) );
   logger.log("Name ::", member.Name);
@@ -82,14 +85,17 @@ function describeMember( member ) {
 
 }
 
-const readline = require('readline');
 function confirmDeploy( member ) {
+  console.log("\x1b[34m Do you Approve Deployment & Registration of UtilityToken? Options:\x1b[0m");
+  console.log("\x1b[32m yes \x1b[0m\t" , "To Approve Deployment & Registration of UtilityToken");
+  console.log("\x1b[31m no \x1b[0m\t" , "To disapprove");
+  console.log("\x1b[33m exit \x1b[0m\t" , "To quit the program");
   return new Promise( (resolve, reject) => {
     
     const rl = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
-      prompt: '\x1b[34mAre you sure you want to continue with deployment ? (yes/no) >\x1b[0m'
+      prompt: '>'
     });
     rl.prompt();
     rl.on("line", (line) => {
@@ -100,15 +106,15 @@ function confirmDeploy( member ) {
           rl.close();
           resolve( member );    
         break;
+        case "no":
+        case "n":
         case "skip":
           rl.close();
           resolve();    
         break;
-        case "no":
-        case "n":
         case "exit":
         case "bye":
-          logger.log("Deployment aborted");
+          logger.log("Deployment aborted. Bye");
           process.exit(0);
         break;
         default:
@@ -119,26 +125,48 @@ function confirmDeploy( member ) {
 }
 
 function deployUtilityToken( member ) {
-  logger.step("Deploying UtilityToken Contract for ", member.Name);
-  return getPassphrase( member )
-    .then(passphrase =>{
-      return unlockMember(member, passphrase);
-    })
+  logger.step("Unlocking REGISTRAR, REGISTRAR_ADDRESS:", REGISTRAR_ADDRESS);
+  return Geth.UtilityChain.eth.personal.unlockAccount( member.Reserve, REGISTRAR_KEY)
     .then(_ => {
+      logger.win("Registrar Unlocked");
       logger.step("Deploying UtilityToken");
       return new UtilityToken(member.Reserve, member.ERC20)
           .deploy(member.Symbol, member.Name, member.Decimals, member.ChainId);
     })
     .then(address => {
       logger.win("UtilityToken Deployed Successfully!");
-      
       member.ERC20 = address;
+      logger.step("Registering UtilityToken");
+
+      const FOUNDATION_ADDRESS = coreConstants.OST_FOUNDATION_ADDRESS
+            ,contractAddress = coreConstants.OST_STAKE_CONTRACT_ADDRESS
+            ,stakeContract = new StakeContract(FOUNDATION_ADDRESS, Config.ValueChain.Stake)
+      ;
+
+      console.log(Config.ValueChain.Stake, contractAddress);
+
+      return stakeContract.registerUtilityToken(member.Symbol, member.Name, member.Decimals, member.ConversionRate, member.ChainId, member.Reserve, member.ERC20 );
+
+    })
+    .then(txreceipt => {
+      if ( !txreceipt instanceof Object || !txreceipt.value ) {
+        throw("Failed to register UtilityToken");
+      }
+      logger.win("UtilityToken Registered Successfully");
 
       logger.step("Updating Config");
-      logger.info("UtilityToken Contract Address\x1b[34m", address,logger.CONSOLE_RESET);
+      logger.info("UtilityToken Contract Address\x1b[34m", member.ERC20, logger.CONSOLE_RESET);
       logger.info("Fetching UUID of", member.Name);
-      return new UtilityToken(member.Reserve, address).uuid();
+      return new UtilityToken(member.Reserve, member.ERC20).uuid();
     })
+    // .then(address => {
+    //   logger.win("UtilityToken Deployed Successfully!");
+    //   member.ERC20 = address;
+    //   logger.step("Updating Config");
+    //   logger.info("UtilityToken Contract Address\x1b[34m", member.ERC20, logger.CONSOLE_RESET);
+    //   logger.info("Fetching UUID of", member.Name);
+    //   return new UtilityToken(member.Reserve, member.ERC20).uuid();
+    // })
     .then(uuid => {
         logger.info(member.Name, "UUID:" , uuid);
         member.UUID = uuid;
@@ -166,52 +194,26 @@ function deployUtilityToken( member ) {
     });
 }
 
-function unlockMember( member, passphrase ) {
-  passphrase = passphrase || "";
-  logger.step("Unlocking",member.Name,"on UtilityChain");
-  return Geth.UtilityChain.eth.personal.unlockAccount(member.Reserve, passphrase)
-    .catch(reason => {
-      logger.error("Failed to unlock account");
-      catchAndExit( reason );
-    })
-    .then(_ => {
-      logger.win(member.Name, "successfully unlocked");
-    })
+async function deployUtilityTokenForAllMembers() {
+  const Members = Config.Members;
+  var len = Members.length
+      ,member
   ;
-}
-
-function getPassphrase( member ) {
-  return new Promise( (resolve, reject) => {
-    
-    const rl = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-      prompt: '\x1b[34m Enter Passphrase:\x1b[0m\x1b[8m'
-    });
-    rl.prompt();
-    rl.on("line", ( passphrase ) => {
-      console.log("\x1b[0m");
-      resolve( passphrase );
-      rl.close();
-    });
-
-  });
-}
-
-function deployUtilityTokenForAllMembers() {
-  Config.Members.map(async function (member) {
+  for(var i=0; i<len; i++ ) {
+    member = Members[ i ];
     describeMember( member );
     if ( is_uc_main_net ){
-      await confirmDeploy( member ).then(member =>{
-        if ( member ) {
-          return deployUtilityToken( member );  
+      await confirmDeploy( member ).then( approvedMember =>{
+        if ( approvedMember ) {
+          return deployUtilityToken( approvedMember );  
         }
-        logger.info("UtilityToken Deployment of", member.Name, "has been skipped");
+        logger.info("UtilityToken Deployment has been skipped");
       });
     } else {
       await deployUtilityToken( member );
     }
-  });
+  }
+  console.log("Done....");
 }
 
 (function () {

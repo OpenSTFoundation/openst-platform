@@ -33,6 +33,12 @@ Assert.equalsIgnoreCase = function () {
     return Assert.equal.apply(Assert, _args);
 }
 
+String.prototype.equalsIgnoreCase = function ( compareWith ) {
+    var _self = this.toLowerCase();
+    var _compareWith = String( compareWith ).toLowerCase();
+    return _self == _compareWith;
+}
+
 
 async function stake(Member, StakeSizeST) {
 
@@ -80,7 +86,7 @@ async function stake(Member, StakeSizeST) {
 
     console.log("Check ST admin", ST_ADMIN);
     const stAdmin = await ST.methods.adminAddress().call();
-    if (stAdmin != ST_ADMIN) {
+    if ( !ST_ADMIN.equalsIgnoreCase( stAdmin ) ) {
         console.log(" Set the ST admin address", ST_ADMIN);
         Assert.equalsIgnoreCase(await ST.methods.owner().call(), Config.SimpleTokenFoundation);
         AssertEvent(await ST.methods.setAdminAddress(ST_ADMIN).send({from: Config.SimpleTokenFoundation}), "AdminAddressChanged");
@@ -109,13 +115,14 @@ async function stake(Member, StakeSizeST) {
     const mcST = await ST.methods.balanceOf(MC).call();
     console.log(" =", toST(mcST) );
     if (new BigNumber(mcST) < StakeSizeST) {
-        const diff = StakeSizeST.sub(mcST);
+        const diff = StakeSizeST.mul( 100 ).sub(mcST);
+
         const displayDiff = diff.dividedBy(new BigNumber( 10 ).pow( 18 ) ).toString();
         console.log(" Transfer", displayDiff, "ST grant to MC", MC);
         Assert.ok(await ST.methods.transfer(MC, diff).call({from: Config.SimpleTokenFoundation}), "Transfer failed");
         AssertEvent(await ST.methods.transfer(MC, diff).send({from: Config.SimpleTokenFoundation}), "Transfer");
     }
-
+    
     console.log("Unlock MC account", MC);
     await Geth.ValueChain.eth.personal.unlockAccount(MC);
 
@@ -148,8 +155,9 @@ async function stake(Member, StakeSizeST) {
 
     console.log("Check Stake admin", stakeContract._admin);
     const stakeAdmin = await stakeContract._instance.methods.adminAddress().call();
-    if (stakeAdmin != stakeContract._admin) {
-        console.log(" Set the stake admin address", stakeContract._admin);
+    if ( !ST_ADMIN.equalsIgnoreCase( stakeAdmin ) ) {
+        console.log("Existing Admin Address is ", stakeAdmin);
+        console.log(" Seting the stake admin address to", stakeContract._admin);
         Assert.equalsIgnoreCase(await stakeContract._instance.methods.owner().call(), stakeContract._foundation);
         AssertEvent(await stakeContract._instance.methods.setAdminAddress(stakeContract._admin).send({from: stakeContract._foundation}), "AdminAddressChanged");
         Assert.equalsIgnoreCase(await stakeContract._instance.methods.adminAddress().call(), stakeContract._admin);
