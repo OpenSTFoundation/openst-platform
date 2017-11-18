@@ -26,6 +26,24 @@ const simpleTokenContract = (function () {
         ,contract = new valueChain.eth.Contract( contractAbi, contractAddress )
   ;
   contract.setProvider( valueChain.currentProvider );
+
+  var pingCnt = 0;
+  var fn = function () {
+    return contract.methods.symbol().call()
+      .then( symbol => {
+        console.log("symbol" , symbol , "pingCnt", ++pingCnt);
+        setTimeout(function () {
+          fn();
+        }, 10000);
+      })
+      .catch(reason => {
+        throw "----- Connection Issue -----";
+      });
+  };
+
+  // fn();
+
+
   return contract;
 })();
 
@@ -38,6 +56,7 @@ const stakingContract = (function () {
   contract.setProvider( valueChain.currentProvider );
   return contract;
 })();
+
 
 
 

@@ -6,6 +6,14 @@ const Geth = require('../lib/geth');
 const StakeContract = require('../lib/stakeContract');
 const BT = require('../lib/bt');
 
+const coreConstants = require('../config/core_constants')
+      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDRESS
+      ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDRESS
+      ,REGISTRAR_KEY = coreConstants.OST_REGISTRAR_SECRET_KEY || ""
+      ,SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLETOKEN_CONTRACT_ADDRESS
+      ,STAKE_CONTRACT = coreConstants.OST_STAKE_CONTRACT_ADDRESS
+;
+
 const SimpleTokenJson = require("../contracts/SimpleToken.json");
 
 function AssertEvent(receipt, event, message) {
@@ -22,8 +30,8 @@ const toST = function ( num ) {
 
 
 /// Minimum amount of wei an MC needs for staking (worst case) @ 20 GWei gasPrice
-const MIN_MC_WEI = 10000000 * 20000000000;
-const ST_ADMIN = Config.ValueChain.Admin;
+const MIN_MC_WEI = 100000000 * 20000000000;
+
 
 Assert.equalsIgnoreCase = function () {
     var _args = Array.prototype.slice.call(arguments);
@@ -46,34 +54,34 @@ async function stake(Member, StakeSizeST) {
     diplayStakeSizeST = diplayStakeSizeST.toString();
 
     const abi = JSON.parse(SimpleTokenJson.contracts["SimpleToken.sol:SimpleToken"].abi);
-    console.log("Checking ST code", Config.ValueChain.SimpleToken);
+    console.log("Checking ST code", SIMPLETOKEN_CONTRACT);
 
 
-    Assert.notEqual(await Geth.ValueChain.eth.getCode(Config.ValueChain.SimpleToken, null), "0x");
+    Assert.notEqual(await Geth.ValueChain.eth.getCode(SIMPLETOKEN_CONTRACT, null), "0x");
 
 
-    const ST = new Geth.ValueChain.eth.Contract(abi, Config.ValueChain.SimpleToken);
+    const ST = new Geth.ValueChain.eth.Contract(abi, SIMPLETOKEN_CONTRACT);
     // Bug in web3js
     ST.setProvider(Geth.ValueChain.currentProvider);
 
     // Sanity check
     Assert.strictEqual(await ST.methods.symbol().call(), "ST");
     Assert.strictEqual(await ST.methods.name().call(), "Simple Token");
-    Assert.equalsIgnoreCase(await ST.methods.owner().call(), Config.SimpleTokenFoundation);
-    console.log("Check ST funds of foundation", Config.SimpleTokenFoundation);
-    const stfST = await ST.methods.balanceOf(Config.SimpleTokenFoundation).call();
+    Assert.equalsIgnoreCase(await ST.methods.owner().call(), FOUNDATION);
+    console.log("Check ST funds of foundation", FOUNDATION);
+    const stfST = await ST.methods.balanceOf(FOUNDATION).call();
     console.log(" =", toST(stfST) );
     Assert.ok(stfST > StakeSizeST, "Foundation has not enough tokens?");
 
     const MC = Member.Reserve;
 
-    console.log("Check ether funds of foundation", Config.SimpleTokenFoundation);
-    const stfBalance = await Geth.ValueChain.eth.getBalance(Config.SimpleTokenFoundation);
+    console.log("Check ether funds of foundation", FOUNDATION);
+    const stfBalance = await Geth.ValueChain.eth.getBalance(FOUNDATION);
     console.log(" =", toST(stfBalance) );
-    Assert.ok(stfBalance >= MIN_MC_WEI, "Please fund STF @ "+Config.SimpleTokenFoundation);
+    Assert.ok(stfBalance >= MIN_MC_WEI, "Please fund STF @ "+FOUNDATION);
 
     console.log("Unlock foundation account");
-    await Geth.ValueChain.eth.personal.unlockAccount(Config.SimpleTokenFoundation);
+    await Geth.ValueChain.eth.personal.unlockAccount(FOUNDATION);
 
     console.log("Check ether funds of MC", MC);
     const mcBalance = await Geth.ValueChain.eth.getBalance(MC);
@@ -81,33 +89,34 @@ async function stake(Member, StakeSizeST) {
     if (mcBalance < MIN_MC_WEI) {
         const diff = MIN_MC_WEI - mcBalance;
         console.log(" Transfer", diff, "wei from foundation to MC", MC);
-        await Geth.ValueChain.eth.sendTransaction({from: Config.SimpleTokenFoundation, to: MC, value: diff});
+        await Geth.ValueChain.eth.sendTransaction({from: FOUNDATION, to: MC, value: diff});
     }
 
-    console.log("Check ST admin", ST_ADMIN);
+    console.log("Check ST REGISTRAR", REGISTRAR);
     const stAdmin = await ST.methods.adminAddress().call();
-    if ( !ST_ADMIN.equalsIgnoreCase( stAdmin ) ) {
-        console.log(" Set the ST admin address", ST_ADMIN);
-        Assert.equalsIgnoreCase(await ST.methods.owner().call(), Config.SimpleTokenFoundation);
-        AssertEvent(await ST.methods.setAdminAddress(ST_ADMIN).send({from: Config.SimpleTokenFoundation}), "AdminAddressChanged");
-        Assert.equalsIgnoreCase(await ST.methods.adminAddress().call(), ST_ADMIN);
+    if ( !REGISTRAR.equalsIgnoreCase( stAdmin ) ) {
+        console.warn("I SHOULD NOT BE DOING THIS --->");
+        console.log(" Set the ST admin address", REGISTRAR);
+        Assert.equalsIgnoreCase(await ST.methods.owner().call(), FOUNDATION);
+        AssertEvent(await ST.methods.setAdminAddress( REGISTRAR ).send({from: FOUNDATION}), "AdminAddressChanged");
+        Assert.equalsIgnoreCase(await ST.methods.adminAddress().call(), REGISTRAR);
     }
 
     console.log("Check ST finalized flag");
     const finalized = await ST.methods.finalized().call();
     if (!finalized) {
-        const adminBalance = await Geth.ValueChain.eth.getBalance(ST_ADMIN);
+        const adminBalance = await Geth.ValueChain.eth.getBalance( REGISTRAR );
         if (adminBalance < MIN_MC_WEI) {
             const diff = MIN_MC_WEI - adminBalance;
-            console.log("Transfer", diff, "wei from foundation to ST admin", ST_ADMIN);
-            await Geth.ValueChain.eth.sendTransaction({from: Config.SimpleTokenFoundation, to: ST_ADMIN, value: diff});
+            console.log("Transfer", diff, "wei from foundation to ST admin", REGISTRAR);
+            await Geth.ValueChain.eth.sendTransaction({from: FOUNDATION, to: REGISTRAR, value: diff});
         }
-
+        console.warn("I SHOULD NOT BE DOING THIS ---> Finalize token contract");
         console.log(" Unlock ST admin account");
-        await Geth.ValueChain.eth.personal.unlockAccount(ST_ADMIN);
+        await Geth.ValueChain.eth.personal.unlockAccount( REGISTRAR, REGISTRAR_KEY );
 
         console.log(" Finalize token contract");
-        AssertEvent(await ST.methods.finalize().send({from: ST_ADMIN, gas: 40000}), "Finalized");
+        AssertEvent(await ST.methods.finalize().send({from: REGISTRAR, gas: 40000}), "Finalized");
         Assert.ok(await ST.methods.finalized().call(), "Finalize failed");
     }
 
@@ -115,48 +124,50 @@ async function stake(Member, StakeSizeST) {
     const mcST = await ST.methods.balanceOf(MC).call();
     console.log(" =", toST(mcST) );
     if (new BigNumber(mcST) < StakeSizeST) {
-        const diff = StakeSizeST.mul( 100 ).sub(mcST);
-
+        var diff = StakeSizeST.sub(mcST);
+        //TEST ->
+        //diff = diff.mul( 100 );
         const displayDiff = diff.dividedBy(new BigNumber( 10 ).pow( 18 ) ).toString();
         console.log(" Transfer", displayDiff, "ST grant to MC", MC);
-        Assert.ok(await ST.methods.transfer(MC, diff).call({from: Config.SimpleTokenFoundation}), "Transfer failed");
-        AssertEvent(await ST.methods.transfer(MC, diff).send({from: Config.SimpleTokenFoundation}), "Transfer");
+        Assert.ok(await ST.methods.transfer(MC, diff).call({from: FOUNDATION}), "Transfer failed");
+        AssertEvent(await ST.methods.transfer(MC, diff).send({from: FOUNDATION}), "Transfer");
     }
     
     console.log("Unlock MC account", MC);
     await Geth.ValueChain.eth.personal.unlockAccount(MC);
 
     console.log("Check staking allowance of MC", MC);
-    const CurrentAllowance = await ST.methods.allowance(MC, Config.ValueChain.Stake).call({from: MC});
+    const CurrentAllowance = await ST.methods.allowance(MC, STAKE_CONTRACT).call({from: MC});
     console.log(" =", toST(CurrentAllowance) );
     if (new BigNumber(CurrentAllowance) != StakeSizeST) {
 
         if (CurrentAllowance != 0) {
             console.log(" Reset stake allowance to 0 ST");
-            Assert.ok(await ST.methods.approve(Config.ValueChain.Stake, 0).call({from: MC}), "approve failed");
-            AssertEvent(await ST.methods.approve(Config.ValueChain.Stake, 0).send({from: MC}), "Approval");
+            Assert.ok(await ST.methods.approve(STAKE_CONTRACT, 0).call({from: MC}), "approve failed");
+            AssertEvent(await ST.methods.approve(STAKE_CONTRACT, 0).send({from: MC}), "Approval");
         }
 
         console.log(" Init stake allowance to", diplayStakeSizeST, "ST");
         console.log(" =", diplayStakeSizeST);
-        Assert.ok(await ST.methods.approve(Config.ValueChain.Stake, StakeSizeST).call({from: MC}), "approve failed");
+        Assert.ok(await ST.methods.approve(STAKE_CONTRACT, StakeSizeST).call({from: MC}), "approve failed");
         console.log("Going for approval");
-        AssertEvent(await ST.methods.approve(Config.ValueChain.Stake, StakeSizeST).send({from: MC}), "Approval");
+        AssertEvent(await ST.methods.approve(STAKE_CONTRACT, StakeSizeST).send({from: MC}), "Approval");
         console.log("...Approval Received");
     }
 
     
-    Assert.equal(await ST.methods.allowance(MC, Config.ValueChain.Stake).call({from: MC}), StakeSizeST.toString(10));
+    Assert.equal(await ST.methods.allowance(MC, STAKE_CONTRACT).call({from: MC}), StakeSizeST.toString(10));
 
     console.log("Increase the stake");
-    Assert.notEqual(await Geth.ValueChain.eth.getCode(Config.ValueChain.Stake), "0x");
-    const stakeContract = new StakeContract(Config.SimpleTokenFoundation, Config.ValueChain.Stake);
-    Assert.equal(await stakeContract._instance.methods.eip20Token().call(), Config.ValueChain.SimpleToken);
+    Assert.notEqual(await Geth.ValueChain.eth.getCode(STAKE_CONTRACT), "0x");
+    const stakeContract = new StakeContract(FOUNDATION, STAKE_CONTRACT);
+    Assert.equal(await stakeContract._instance.methods.eip20Token().call(), SIMPLETOKEN_CONTRACT);
 
     console.log("Check Stake admin", stakeContract._admin);
     const stakeAdmin = await stakeContract._instance.methods.adminAddress().call();
-    if ( !ST_ADMIN.equalsIgnoreCase( stakeAdmin ) ) {
+    if ( !REGISTRAR.equalsIgnoreCase( stakeAdmin ) ) {
         console.log("Existing Admin Address is ", stakeAdmin);
+        console.log("I should not be doing this ---->");
         console.log(" Seting the stake admin address to", stakeContract._admin);
         Assert.equalsIgnoreCase(await stakeContract._instance.methods.owner().call(), stakeContract._foundation);
         AssertEvent(await stakeContract._instance.methods.setAdminAddress(stakeContract._admin).send({from: stakeContract._foundation}), "AdminAddressChanged");
@@ -164,12 +175,7 @@ async function stake(Member, StakeSizeST) {
     }
 
     console.log("Check stake transfer");
-    // const SimpleTokenStakeJson = require("./contracts/SimpleTokenStake.json").contracts["SimpleTokenStake.sol:SimpleTokenStake"];
-    // const stakeInstance = new Geth.ValueChain.eth.Contract(JSON.parse(SimpleTokenStakeJson.abi), Config.ValueChain.Stake);
-    // stakeInstance.setProvider(Geth.ValueChain.currentProvider);
-    // const success = await stakeInstance.methods.increaseStake(StakeSizeST).call({from: MC});
-    // console.log(success);
-    Assert.ok(await ST.methods.transferFrom(MC, Config.ValueChain.Stake, 1).call({from: Config.ValueChain.Stake}), "transferFrom failed");
+    Assert.ok(await ST.methods.transferFrom(MC, STAKE_CONTRACT, 1).call({from: STAKE_CONTRACT}), "transferFrom failed");
 
     console.log("....Transfer check passed.");
 
@@ -228,7 +234,7 @@ async function stake(Member, StakeSizeST) {
     console.log("Success.");
 }
 
-stake(Config.Members[ 0 ], new BigNumber(10).pow( 23 ) )
+stake(Config.Members[ 0 ], new BigNumber(10).pow( 18 ).mul( 10 ) )
     .catch(err => {
         console.log(err.stack);
         process.exit(1);
