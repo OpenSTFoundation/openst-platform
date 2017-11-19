@@ -200,6 +200,7 @@ async function stake(Member, StakeSizeST) {
 
     console.log("Stake", diplayStakeSizeST, "ST");
     const stakeTX = await stakeContract.stake(MC, Member.UUID, StakeSizeST);
+    console.log("stakeTX" , JSON.stringify( stakeTX ) );
 
     AssertEvent(stakeTX, "MintingIntentDeclared");
 
@@ -234,7 +235,7 @@ async function stake(Member, StakeSizeST) {
     console.log("Success.");
 }
 
-stake(Config.Members[ 0 ], new BigNumber(10).pow( 18 ).mul( 10 ) )
+stake(Config.Members[ 0 ], new BigNumber(10).pow( 18 ).mul( 1 ) )
     .catch(err => {
         console.log(err.stack);
         process.exit(1);

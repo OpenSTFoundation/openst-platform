@@ -13,43 +13,23 @@ const Web3 = require("web3")
       ,reqPrefix = ".."
       ,logger = require(reqPrefix + "/helpers/CustomConsoleLogger")
       ,coreConstants = require(reqPrefix + '/config/core_constants')
-      ,MintingIntentHandler = require(reqPrefix + "/services/mintingIntentHandler")
+
+      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDRESS
+      ,REGISTRAR_ADDRESS = coreConstants.OST_REGISTRAR_ADDRESS
+      ,REGISTRAR_KEY = coreConstants.OST_REGISTRAR_SECRET_KEY || ""
+      ,STAKE_CONTRACT = coreConstants.OST_STAKE_CONTRACT_ADDRESS
+
+      ,StakeContract = require( reqPrefix + '/lib/stakeContract')
+      ,UtilityToken = require(reqPrefix + '/lib/bt')
+
 ;
 
 
 const valueChain = new Web3( coreConstants.OST_GETH_VALUE_CHAIN_WS_PROVIDER );
 
-const simpleTokenContract = (function () {
-  const ContractJson = require( reqPrefix + "/contracts/SimpleToken.json")
-        ,contractAddress = coreConstants.OST_SIMPLETOKEN_CONTRACT_ADDRESS
-        ,contractAbi = JSON.parse( ContractJson.contracts["SimpleToken.sol:SimpleToken"].abi )
-        ,contract = new valueChain.eth.Contract( contractAbi, contractAddress )
-  ;
-  contract.setProvider( valueChain.currentProvider );
-
-  var pingCnt = 0;
-  var fn = function () {
-    return contract.methods.symbol().call()
-      .then( symbol => {
-        console.log("symbol" , symbol , "pingCnt", ++pingCnt);
-        setTimeout(function () {
-          fn();
-        }, 10000);
-      })
-      .catch(reason => {
-        throw "----- Connection Issue -----";
-      });
-  };
-
-  // fn();
-
-
-  return contract;
-})();
-
 const stakingContract = (function () {
   const ContractJson = require( reqPrefix + "/contracts/Staking.json")
-        ,contractAddress = coreConstants.OST_STAKE_CONTRACT_ADDRESS
+        ,contractAddress = STAKE_CONTRACT
         ,contractAbi = JSON.parse( ContractJson.contracts["Staking.sol:Staking"].abi )
         ,contract = new valueChain.eth.Contract( contractAbi, contractAddress )
   ;
@@ -67,7 +47,6 @@ const registrar = module.exports = {
   ,valueChain: valueChain
   ,eventProcessingDelay: 100
   ,init: function () {
-    this.bindSTEvents();
     this.bindStakeEvents();
   }
   //Generic Method to log event subscription error
@@ -93,34 +72,6 @@ const registrar = module.exports = {
     );
 
   }
-
-  ,simpleTokenContract: simpleTokenContract
-  ,bindSTEvents: function () {
-    if ( !registrar.simpleTokenContract.events.Approval ) {
-      logger.error("Approval event missing in SimpleToken Contract");
-    } else {
-      logger.log("bindSTEvents binding Approval");
-      registrar.simpleTokenContract.events.Approval({})
-        .on('error', (errorObj =>{
-          logger.win("error :: Approval");
-          registrar.onEventSubscriptionError( errorObj );
-        }))
-        .on('data', (eventObj => {
-          logger.win("data :: Approval");
-          registrar.onSimpleTokenApprovalReceived( eventObj );
-        }))
-        .on('changed', (eventObj => {
-          logger.win("changed :: Approval");
-          registrar.onSimpleTokenApprovalReceived( eventObj );
-        }))
-    }
-    logger.log("bindSTEvents done");
-  }
-  ,onSimpleTokenApprovalReceived: function ( eventObj ) {
-    this.describeEvent( eventObj , "SimpleToken");
-  }
-
-
   ,stakingContract: stakingContract
   ,bindStakeEvents: function () {
     if ( !registrar.stakingContract.events.MintingIntentDeclared ) {
@@ -182,6 +133,8 @@ const registrar = module.exports = {
       logger.error(eventId, " has already been queued");
       return;
     }
+    
+
 
     //Create intent handler
     const _handler = new MintingIntentHandler( eventObj, stakingContract );
@@ -212,6 +165,7 @@ const registrar = module.exports = {
     const _handler = handlerQueue[ eventId ];
 
     if ( !_handler ) {
+      logger.info("updateIntent :: _handler is null");
       return;
     }
 
@@ -262,16 +216,224 @@ const registrar = module.exports = {
 
     handlerQueue[ eventId ] = null;
 
-    //Just for the sake of it.
-    if ( _handler.isScheduled ) {
-      _handler.cancelProcessing();  
-    }
+    // //Just for the sake of it.
+    // if ( _handler.isScheduled ) {
+    //   _handler.cancelProcessing();  
+    // }
     
   }
 };
 
 
+const MintingIntentHandler = function ( eventObj, stakingContract ) {
+  this.setEventData( eventObj );
+  this.stakingContract = stakingContract;
+};
 
+MintingIntentHandler.prototype = {
+  constructor: MintingIntentHandler
+  ,stakingContract : null
+  
+  ,timer: -1
+  ,isScheduled: false
+
+  ,eventObj: null
+  ,setEventData: function ( eventObj ){
+    this.eventObj = eventObj;
+  }
+
+  ,onProcessCallback: null
+  ,setOnProcessCallback: function ( callback ) {
+    this.onProcessCallback = callback;
+  }
+
+  ,isValid: function () {
+    //Note: Always log the reason is calling an event invalid.
+
+    if( !this.eventObj ) {
+      logger.warn("Event Invalid :: eventObj is null ");
+      return false;
+    } 
+    else if ( this.eventObj.removed ) {
+      logger.warn("Event Invalid :: removed", this.getEventDescription() );
+      return false;
+    }
+
+    return true;
+  }
+  ,scheduleProcessing: function ( timeInMilliSec ) {
+    var oThis = this;
+    if ( oThis.isScheduled ) {
+      logger.warn("MintingIntentHandler :: scheduleProcessing :: Processing is already scheduled.", this.getEventDescription() );
+      return;
+    }
+    oThis.isScheduled = true;
+    // oThis.processRequest();
+    oThis.timer = setTimeout(function () {
+      oThis.processRequest();
+    }, timeInMilliSec);
+  }
+  ,cancelProcessing: function () {
+    if ( !this.isScheduled ) {
+      logger.warn("MintingIntentHandler :: cancelProcessing :: Processing is NOT scheduled.", this.getEventDescription() );
+      return;
+    }
+    clearTimeout( this.timer );
+    this.isScheduled = false;
+    this.timer = -1;
+  }
+  ,processRequest: function () {
+    const oThis = this
+          ,returnValues = this.eventObj.returnValues
+          ,uuid                 = returnValues._uuid
+          ,staker               = returnValues._staker
+          ,stakerNonce          = returnValues._stakerNonce
+          ,amountST             = returnValues._amountST
+          ,amountUT             = returnValues._amountUT
+          ,escrowUnlockHeight   = returnValues._escrowUnlockHeight
+          ,mintingIntentHash    = returnValues._mintingIntentHash
+
+          ,foundation = coreConstants.OST_FOUNDATION_ADDRESS
+          ,stakingContractAddress = coreConstants.OST_STAKE_CONTRACT_ADDRESS
+    ;
+    if ( !this.isValid() ) {
+      logger.warn("MintingIntentHandler :: processRequest :: Intent is not valid.", this.getEventDescription() );
+      return;
+    }
+    logger.info("MintingIntentHandler :: processRequest :: Processing Started.", this.getEventDescription() );
+
+    
+    logger.step("Verifying stakingContract registrar");
+    oThis.stakingContract.methods.adminAddress().call()
+    .catch(  error => {
+      logger.error( error.message );
+      logger.log( error );
+      throw "stakingContract registrar verification failed";
+    })
+    .then(stakeAdmin => {
+      stakeAdmin = stakeAdmin.toLowerCase();
+      var registrarAddress = coreConstants.OST_REGISTRAR_ADDRESS;
+      if ( stakeAdmin != registrarAddress ) {
+        throw "stakingContract registrar verification failed";
+      }
+      logger.win("stakingContract registrar verification passed");
+      return true;
+    })
+    .then(isAdminValid => {
+      logger.step("Fetching UtilityToken(ERC20) Address");
+      return oThis.getStakerERC20Address( staker );
+    })
+    .then(utilityTokenAddress => {
+      //@Kedar. If I comment this block, events are received if stake is done more than once.
+      //  But, this is the main part of this script.
+      //  Whats happening different here: 
+      //  This is first time time in this script that we are talking to utility chain. 
+      //  The rest of the script only listens & talks to Value Chain.
+      //  Only one other script talks to both chains. test/test_staking.js
+      //  The difference is that test/test_staking.js uses RPC to talk to both chains.
+      //  This script talks to ValueChain over ws & speaks to UtilityChain over RPC.
+      //
+      //  How to test it:
+      //      tools/stakeAndMint.js expects this script to perform the operation. Hence, we can not use it.
+      //      However, test/test_staking.js does the operation below on its own.
+      //      test/test_staking.js will fire the same events as tools/stakeAndMint.js
+      //      If this block is uncommented, the registrar will race with test/test_staking.js
+      //      Only one of them will successed. Other script will fail.
+      //
+      //    Here is what I do, if this block is uncommented.
+      //      I run tools/stakeAndMint.js the first time & test/test_staking.js.
+      //
+      //  Important: 
+      //      If Staking goes through and mint is not performed, 
+      //      you will have to redeploy the contracts and UtilityToken
+      //      OR create a new member company.
+      //    EveryTime You run any deploy script:
+      //      Copy the values from config.json to open_st_env_vars.sh and source it.
+      //
+      //    On the other hand, 
+      //      its ok if mint goes through & processStaking & processMinting are not performed.
+      //      This will happen if you are running test/test_staking.js & registrar (this script) 
+      //      mints before the test_staking script.
+      //
+      //    Short-Cut for If Staking goes through and mint is not performed scenario
+      //      Copy the transaction receipt you see on the console.
+      //      Open services/mintingIntentHandler.js (Currently not used by this script)
+      //      Search for: If in development, the registrar fails, uncomment and use below code.
+      //      Put in the transactionReceipt
+      //      run the script from console: node service/mintingIntentHandler.js
+      //      It will perform minting & tools/stakeAndMint.js (if running) would complete error free.
+      //    
+      //    If possible, 
+      //      Please host chains on your system & run registrar.
+      //      Run tools/stakeAndMint.js from other system connecting to your system.
+      //      I am guessing, it has something to do with how web3 manages connections.
+      //    
+      //  Hope you find the solution!
+      //
+
+
+      logger.win("received utilityTokenAddress", utilityTokenAddress);
+      logger.step("Minting UtilityToken");
+      const utilityToken = new UtilityToken(staker, utilityTokenAddress);
+      return utilityToken.mint( uuid, staker, stakerNonce, amountST, amountUT, escrowUnlockHeight, mintingIntentHash);
+    })
+    .then(mintEvent => {
+      logger.win("Minting Intent has been Confirmed for mintingIntentHash" , mintingIntentHash);
+      oThis.triggerProcessCallback( true );
+    })
+    .catch( (error) => { 
+      logger.error( error.message, oThis.getEventDescription());
+      //Always mark request as complete.
+      oThis.triggerProcessCallback( false );
+    })
+  }
+  ,triggerProcessCallback: function ( success ) {
+    this.stakingContract = null;
+    this.isScheduled = false;
+    this.onProcessCallback && this.onProcessCallback( this.eventObj, success);
+    this.eventObj = null;
+    this.onProcessCallback = null;
+
+  }
+  ,getEventDescription: function () {
+    return "IntentHandler EventId: " + this.eventObj.id + " transactionHash: " + this.eventObj.transactionHash;
+  }
+  ,getStakerERC20Address: function ( staker ) {
+    //THIS IS TEMP CODE. THE ACTUAL LOGIC NEEDS TO COME HERE. LCT - Light Coin.
+    return new Promise(function (resolve,reject) {
+      const Config = require( reqPrefix + '/config.json');
+      var erc20 = null;
+      Config.Members.some(function ( member ) {
+        if ( member.Reserve.toLowerCase() == staker.toLowerCase() ) {
+          erc20 = member.ERC20;
+          return true;
+        }
+      });
+      if ( erc20 ) {
+        logger.info("getStakerERC20Address :: staker", staker, " found erc20", erc20 );
+        resolve( erc20 );
+      } else {
+        reject("ERC20 not found for staker address " , staker);
+      }
+      
+    });
+  }
+};
+
+
+MintingIntentHandler.getMintingIntentDeclaredEventFromTransactionReceipt 
+= MintingIntentHandler.getEventFromTransactionReceipt
+= function ( receipt ) {
+  if ( !receipt ) {
+    return null;
+  }
+  const events = receipt.events;
+  if ( !events ) {
+    return null;
+  }
+  const mintingIntentDeclared = events.MintingIntentDeclared;
+  return mintingIntentDeclared || null;
+};
 
 
 registrar.init();
