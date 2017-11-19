@@ -92,6 +92,7 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
     const owner = req.query.owner;
     Promise.resolve(erc20.balanceOf(owner))
       .then(value => {
+        console.log("value", value);
         var _val = web3.utils.fromWei( value, "ether" ).toString();
         res.json({data: _val});
       })
@@ -168,9 +169,9 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
     res.json({data: auditLog[owner] || []});
   });
 
-  // router.get('/getAllTxDetails', function(req, res, next) { 
-  //   res.json( erc20.getAllTxDetails() );
-  // });
+  router.get('/getAllTxDetails', function(req, res, next) { 
+    res.json( erc20.getAllTxDetails() );
+  });
 
   return router;
 }
