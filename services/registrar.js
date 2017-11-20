@@ -13,6 +13,7 @@ const Web3 = require("web3")
       ,reqPrefix = ".."
       ,logger = require(reqPrefix + "/helpers/CustomConsoleLogger")
       ,coreConstants = require(reqPrefix + '/config/core_constants')
+      ,Geth = require(reqPrefix + '/lib/geth')
 
       ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDRESS
       ,REGISTRAR_ADDRESS = coreConstants.OST_REGISTRAR_ADDRESS
@@ -24,8 +25,7 @@ const Web3 = require("web3")
 
 ;
 
-
-const valueChain = new Web3( coreConstants.OST_GETH_VALUE_CHAIN_WS_PROVIDER );
+var valueChain = Geth.ValueChainWS;
 
 const stakingContract = (function () {
   const ContractJson = require( reqPrefix + "/contracts/Staking.json")
@@ -36,11 +36,6 @@ const stakingContract = (function () {
   contract.setProvider( valueChain.currentProvider );
   return contract;
 })();
-
-
-
-
-
 
 const registrar = module.exports = {
   _secret: coreConstants.OST_REGISTRAR_SECRET_KEY
