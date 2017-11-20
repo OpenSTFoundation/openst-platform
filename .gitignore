@@ -16,6 +16,9 @@ test/st-poa
 
 # Runtime data
 pids
+
+/.idea
+
 *.pid
 *.seed
 
