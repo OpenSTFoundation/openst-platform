@@ -160,7 +160,7 @@ function listAllMembers() {
   return new Promise( (resolve, reject) => {
     rl.prompt();
     const rlCallback = (line) => {
-      console.log("line", line);
+      console.log("listAllMembers :: line", line);
       line = line.trim().toLowerCase();
       switch ( line ) {
         case "exit":
@@ -178,7 +178,7 @@ function listAllMembers() {
         return;
       }
       console.log( rlCallback );
-      rl.close();
+      rl.removeListener("line", rlCallback);
       const member = Config.Members[ memberIndex ];
       resolve( member );
     };
@@ -189,17 +189,17 @@ function listAllMembers() {
 function confirmMember(member) {
   describeMember( member );
   console.log("\x1b[34m Are you sure you would like to continue with Staking And Minting ? Options:\x1b[0m");
-  console.log("\x1b[32m yes \x1b[0m\t" , "To Approve Deployment & Registration of UtilityToken");
+  console.log("\x1b[32m yes \x1b[0m\t" , "To continue with Staking And Minting");
   console.log("\x1b[31m no \x1b[0m\t" , "To quit the program");
   return new Promise( (resolve, reject) => {
     rl.prompt();
-    rl.on("line", (line) => {
+    const rlCallback = (line) => {
       console.log("confirmMember :: rl :: line", line);
       line = line.trim().toLowerCase();
       switch ( line ) {
         case "yes":
         case "y":
-          rl.close();
+          rl.removeListener("line", rlCallback);
           resolve( member );    
         break;
         case "no":
@@ -212,7 +212,8 @@ function confirmMember(member) {
         default:
           logger.error("Invalid Input. Supported Inputs: yes/no/exit");
       }
-    });
+    };
+    rl.on("line", rlCallback);
   });
 }
 
@@ -225,24 +226,58 @@ function getMemberSTBalance( member ) {
 }
 
 function askStakingAmount( bigNumBalance ) {
-  //TO DO: Open prompt and ask for amount here. Below is a temp code.
   return new Promise( (resolve, reject) => {
-    const amt = Number("1")
-          ,bigNumStakeAmount = toWeiST( amt );
-    ;
-    console.log("bigNumStakeAmount" , bigNumStakeAmount);
-    if ( bigNumStakeAmount > bigNumBalance ) {
-      throw ("Member does not have sufficient SimpleTokens to stake " + toDisplayST(bigNumStakeAmount) );
-    }
-
-    resolve( bigNumStakeAmount );
+    rl.prompt();
+    const rlCallback = (line) => {
+      console.log("askStakingAmount :: rl :: line", line);
+      line = line.trim().toLowerCase();
+      switch ( line ) {
+        case "exit":
+        case "bye":
+          logger.log("Staking Aborted. Bye");
+          process.exit(0);
+        break;
+      }
+      const amt = Number( line );
+      if ( isNaN( amt ) ) {
+        logger.error("amount is not a number. amount:", line);
+        return;
+      }
+      const bigNumStakeAmount = toWeiST( line );
+      console.log("bigNumStakeAmount" , bigNumStakeAmount);
+      if ( bigNumStakeAmount.cmp( bigNumBalance ) > 0 ) {
+        logger.error("Member does not have sufficient SimpleTokens to stake " + toDisplayST(bigNumStakeAmount) );
+        return;
+      }
+      rl.removeListener("line", rlCallback);
+      resolve( bigNumStakeAmount );
+    };
+    rl.on("line", rlCallback);
   });
 }
 
-function getPassphrase() {
-  //To DO: Open prompt and ask for passphrase
+function getPassphrase( selectedMember ) {
+  const hideConsoleString = "\x1b[8m";
+  const resetConsoleString = "\x1b[0m";
+  logger.step("Please provide member reserve passphrase.");
   return new Promise( (resolve, reject) => {
-    resolve("");
+    rl.setPrompt("Passphrase:" + hideConsoleString);
+    rl.prompt();
+    const rlCallback = ( passphrase ) => {
+      logger.step(resetConsoleString, "Unlocking Member Reserve on", VC);
+      Geth.ValueChain.eth.personal.unlockAccount(selectedMember.Reserve, passphrase)
+      .then(_ => {
+        logger.win("Member Reserve unlocked on", VC);
+        rl.removeListener("line", rlCallback);
+        resolve( passphrase );
+      })
+      .catch( reason => {
+        logger.error("Failed to unlock reserve.");
+        logger.error(reason.message);
+        logger.step("Please provide member reserve passphrase." , hideConsoleString);
+      });
+    };
+    rl.on("line", rlCallback);
   });
 }
 
@@ -360,7 +395,7 @@ function listenToUtilityToken( member, mintingIntentHash ) {
       logger.step("Validate", UC);
       return validateUtilityChain()
     })
-    // .then( listAllMembers )
+    .then( listAllMembers )
     .then(_ => {
       logger.win(UC, "Validated");
       logger.step("Confirm Member");
@@ -383,15 +418,11 @@ function listenToUtilityToken( member, mintingIntentHash ) {
     })
     .then( _ => {
       logger.win("Stake Contract Validated");
-      return getPassphrase();
+      return getPassphrase( selectedMember );
     })
     .then( passphrase => {
-      logger.step("Unlocking Member Reserve on", VC);
-      _passphrase = passphrase;
-      return Geth.ValueChain.eth.personal.unlockAccount(selectedMember.Reserve, passphrase);
-    })
-    .then( _ => {
       logger.win("Member Reserve unlocked on", VC);
+      _passphrase = passphrase;
       logger.step("Validate Current Allowance");
       return validateCurrentAllowance(selectedMember, stakedAmount) ;
     })
@@ -408,13 +439,15 @@ function listenToUtilityToken( member, mintingIntentHash ) {
             ,escrowUnlockHeight   = stakeReturnValues._escrowUnlockHeight
             ,nonce                = stakeReturnValues._stakerNonce
             ,stakeUT              = stakeReturnValues._amountUT
+            ,stakeST              = stakeReturnValues._amountST
       ;
       mintingIntentHash = stakeReturnValues._mintingIntentHash
 
       logger.info("Transaction Hash:", stakeTX.transactionHash);
       logger.info("EscrowUnlockHeight:", escrowUnlockHeight);
       logger.info("Nonce:", nonce);
-      logger.info("Staked Info", stakeUT);
+      logger.info("Staked SimpleToken", toDisplayST( stakeST ) );
+      logger.info("Staked UtilityToken", stakeUT);
       logger.info("MintingIntentHash", mintingIntentHash)
       logger.info("Transaction Receipt");
       console.log("\n------------------", JSON.stringify( stakeTX ), "\n------------------" );
