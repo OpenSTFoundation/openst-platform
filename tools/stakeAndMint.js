@@ -274,7 +274,7 @@ function getPassphrase( selectedMember ) {
       .catch( reason => {
         logger.error("Failed to unlock reserve.");
         logger.error(reason.message);
-        logger.step("Please provide member reserve passphrase." , hideConsoleString);
+        logger.step("Please provide correct member reserve passphrase." , hideConsoleString);
       });
     };
     rl.on("line", rlCallback);
