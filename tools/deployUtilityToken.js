@@ -126,12 +126,12 @@ function confirmDeploy( member ) {
 
 function deployUtilityToken( member ) {
   logger.step("Unlocking REGISTRAR, REGISTRAR_ADDRESS:", REGISTRAR_ADDRESS);
-  return Geth.UtilityChain.eth.personal.unlockAccount( member.Reserve, REGISTRAR_KEY)
+  return Geth.UtilityChain.eth.personal.unlockAccount( REGISTRAR_ADDRESS, REGISTRAR_KEY)
     .then(_ => {
       logger.win("Registrar Unlocked");
       logger.step("Deploying UtilityToken");
       return new UtilityToken(member.Reserve, member.ERC20)
-          .deploy(member.Symbol, member.Name, member.Decimals, member.ChainId);
+          .deploy(member.Symbol, member.Name, member.Decimals, member.ChainId, REGISTRAR_ADDRESS);
     })
     .then(address => {
       logger.win("UtilityToken Deployed Successfully!");
