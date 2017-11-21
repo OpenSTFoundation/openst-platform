@@ -293,8 +293,10 @@ function validateCurrentAllowance( member, stakedAmount) {
         if ( bigNumAllowance != 0 ) {
           logger.info("Resetting Allowance to 0");
           //Reset allowance
-          return ST.methods.approve(stakingContractAddress, 0).send({from: member.Reserve})
-            .then( _=> {
+          return ST.methods.approve(stakingContractAddress, 0).send({
+              from: member.Reserve,
+              gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+            }).then( _=> {
               logger.info("Current Allowance has been set to 0");
               return needsApproval;
             });
@@ -307,7 +309,10 @@ function validateCurrentAllowance( member, stakedAmount) {
         return true;
       }
       logger.info("Approving StakingContract with " , toDisplayST(stakedAmount));
-      return  ST.methods.approve(stakingContractAddress, stakedAmount).send({from: member.Reserve})
+      return  ST.methods.approve(stakingContractAddress, stakedAmount).send({
+        from: member.Reserve,
+        gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+      })
     })
     .then( _ => {
       return ST.methods.allowance(member.Reserve, stakingContractAddress).call({from: member.Reserve})
@@ -471,7 +476,10 @@ function listenToUtilityToken( member, mintingIntentHash ) {
       logger.win("Unlocked Successfully");
       logger.step("Process Minting")
       utilityToken = new UtilityToken(selectedMember.Reserve, selectedMember.ERC20);
-      return utilityToken._btInstance.methods.processMinting(mintingIntentHash).send({from: selectedMember.Reserve})      
+      return utilityToken._btInstance.methods.processMinting(mintingIntentHash).send({
+        from: selectedMember.Reserve,
+        gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+      })
     })
     .then( _ => {
       logger.win("Minting Completed!");

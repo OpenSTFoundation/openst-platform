@@ -98,7 +98,10 @@ async function stake(Member, StakeSizeST) {
         console.warn("I SHOULD NOT BE DOING THIS --->");
         console.log(" Set the ST admin address", REGISTRAR);
         Assert.equalsIgnoreCase(await ST.methods.owner().call(), FOUNDATION);
-        AssertEvent(await ST.methods.setAdminAddress( REGISTRAR ).send({from: FOUNDATION}), "AdminAddressChanged");
+        AssertEvent(await ST.methods.setAdminAddress( REGISTRAR ).send({
+            from: FOUNDATION,
+            gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+        }), "AdminAddressChanged");
         Assert.equalsIgnoreCase(await ST.methods.adminAddress().call(), REGISTRAR);
     }
 
@@ -116,7 +119,11 @@ async function stake(Member, StakeSizeST) {
         await Geth.ValueChain.eth.personal.unlockAccount( REGISTRAR, REGISTRAR_KEY );
 
         console.log(" Finalize token contract");
-        AssertEvent(await ST.methods.finalize().send({from: REGISTRAR, gas: 40000}), "Finalized");
+        AssertEvent(await ST.methods.finalize().send({
+            from: REGISTRAR,
+            gas: 40000,
+            gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+        }), "Finalized");
         Assert.ok(await ST.methods.finalized().call(), "Finalize failed");
     }
 
@@ -130,7 +137,10 @@ async function stake(Member, StakeSizeST) {
         const displayDiff = diff.dividedBy(new BigNumber( 10 ).pow( 18 ) ).toString();
         console.log(" Transfer", displayDiff, "ST grant to MC", MC);
         Assert.ok(await ST.methods.transfer(MC, diff).call({from: FOUNDATION}), "Transfer failed");
-        AssertEvent(await ST.methods.transfer(MC, diff).send({from: FOUNDATION}), "Transfer");
+        AssertEvent(await ST.methods.transfer(MC, diff).send({
+            from: FOUNDATION,
+            gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+        }), "Transfer");
     }
     
     console.log("Unlock MC account", MC);
@@ -144,14 +154,20 @@ async function stake(Member, StakeSizeST) {
         if (CurrentAllowance != 0) {
             console.log(" Reset stake allowance to 0 ST");
             Assert.ok(await ST.methods.approve(STAKE_CONTRACT, 0).call({from: MC}), "approve failed");
-            AssertEvent(await ST.methods.approve(STAKE_CONTRACT, 0).send({from: MC}), "Approval");
+            AssertEvent(await ST.methods.approve(STAKE_CONTRACT, 0).send({
+                from: MC,
+                gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+            }), "Approval");
         }
 
         console.log(" Init stake allowance to", diplayStakeSizeST, "ST");
         console.log(" =", diplayStakeSizeST);
         Assert.ok(await ST.methods.approve(STAKE_CONTRACT, StakeSizeST).call({from: MC}), "approve failed");
         console.log("Going for approval");
-        AssertEvent(await ST.methods.approve(STAKE_CONTRACT, StakeSizeST).send({from: MC}), "Approval");
+        AssertEvent(await ST.methods.approve(STAKE_CONTRACT, StakeSizeST).send({
+            from: MC,
+            gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+        }), "Approval");
         console.log("...Approval Received");
     }
 
@@ -170,7 +186,10 @@ async function stake(Member, StakeSizeST) {
         console.log("I should not be doing this ---->");
         console.log(" Seting the stake admin address to", stakeContract._admin);
         Assert.equalsIgnoreCase(await stakeContract._instance.methods.owner().call(), stakeContract._foundation);
-        AssertEvent(await stakeContract._instance.methods.setAdminAddress(stakeContract._admin).send({from: stakeContract._foundation}), "AdminAddressChanged");
+        AssertEvent(await stakeContract._instance.methods.setAdminAddress(stakeContract._admin).send({
+            from: stakeContract._foundation,
+            gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+        }), "AdminAddressChanged");
         Assert.equalsIgnoreCase(await stakeContract._instance.methods.adminAddress().call(), stakeContract._admin);
     }
 
@@ -229,7 +248,10 @@ async function stake(Member, StakeSizeST) {
     console.log("...Unlock MC successfull");
 
     console.log("Process minting on UtilityChain");
-    AssertEvent(await bt._btInstance.methods.processMinting(hashIntent).send({from: MC}), "Minted");
+    AssertEvent(await bt._btInstance.methods.processMinting(hashIntent).send({
+        from: MC,
+        gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+    }), "Minted");
     console.log("...Process minting on UtilityChain");
 
     console.log("Success.");

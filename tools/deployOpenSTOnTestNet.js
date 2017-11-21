@@ -224,8 +224,10 @@ function setSimpleTokenRegistrar( deployMeta ) {
       return deployMeta;
     }
     logInfo("Setting", _registrarName ,"Address to", REGISTRAR);
-    return ST.methods.setAdminAddress( REGISTRAR ).send({from: FOUNDATION })
-    .catch( reason =>  {
+    return ST.methods.setAdminAddress( REGISTRAR ).send({
+        from: FOUNDATION,
+        gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+      }).catch( reason =>  {
       logError("Failed to set", _registrarName, "Address");
       catchAndExit();
     })
@@ -307,7 +309,10 @@ function deployStakeContract( deployMeta ) {
     logInfo("Stake Contract deployed");
     logInfo("Setting Stake Contract Registrar Address");
     const stakeContract = new StakeContract(FOUNDATION, stake)
-    return stakeContract._instance.methods.setAdminAddress( REGISTRAR ).send({from: FOUNDATION})
+    return stakeContract._instance.methods.setAdminAddress( REGISTRAR ).send({
+      from: FOUNDATION,
+      gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+    })
   })
   .then( _ =>{
     logWin("Stake Contract Admin Updated");
@@ -323,8 +328,10 @@ function finalizeSimpleTokenContract( deployMeta ) {
   logInfo("Unlocking", _registrarName);
   return Geth.ValueChain.eth.personal.unlockAccount( REGISTRAR, REGISTRAR_KEY )
   .then( _ => {
-    return ST.methods.finalize().send({from: REGISTRAR})
-    .then( receipt => {
+    return ST.methods.finalize().send({
+      from: REGISTRAR,
+      gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+    }).then( receipt => {
       if ( ("Finalized") in receipt.events ) {
         logWin("SimpleTokenContract Finalized");
         return deployMeta;
@@ -351,7 +358,10 @@ function fundMember( member ) {
     })
     .then(_ => {
       logStep("Grant", member.Name, "with" , grantInST.toString( 10 ), "ST");
-      return ST.methods.transfer( member.Reserve, grant.toString( 10 ) ).send({from: FOUNDATION});
+      return ST.methods.transfer( member.Reserve, grant.toString( 10 ) ).send({
+        from: FOUNDATION,
+        gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+      });
     })
     .then(_ => {
       logWin(member.Name, "has been granted with", grantInST.toString( 10 ), "ST");
