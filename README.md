@@ -67,7 +67,7 @@ DEVELOPMENT STEPS
     source test/open_st_env_vars.sh
     node tools/deployOpenSTOnTestNet.js
 
-    # Deploys simpletoken, stake contract on value chain
+    # Deploys SimpleToken, Stake contract on value chain
     # Funds Member Companies
     # Populates below env variables
     export OST_SIMPLETOKEN_CONTRACT_ADDRESS=''
