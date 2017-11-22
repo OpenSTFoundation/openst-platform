@@ -40,7 +40,7 @@ At the highest level this diagram represents past work and future roadmap items.
 
 ![](docs/roadmap.png)
 
-STEPS
+DEVELOPMENT STEPS
 
 1) Clean up the test/open_st_env_vars.sh except fixed constants
     source test/open_st_env_vars.sh
