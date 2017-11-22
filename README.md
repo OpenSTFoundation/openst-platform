@@ -1,3 +1,9 @@
+# env vars
+export OST_GETH_UTILITY_RPC_PROVIDER='http://127.0.0.1:8545'
+export OST_GETH_UTILITY_WS_PROVIDER='ws://127.0.0.1:8546'
+export OST_GETH_VALUE_RPC_PROVIDER='http://127.0.0.1:8645'
+export OST_GETH_VALUE_WS_PROVIDER='ws://127.0.0.1:8646'
+
 # [OpenST platform](https://simpletoken.org) - bridging cryptocurrencies and mainstream consumer apps
 
 **warning: this is pre-alpha software and under heavy development**
