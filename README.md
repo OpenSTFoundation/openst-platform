@@ -44,6 +44,11 @@ DEVELOPMENT STEPS
 
 1) Clean up the test/open_st_env_vars.sh except fixed constants
     source test/open_st_env_vars.sh
+    # populates below env variables
+
+    export OST_FOUNDATION_ADDRESS=''
+    export OST_REGISTRAR_ADDRESS=''
+    export OST_REGISTRAR_SECRET_KEY=''
 
 2) cd test/
    ./init_keys.sh
@@ -62,8 +67,11 @@ DEVELOPMENT STEPS
     source test/open_st_env_vars.sh
     node tools/deployOpenSTOnTestNet.js
 
-    #deploys simpletoken, stake contract on value chain
-    #Funds Member Companies
+    # Deploys simpletoken, stake contract on value chain
+    # Funds Member Companies
+    # Populates below env variables
+    export OST_SIMPLETOKEN_CONTRACT_ADDRESS=''
+    export OST_STAKE_CONTRACT_ADDRESS=''
 
 7) On Utility Chain Machine
     source test/open_st_env_vars.sh
