@@ -450,8 +450,6 @@ function updateConfig() {
   .then( _ => {
     logWin("open_st_env_vars updated.");
   });
-
-
 }
 
 //Self Executing Function.
