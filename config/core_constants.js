@@ -15,7 +15,7 @@ function define(name, value) {
   });
 }
 
-const are_we_ready_to_use_env_var = false; //@Abhay: Change this when we are :).
+const are_we_ready_to_use_env_var = false;
 
 const oneGW = '0x3B9ACA00' // taken from http://ethgasstation.info/ ---- 1 gwei
   , fiveGW = '0x12A05F200'; // 5 GWei

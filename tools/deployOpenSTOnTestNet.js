@@ -17,19 +17,20 @@ const SimpleToken = require('../lib/simpleTokenContract');
 const StakeContract = require('../lib/stakeContract');
 const Geth = require("../lib/geth");
 
-const SimpleTokenJson = require("../contracts/SimpleToken.json");
-const Config = require(process.argv[2] || '../config.json');
+const SimpleTokenJson = require("../contracts/SimpleToken.json")
+     , Config = require(process.argv[2] || '../config.json')
+     , populateEnvVars = require("../lib/populate_env_vars.js");
+
 const coreConstants = require('../config/core_constants')
       ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDRESS
       ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDRESS
       ,REGISTRAR_KEY = coreConstants.OST_REGISTRAR_SECRET_KEY
 ;
 
-//These addresses may change during the script. So, these should not be const.
+// These addresses may change during the script. So, these should not be const.
 var SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLETOKEN_CONTRACT_ADDRESS
     ,STAKE_CONTRACT = coreConstants.OST_STAKE_CONTRACT_ADDRESS
 ;
-
 
 
 const CONSOLE_RESET = "\x1b[0m";
@@ -428,16 +429,30 @@ function updateConfig() {
 
   return new Promise( (resolve,reject) => {
     FS.writeFile(Path.join(__dirname, '/../config.json'), json, err => err ? reject(err) : resolve() );
-  })          
-  .catch( reason =>  {
+  })
+ .catch( reason =>  {
     logError("Failed to update Config file!");
     catchAndExit( reason );
   })
   .then( _ => {
     logWin("Config updated.");
+  })
+  .then (_ => {
+    populateEnvVars.renderAndPopulate('contract', {
+    ost_simpletoken_contract_address: SIMPLETOKEN_CONTRACT,
+    ost_stake_contract_address: STAKE_CONTRACT
+    });
+  })
+  .catch( reason =>  {
+    logError("Failed to populate open_st_env_vars.sh file!");
+    catchAndExit( reason );
+  })
+  .then( _ => {
+    logWin("open_st_env_vars updated.");
   });
-}
 
+
+}
 
 //Self Executing Function.
 (function () {

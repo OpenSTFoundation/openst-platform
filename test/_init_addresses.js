@@ -7,15 +7,16 @@ const _addresses = {
   "members": []
 };
 
-const Config = require(process.argv[3] || '../config.json');
-const poaGenesisValue = require("./poa-genesis-value.json");
-const poaGenesisUtility = require("./poa-genesis-utility.json");
+const Config = require(process.argv[3] || '../config.json')
+  , poaGenesisValue = require("./poa-genesis-value.json")
+  , poaGenesisUtility = require("./poa-genesis-utility.json")
+  , populateEnvVars = require("../lib/populate_env_vars.js");
 
 function main( addressFile ) {
   const _path = Path.join(__dirname, addressFile );
   const fileContent = fs.readFileSync( _path, "utf8");
   fileContent.toString().split('\n').forEach(function (line, index) {
-    
+
     var thisAddress = line.replace("Address: {", "0x").replace("}","").trim();
     if ( thisAddress.length < 40 ) {
       return;
@@ -36,12 +37,18 @@ function main( addressFile ) {
   });
   writeJsonToFile( Config, '/../config.json', 4);
 
+  populateEnvVars.renderAndPopulate('address', {
+      ost_foundation_address: _addresses.foundation,
+      ost_registrar_address: _addresses.admin
+    }
+  );
+
 }
 
 function updateFoundationAddress( foundation ) {
   //Update Config.
   Config.SimpleTokenFoundation = foundation;
-  
+
   //Update poa-genesis-value
   updateGenesisAlloc( poaGenesisValue, foundation, "0x200000000000000000000000000000000000000000000000000000000000000");
   writeJsonToFile(poaGenesisValue, "./poa-genesis-value.json");

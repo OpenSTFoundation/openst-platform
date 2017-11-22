@@ -39,3 +39,44 @@ Milestone 5 : Consolidation of OpenST as open platform (2019)
 At the highest level this diagram represents past work and future roadmap items.  All milestones and work items are indicative only.
 
 ![](docs/roadmap.png)
+
+STEPS
+
+1) Clean up the test/open_st_env_vars.sh except fixed constants
+    source test/open_st_env_vars.sh
+
+2) cd test/
+   ./init_keys.sh
+
+3) source test/open_st_env_vars.sh
+
+4) Open a New Terminal
+    cd test
+    ./run_utility_chain.sh
+
+5) Open a new Terminal and Run
+    cd test
+    ./run_value_chain.sh
+
+6) On Value Chain machine
+    source test/open_st_env_vars.sh
+    node tools/deployOpenSTOnTestNet.js
+
+    #deploys simpletoken, stake contract on value chain
+    #Funds Member Companies
+
+7) On Utility Chain Machine
+    source test/open_st_env_vars.sh
+    node tools/deployUtilityToken.js
+
+    #deploys Utility Token Contract
+
+8) Open a new terminal and run
+    source test/open_st_env_vars.sh
+    node services/registrar.js
+
+9) node tools/stakeAndMint.js
+
+10) To Host APIs
+    source test/open_st_env_vars.sh
+    npm start
