@@ -11,7 +11,6 @@
  */
 const FS = require('fs')
       ,Path = require('path')
-      ,BigNumber = require('bignumber.js')
       ,UtilityToken = require('../lib/bt')
       ,StakeContract = require('../lib/stakeContract')
       ,Geth = require("../lib/geth")
