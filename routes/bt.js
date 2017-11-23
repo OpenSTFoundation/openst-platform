@@ -1,10 +1,21 @@
 const Assert = require('assert');
 const Express = require('express');
 const RP = require('request');
-
-const ERC20 = require('../lib/erc20contract');
-const Stake = require('../lib/stakeContract');
 const BigNumber = require('bignumber.js');
+const Web3 = require('web3');
+
+const reqPrefix     = ".."
+      ,ERC20        = require(reqPrefix + '/lib/erc20contract')
+      ,UtilityToken = require(reqPrefix + "/lib/contract_interact/UtilityToken")
+      ,Stake        = require(reqPrefix + '/lib/stakeContract')
+      ,web3         = new Web3()
+;
+
+//Old things. To be removed.
+const BrandedTokenJson = require(reqPrefix + "/contracts/UtilityToken.json");
+const BrandedTokenContract = BrandedTokenJson.contracts['UtilityToken.sol:UtilityToken'];
+
+
 
 
 /** Construct a new route for a specific BT.
@@ -12,9 +23,15 @@ const BigNumber = require('bignumber.js');
  * @param {string} callbackUrl The callback URL for confirmed transactions.
  * @param {object?} callbackAuth Optional authentication object for callback requests.
  */
-module.exports = function(erc20, callbackUrl, callbackAuth) {
-  const Web3 = require('web3'); // eslint-disable-line
-  const web3 = new Web3(); // eslint-disable-line
+module.exports = function( member ) {
+  const btContractInteract  = new UtilityToken( member )
+        ,callbackUrl        = member.Callback
+        ,callbackAuth       = member.CallbackAuth
+  ;
+
+//Old things. To be removed.
+  const erc20 = new ERC20( member.Reserve, BrandedTokenContract, member.ERC20);
+
 
   Assert.ok(erc20 instanceof ERC20, `erc20 must be an instance of ERC20`);
   Assert.strictEqual(typeof callbackUrl, 'string', `callbackUrl must be of type 'string'`);
@@ -49,41 +66,42 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
     return new BigNumber( weiValue );
   }
 
-  router.get('/reserve', function(req, res, next) {
-    res.json({data: erc20._reserve});
+  router.get('/owner', function(req, res, next) {
+    btContractInteract.getOwner()
+      .then( response => {
+        res.json( response );   
+      })
+      .catch(next);
   });
 
   router.get('/name', function(req, res, next) {
-    Promise.resolve(erc20.name())
-      .then(value => {
-        res.json({data: value});
+    btContractInteract.getName()
+      .then( response => {
+        res.json( response );   
       })
       .catch(next);
   });
 
   router.get('/symbol', function(req, res, next) {
-
-    Promise.resolve(erc20.symbol())
-      .then(value => {
-        console.log("value",value);
-        res.json({data: value});
+    btContractInteract.getSymbol()
+      .then( response => {
+        res.json( response );   
       })
       .catch(next);
   });
 
   router.get('/decimals', function(req, res, next) {
-    Promise.resolve(erc20.decimals())
-      .then(value => {
-        res.json({data: value});
+    btContractInteract.getDecimals()
+      .then( response => {
+        res.json( response );   
       })
       .catch(next);
   });
 
   router.get('/totalSupply', function(req, res, next) {
-    Promise.resolve(erc20.totalSupply())
-      .then(value => {
-        var _val = web3.utils.fromWei( value, "ether" ).toString();
-        res.json({data: _val});
+    btContractInteract.getTotalSupply()
+      .then( response => {
+        res.json( response );   
       })
       .catch(next);
   });
@@ -171,6 +189,14 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
 
   router.get('/getAllTxDetails', function(req, res, next) { 
     res.json( erc20.getAllTxDetails() );
+    next();
+  });
+
+  router.get('/newkey', function(req, res, next) {
+    Geth.UtilityChain.eth.personal.newAccount().then(x => {
+        res.json({data: x});
+    })
+    .catch(next);
   });
 
   return router;

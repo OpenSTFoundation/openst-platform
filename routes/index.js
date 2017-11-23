@@ -8,12 +8,6 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.get('/newkey', function(req, res, next) {
 
-  Geth.UtilityChain.eth.personal.newAccount().then(x => {
-      res.json({data: x});
-    })
-    .catch(next);
-});
 
 module.exports = router;
