@@ -18,9 +18,9 @@ const FS = require('fs')
       ,logger = require("./helpers/CustomConsoleLogger")
       ,Config = require(process.argv[2] || (reqPrefix + '/config.json') )
       ,coreConstants = require(reqPrefix + '/config/core_constants')
-      ,stakingContractAddress = coreConstants.OST_STAKE_CONTRACT_ADDRESS
-      ,FOUNDATION_ADDRESS = coreConstants.OST_FOUNDATION_ADDRESS
-      ,REGISTRAR_ADDRESS = coreConstants.OST_REGISTRAR_ADDRESS
+      ,stakingContractAddress = coreConstants.OST_STAKING_CONTRACT_ADDR
+      ,FOUNDATION_ADDRESS = coreConstants.OST_FOUNDATION_ADDR
+      ,REGISTRAR_ADDRESS = coreConstants.OST_REGISTRAR_ADDR
       ,UC = "UtilityChain"
       ,UC_MAIN_NET_ID = 20171010
       ,VC_MAIN_NET_ID = 20171011
@@ -49,7 +49,7 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
 
 const ST = (function () {
   const ContractJson = require( reqPrefix + "/contracts/SimpleToken.json")
-        ,contractAddress = coreConstants.OST_SIMPLETOKEN_CONTRACT_ADDRESS
+        ,contractAddress = coreConstants.OST_SIMPLE_TOKEN_CONTRACT_ADDR
         ,contractAbi = JSON.parse( ContractJson.contracts["SimpleToken.sol:SimpleToken"].abi )
         ,contract = new Geth.ValueChain.eth.Contract( contractAbi, contractAddress )
   ;
@@ -59,7 +59,7 @@ const ST = (function () {
 
 const stakingContract = (function () {
   const ContractJson = require( reqPrefix + "/contracts/Staking.json")
-        ,contractAddress = coreConstants.OST_STAKE_CONTRACT_ADDRESS
+        ,contractAddress = coreConstants.OST_STAKING_CONTRACT_ADDR
         ,contractAbi = JSON.parse( ContractJson.contracts["Staking.sol:Staking"].abi )
         ,contract = new Geth.ValueChain.eth.Contract( contractAbi, contractAddress )
   ;
@@ -352,7 +352,7 @@ function validateStakeContract ( stakeContract, member ) {
 }
 
 function listenToUtilityToken( member, mintingIntentHash ) {
-  const utilityChain = new Web3( coreConstants.OST_GETH_UTILITY_CHAIN_WS_PROVIDER );
+  const utilityChain = new Web3( coreConstants.OST_GETH_UTILITY_WS_PROVIDER );
   const utilityTokenContract = (function () {
     const ContractJson = require( reqPrefix + "/contracts/UtilityToken.json")
           ,contractAddress = member.ERC20

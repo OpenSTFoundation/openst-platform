@@ -13,11 +13,11 @@ const BigNumber = require('bignumber.js')
 const reqPrefix = "../.."
       ,coreConstants = require(reqPrefix + '/config/core_constants')
       ,Config = require(reqPrefix + "/config.json")
-      ,web3WsProvider = new Web3( coreConstants.OST_GETH_VALUE_CHAIN_WS_PROVIDER ) /* ValueChain WebSocket Address */
-      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDRESS
-      ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDRESS
-      ,SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLETOKEN_CONTRACT_ADDRESS
-      ,STAKE_CONTRACT = coreConstants.OST_STAKE_CONTRACT_ADDRESS
+      ,web3WsProvider = new Web3( coreConstants.OST_GETH_VALUE_WS_PROVIDER ) /* ValueChain WebSocket Address */
+      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDR
+      ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDR
+      ,SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLE_TOKEN_CONTRACT_ADDR
+      ,STAKE_CONTRACT = coreConstants.OST_STAKING_CONTRACT_ADDR
 ;
 
 
