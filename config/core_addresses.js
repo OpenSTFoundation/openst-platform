@@ -1,32 +1,33 @@
 "use strict";
 
 const core_abis = require('./core_abis')
-  , core_bins = require('./core_bins');
+  , core_bins = require('./core_bins')
+  , coreConstants = require('./core_constants');
 
 const allAddresses = {
   users: {
     foundation: {
-      address: process.env.OST_FOUNDATION_ADDRESS,
-      passphrase: process.env.OST_FOUNDATION_PASSPHRASE
+      address: coreConstants.OST_FOUNDATION_ADDR,
+      passphrase: coreConstants.OST_FOUNDATION_PASSPHRASE
     },
     registrar: {
-      address: process.env.OST_REGISTRAR_ADDRESS,
-      passphrase: process.env.OST_REGISTRAR_PASSPHRASE
+      address: coreConstants.OST_REGISTRAR_ADDR,
+      passphrase: coreConstants.OST_REGISTRAR_PASSPHRASE
     }
   },
   contracts: {
     simpleToken: {
-      address: process.env.OST_SIMPLE_TOKEN_CONTRACT_ADDR,
+      address: coreConstants.OST_SIMPLE_TOKEN_CONTRACT_ADDR,
       abi: core_abis.simpleToken,
       bin: core_bins.simpleToken
     },
     staking: {
-      address: process.env.OST_STAKING_CONTRACT_ADDR,
+      address: coreConstants.OST_STAKING_CONTRACT_ADDR,
       abi: core_abis.staking,
       bin: core_bins.staking
     },
     utilityToken: {
-      address: process.env.OST_UTILITY_TOKEN_CONTRACT_ADDR,
+      address: coreConstants.OST_UTILITY_TOKEN_CONTRACT_ADDR,
       abi: core_abis.utilityToken,
       bin: core_bins.utilityToken
     }

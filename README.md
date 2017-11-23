@@ -1,18 +1,3 @@
-# env vars
-export OST_GETH_UTILITY_RPC_PROVIDER='http://127.0.0.1:9546'
-export OST_GETH_UTILITY_WS_PROVIDER='ws://127.0.0.1:19546'
-export OST_GETH_VALUE_RPC_PROVIDER='http://127.0.0.1:8545'
-export OST_GETH_VALUE_WS_PROVIDER='ws://127.0.0.1:18545'
-export OST_SIMPLE_TOKEN_CONTRACT_ADDR=''
-export OST_STAKING_CONTRACT_ADDR=''
-export OST_UTILITY_TOKEN_CONTRACT_ADDR=''
-
-export OST_FOUNDATION_ADDRESS=''
-export OST_FOUNDATION_PASSPHRASE=''
-export OST_REGISTRAR_ADDRESS=''
-export OST_REGISTRAR_PASSPHRASE=''
-
-
 # [OpenST platform](https://simpletoken.org) - bridging cryptocurrencies and mainstream consumer apps
 
 **warning: this is pre-alpha software and under heavy development**
@@ -49,51 +34,59 @@ At the highest level this diagram represents past work and future roadmap items.
 
 ![](docs/roadmap.png)
 
-DEVELOPMENT STEPS
+STEPS
 
-1) Clean up the test/open_st_env_vars.sh except fixed constants
-    source test/open_st_env_vars.sh
-    # populates below env variables
+1)  In test/open_st_env_vars.sh, verify all the addressed if known else keep it blank
+    - source test/open_st_env_vars.sh
 
-    export OST_FOUNDATION_ADDRESS=''
-    export OST_REGISTRAR_ADDRESS=''
-    export OST_REGISTRAR_SECRET_KEY=''
+2) On Development only
+   - cd test/
+   - ./init_keys.sh
+   - populate OST_FOUNDATION_ADDR(SimpleTokenFoundation), OST_REGISTRAR_ADDR(ValueChain.Admin) from config.json to test/open_st_env_vars.sh
+   - source test/open_st_env_vars.sh
 
-2) cd test/
-   ./init_keys.sh
+3) On Development only
+    - Verify genesis test/poa-genesis-value.json
+    - Open a new Terminal and Run
+    - cd test
+    - ./run_value_chain.sh
 
-3) source test/open_st_env_vars.sh
+4) Verify test/poa-genesis-utility.json
+   - Open a New Terminal
+   - cd test
+   - ./run_utility_chain.sh
 
-4) Open a New Terminal
-    cd test
-    ./run_utility_chain.sh
+6) On development only - if simple contract is not deployed
+    - On value chain machine
+    - source test/open_st_env_vars.sh
+    - node test/deployOpenSTOnTestNet.js
+    - populate OST_SIMPLE_TOKEN_CONTRACT_ADDR in test/open_st_env_vars.sh from config.json
 
-5) Open a new Terminal and Run
-    cd test
-    ./run_value_chain.sh
-
-6) On Value Chain machine
-    source test/open_st_env_vars.sh
-    node test/deployOpenSTOnTestNet.js
-
-    # Deploys SimpleToken, Stake contract on value chain
+    # Deploys SimpleToken contract on value chain
     # Funds Member Companies
-    # Populates below env variables
-    export OST_SIMPLETOKEN_CONTRACT_ADDRESS=''
-    export OST_STAKE_CONTRACT_ADDRESS=''
 
-7) On Utility Chain Machine
-    source test/open_st_env_vars.sh
-    node test/deployUtilityToken.js
+7) If staking contract is not deployed on production
+    - On Value Chain machine
+    - source test/open_st_env_vars.sh
+    - node lib/deploy/staking.js
+    - From contract deployment receipt populate OST_STAKING_CONTRACT_ADDR in open_st_env_vars.sh
+    - Also populate staking contract address(config.Stake) in config.json
 
-    #deploys Utility Token Contract
+8) On Utility Chain Machine
+    - source test/open_st_env_vars.sh
+    - node lib/deploy/utility_token.js
+    - From contract deployment receipt populate OST_UTILITY_TOKEN_CONTRACT_ADDR in open_st_env_vars.sh
+    - Populate utility_token contract address(config.Members.ERC20) in config.json
+    - Populate UUID(config.Members.UUID) from console in config.json
 
-8) Open a new terminal and run
-    source test/open_st_env_vars.sh
-    node services/registrar.js
+9) Open a new terminal and run
+    - source test/open_st_env_vars.sh
+    - node services/registrar.js
 
-9) node tools/stakeAndMint.js
+10) For staking and minting
+   - source test/open_st_env_vars.sh
+   - node tools/stakeAndMint.js
 
-10) To Host APIs
+11) To Host APIs
     source test/open_st_env_vars.sh
     npm start

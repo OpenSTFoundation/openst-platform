@@ -13,13 +13,13 @@ const BigNumber = require('bignumber.js')
 
 const reqPrefix = "../.."
       ,coreConstants = require(reqPrefix + '/config/core_constants')
-      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDRESS
-      ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDRESS
-      ,SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLETOKEN_CONTRACT_ADDRESS
-      ,STAKE_CONTRACT = coreConstants.OST_STAKE_CONTRACT_ADDRESS
+      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDR
+      ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDR
+      ,SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLE_TOKEN_CONTRACT_ADDR
+      ,STAKE_CONTRACT = coreConstants.OST_STAKING_CONTRACT_ADDR
       ,Config = require( reqPrefix + "/config.json")
       ,Geth = require(reqPrefix + "/lib/geth")
-      ,web3WsProvider = new Web3( coreConstants.OST_GETH_UTILITY_CHAIN_WS_PROVIDER  )
+      ,web3WsProvider = new Web3( coreConstants.OST_GETH_UTILITY_WS_PROVIDER  )
       ,contractAbiJson = require(reqPrefix + "/contracts/UtilityToken.json")
       ,contractAbi = JSON.parse( contractAbiJson.contracts["UtilityToken.sol:UtilityToken"].abi )
 ;

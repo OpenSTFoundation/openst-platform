@@ -7,11 +7,11 @@ const StakeContract = require('../lib/stakeContract');
 const BT = require('../lib/bt');
 
 const coreConstants = require('../config/core_constants')
-      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDRESS
-      ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDRESS
-      ,REGISTRAR_KEY = coreConstants.OST_REGISTRAR_SECRET_KEY || ""
-      ,SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLETOKEN_CONTRACT_ADDRESS
-      ,STAKE_CONTRACT = coreConstants.OST_STAKE_CONTRACT_ADDRESS
+      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDR
+      ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDR
+      ,REGISTRAR_KEY = coreConstants.OST_REGISTRAR_PASSPHRASE || ""
+      ,SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLE_TOKEN_CONTRACT_ADDR
+      ,STAKE_CONTRACT = coreConstants.OST_STAKING_CONTRACT_ADDR
 ;
 
 const SimpleTokenJson = require("../contracts/SimpleToken.json");

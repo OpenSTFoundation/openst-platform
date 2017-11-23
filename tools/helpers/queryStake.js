@@ -10,10 +10,10 @@
 const reqPrefix = "../.."
       ,coreConstants = require(reqPrefix + '/config/core_constants')
       ,Geth = require(reqPrefix + "/lib/geth")
-      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDRESS
-      ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDRESS
-      ,SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLETOKEN_CONTRACT_ADDRESS
-      ,STAKE_CONTRACT = coreConstants.OST_STAKE_CONTRACT_ADDRESS
+      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDR
+      ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDR
+      ,SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLE_TOKEN_CONTRACT_ADDR
+      ,STAKE_CONTRACT = coreConstants.OST_STAKING_CONTRACT_ADDR
 ;
 
 

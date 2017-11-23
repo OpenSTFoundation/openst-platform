@@ -17,8 +17,8 @@ const FS = require('fs')
       ,logger = require("./helpers/CustomConsoleLogger")
       ,Config = require(process.argv[2] || '../config.json')
       ,coreConstants = require('../config/core_constants')
-      ,REGISTRAR_ADDRESS = coreConstants.OST_REGISTRAR_ADDRESS
-      ,REGISTRAR_KEY = coreConstants.OST_REGISTRAR_SECRET_KEY || ""
+      ,REGISTRAR_ADDRESS = coreConstants.OST_REGISTRAR_ADDR
+      ,REGISTRAR_KEY = coreConstants.OST_REGISTRAR_PASSPHRASE || ""
       ,readline = require('readline')
       ,UC = "UtilityChain"
       ,UC_MAIN_NET_ID = 1410
@@ -137,8 +137,8 @@ function deployUtilityToken( member ) {
       member.ERC20 = address;
       logger.step("Registering UtilityToken");
 
-      const FOUNDATION_ADDRESS = coreConstants.OST_FOUNDATION_ADDRESS
-            ,contractAddress = coreConstants.OST_STAKE_CONTRACT_ADDRESS
+      const FOUNDATION_ADDRESS = coreConstants.OST_FOUNDATION_ADDR
+            ,contractAddress = coreConstants.OST_STAKING_CONTRACT_ADDR
             ,stakeContract = new StakeContract(FOUNDATION_ADDRESS, contractAddress)
       ;
 

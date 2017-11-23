@@ -15,10 +15,10 @@ const Web3 = require("web3")
       ,coreConstants = require(reqPrefix + '/config/core_constants')
       ,Geth = require(reqPrefix + '/lib/geth')
 
-      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDRESS
-      ,REGISTRAR_ADDRESS = coreConstants.OST_REGISTRAR_ADDRESS
-      ,REGISTRAR_KEY = coreConstants.OST_REGISTRAR_SECRET_KEY || ""
-      ,STAKE_CONTRACT = coreConstants.OST_STAKE_CONTRACT_ADDRESS
+      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDR
+      ,REGISTRAR_ADDRESS = coreConstants.OST_REGISTRAR_ADDR
+      ,REGISTRAR_KEY = coreConstants.OST_REGISTRAR_PASSPHRASE || ""
+      ,STAKE_CONTRACT = coreConstants.OST_STAKING_CONTRACT_ADDR
 
       ,StakeContract = require( reqPrefix + '/lib/stakeContract')
       ,UtilityToken = require(reqPrefix + '/lib/bt')
@@ -38,7 +38,7 @@ const stakingContract = (function () {
 })();
 
 const registrar = module.exports = {
-  _secret: coreConstants.OST_REGISTRAR_SECRET_KEY
+  _secret: coreConstants.OST_REGISTRAR_PASSPHRASE
   ,valueChain: valueChain
   ,eventProcessingDelay: 100
   ,init: function () {
@@ -288,8 +288,8 @@ MintingIntentHandler.prototype = {
           ,escrowUnlockHeight   = returnValues._escrowUnlockHeight
           ,mintingIntentHash    = returnValues._mintingIntentHash
 
-          ,foundation = coreConstants.OST_FOUNDATION_ADDRESS
-          ,stakingContractAddress = coreConstants.OST_STAKE_CONTRACT_ADDRESS
+          ,foundation = coreConstants.OST_FOUNDATION_ADDR
+          ,stakingContractAddress = coreConstants.OST_STAKING_CONTRACT_ADDR
     ;
     if ( !this.isValid() ) {
       logger.warn("MintingIntentHandler :: processRequest :: Intent is not valid.", this.getEventDescription() );
@@ -307,7 +307,7 @@ MintingIntentHandler.prototype = {
     })
     .then(stakeAdmin => {
       stakeAdmin = stakeAdmin.toLowerCase();
-      var registrarAddress = coreConstants.OST_REGISTRAR_ADDRESS;
+      var registrarAddress = coreConstants.OST_REGISTRAR_ADDR;
       if ( stakeAdmin != registrarAddress ) {
         throw "stakingContract registrar verification failed";
       }
