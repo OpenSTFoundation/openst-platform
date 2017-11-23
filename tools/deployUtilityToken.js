@@ -17,6 +17,7 @@ const FS = require('fs')
       ,logger = require("./helpers/CustomConsoleLogger")
       ,Config = require(process.argv[2] || '../config.json')
       ,coreConstants = require('../config/core_constants')
+      ,UpdateMemberInfo = require("../lib/updateMemberInfo")
       ,REGISTRAR_ADDRESS = coreConstants.OST_REGISTRAR_ADDR
       ,REGISTRAR_KEY = coreConstants.OST_REGISTRAR_PASSPHRASE || ""
       ,readline = require('readline')
@@ -125,6 +126,9 @@ function confirmDeploy( member ) {
 
 function deployUtilityToken( member ) {
   logger.step("Unlocking REGISTRAR, REGISTRAR_ADDRESS:", REGISTRAR_ADDRESS);
+
+  const updateMemberInfo = new UpdateMemberInfo(member);
+
   return Geth.UtilityChain.eth.personal.unlockAccount( REGISTRAR_ADDRESS, REGISTRAR_KEY)
     .then(_ => {
       logger.win("Registrar Unlocked");
@@ -134,13 +138,17 @@ function deployUtilityToken( member ) {
     })
     .then(address => {
       logger.win("UtilityToken Deployed Successfully!");
-      member.ERC20 = address;
-      logger.step("Registering UtilityToken");
+      logger.info("Updating Utility Token Address");
+      return updateMemberInfo.setMemberContractAddress(address);
+    })
+    .then( _ => {
 
       const FOUNDATION_ADDRESS = coreConstants.OST_FOUNDATION_ADDR
             ,contractAddress = coreConstants.OST_STAKING_CONTRACT_ADDR
             ,stakeContract = new StakeContract(FOUNDATION_ADDRESS, contractAddress)
       ;
+
+      logger.step("Registering UtilityToken");
 
       return stakeContract.registerUtilityToken(member.Symbol, member.Name, member.Decimals, member.ConversionRate, member.ChainId, member.Reserve, member.ERC20 );
 
@@ -151,7 +159,6 @@ function deployUtilityToken( member ) {
       }
       logger.win("UtilityToken Registered Successfully");
 
-      logger.step("Updating Config");
       logger.info("UtilityToken Contract Address\x1b[34m", member.ERC20, logger.CONSOLE_RESET);
       logger.info("Fetching UUID of", member.Name);
       return new UtilityToken(member.Reserve, member.ERC20).uuid();
@@ -166,28 +173,11 @@ function deployUtilityToken( member ) {
     // })
     .then(uuid => {
         logger.info(member.Name, "UUID:" , uuid);
-        member.UUID = uuid;
+        updateMemberInfo.setMemberUUID(uuid);
     })
     .catch(err => {
         logger.error(member.Symbol, err.message||err);
         catchAndExit( err );
-    })
-    .then(_ =>{
-      
-      const json = JSON.stringify(Config, null, 4);
-      const configFilePath  = Path.join(__dirname, '/../config.json');
-
-      logger.info("Updating Config File. Writing into:" , configFilePath);
-      return new Promise( (resolve,reject) => {
-        FS.writeFile(configFilePath, json, err => err ? reject(err) : resolve() );
-      })          
-      .catch( reason =>  {
-        logError("Failed to update Config file!");
-        catchAndExit( reason );
-      })
-      .then( _ => {
-        logger.win("Config updated.");
-      });
     });
 }
 
