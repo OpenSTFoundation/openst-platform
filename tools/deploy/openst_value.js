@@ -11,7 +11,7 @@ const rootPrefix = '../..'
   , prompts = readline.createInterface(process.stdin, process.stdout)
   , deployerAddress = coreAddresses.getAddressForUser(deployerName)
   , Assert = require('assert')
-  , logger = require(rootPrefix + "/helpers/CustomConsoleLogger")
+  , logger = require(rootPrefix+'/helpers/custom_console_logger')
   , ValueRegistrar = require(rootPrefix+"/lib/contract_interact/value_registrar")
   , OpenstValueContract = require(rootPrefix+'/lib/contract_interact/openst_value')
 ;

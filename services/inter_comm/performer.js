@@ -10,7 +10,7 @@
 
 const rootPrefix = '../..'
   , web3ValueWsProvider = require(rootPrefix+'/lib/web3/providers/value_ws')
-  , logger = require(rootPrefix + "/helpers/CustomConsoleLogger")
+  , logger = require(rootPrefix+'/helpers/custom_console_logger')
   , eventQueueManagerKlass = require(rootPrefix+'/services/inter_comm/event_queue_manager')
   , coreAddresses = require(rootPrefix+'/config/core_addresses')
   , stakingContractName = 'staking'

@@ -12,24 +12,24 @@ const rootPrefix = '..'
   , BigNumber = require('bignumber.js');
 
 const FS = require('fs')
-      ,Path = require('path')
-      ,readline = require('readline')
-      ,Web3 = require("web3")
-      ,reqPrefix = ".."
-      ,UtilityToken = require( reqPrefix + '/lib/bt')
-      ,StakeContract = require(reqPrefix + '/lib/stakeContract')
-      ,Geth = require(reqPrefix + "/lib/geth")
-      ,logger = require("./helpers/CustomConsoleLogger")
-      ,Config = require(process.argv[2] || (reqPrefix + '/config.json') )
-      ,coreConstants = require(reqPrefix + '/config/core_constants')
-      ,coreAddresses = require(reqPrefix+'/config/core_addresses')
-      ,FOUNDATION_ADDRESS = coreAddresses.getAddressForUser('foundation')
-      ,REGISTRAR_ADDRESS = coreAddresses.getAddressForUser('registrar')
-      ,UC = "UtilityChain"
-      ,UC_MAIN_NET_ID = 20171010
-      ,VC_MAIN_NET_ID = 20171011
-      ,VC = "ValueChain"
-;
+  , Path = require('path')
+  , readline = require('readline')
+  , Web3 = require("web3")
+  , reqPrefix = ".."
+  , UtilityToken = require( reqPrefix + '/lib/bt')
+  , StakeContract = require(reqPrefix + '/lib/stakeContract')
+  , Geth = require(reqPrefix + "/lib/geth")
+  , logger = require(rootPrefix+'/helpers/custom_console_logger')
+  , Config = require(process.argv[2] || (reqPrefix + '/config.json') )
+  , coreConstants = require(reqPrefix + '/config/core_constants')
+  , coreAddresses = require(reqPrefix+'/config/core_addresses')
+  , FOUNDATION_ADDRESS = coreAddresses.getAddressForUser('foundation')
+  , REGISTRAR_ADDRESS = coreAddresses.getAddressForUser('registrar')
+  , UC = "UtilityChain"
+  , UC_MAIN_NET_ID = 20171010
+  , VC_MAIN_NET_ID = 20171011
+  , VC = "ValueChain"
+  ;
 
 
 

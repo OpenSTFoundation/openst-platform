@@ -10,19 +10,18 @@
 
 
 const Web3 = require("web3")
-      ,reqPrefix = ".."
-      ,logger = require(reqPrefix + "/helpers/CustomConsoleLogger")
-      ,coreAddresses = require(reqPrefix+'/config/core_addresses')
-      ,Geth = require(reqPrefix + '/lib/geth')
-      ,STAKE_CONTRACT = coreAddresses.getAddressesForContract('staking')
-      ,UtilityToken = require(reqPrefix + '/lib/bt')
-
-;
+  , rootPrefix = ".."
+  , logger = require(rootPrefix+'/helpers/custom_console_logger')
+  , coreAddresses = require(rootPrefix+'/config/core_addresses')
+  , Geth = require(rootPrefix + '/lib/geth')
+  , STAKE_CONTRACT = coreAddresses.getAddressesForContract('staking')
+  , UtilityToken = require(rootPrefix + '/lib/bt')
+  ;
 
 var valueChain = Geth.ValueChainWS;
 
 const stakingContract = (function () {
-  const ContractJson = require( reqPrefix + "/contracts/Staking.json")
+  const ContractJson = require( rootPrefix + "/contracts/Staking.json")
         ,contractAddress = STAKE_CONTRACT
         ,contractAbi = JSON.parse( ContractJson.contracts["Staking.sol:Staking"].abi )
         ,contract = new valueChain.eth.Contract( contractAbi, contractAddress )
@@ -389,7 +388,7 @@ MintingIntentHandler.prototype = {
   ,getStakerERC20Address: function ( staker ) {
     //THIS IS TEMP CODE. THE ACTUAL LOGIC NEEDS TO COME HERE. LCT - Light Coin.
     return new Promise(function (resolve,reject) {
-      const Config = require( reqPrefix + '/config.json');
+      const Config = require( rootPrefix + '/config.json');
       var erc20 = null;
       Config.Members.some(function ( member ) {
         if ( member.Reserve.toLowerCase() == staker.toLowerCase() ) {

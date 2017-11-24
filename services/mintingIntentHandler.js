@@ -9,12 +9,12 @@
  *
  */
 
-const reqPrefix = ".."
-      ,logger = require(reqPrefix + "/helpers/CustomConsoleLogger")
-      ,UtilityToken = require(reqPrefix + '/lib/bt')
-      ,coreConstants = require(reqPrefix + '/config/core_constants')
-     ,coreAddresses = require(reqPrefix+'/config/core_addresses');
-
+const rootPrefix = ".."
+  , logger = require(rootPrefix+'/helpers/custom_console_logger')
+  , UtilityToken = require(rootPrefix + '/lib/bt')
+  , coreConstants = require(rootPrefix + '/config/core_constants')
+  , coreAddresses = require(rootPrefix+'/config/core_addresses')
+  ;
 
 const MintingIntentHandler = module.exports = function ( eventObj, stakingContract ) {
   this.setEventData( eventObj );
@@ -138,7 +138,7 @@ MintingIntentHandler.prototype = {
   ,getStakerERC20Address: function ( staker ) {
     //THIS IS TEMP CODE. THE ACTUAL LOGIC NEEDS TO COME HERE. LCT - Light Coin.
     return new Promise(function (resolve,reject) {
-      const Config = require( reqPrefix + '/config.json');
+      const Config = require( rootPrefix + '/config.json');
       var erc20 = null;
       Config.Members.some(function ( member ) {
         if ( member.Reserve.toLowerCase() == staker.toLowerCase() ) {
@@ -180,7 +180,7 @@ MintingIntentHandler.getMintingIntentDeclaredEventFromTransactionReceipt
 // ;
 
 // const stakingContract = (function () {
-//   const ContractJson = require( reqPrefix + "/contracts/Staking.json")
+//   const ContractJson = require( rootPrefix + "/contracts/Staking.json")
 //         ,contractAddress = coreAddresses.getAddressesForContract('staking')
 //         ,contractAbi = JSON.parse( ContractJson.contracts["Staking.sol:Staking"].abi )
 //         ,contract = new valueChain.eth.Contract( contractAbi, contractAddress )

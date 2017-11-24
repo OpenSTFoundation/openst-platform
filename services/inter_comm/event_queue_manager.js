@@ -1,7 +1,7 @@
 "use strict"
 
 const rootPrefix = '../..'
-  , logger = require(rootPrefix + "/helpers/CustomConsoleLogger")
+  , logger = require(rootPrefix+'/helpers/custom_console_logger')
   , eventProcessorKlass = require(rootPrefix+'/services/inter_comm/event_processor');
 
 const EventQueueManager = module.exports = function (stakingContract) {
