@@ -6,26 +6,72 @@ const core_abis = require('./core_abis')
 
 const allAddresses = {
   users: {
+
     foundation: {
       address: coreConstants.OST_FOUNDATION_ADDR,
       passphrase: coreConstants.OST_FOUNDATION_PASSPHRASE
     },
+
+    simpleTokenCompany: {
+      address: process.env.OST_SIMPLETOKENCOMPANY_ADDR,
+      passphrase: coreConstants.OST_SIMPLETOKENCOMPANY_PASSPHRASE
+    },
+
     registrar: {
       address: coreConstants.OST_REGISTRAR_ADDR,
       passphrase: coreConstants.OST_REGISTRAR_PASSPHRASE
     }
   },
+
   contracts: {
     simpleToken: {
       address: coreConstants.OST_SIMPLE_TOKEN_CONTRACT_ADDR,
       abi: core_abis.simpleToken,
       bin: core_bins.simpleToken
     },
+
+    openSTUtility: {
+      address: process.env.OST_OPENSTUTILITY_CONTRACT_ADDR,
+      abi: core_abis.openSTUtility,
+      bin: core_bins.openSTUtility
+    },
+
+    openSTValue: {
+      address: process.env.OST_OPENSTVALUE_CONTRACT_ADDR,
+      abi: core_abis.openSTValue,
+      bin: core_bins.openSTValue
+    },
+
+    stPrime: {
+      address: process.env.OST_STPRIME_CONTRACT_ADDR,
+      abi: core_abis.stPrime,
+      bin: core_bins.stPrime
+    },
+
+    valueCore: {
+      address: process.env.OST_VALUE_CORE_CONTRACT_ADDR,
+      abi: core_abis.valueCore,
+      bin: core_bins.valueCore
+    },
+
+    valueRegistrar: {
+      address: process.env.OST_VALUE_REGISTRAR_CONTRACT_ADDR,
+      abi: core_abis.valueRegistrar,
+      bin: core_bins.valueRegistrar
+    },
+
+    utilityRegistrar: {
+      address: process.env.OST_UTILITY_REGISTRAR_CONTRACT_ADDR,
+      abi: core_abis.utilityRegistrar,
+      bin: core_bins.utilityRegistrar
+    },
+
     staking: {
       address: coreConstants.OST_STAKING_CONTRACT_ADDR,
       abi: core_abis.staking,
       bin: core_bins.staking
     },
+
     utilityToken: {
       address: coreConstants.OST_UTILITY_TOKEN_CONTRACT_ADDR,
       abi: core_abis.utilityToken,
