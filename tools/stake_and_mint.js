@@ -38,13 +38,13 @@ const toDisplayST = function ( num ) {
   var bigNum = new BigNumber( num );
   var fact = new BigNumber( 10 ).pow( 18 );
   return bigNum.dividedBy( fact ).toString( 10 ) + " ST";
-}
+};
 
 String.prototype.equalsIgnoreCase = function ( compareWith ) {
     var _self = this.toLowerCase();
     var _compareWith = String( compareWith ).toLowerCase();
     return _self == _compareWith;
-}
+};
 
 
 
@@ -91,7 +91,7 @@ function validateValueChain() {
   .then( networkId => {
     logger.info( VC, "NetworkId: ", networkId );
     logger.info( VC, "HttpProvider.host: ", Geth.ValueChain.currentProvider.host );
-  });
+  })
 }
 
 //Method to validate UtilityChain. Ensures no one 'accidentally' deploys on Mainnet.
@@ -112,7 +112,7 @@ function validateUtilityChain() {
   .then( networkId => {
     logger.info( UC, "NetworkId: ", networkId );
     logger.info( UC, "HttpProvider.host: ", Geth.UtilityChain.currentProvider.host );
-  });
+  })
 }
 
 function describeMember( member ) {
