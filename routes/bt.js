@@ -1,14 +1,16 @@
-const Assert = require('assert');
-const Express = require('express');
-const RP = require('request');
-const BigNumber = require('bignumber.js');
-const Web3 = require('web3');
+const Assert      = require("assert")
+      , Express   = require("express")
+      , RP        = require("request")
+      , BigNumber = require("bignumber.js")
+      , Web3      = require("web3")
+;
 
-const reqPrefix     = ".."
-      ,ERC20        = require(reqPrefix + '/lib/erc20contract')
-      ,UtilityToken = require(reqPrefix + "/lib/contract_interact/UtilityToken")
-      ,Stake        = require(reqPrefix + '/lib/stakeContract')
-      ,web3         = new Web3()
+const reqPrefix         = ".."
+      , ERC20           = require(reqPrefix + "/lib/erc20contract")
+      , UtilityToken    = require(reqPrefix + "/lib/contract_interact/UtilityToken")
+      , Stake           = require(reqPrefix + "/lib/stakeContract")
+      , responseHelper  = require(reqPrefix + "/lib/formatter/response")
+      , web3            = new Web3()
 ;
 
 //Old things. To be removed.
@@ -210,8 +212,16 @@ module.exports = function( member ) {
 
   router.get('/newkey', function(req, res, next) {
     const web3RpcProvider = require('../lib/web3/providers/utility_rpc');
-    web3RpcProvider.eth.personal.newAccount().then(x => {
-        res.json({data: x});
+    web3RpcProvider.eth.personal.newAccount().then(address => {
+      return responseHelper.successWithData({
+        address: address
+      });
+    })
+    .catch( error => {
+      return responseHelper.error("rt_bt_nk.1", "Something went wrong");
+    })
+    .then( response => {
+      response.renderResponse( res );
     })
     .catch(next);
   });
