@@ -1,10 +1,8 @@
 "use strict";
+
 /*
- *   Custom Console Logger for 'color-full' logs
- * * Author: Rachin Kapoor
- * * Date: 12/10/2017
- * * Reviewed by:
- * * 
+ * Custom Console log methods. Apply different colors for different log levels/severity.
+ *
  */
 
 const CONSOLE_RESET = "\x1b[0m";
@@ -21,6 +19,7 @@ module.exports = {
   ,"INFO_PRE": INFO_PRE
   ,"ERR_PRE" : ERR_PRE
   ,"CONSOLE_RESET" : CONSOLE_RESET
+
   ,step : function() {
     var args = [this.STEP_PRE];
     args = args.concat(Array.prototype.slice.call(arguments));
@@ -58,6 +57,7 @@ module.exports = {
     args.push( this.CONSOLE_RESET );
     console.log.apply(console, args);
   }
+
   ,log: function () {
     console.log.apply(console, arguments);
   }
