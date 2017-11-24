@@ -15,7 +15,7 @@ const rootPrefix = '../..'
   , Assert = require('assert')
   , stakingContractInteract = require('../contract_interact/staking')
   , UpdateMemberInfo = require(rootPrefix+"/lib/updater/updateMemberInfo")
-  , UtilityTokenContractInteract = require('../contract_interact/utilityToken');
+  , UtilityTokenContractInteract = require(rootPrefix+'/lib/contract_interact/utilityToken');
 
 const describeMemberDetails = function(member){
   console.log("Describing Member Details...");
