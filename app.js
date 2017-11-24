@@ -12,6 +12,7 @@ const BT = require('./routes/bt');
 
 const Config = require('./config.json');
 
+const responseHelper = require('./lib/formatter/response');
 
 // const NDEBUG = process.env.npm_package_scripts_start === undefined;
 
@@ -56,7 +57,7 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   console.error(err.stack);
-  res.status(err.status || 400).json({error: err.message});
+  res.status( 200 ).json( responseHelper.error("app_1", "Something went wrong") );
 });
 
 module.exports = app;
