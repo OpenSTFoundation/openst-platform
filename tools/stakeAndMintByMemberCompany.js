@@ -335,6 +335,7 @@ function listenToUtilityToken( member, mintingIntentHash ) {
       ,_passphrase = null
   ;
   logger.step("Validate", VC);
+
   describeChain(VC, web3ValueRpcProvider)
     .then(function(){
       logger.win(VC, "Validated");
