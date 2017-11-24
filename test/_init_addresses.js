@@ -4,6 +4,7 @@ const Path = require('path');
 const _addresses = {
   "foundation": null,
   "admin":null,
+  "deployer": null,
   "members": []
 };
 
@@ -29,6 +30,9 @@ function main( addressFile ) {
     } else if ( !_addresses.admin ) {
       _addresses.admin = thisAddress;
       updateAdminAddress( thisAddress );
+    } else if ( !_addresses.deployer ) {
+      _addresses.deployer = thisAddress;
+      updateDeployerAddress( thisAddress );
     } else {
       //Member Address
       _addresses.members.push( thisAddress );
@@ -40,6 +44,11 @@ function main( addressFile ) {
   populateEnvVars.renderAndPopulate('address', {
       ost_foundation_address: _addresses.foundation,
       ost_registrar_address: _addresses.admin
+    }
+  );
+
+  populateEnvVars.renderAndPopulate('deployer', {
+      ost_deployer_address: _addresses.deployer,
     }
   );
 
@@ -60,6 +69,10 @@ function updateFoundationAddress( foundation ) {
 
 function updateAdminAddress( admin ) {
   Config.ValueChain.Admin = admin; /* Allowed Usage */
+}
+
+function updateDeployerAddress( deployer ) {
+  Config.ValueChain.Deployer = deployer; /* Allowed Usage */
 }
 
 function updateGenesisAlloc( genesis, foundation, value ) {
