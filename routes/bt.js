@@ -1,10 +1,21 @@
 const Assert = require('assert');
 const Express = require('express');
 const RP = require('request');
-
-const ERC20 = require('../lib/erc20contract');
-const Stake = require('../lib/stakeContract');
 const BigNumber = require('bignumber.js');
+const Web3 = require('web3');
+
+const reqPrefix     = ".."
+      ,ERC20        = require(reqPrefix + '/lib/erc20contract')
+      ,UtilityToken = require(reqPrefix + "/lib/contract_interact/UtilityToken")
+      ,Stake        = require(reqPrefix + '/lib/stakeContract')
+      ,web3         = new Web3()
+;
+
+//Old things. To be removed.
+const BrandedTokenJson = require(reqPrefix + "/contracts/UtilityToken.json");
+const BrandedTokenContract = BrandedTokenJson.contracts['UtilityToken.sol:UtilityToken'];
+
+
 
 
 /** Construct a new route for a specific BT.
@@ -12,9 +23,16 @@ const BigNumber = require('bignumber.js');
  * @param {string} callbackUrl The callback URL for confirmed transactions.
  * @param {object?} callbackAuth Optional authentication object for callback requests.
  */
-module.exports = function(erc20, callbackUrl, callbackAuth) {
-  const Web3 = require('web3'); // eslint-disable-line
-  const web3 = new Web3(); // eslint-disable-line
+module.exports = function( member ) {
+  const btContractInteract  = new UtilityToken( member )
+        ,callbackUrl        = member.Callback
+        ,callbackAuth       = member.CallbackAuth
+        ,memberSymbol       = member.Symbol
+  ;
+
+//Old things. To be removed.
+  const erc20 = new ERC20( member.Reserve, BrandedTokenContract, member.ERC20);
+
 
   Assert.ok(erc20 instanceof ERC20, `erc20 must be an instance of ERC20`);
   Assert.strictEqual(typeof callbackUrl, 'string', `callbackUrl must be of type 'string'`);
@@ -49,70 +67,97 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
     return new BigNumber( weiValue );
   }
 
-  router.get('/reserve', function(req, res, next) {
-    res.json({data: erc20._reserve});
+  router.get('/owner', function(req, res, next) {
+    btContractInteract.getOwner()
+      .then( response => {
+        response.renderResponse( res );
+      })
+      .catch(next);
   });
 
   router.get('/name', function(req, res, next) {
-    Promise.resolve(erc20.name())
-      .then(value => {
-        res.json({data: value});
+    btContractInteract.getName()
+      .then( response => {
+        response.renderResponse( res );
       })
       .catch(next);
   });
 
   router.get('/symbol', function(req, res, next) {
-
-    Promise.resolve(erc20.symbol())
-      .then(value => {
-        console.log("value",value);
-        res.json({data: value});
+    btContractInteract.getSymbol()
+      .then( response => {
+        response.renderResponse( res );
       })
       .catch(next);
   });
 
   router.get('/decimals', function(req, res, next) {
-    Promise.resolve(erc20.decimals())
-      .then(value => {
-        res.json({data: value});
+    btContractInteract.getDecimals()
+      .then( response => {
+        response.renderResponse( res );
       })
       .catch(next);
   });
 
   router.get('/totalSupply', function(req, res, next) {
-    Promise.resolve(erc20.totalSupply())
-      .then(value => {
-        var _val = web3.utils.fromWei( value, "ether" ).toString();
-        res.json({data: _val});
+    btContractInteract.getTotalSupply()
+      .then( response => {
+        if ( response && response.data && response.data.totalSupply ) {
+          response.data.totalSupply = web3.utils.fromWei( response.data.totalSupply, "ether" )
+          response.data.unit = memberSymbol;
+        }
+        response.renderResponse( res ); 
+      })
+      .catch(next);
+  });
+
+  router.get('/allowance', function(req, res, next) {
+    const owner = req.query.owner;
+    const spender = req.query.spender;
+
+    btContractInteract.getAllowance(owner, spender)
+      .then( response => {
+        if ( response && response.data && response.data.allowance ) {
+          response.data.allowance = web3.utils.fromWei( response.data.allowance, "ether" )
+        }
+        response.renderResponse( res );   
       })
       .catch(next);
   });
 
   router.get('/balanceOf', function(req, res, next) {
     const owner = req.query.owner;
-    Promise.resolve(erc20.balanceOf(owner))
-      .then(value => {
-        var _val = web3.utils.fromWei( value, "ether" ).toString();
-        res.json({data: _val});
+
+    btContractInteract.getBalanceOf(owner)
+      .then( response => {
+        if ( response && response.data && response.data.balance ) {
+          response.data.balance = web3.utils.fromWei( response.data.balance, "ether" );
+          response.data.unit = memberSymbol;
+          response.data.owner = owner;
+        }
+        response.renderResponse( res );
       })
       .catch(next);
   });
 
   router.get('/transfer', function(req, res, next) {
     const sender = req.query.sender;
-    const to = req.query.to;
-    const value = Number(req.query.value);
+    const recipient = req.query.to;
+    const amount = Number(req.query.value);
     const tag = req.query.tag || "transfer";
 
-    const bigWeiValue = toBigNumberWei( value );
+    const amountInWei = toBigNumberWei( amount );
 
-    Promise.resolve(erc20.transfer(sender, to, bigWeiValue))
-      .then(txid => {
-        const log = {from: sender, to: to, value: bigWeiValue, tag: tag, txid: txid};
-        res.json({data: txid});
-        addTransaction(log);
+    btContractInteract.transfer(sender, recipient, amountInWei, tag)
+      .then( response => {
+        if ( response && response.data && response.data.amount ) {
+          response.data.amount = web3.utils.fromWei( response.data.amount, "ether" );
+          response.data.unit = memberSymbol;
+        }
+        response.renderResponse( res );
       })
-      .catch(next);
+      .catch(next)
+    ;
   });
 
   router.get('/transferFrom', function(req, res, next) {
@@ -151,26 +196,25 @@ module.exports = function(erc20, callbackUrl, callbackAuth) {
       .catch(next);
   });
 
-  router.get('/allowance', function(req, res, next) {
-    const owner = req.query.owner;
-    const spender = req.query.spender;
 
-    Promise.resolve(erc20.allowance(owner, spender))
-      .then(value => {
-        var _val = web3.utils.fromWei( value, "ether" ).toString();
-        res.json({data: _val});
-      })
-      .catch(next);
-  });
 
   router.get('/log', function(req, res, next) {
     const owner = req.query.owner;
     res.json({data: auditLog[owner] || []});
   });
 
-  // router.get('/getAllTxDetails', function(req, res, next) { 
-  //   res.json( erc20.getAllTxDetails() );
-  // });
+  router.get('/getAllTxDetails', function(req, res, next) { 
+    res.json( erc20.getAllTxDetails() );
+    next();
+  });
+
+  router.get('/newkey', function(req, res, next) {
+    const web3RpcProvider = require('../lib/web3/providers/utility_rpc');
+    web3RpcProvider.eth.personal.newAccount().then(x => {
+        res.json({data: x});
+    })
+    .catch(next);
+  });
 
   return router;
 }

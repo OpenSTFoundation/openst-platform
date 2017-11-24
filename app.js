@@ -12,10 +12,9 @@ const BT = require('./routes/bt');
 
 const Config = require('./config.json');
 
-const BrandedTokenJson = require("./contracts/UtilityToken.json");
-const BrandedTokenContract = BrandedTokenJson.contracts['UtilityToken.sol:UtilityToken'];
+const responseHelper = require('./lib/formatter/response');
 
-const NDEBUG = process.env.npm_package_scripts_start === undefined;
+// const NDEBUG = process.env.npm_package_scripts_start === undefined;
 
 var app = Express();
 
@@ -34,10 +33,9 @@ app.use('/', Index);
 
 for (var key in Config.Members) {
   const member = Config.Members[key];
+  member.Route = "/bt" + member.Route
   console.log("Mounting branded token", member.Name, "on", member.Route);
-  const callback = NDEBUG ? member.Callback : "http://localhost:3000/transaction";
-  const erc20 = new ERC20(member.Reserve, BrandedTokenContract, member.ERC20);
-  app.use(member.Route, BasicAuth(member.ApiAuth), new BT(erc20, callback, member.CallbackAuth));
+  app.use(member.Route, BasicAuth(member.ApiAuth), new BT(  member ) );
 }
 
 // debug transaction callback handler
@@ -59,7 +57,7 @@ app.use(function(err, req, res, next) {
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
   console.error(err.stack);
-  res.status(err.status || 400).json({error: err.message});
+  res.status( 200 ).json( responseHelper.error("app_1", "Something went wrong") );
 });
 
 module.exports = app;

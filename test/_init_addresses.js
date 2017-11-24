@@ -7,15 +7,16 @@ const _addresses = {
   "members": []
 };
 
-const Config = require(process.argv[3] || '../config.json');
-const poaGenesisValue = require("./poa-genesis-value.json");
-const poaGenesisUtility = require("./poa-genesis-utility.json");
+const Config = require(process.argv[3] || '../config.json')
+  , poaGenesisValue = require("./poa-genesis-value.json")
+  , poaGenesisUtility = require("./poa-genesis-utility.json")
+  , populateEnvVars = require("../lib/populate_env_vars.js");
 
 function main( addressFile ) {
   const _path = Path.join(__dirname, addressFile );
   const fileContent = fs.readFileSync( _path, "utf8");
   fileContent.toString().split('\n').forEach(function (line, index) {
-    
+
     var thisAddress = line.replace("Address: {", "0x").replace("}","").trim();
     if ( thisAddress.length < 40 ) {
       return;
@@ -34,25 +35,31 @@ function main( addressFile ) {
       updateMember( (_addresses.members.length - 1 ), thisAddress);
     }
   });
-  wrtieJsonToFile( Config, '/../config.json', 4);
+  writeJsonToFile( Config, '/../config.json', 4);
+
+  populateEnvVars.renderAndPopulate('address', {
+      ost_foundation_address: _addresses.foundation,
+      ost_registrar_address: _addresses.admin
+    }
+  );
 
 }
 
 function updateFoundationAddress( foundation ) {
   //Update Config.
   Config.SimpleTokenFoundation = foundation;
-  
+
   //Update poa-genesis-value
   updateGenesisAlloc( poaGenesisValue, foundation, "0x200000000000000000000000000000000000000000000000000000000000000");
-  wrtieJsonToFile(poaGenesisValue, "./poa-genesis-value.json");
+  writeJsonToFile(poaGenesisValue, "./poa-genesis-value.json");
 
   //Update poa-genesis-utility
   updateGenesisAlloc( poaGenesisUtility, foundation, "0x2000000000000000000000000000000000000000000000000000000000000000");
-  wrtieJsonToFile(poaGenesisUtility, "./poa-genesis-utility.json");
+  writeJsonToFile(poaGenesisUtility, "./poa-genesis-utility.json");
 }
 
 function updateAdminAddress( admin ) {
-  Config.ValueChain.Admin = admin;
+  Config.ValueChain.Admin = admin; /* Allowed Usage */
 }
 
 function updateGenesisAlloc( genesis, foundation, value ) {
@@ -73,7 +80,7 @@ function updateMember( indx, memberReserveAddress ) {
 }
 
 
-function wrtieJsonToFile( jsObject, relativeFilePath, tab_space ) {
+function writeJsonToFile( jsObject, relativeFilePath, tab_space ) {
   tab_space = tab_space || 2;
   var json = JSON.stringify(jsObject, null, tab_space);
   fs.writeFileSync(Path.join(__dirname, '/' + relativeFilePath ), json );

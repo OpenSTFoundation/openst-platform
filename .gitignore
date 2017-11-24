@@ -16,6 +16,9 @@ test/st-poa
 
 # Runtime data
 pids
+
+/.idea
+
 *.pid
 *.seed
 
@@ -42,3 +45,7 @@ node_modules
 npm-debug.log
 .vscode
 
+
+test/pwvalue
+
+test/pwutility
