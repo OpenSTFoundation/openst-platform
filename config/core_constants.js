@@ -19,6 +19,7 @@ const oneGW = '0x3B9ACA00' // taken from http://ethgasstation.info/ ---- 1 gwei
   , fiveGW = '0x12A05F200'; // 5 GWei
 
 define("OST_DEFAULT_GAS_PRICE", fiveGW);
+define('OST_TOTAL_SIMPLETOKENS', process.env.OST_TOTAL_SIMPLETOKENS);
 
 //GETH
 define('OST_GETH_VALUE_RPC_PROVIDER', process.env.OST_GETH_VALUE_RPC_PROVIDER);

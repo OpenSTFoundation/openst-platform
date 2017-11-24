@@ -20,7 +20,13 @@ const allAddresses = {
     registrar: {
       address: process.env.OST_REGISTRAR_ADDR,
       passphrase: process.env.OST_REGISTRAR_PASSPHRASE
-    }
+    },
+
+    deployer: {
+      address: process.env.OST_DEPLOYER_ADDR,
+      passphrase: process.env.OST_DEPLOYER_PASSPHRASE
+    },
+    
   },
 
   contracts: {
