@@ -11,13 +11,14 @@ const BigNumber = require('bignumber.js')
 ;
 
 const reqPrefix = "../.."
+      ,coreAddresses = require(reqPrefix + '/config/core_addresses')
       ,coreConstants = require(reqPrefix + '/config/core_constants')
       ,Config = require(reqPrefix + "/config.json")
       ,web3WsProvider = new Web3( coreConstants.OST_GETH_VALUE_WS_PROVIDER ) /* ValueChain WebSocket Address */
-      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDR
-      ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDR
-      ,SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLE_TOKEN_CONTRACT_ADDR
-      ,STAKE_CONTRACT = coreConstants.OST_STAKING_CONTRACT_ADDR
+      ,FOUNDATION = coreAddresses.getAddressForUser('foundation')
+      ,REGISTRAR = coreAddresses.getAddressForUser('registrar')
+      ,SIMPLETOKEN_CONTRACT = coreAddresses.getAddressForContract('simpleToken')
+      ,STAKE_CONTRACT = coreAddresses.getAddressesForContract('staking')
 ;
 
 

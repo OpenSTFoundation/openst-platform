@@ -12,7 +12,8 @@
 const reqPrefix = ".."
       ,logger = require(reqPrefix + "/helpers/CustomConsoleLogger")
       ,UtilityToken = require(reqPrefix + '/lib/bt')
-      ,coreConstants = require(reqPrefix + '/config/core_constants');
+      ,coreConstants = require(reqPrefix + '/config/core_constants')
+     ,coreAddresses = require(reqPrefix+'/config/core_addresses');
 
 
 const MintingIntentHandler = module.exports = function ( eventObj, stakingContract ) {
@@ -82,8 +83,8 @@ MintingIntentHandler.prototype = {
           ,escrowUnlockHeight   = returnValues._escrowUnlockHeight
           ,mintingIntentHash    = returnValues._mintingIntentHash
 
-          ,foundation = coreConstants.OST_FOUNDATION_ADDR
-          ,stakingContractAddress = coreConstants.OST_STAKING_CONTRACT_ADDR
+          ,foundation = coreAddresses.getAddressForUser('foundation')
+          ,stakingContractAddress = coreAddresses.getAddressesForContract('staking')
     ;
     if ( !this.isValid() ) {
       logger.warn("MintingIntentHandler :: processRequest :: Intent is not valid.", this.getEventDescription() );
@@ -101,7 +102,7 @@ MintingIntentHandler.prototype = {
     })
     .then(stakeAdmin => {
       stakeAdmin = stakeAdmin.toLowerCase();
-      var registrarAddress = coreConstants.OST_REGISTRAR_ADDR;
+      var registrarAddress = coreAddresses.getAddressForUser('registrar');
       if ( stakeAdmin != registrarAddress ) {
         throw "stakingContract registrar verification failed";
       }
@@ -180,7 +181,7 @@ MintingIntentHandler.getMintingIntentDeclaredEventFromTransactionReceipt
 
 // const stakingContract = (function () {
 //   const ContractJson = require( reqPrefix + "/contracts/Staking.json")
-//         ,contractAddress = coreConstants.OST_STAKING_CONTRACT_ADDR
+//         ,contractAddress = coreAddresses.getAddressesForContract('staking')
 //         ,contractAbi = JSON.parse( ContractJson.contracts["Staking.sol:Staking"].abi )
 //         ,contract = new valueChain.eth.Contract( contractAbi, contractAddress )
 //   ;

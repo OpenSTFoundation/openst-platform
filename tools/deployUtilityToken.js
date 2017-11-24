@@ -16,10 +16,10 @@ const FS = require('fs')
       ,Geth = require("../lib/geth")
       ,logger = require("./helpers/CustomConsoleLogger")
       ,Config = require(process.argv[2] || '../config.json')
-      ,coreConstants = require('../config/core_constants')
+      ,coreAddresses = require('../config/core_addresses')
       ,UpdateMemberInfo = require("../lib/updateMemberInfo")
-      ,REGISTRAR_ADDRESS = coreConstants.OST_REGISTRAR_ADDR
-      ,REGISTRAR_KEY = coreConstants.OST_REGISTRAR_PASSPHRASE || ""
+      ,REGISTRAR_ADDRESS = coreAddresses.getAddressForUser('registrar')
+      ,REGISTRAR_KEY = coreAddresses.getPassphraseForUser('registrar')
       ,readline = require('readline')
       ,UC = "UtilityChain"
       ,UC_MAIN_NET_ID = 1410
@@ -143,8 +143,8 @@ function deployUtilityToken( member ) {
     })
     .then( _ => {
 
-      const FOUNDATION_ADDRESS = coreConstants.OST_FOUNDATION_ADDR
-            ,contractAddress = coreConstants.OST_STAKING_CONTRACT_ADDR
+      const FOUNDATION_ADDRESS = coreAddresses.getAddressForUser('foundation')
+            ,contractAddress = coreAddresses.getAddressesForContract('staking')
             ,stakeContract = new StakeContract(FOUNDATION_ADDRESS, contractAddress)
       ;
 

@@ -12,15 +12,9 @@
 const Web3 = require("web3")
       ,reqPrefix = ".."
       ,logger = require(reqPrefix + "/helpers/CustomConsoleLogger")
-      ,coreConstants = require(reqPrefix + '/config/core_constants')
+      ,coreAddresses = require(reqPrefix+'/config/core_addresses')
       ,Geth = require(reqPrefix + '/lib/geth')
-
-      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDR
-      ,REGISTRAR_ADDRESS = coreConstants.OST_REGISTRAR_ADDR
-      ,REGISTRAR_KEY = coreConstants.OST_REGISTRAR_PASSPHRASE || ""
-      ,STAKE_CONTRACT = coreConstants.OST_STAKING_CONTRACT_ADDR
-
-      ,StakeContract = require( reqPrefix + '/lib/stakeContract')
+      ,STAKE_CONTRACT = coreAddresses.getAddressesForContract('staking')
       ,UtilityToken = require(reqPrefix + '/lib/bt')
 
 ;
@@ -38,7 +32,7 @@ const stakingContract = (function () {
 })();
 
 const registrar = module.exports = {
-  _secret: coreConstants.OST_REGISTRAR_PASSPHRASE
+  _secret: coreAddresses.getPassphraseForUser('registrar')
   ,valueChain: valueChain
   ,eventProcessingDelay: 100
   ,init: function () {
@@ -288,8 +282,7 @@ MintingIntentHandler.prototype = {
           ,escrowUnlockHeight   = returnValues._escrowUnlockHeight
           ,mintingIntentHash    = returnValues._mintingIntentHash
 
-          ,foundation = coreConstants.OST_FOUNDATION_ADDR
-          ,stakingContractAddress = coreConstants.OST_STAKING_CONTRACT_ADDR
+          ,foundation = coreAddresses.getAddressForUser('foundation')
     ;
     if ( !this.isValid() ) {
       logger.warn("MintingIntentHandler :: processRequest :: Intent is not valid.", this.getEventDescription() );
@@ -307,7 +300,7 @@ MintingIntentHandler.prototype = {
     })
     .then(stakeAdmin => {
       stakeAdmin = stakeAdmin.toLowerCase();
-      var registrarAddress = coreConstants.OST_REGISTRAR_ADDR;
+      var registrarAddress = coreAddresses.getAddressForUser('registrar');
       if ( stakeAdmin != registrarAddress ) {
         throw "stakingContract registrar verification failed";
       }

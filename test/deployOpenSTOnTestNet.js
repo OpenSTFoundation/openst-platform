@@ -22,14 +22,15 @@ const SimpleTokenJson = require("../contracts/SimpleToken.json")
      , populateEnvVars = require("../lib/populate_env_vars.js");
 
 const coreConstants = require('../config/core_constants')
-      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDR
-      ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDR
-      ,REGISTRAR_KEY = coreConstants.OST_REGISTRAR_PASSPHRASE
+     ,coreAddresses = require('../config/core_addresses')
+      ,FOUNDATION = coreAddresses.getAddressForUser('foundation')
+      ,REGISTRAR = coreAddresses.getAddressForUser('registrar')
+      ,REGISTRAR_KEY = coreAddresses.getPassphraseForUser('registrar')
 ;
 
 // These addresses may change during the script. So, these should not be const.
-var SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLE_TOKEN_CONTRACT_ADDR
-    ,STAKE_CONTRACT = coreConstants.OST_STAKING_CONTRACT_ADDR
+var SIMPLETOKEN_CONTRACT = coreAddresses.getAddressForContract('simpleToken')
+    ,STAKE_CONTRACT = coreAddresses.getAddressesForContract('staking')
 ;
 
 

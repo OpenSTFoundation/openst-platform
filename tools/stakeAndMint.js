@@ -18,9 +18,10 @@ const FS = require('fs')
       ,logger = require("./helpers/CustomConsoleLogger")
       ,Config = require(process.argv[2] || (reqPrefix + '/config.json') )
       ,coreConstants = require(reqPrefix + '/config/core_constants')
-      ,stakingContractAddress = coreConstants.OST_STAKING_CONTRACT_ADDR
-      ,FOUNDATION_ADDRESS = coreConstants.OST_FOUNDATION_ADDR
-      ,REGISTRAR_ADDRESS = coreConstants.OST_REGISTRAR_ADDR
+      ,coreAddresses = require(reqPrefix+'/config/core_addresses')
+      ,stakingContractAddress = coreAddresses.getAddressesForContract('staking')
+      ,FOUNDATION_ADDRESS = coreAddresses.getAddressForUser('foundation')
+      ,REGISTRAR_ADDRESS = coreAddresses.getAddressForUser('registrar')
       ,UC = "UtilityChain"
       ,UC_MAIN_NET_ID = 20171010
       ,VC_MAIN_NET_ID = 20171011
@@ -49,7 +50,7 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
 
 const ST = (function () {
   const ContractJson = require( reqPrefix + "/contracts/SimpleToken.json")
-        ,contractAddress = coreConstants.OST_SIMPLE_TOKEN_CONTRACT_ADDR
+        ,contractAddress = coreAddresses.getAddressForContract('simpleToken')
         ,contractAbi = JSON.parse( ContractJson.contracts["SimpleToken.sol:SimpleToken"].abi )
         ,contract = new Geth.ValueChain.eth.Contract( contractAbi, contractAddress )
   ;
@@ -59,7 +60,7 @@ const ST = (function () {
 
 const stakingContract = (function () {
   const ContractJson = require( reqPrefix + "/contracts/Staking.json")
-        ,contractAddress = coreConstants.OST_STAKING_CONTRACT_ADDR
+        ,contractAddress = coreAddresses.getAddressesForContract('staking')
         ,contractAbi = JSON.parse( ContractJson.contracts["Staking.sol:Staking"].abi )
         ,contract = new Geth.ValueChain.eth.Contract( contractAbi, contractAddress )
   ;

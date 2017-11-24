@@ -8,8 +8,8 @@ const allAddresses = {
   users: {
 
     foundation: {
-      address: coreConstants.OST_FOUNDATION_ADDR,
-      passphrase: coreConstants.OST_FOUNDATION_PASSPHRASE
+      address: process.env.OST_FOUNDATION_ADDR,
+      passphrase: process.env.OST_FOUNDATION_PASSPHRASE
     },
 
     simpleTokenCompany: {
@@ -18,14 +18,14 @@ const allAddresses = {
     },
 
     registrar: {
-      address: coreConstants.OST_REGISTRAR_ADDR,
-      passphrase: coreConstants.OST_REGISTRAR_PASSPHRASE
+      address: process.env.OST_REGISTRAR_ADDR,
+      passphrase: process.env.OST_REGISTRAR_PASSPHRASE
     }
   },
 
   contracts: {
     simpleToken: {
-      address: coreConstants.OST_SIMPLE_TOKEN_CONTRACT_ADDR,
+      address: process.env.OST_SIMPLE_TOKEN_CONTRACT_ADDR,
       abi: core_abis.simpleToken,
       bin: core_bins.simpleToken
     },
@@ -67,13 +67,13 @@ const allAddresses = {
     },
 
     staking: {
-      address: coreConstants.OST_STAKING_CONTRACT_ADDR,
+      address: process.env.OST_STAKING_CONTRACT_ADDR,
       abi: core_abis.staking,
       bin: core_bins.staking
     },
 
     utilityToken: {
-      address: coreConstants.OST_UTILITY_TOKEN_CONTRACT_ADDR,
+      address: process.env.OST_UTILITY_TOKEN_CONTRACT_ADDR,
       abi: core_abis.utilityToken,
       bin: core_bins.utilityToken
     }

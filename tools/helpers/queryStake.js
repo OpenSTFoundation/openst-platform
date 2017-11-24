@@ -8,12 +8,9 @@
  */
 
 const reqPrefix = "../.."
-      ,coreConstants = require(reqPrefix + '/config/core_constants')
+      ,coreAddresses = require(reqPrefix+'/config/core_addresses')
       ,Geth = require(reqPrefix + "/lib/geth")
-      ,FOUNDATION = coreConstants.OST_FOUNDATION_ADDR
-      ,REGISTRAR = coreConstants.OST_REGISTRAR_ADDR
-      ,SIMPLETOKEN_CONTRACT = coreConstants.OST_SIMPLE_TOKEN_CONTRACT_ADDR
-      ,STAKE_CONTRACT = coreConstants.OST_STAKING_CONTRACT_ADDR
+      ,STAKE_CONTRACT = coreAddresses.getAddressesForContract('staking')
 ;
 
 
