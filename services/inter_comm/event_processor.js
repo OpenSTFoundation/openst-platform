@@ -24,7 +24,7 @@ EventProcessor.prototype = {
   stakingContract : null,
 
   // we will process the event after 90 seconds
-  eventProcessingDelay = 90000,
+  eventProcessingDelay: 90000,
 
   timer: -1,
 
