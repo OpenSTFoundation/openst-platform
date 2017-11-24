@@ -327,7 +327,6 @@ function listenToUtilityToken( member, mintingIntentHash ) {
 
 (function () {
   var selectedMember = null
-      ,memberBalance = null
       ,toStakeAmount  = null
       ,stakeContract = null
       ,mintingIntentHash = null
