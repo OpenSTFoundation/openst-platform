@@ -19,6 +19,11 @@ STEPS
 2)  In test/open_st_env_vars.sh, verify all the addressed if known else keep it blank
     - source test/open_st_env_vars.sh
 
+3) Setup chainId according to the environment in open_st_env_vars.sh
+    - OST_VALUE_CHAIN_ID
+    - OST_UTILITY_CHAIN_ID
+    - source test/open_st_env_vars.sh
+
 3) On Development only
    - cd test/
    - ./init_keys.sh

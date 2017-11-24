@@ -1,8 +1,10 @@
 "use strict";
 
-const core_abis = require('./core_abis')
+const relPath = ".."
+  , core_abis = require('./core_abis')
   , core_bins = require('./core_bins')
-  , coreConstants = require('./core_constants');
+  , coreConstants = require('./core_constants')
+  , utilityRegistrarConfig = require(relPath+"/utility_registrar_config.json");
 
 const allAddresses = {
   users: {
@@ -17,6 +19,7 @@ const allAddresses = {
       passphrase: coreConstants.OST_SIMPLETOKENCOMPANY_PASSPHRASE
     },
 
+    // This is value chain registrar
     registrar: {
       address: process.env.OST_REGISTRAR_ADDR,
       passphrase: process.env.OST_REGISTRAR_PASSPHRASE
@@ -136,6 +139,22 @@ const coreAddresses = {
 
   getBinForContract: function(contractName) {
     return allAddresses.contracts[contractName].bin;
+  },
+
+  getUtilityRegistrarAddress: function(utilityChainId) {
+    var utilityChainObj = utilityRegistrarConfig[utilityChainId];
+    if (utilityChainObj) {
+      return utilityChainObj.registrarAddr;
+    }
+    return ""
+  },
+
+  getUtilityRegistrarPassphrase: function(utilityChainId) {
+    var utilityChainObj = utilityRegistrarConfig[utilityChainId];
+    if (utilityChainObj) {
+      return utilityChainObj.registrarPassphrase;
+    }
+    return ""
   }
 };
 
