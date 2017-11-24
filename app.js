@@ -6,7 +6,6 @@
  */
 const express = require('express')
   , path = require('path')
-  , favicon = require('serve-favicon')
   , logger = require('morgan')
   , cookieParser = require('cookie-parser')
   , bodyParser = require('body-parser')
@@ -19,8 +18,6 @@ const express = require('express')
   , indexRoutes = require('./routes/index')
   , btRoutes = require('./routes/bt');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(Path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('combined'));
 app.use(helmet());
 app.use(bodyParser.json());
