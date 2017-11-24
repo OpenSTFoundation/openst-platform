@@ -1,6 +1,13 @@
+"use strict";
+
+/*
+ * Load all contract bin files
+ *
+ */
+
 const fs = require('fs');
 
-const core_bins = {
+const coreBins = {
   simpleToken: fs.readFileSync('./contracts/bin/SimpleToken.bin', 'utf8'),
   openSTUtility: fs.readFileSync('./contracts/bin/OpenSTUtility.bin', 'utf8'),
   openSTValue: fs.readFileSync('./contracts/bin/OpenSTValue.bin', 'utf8'),
@@ -12,4 +19,4 @@ const core_bins = {
   utilityToken: ''
 };
 
-module.exports = core_bins;
+module.exports = coreBins;

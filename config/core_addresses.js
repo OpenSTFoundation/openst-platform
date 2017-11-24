@@ -1,8 +1,17 @@
 "use strict";
 
+/**
+ * List of all addresses and there respective abi, bin, passphrase
+ * required for platform.
+ *
+ * And helper methods to access this information using human readable
+ * names.
+ *
+ */
+
 const relPath = ".."
-  , core_abis = require('./core_abis')
-  , core_bins = require('./core_bins')
+  , coreAbis = require('./core_abis')
+  , coreBins = require('./core_bins')
   , coreConstants = require('./core_constants')
   , utilityRegistrarConfig = require(relPath+"/utility_registrar_config.json");
 
@@ -11,15 +20,15 @@ const allAddresses = {
 
     foundation: {
       address: process.env.OST_FOUNDATION_ADDR,
-      passphrase: process.env.OST_FOUNDATION_PASSPHRASE
+      passphrase: ''
     },
 
-    simpleTokenCompany: {
-      address: process.env.OST_SIMPLETOKENCOMPANY_ADDR,
-      passphrase: coreConstants.OST_SIMPLETOKENCOMPANY_PASSPHRASE
+    utilityChainOwner: {
+      address: process.env.OST_UTILITY_CHAIN_OWNER_ADDR,
+      passphrase: ''
     },
 
-    // This is value chain registrar
+    // This is value chain registrar address
     registrar: {
       address: process.env.OST_REGISTRAR_ADDR,
       passphrase: process.env.OST_REGISTRAR_PASSPHRASE
@@ -35,67 +44,67 @@ const allAddresses = {
   contracts: {
     simpleToken: {
       address: process.env.OST_SIMPLE_TOKEN_CONTRACT_ADDR,
-      abi: core_abis.simpleToken,
-      bin: core_bins.simpleToken
+      abi: coreAbis.simpleToken,
+      bin: coreBins.simpleToken
     },
 
     openSTUtility: {
       address: process.env.OST_OPENSTUTILITY_CONTRACT_ADDR,
-      abi: core_abis.openSTUtility,
-      bin: core_bins.openSTUtility
+      abi: coreAbis.openSTUtility,
+      bin: coreBins.openSTUtility
     },
 
     openSTValue: {
       address: process.env.OST_OPENSTVALUE_CONTRACT_ADDR,
-      abi: core_abis.openSTValue,
-      bin: core_bins.openSTValue
+      abi: coreAbis.openSTValue,
+      bin: coreBins.openSTValue
     },
 
     stPrime: {
       address: process.env.OST_STPRIME_CONTRACT_ADDR,
-      abi: core_abis.stPrime,
-      bin: core_bins.stPrime
+      abi: coreAbis.stPrime,
+      bin: coreBins.stPrime
     },
 
     valueCore: {
       address: process.env.OST_VALUE_CORE_CONTRACT_ADDR,
-      abi: core_abis.valueCore,
-      bin: core_bins.valueCore
+      abi: coreAbis.valueCore,
+      bin: coreBins.valueCore
     },
 
     valueRegistrar: {
       address: process.env.OST_VALUE_REGISTRAR_CONTRACT_ADDR,
-      abi: core_abis.valueRegistrar,
-      bin: core_bins.valueRegistrar
+      abi: coreAbis.valueRegistrar,
+      bin: coreBins.valueRegistrar
     },
 
     utilityRegistrar: {
       address: process.env.OST_UTILITY_REGISTRAR_CONTRACT_ADDR,
-      abi: core_abis.utilityRegistrar,
-      bin: core_bins.utilityRegistrar
+      abi: coreAbis.utilityRegistrar,
+      bin: coreBins.utilityRegistrar
     },
 
     staking: {
       address: process.env.OST_STAKING_CONTRACT_ADDR,
-      abi: core_abis.staking,
-      bin: core_bins.staking
+      abi: coreAbis.staking,
+      bin: coreBins.staking
     },
 
     utilityToken: {
       address: process.env.OST_UTILITY_TOKEN_CONTRACT_ADDR,
-      abi: core_abis.utilityToken,
-      bin: core_bins.utilityToken
+      abi: coreAbis.utilityToken,
+      bin: coreBins.utilityToken
     }
   }
 };
 
+// generate a contract address to name map for reverse lookup
 const addrToContractNameMap = {};
-
-for(var contractName in allAddresses.contracts) {
+for (var contractName in allAddresses.contracts) {
   var addr = allAddresses.contracts[contractName].address;
 
   if ( Array.isArray(addr) ) {
-    for(var i = 0; i < addr.length; i ++) {
+    for (var i = 0; i < addr.length; i++) {
       addrToContractNameMap[addr[i].toLowerCase()] = contractName;
     }
   } else {
@@ -103,28 +112,29 @@ for(var contractName in allAddresses.contracts) {
   }
 }
 
+// helper methods to access difference addresses and their respective details
 const coreAddresses = {
-  getAddressForUser: function(userName){
+  getAddressForUser: function(userName) {
     return allAddresses.users[userName].address;
   },
 
-  getPassphraseForUser: function(userName){
+  getPassphraseForUser: function(userName) {
     return allAddresses.users[userName].passphrase;
   },
 
-  getAddressForContract: function(contractName){
+  getAddressForContract: function(contractName) {
     var contractAddress = allAddresses.contracts[contractName].address;
-    if(!contractAddress || contractAddress=='' || Array.isArray(contractAddress)){
-      throw "Please pass valid contractName to get contract address"
+    if (!contractAddress || contractAddress==='' || Array.isArray(contractAddress)) {
+      throw "Please pass valid contractName to get contract address";
     }
     return contractAddress;
   },
 
   // This must return array of addresses.
-  getAddressesForContract: function(contractName){
+  getAddressesForContract: function(contractName) {
     var contractAddresses = allAddresses.contracts[contractName].address;
-    if(!contractAddresses || !Array.isArray(contractAddresses) || contractAddresses.length==0 ){
-      throw "Please pass valid contractName to get contract address"
+    if (!contractAddresses || !Array.isArray(contractAddresses) || contractAddresses.length===0) {
+      throw "Please pass valid contractName to get contract address";
     }
     return contractAddresses;
   },
@@ -146,7 +156,7 @@ const coreAddresses = {
     if (utilityChainObj) {
       return utilityChainObj.registrarAddr;
     }
-    return ""
+    return "";
   },
 
   getUtilityRegistrarPassphrase: function(utilityChainId) {
@@ -154,7 +164,7 @@ const coreAddresses = {
     if (utilityChainObj) {
       return utilityChainObj.registrarPassphrase;
     }
-    return ""
+    return "";
   }
 };
 

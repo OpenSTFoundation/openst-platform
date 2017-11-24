@@ -6,7 +6,6 @@ STEPS
    export OST_GETH_UTILITY_RPC_PROVIDER='http://localhost:9546'
    export OST_GETH_UTILITY_WS_PROVIDER='ws://localhost:19546'
 
-   export OST_FOUNDATION_PASSPHRASE=''
    export OST_REGISTRAR_PASSPHRASE=''
 
    export OST_FOUNDATION_ADDR=''

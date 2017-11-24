@@ -1,5 +1,13 @@
-const fs = require('fs'),
-  core_abis = {
+"use strict";
+
+/*
+ * Load all contract abi files
+ *
+ */
+
+const fs = require('fs');
+
+const coreAbis = {
     simpleToken: JSON.parse(fs.readFileSync('./contracts/abi/SimpleToken.abi', "utf8")),
     openSTUtility: JSON.parse(fs.readFileSync('./contracts/abi/OpenSTUtility.abi', "utf8")),
     openSTValue: JSON.parse(fs.readFileSync('./contracts/abi/OpenSTValue.abi', "utf8")),
@@ -9,6 +17,6 @@ const fs = require('fs'),
     utilityRegistrar: JSON.parse(fs.readFileSync('./contracts/abi/Registrar.abi', "utf8")),
     staking: '',
     utilityToken: ''
-};
+  };
 
-module.exports = core_abis;
+module.exports = coreAbis;
