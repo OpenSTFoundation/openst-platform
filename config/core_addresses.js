@@ -28,8 +28,8 @@ const allAddresses = {
     deployer: {
       address: process.env.OST_DEPLOYER_ADDR,
       passphrase: process.env.OST_DEPLOYER_PASSPHRASE
-    },
-    
+    }
+
   },
 
   contracts: {
