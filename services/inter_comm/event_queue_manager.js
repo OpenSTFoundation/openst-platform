@@ -2,7 +2,7 @@
 
 const rootPrefix = '../..'
   , logger = require(rootPrefix + "/helpers/CustomConsoleLogger")
-  , eventProcessorKlass = require(rootPrefix+'/services/inter_comm/event_processor')
+  , eventProcessorKlass = require(rootPrefix+'/services/inter_comm/event_processor');
 
 const EventQueueManager = module.exports = function (stakingContract) {
   this.stakingContract = stakingContract;

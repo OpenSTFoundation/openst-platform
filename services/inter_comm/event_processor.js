@@ -135,7 +135,7 @@ EventProcessor.prototype = {
         logger.error( error.message, oThis.getEventDescription());
         //Always mark request as complete.
         oThis.triggerProcessCallback( false );
-      })
+      });
   },
 
   triggerProcessCallback: function ( success ) {
