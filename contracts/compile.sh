@@ -10,19 +10,33 @@ echo ""
 echo "Compiling SimpleToken.sol"
 echo ""
 
-solc --abi --overwrite ../SimpleTokenSale/contracts/SimpleToken.sol -o $ABIDIRUTILITY
-solc --bin --overwrite ../SimpleTokenSale/contracts/SimpleToken.sol -o $BINDIRVALUE
+solc --abi --overwrite ../openst-protocol/contracts/SimpleToken/SimpleToken.sol -o $ABIDIRUTILITY
+solc --bin --overwrite ../openst-protocol/contracts/SimpleToken/SimpleToken.sol -o $BINDIRVALUE
 
 echo ""
-echo "Compiling Staking.sol"
+echo "Compiling OpenSTUtility.sol"
 echo ""
 
-solc --abi --overwrite ../openst-protocol/contracts/Staking.sol -o $ABIDIRUTILITY
-solc --bin --overwrite ../openst-protocol/contracts/Staking.sol -o $BINDIRVALUE
+solc --abi --overwrite ../openst-protocol/contracts/utilityChain/OpenSTUtility.sol -o $ABIDIRUTILITY
+solc --bin --overwrite ../openst-protocol/contracts/utilityChain/OpenSTUtility.sol -o $BINDIRVALUE
 
 echo ""
-echo "Compiling UtilityToken.sol"
+echo "Compiling OpenSTValue.sol"
 echo ""
 
-solc --abi --overwrite ../openst-protocol/contracts/UtilityToken.sol -o $ABIDIRUTILITY
-solc --bin --overwrite ../openst-protocol/contracts/UtilityToken.sol -o $BINDIRVALUE
+solc --abi --overwrite ../openst-protocol/contracts/valueChain/OpenSTValue.sol -o $ABIDIRUTILITY
+solc --bin --overwrite ../openst-protocol/contracts/valueChain/OpenSTValue.sol -o $BINDIRVALUE
+
+echo ""
+echo "Compiling Core.sol"
+echo ""
+
+solc --abi --overwrite ../openst-protocol/contracts/Core.sol -o $ABIDIRUTILITY
+solc --bin --overwrite ../openst-protocol/contracts/Core.sol -o $BINDIRVALUE
+
+echo ""
+echo "Compiling Registrar.sol"
+echo ""
+
+solc --abi --overwrite ../openst-protocol/contracts/Registrar.sol -o $ABIDIRUTILITY
+solc --bin --overwrite ../openst-protocol/contracts/Registrar.sol -o $BINDIRVALUE
