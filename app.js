@@ -1,63 +1,60 @@
-const Express = require('express');
-const Path = require('path');
-//const favicon = require('serve-favicon');
-const Logger = require('morgan');
-const CookieParser = require('cookie-parser');
-const BodyParser = require('body-parser');
-const BasicAuth = require('express-basic-auth');
+"use strict";
 
-const Index = require('./routes/index');
-const ERC20 = require('./lib/erc20contract');
-const BT = require('./routes/bt');
-
-const Config = require('./config.json');
-
-const responseHelper = require('./lib/formatter/response');
-
-// const NDEBUG = process.env.npm_package_scripts_start === undefined;
-
-var app = Express();
-
-// view engine setup
-app.set('views', Path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+/*
+ * Main application file
+ *
+ */
+const express = require('express')
+  , path = require('path')
+  , favicon = require('serve-favicon')
+  , logger = require('morgan')
+  , cookieParser = require('cookie-parser')
+  , bodyParser = require('body-parser')
+  , basicAuth = require('express-basic-auth')
+  , helmet = require('helmet')
+  , sanitizer = require('express-sanitized')
+  , app = express()
+  , config = require('./config.json')
+  , responseHelper = require('./lib/formatter/response')
+  , indexRoutes = require('./routes/index')
+  , btRoutes = require('./routes/bt');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(Path.join(__dirname, 'public', 'favicon.ico')));
-app.use(Logger('dev'));
-app.use(BodyParser.json());
-app.use(BodyParser.urlencoded({ extended: false }));
-app.use(CookieParser());
-app.use(Express.static(Path.join(__dirname, 'public')));
-app.use('/', Index);
+app.use(logger('combined'));
+app.use(helmet());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
-for (var key in Config.Members) {
-  const member = Config.Members[key];
+/*
+  The below peice of code should always be before routes.
+  Docs: https://www.npmjs.com/package/express-sanitized
+*/
+app.use(sanitizer());
+
+// load index routes
+app.use('/', indexRoutes);
+
+// Mount member company routes
+for (var key in config.Members) {
+  const member = config.Members[key];
   member.Route = "/bt" + member.Route
   console.log("Mounting branded token", member.Name, "on", member.Route);
-  app.use(member.Route, BasicAuth(member.ApiAuth), new BT(  member ) );
+  app.use(member.Route, basicAuth(member.ApiAuth), new btRoutes(member));
 }
 
-// debug transaction callback handler
-app.post('/transaction', function(req, res, next) {
-  console.log(req.body);
-});
-
-// catch 404
-app.use(function(req, res, next) {
-  res.locals.error = {}
-  res.locals.message = 'Not Found';
-  res.status(404).render('error')
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+  return responseHelper.error('404', 'Not Found').renderResponse(res, 404);
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  console.error(err.stack);
-  res.status( 200 ).json( responseHelper.error("app_1", "Something went wrong") );
+  console.error(err);
+  return responseHelper.error('500', 'Something went wrong').renderResponse(res, 500);
 });
 
 module.exports = app;
