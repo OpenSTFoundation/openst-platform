@@ -18,6 +18,7 @@ test/st-poa
 pids
 
 /.idea
+package-lock.json
 
 *.pid
 *.seed
