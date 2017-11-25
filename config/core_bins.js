@@ -16,7 +16,7 @@ const coreBins = {
   valueRegistrar: fs.readFileSync('./contracts/bin/Registrar.bin', 'utf8'),
   utilityRegistrar: fs.readFileSync('./contracts/bin/Registrar.bin', 'utf8'),
   staking: '',
-  utilityToken: ''
+  brandedToken:  fs.readFileSync('./contracts/bin/BrandedToken.bin', 'utf8')
 };
 
 module.exports = coreBins;

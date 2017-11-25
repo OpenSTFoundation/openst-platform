@@ -90,10 +90,10 @@ const allAddresses = {
       bin: coreBins.staking
     },
 
-    utilityToken: {
+    brandedToken: {
       address: process.env.OST_UTILITY_TOKEN_CONTRACT_ADDR,
-      abi: coreAbis.utilityToken,
-      bin: coreBins.utilityToken
+      abi: coreAbis.brandedToken,
+      bin: coreBins.brandedToken
     }
   }
 };

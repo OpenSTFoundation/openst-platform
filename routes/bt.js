@@ -1,20 +1,16 @@
-const Assert      = require("assert")
-      , Express   = require("express")
-      , RP        = require("request")
-      , BigNumber = require("bignumber.js")
-      , Web3      = require("web3")
+const Assert  = require("assert")
+  , Express   = require("express")
+  , RP        = require("request")
+  , BigNumber = require("bignumber.js")
 ;
 
 const reqPrefix         = ".."
-      , ERC20           = require(reqPrefix + "/lib/erc20contract")
-      , UtilityToken    = require(reqPrefix + "/lib/contract_interact/UtilityToken")
-      , Stake           = require(reqPrefix + "/lib/stakeContract")
-      , responseHelper  = require(reqPrefix + "/lib/formatter/response")
-      , web3            = new Web3()
+  , BTContractInteract  = require(reqPrefix + "/lib/contract_interact/branded_token")
+  , responseHelper      = require(reqPrefix + "/lib/formatter/response")
 ;
 
 //Old things. To be removed.
-const BrandedTokenJson = require(reqPrefix + "/contracts/UtilityToken.json");
+const BrandedTokenJson = require(reqPrefix + "/contracts/old/UtilityToken.json");
 const BrandedTokenContract = BrandedTokenJson.contracts['UtilityToken.sol:UtilityToken'];
 
 
@@ -26,17 +22,13 @@ const BrandedTokenContract = BrandedTokenJson.contracts['UtilityToken.sol:Utilit
  * @param {object?} callbackAuth Optional authentication object for callback requests.
  */
 module.exports = function( member ) {
-  const btContractInteract  = new UtilityToken( member )
-        ,callbackUrl        = member.Callback
-        ,callbackAuth       = member.CallbackAuth
-        ,memberSymbol       = member.Symbol
+  const btContractInteract  = new BTContractInteract( member )
+    , callbackUrl           = member.Callback
+    , callbackAuth          = member.CallbackAuth
+    , memberSymbol          = member.Symbol
+    , web3                  = btContractInteract.getWeb3Provider()
   ;
 
-//Old things. To be removed.
-  const erc20 = new ERC20( member.Reserve, BrandedTokenContract, member.ERC20);
-
-
-  Assert.ok(erc20 instanceof ERC20, `erc20 must be an instance of ERC20`);
   Assert.strictEqual(typeof callbackUrl, 'string', `callbackUrl must be of type 'string'`);
 
   const router = Express.Router();
@@ -80,7 +72,12 @@ module.exports = function( member ) {
   router.get('/name', function(req, res, next) {
     btContractInteract.getName()
       .then( response => {
+        console.log( "then.response", JSON.stringify( response ) );
         response.renderResponse( res );
+      })
+      .catch( reason => {
+        console.log( "catch.reason", reason.message );
+        throw reason;
       })
       .catch(next);
   });
@@ -162,53 +159,53 @@ module.exports = function( member ) {
     ;
   });
 
-  router.get('/transferFrom', function(req, res, next) {
-    const sender = req.query.sender;
-    const from = req.query.from;
-    const to = req.query.to;
-    const value = Number(req.query.value);
-    const tag = req.query.tag || "transferFrom";
+  // router.get('/transferFrom', function(req, res, next) {
+  //   const sender = req.query.sender;
+  //   const from = req.query.from;
+  //   const to = req.query.to;
+  //   const value = Number(req.query.value);
+  //   const tag = req.query.tag || "transferFrom";
 
-    const bigWeiValue = toBigNumberWei( value );
-    console.log("bigWeiValue", bigWeiValue);
+  //   const bigWeiValue = toBigNumberWei( value );
+  //   console.log("bigWeiValue", bigWeiValue);
 
-    Promise.resolve(erc20.transferFrom(sender, from, to, bigWeiValue))
-      .then(txid => {
-        const log = {from: from, to: to, value: bigWeiValue, tag: tag, txid: txid};
-        res.json({data: txid});
-        addTransaction(log);
-      })
-      .catch(next);
-  });
+  //   Promise.resolve(erc20.transferFrom(sender, from, to, bigWeiValue))
+  //     .then(txid => {
+  //       const log = {from: from, to: to, value: bigWeiValue, tag: tag, txid: txid};
+  //       res.json({data: txid});
+  //       addTransaction(log);
+  //     })
+  //     .catch(next);
+  // });
 
-  router.get('/approve', function(req, res, next) {
-    const sender = req.query.sender;
-    const spender = req.query.spender;
-    const value = Number(req.query.value);
-    const tag = req.query.tag || "approve";
+  // router.get('/approve', function(req, res, next) {
+  //   const sender = req.query.sender;
+  //   const spender = req.query.spender;
+  //   const value = Number(req.query.value);
+  //   const tag = req.query.tag || "approve";
 
-    const bigWeiValue = toBigNumberWei( value );
+  //   const bigWeiValue = toBigNumberWei( value );
 
-    Promise.resolve(erc20.approve(sender, spender, bigWeiValue))
-      .then(txid => {
-        const log = {sender: sender, to: spender, value: bigWeiValue, tag: tag, txid: txid};
-        res.json({data: txid});
-        addTransaction(log);
-      })
-      .catch(next);
-  });
+  //   Promise.resolve(erc20.approve(sender, spender, bigWeiValue))
+  //     .then(txid => {
+  //       const log = {sender: sender, to: spender, value: bigWeiValue, tag: tag, txid: txid};
+  //       res.json({data: txid});
+  //       addTransaction(log);
+  //     })
+  //     .catch(next);
+  // });
 
 
 
-  router.get('/log', function(req, res, next) {
-    const owner = req.query.owner;
-    res.json({data: auditLog[owner] || []});
-  });
+  // router.get('/log', function(req, res, next) {
+  //   const owner = req.query.owner;
+  //   res.json({data: auditLog[owner] || []});
+  // });
 
-  router.get('/getAllTxDetails', function(req, res, next) { 
-    res.json( erc20.getAllTxDetails() );
-    next();
-  });
+  // router.get('/getAllTxDetails', function(req, res, next) { 
+  //   res.json( erc20.getAllTxDetails() );
+  //   next();
+  // });
 
   router.get('/newkey', function(req, res, next) {
     const web3RpcProvider = require('../lib/web3/providers/utility_rpc');
