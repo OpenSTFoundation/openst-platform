@@ -37,7 +37,7 @@ const performer = async function() {
     }
   );
 
-  var contractName = 'registrar'
+  var contractName = 'valueRegistrar'
     ,contractAbi = coreAddresses.getAbiForContract(contractName)
     ,contractBin = coreAddresses.getBinForContract(contractName);
 

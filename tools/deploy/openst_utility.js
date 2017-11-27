@@ -14,7 +14,7 @@ const rootPrefix = '../..'
   , utilityChainOwnerAddress = coreAddresses.getAddressForUser('utilityChainOwner')
   , OpenStUtilityContractInteract = require(rootPrefix+'/lib/contract_interact/openst_utility')
   , StPrimeContractInteract = require(rootPrefix+'/lib/contract_interact/st_prime')
-  , customLogger = require(rootPrefix+'/custom_console_logger')
+  , customLogger = require(rootPrefix+'/helpers/custom_console_logger')
   ;
 
 // TODO Colourful Logger Changes
@@ -42,7 +42,7 @@ const performer = async function() {
   );
 
   // deploy Registrar
-  var contractName = 'registrar'
+  var contractName = 'utilityRegistrar'
      ,contractAbi = coreAddresses.getAbiForContract(contractName)
      ,contractBin = coreAddresses.getBinForContract(contractName);
 
