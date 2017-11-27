@@ -315,7 +315,7 @@ function deploySimpleTokenContract() {
       logStep(contractDeployResult);
       logWin(contractName + " Contract deployed ");
 
-      SIMPLETOKEN_CONTRACT = contractDeployResult.receipt.contractAddress;
+      SIMPLETOKEN_CONTRACT = contractDeployResult.contractAddress;
   });
 }
 
