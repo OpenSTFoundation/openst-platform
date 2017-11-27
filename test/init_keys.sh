@@ -23,6 +23,10 @@ geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE
 #Member Company Address
 geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE
 
+# OST_UTILITY_CHAIN_OWNER_ADDR Address. Will be used in utility chain
+geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE
+
+
 echo "...New addresses generated"
 
 echo "Sync keystores"

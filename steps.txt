@@ -21,7 +21,7 @@ STEPS
     export OST_REGISTRAR_ADDR=''
     export OST_REGISTRAR_PASSPHRASE='testtest'
 
-    export OST_SIMPLE_TOKEN_CONTRACT_ADDR='0xABCDEF0123456789ABCDEF0123456789ABCDEF01'
+    export OST_SIMPLE_TOKEN_CONTRACT_ADDR=''
     export OST_OPENSTVALUE_CONTRACT_ADDR=''
     export OST_OPENSTUTILITY_CONTRACT_ADDR=''
     export OST_STPRIME_CONTRACT_ADDR=''
@@ -51,46 +51,35 @@ STEPS
    - cd test
    - ./run_utility_chain.sh
 
-5) On Development Only
-   - node deployOpenSTOnTestNetNew.js
+5) On development only
+       - if simple contract is not deployed
+       - On value chain machine
+       - source test/open_st_env_vars.sh
+       - node test/deployOpenSTOnTestNetNew.js
+       - populate OST_SIMPLE_TOKEN_CONTRACT_ADDR in test/open_st_env_vars.sh from config.json
 
-5) On Development only
-      - populate OST_FOUNDATION_ADDR(SimpleTokenFoundation) and OST_DEPLOYER_ADDR from config.json to test/open_st_env_vars.sh
+6) On Development only
+      - Verify if OST_FOUNDATION_ADDR(SimpleTokenFoundation) and OST_DEPLOYER_ADDR is populated to test/open_st_env_vars.sh
       - source test/open_st_env_vars.sh
+      - Verify OST_DEPLOYER_ADDR has sufficient balance in value chain.
 
-7) Verify OST_FOUNDATION_ADDR and OST_DEPLOYER_ADDR has sufficient balance.
-
-6) On development only - if simple contract is not deployed
-    - On value chain machine
+7) deploy contracts on value Chain
     - source test/open_st_env_vars.sh
-    - node test/deployOpenSTOnTestNetNew.js
-    - populate OST_SIMPLE_TOKEN_CONTRACT_ADDR in test/open_st_env_vars.sh from config.json
-
-    # Deploys SimpleToken contract on value chain
-    # Funds Member Companies
-
-7) If staking contract is not deployed on production
-    - On Value Chain machine
-    - source test/open_st_env_vars.sh
-    - node lib/deploy/staking.js
-    - From contract deployment receipt populate OST_STAKING_CONTRACT_ADDR in open_st_env_vars.sh
-    - Also populate staking contract address(config.Stake) in config.json
+    - node tools/deploy/openst_value.js
 
 8) On Utility Chain Machine
+    - in poa-genesis-utility.json alloc 800M base tokens to machine key
+    - Transfer sufficient fund to deployer
+
+       var sender = '';
+       var receiver = ''
+       personal.unlockAccount(sender)
+       eth.sendTransaction({from: sender, to: receiver, value: web3.toWei(10, "ether")})
+    - Verify if OST_DEPLOYER_ADDR has proper balance
     - source test/open_st_env_vars.sh
-    - node lib/deploy/utility_token_to_be_deleted.js
-    - From contract deployment receipt populate OST_UTILITY_TOKEN_CONTRACT_ADDR in open_st_env_vars.sh
-    - Populate utility_token contract address(config.Members.ERC20) in config.json
-    - Populate UUID(config.Members.UUID) from console in config.json
+    - node tools/deploy/openst_utility.js
 
-9) Open a new terminal and run
+9) On Value Chain Machine
     - source test/open_st_env_vars.sh
-    - node services/registrar.js
+    - node tools/deploy/register_utility_token_value.js
 
-10) For staking and minting
-   - source test/open_st_env_vars.sh
-   - node tools/stakeAndMint.js
-
-11) To Host APIs
-    source test/open_st_env_vars.sh
-    npm start

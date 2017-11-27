@@ -33,7 +33,11 @@ function main( addressFile ) {
     } else if ( !_addresses.deployer ) {
       _addresses.deployer = thisAddress;
       updateDeployerAddress( thisAddress );
-    } else {
+    } else if ( !_addresses.utilityChainOwnerAddress ) {
+      _addresses.utilityChainOwnerAddress = thisAddress;
+      updateUtilityChainOwnerAddress(thisAddress);
+    }
+    else {
       //Member Address
       _addresses.members.push( thisAddress );
       updateMember( (_addresses.members.length - 1 ), thisAddress);
@@ -73,6 +77,10 @@ function updateAdminAddress( admin ) {
 
 function updateDeployerAddress( deployer ) {
   Config.ValueChain.Deployer = deployer; /* Allowed Usage */
+}
+
+function updateUtilityChainOwnerAddress( utilityChainOwnerAddress ) {
+  Config.ValueChain.UtilityChainOwnerAddress = utilityChainOwnerAddress; /* Allowed Usage */
 }
 
 function updateGenesisAlloc( genesis, foundation, value ) {
