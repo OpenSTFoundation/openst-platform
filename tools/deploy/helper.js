@@ -9,7 +9,7 @@ const rootPrefix = '../..'
   , oneGW = '0x3B9ACA00'
   , fiveGW = '0x12A05F200'
   , gasPrice = fiveGW
-  , gasLimit = 4700000 // TODO: Right now this is the max for any contract to be deployed. We should get it dynamically for each contract.
+  , gasLimit = 9000000 // TODO: Right now this is the max for any contract to be deployed. We should get it dynamically for each contract.
   , coreAddresses = require(rootPrefix + '/config/core_addresses');
 
 const _private = {
@@ -81,7 +81,7 @@ const deployHelper = {
     };
 
     console.log("Unlocking address: " + deployerAddr);
-    console.log("Unlocking passphrase: " + deployerAddrPassphrase);
+    console.log("Unlocking passphrase");
     await web3Provider.eth.personal.unlockAccount(deployerAddr, deployerAddrPassphrase);
 
     console.log("Deploying contract " + contractName);
@@ -96,7 +96,7 @@ const deployHelper = {
     const code = await web3Provider.eth.getCode(contractAddress);
 
     if (code.length <= 2) {
-      return Promise.reject("Contract deployment failed. Empty code.");
+      return Promise.reject("Contract deployment failed. Invalid code length for contract: " + contractName);
     }
 
     // Print summary
