@@ -391,15 +391,15 @@ function listenToUtilityToken( member, mintingIntentHash ) {
       var eventName = 'StakingIntentDeclared'
         , stakingEventData = null;
 
-      for(var i=0; i<eventsData.length; i++){
-        var currEvent = eventsData[i];
-        if(eventName == currEvent.name){
-          stakingEventData = currEvent.events;
-          break;
-        }
-      }
+      var eventDataValues = {};
 
-      if (!stakingEventData){
+      for(var sedi=0; i<stakingEventData.length; i++){
+        var event = stakingEventData[sedi];
+        eventDataValues[event.name] = event.value
+      }
+      eventDataValues = ([eventName], formattedTransactionReceipt)[eventName];
+
+      if (!eventDataValues){
         console.log( "Staking was not completed correctly: StakingIntentDeclared event didn't found in events data: \n");
         console.log("rawTxReceipt is:\n");
         console.log(rawTxReceipt);
@@ -407,15 +407,6 @@ function listenToUtilityToken( member, mintingIntentHash ) {
         console.log(formattedTransactionReceipt);
         process.exit(1);
       }
-
-      var eventDataValues = {};
-
-      for(var sedi=0; i<stakingEventData.length; i++){
-        var event = stakingEventData[sedi];
-        eventDataValues[event.name] = event.value
-      }
-
-      eventDataValues = ([eventName], formattedTransactionReceipt)[eventName];
 
       logger.win("Staked", toDisplayST( toStakeAmount ) );
       const stakeReturnValues     = stakeTX.events.StakingIntentDeclared.returnValues
