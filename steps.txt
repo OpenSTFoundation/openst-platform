@@ -2,30 +2,61 @@ STEPS
 
 1) export variables from open_st_env_vars.sh after reviewing the values
 
-2)  In test/open_st_env_vars.sh, verify all the addressed if known else keep it blank
-    - source test/open_st_env_vars.sh
+    export OST_GETH_VALUE_RPC_PROVIDER='http://localhost:8545'
+    export OST_GETH_VALUE_WS_PROVIDER='ws://localhost:18545'
 
-3) Setup chainId according to the environment in open_st_env_vars.sh
-    - OST_VALUE_CHAIN_ID
-    - OST_UTILITY_CHAIN_ID
-    - source test/open_st_env_vars.sh
+    export OST_GETH_UTILITY_RPC_PROVIDER='http://localhost:9546'
+    export OST_GETH_UTILITY_WS_PROVIDER='ws://localhost:19546'
 
-4) On Development only
-   - cd test/
-   - ./init_keys.sh
-   - populate OST_FOUNDATION_ADDR(SimpleTokenFoundation)) and OST_DEPLOYER_ADDR from config.json to test/open_st_env_vars.sh
-   - source test/open_st_env_vars.sh
+    export OST_VALUE_CHAIN_ID=2001
+    export OST_UTILITY_CHAIN_ID=2000
 
-5) On Development only
+    export OST_FOUNDATION_ADDR=''
+
+    export OST_DEPLOYER_ADDR=''
+    export OST_DEPLOYER_PASSPHRASE='testtest'
+
+    export OST_UTILITY_CHAIN_OWNER_ADDR=''
+
+    export OST_REGISTRAR_ADDR=''
+    export OST_REGISTRAR_PASSPHRASE='testtest'
+
+    export OST_SIMPLE_TOKEN_CONTRACT_ADDR='0xABCDEF0123456789ABCDEF0123456789ABCDEF01'
+    export OST_OPENSTVALUE_CONTRACT_ADDR=''
+    export OST_OPENSTUTILITY_CONTRACT_ADDR=''
+    export OST_STPRIME_CONTRACT_ADDR=''
+    export OST_VALUE_CORE_CONTRACT_ADDR=''
+    export OST_VALUE_REGISTRAR_CONTRACT_ADDR=''
+    export OST_UTILITY_REGISTRAR_CONTRACT_ADDR=''
+
+    export OST_STAKING_CONTRACT_ADDR=''
+    export OST_UTILITY_TOKEN_CONTRACT_ADDR=''
+
+    export OST_DEPLOYER_ADDR=''
+    export OST_DEPLOYER_PASSPHRASE='testtest'
+
+    export OST_UTILITY_STPRIME_TOTAL_SUPPLY=800000000
+
+2) cd test
+    ./init_keys.sh
+
+3) On Development only
     - Verify genesis test/poa-genesis-value.json
     - Open a new Terminal and Run
     - cd test
     - ./run_value_chain.sh
 
-6) Verify test/poa-genesis-utility.json
+4) Verify test/poa-genesis-utility.json
    - Open a New Terminal
    - cd test
    - ./run_utility_chain.sh
+
+5) On Development Only
+   - node deployOpenSTOnTestNetNew.js
+
+5) On Development only
+      - populate OST_FOUNDATION_ADDR(SimpleTokenFoundation) and OST_DEPLOYER_ADDR from config.json to test/open_st_env_vars.sh
+      - source test/open_st_env_vars.sh
 
 7) Verify OST_FOUNDATION_ADDR and OST_DEPLOYER_ADDR has sufficient balance.
 

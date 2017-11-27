@@ -14,7 +14,7 @@ echo "Generate new addresses..."
 #Foundation Address
 geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE
 
-#Admin Address
+#Registrar Address of Value Chain
 geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE
 
 #Deployer Address

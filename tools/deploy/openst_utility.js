@@ -20,6 +20,7 @@ const rootPrefix = '../..'
 // TODO Break into methods
 // TODO Write to config.json and open_st_env_vars.sh
 // TODO write utilityChainOwner in config.json
+// TODO write OST_OPENSTUTILITY_ST_PRIME_UUID
 const performer = async function() {
 
   customLogger.log("Deployer Address: " + deployerAddress);
