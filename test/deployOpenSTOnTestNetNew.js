@@ -13,6 +13,7 @@ const rootPrefix = "..",
       coreConstants = require(rootPrefix + '/config/core_constants'),
       coreAddresses = require(rootPrefix + '/config/core_addresses'),
       FOUNDATION = coreAddresses.getAddressForUser('foundation'),
+      FOUNDATION_PASSPHRASE = coreAddresses.getPassphraseForUser('foundation'),
       REGISTRAR = coreAddresses.getAddressForUser('registrar'),
       REGISTRAR_KEY = coreAddresses.getPassphraseForUser('registrar'),
       DEPLOYER = coreAddresses.getAddressForUser('deployer'),
@@ -113,7 +114,7 @@ function validateSimpleTokenFoundation() {
   .then( balance => {
     logInfo("ValueChain Balance of SimpleTokenFoundation =", balance);
     logInfo("Unlocking SimpleTokenFoundation on ValueChain");
-    return web3RpcValueProvider.eth.personal.unlockAccount( FOUNDATION );
+    return web3RpcValueProvider.eth.personal.unlockAccount( FOUNDATION, FOUNDATION_PASSPHRASE );
   })
   .catch( reason =>  {
     logError( "Failed to unlock SimpleTokenFoundation" );
@@ -129,7 +130,7 @@ function validateSimpleTokenFoundation() {
     .then( balance => {
       logInfo("UtilityChain Balance of SimpleTokenFoundation =", balance);
       logInfo("Unlocking SimpleTokenFoundation on UtilityChain");
-      return web3RpcUtilityProvider.eth.personal.unlockAccount( FOUNDATION );
+      return web3RpcUtilityProvider.eth.personal.unlockAccount( FOUNDATION, FOUNDATION_PASSPHRASE );
     })
   })
   .then(_ => {
@@ -190,10 +191,7 @@ function fundAddressOnUtilityChain( accountAddress, addressName ) {
 
 function fundAddress(Chain, chainName, accountAddress, addressName ) {
   logInfo("Unlock",addressName,"on",chainName);
-  return Chain.eth.personal.unlockAccount(accountAddress)
-  .then( _ => {
-    logInfo("Fetch",addressName,"balance on",chainName);
-    return Chain.eth.getBalance( accountAddress )
+  return Chain.eth.getBalance( accountAddress )
     .catch( reason =>  {
       logError("Failed to fund ", addressName);
       catchAndExit( reason );
@@ -206,7 +204,7 @@ function fundAddress(Chain, chainName, accountAddress, addressName ) {
       const diff = MIN_FUND.minus( bigBalance );
 
       if ( diff.greaterThan( 0 ) ) {
-        return Chain.eth.personal.unlockAccount(FOUNDATION)
+        return Chain.eth.personal.unlockAccount(FOUNDATION, FOUNDATION_PASSPHRASE)
         .catch( reason =>  {
           logError("Failed to deploy unlockAccount SimpleTokenFoundation on", chainName);
           catchAndExit( reason );
@@ -230,7 +228,6 @@ function fundAddress(Chain, chainName, accountAddress, addressName ) {
         logWin(addressName,"has sufficient funds on", chainName);
       }
     });
-  });
 }
 
 function initST() {

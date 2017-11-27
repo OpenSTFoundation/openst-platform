@@ -5,7 +5,7 @@ ADDRESS_FILE=./new_addresses
 
 echo "Init/Re-Init chain..."
 sh ./init_chain.sh
-echo "" > ./pw
+echo "testtest" > ./pw
 echo "" > $ADDRESS_FILE
 echo "...Done Init"
 

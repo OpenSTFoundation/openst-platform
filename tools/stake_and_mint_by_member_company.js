@@ -168,6 +168,7 @@ const getMemberSTBalance = function( member ) {
 
 const askStakingAmount = function(bigNumBalance) {
   return new Promise( function(resolve, reject) {
+    console.log("Please mention the Simple Tokens to Assign.");
     readlineInterface.prompt();
     const rlCallback = function(line) {
       console.log("askStakingAmount :: readlineInterface :: line", line);

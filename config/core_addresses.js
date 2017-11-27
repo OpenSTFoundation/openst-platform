@@ -20,7 +20,7 @@ const allAddresses = {
 
     foundation: {
       address: process.env.OST_FOUNDATION_ADDR,
-      passphrase: ''
+      passphrase: process.env.OST_FOUNDATION_PASSPHRASE
     },
 
     utilityChainOwner: {
