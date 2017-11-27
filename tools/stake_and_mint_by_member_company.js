@@ -393,8 +393,8 @@ function listenToUtilityToken( member, mintingIntentHash ) {
 
       for(var i=0; i<eventsData.length; i++){
         var currEvent = eventsData[i];
-        if(currEvent==eventName){
-          stakingEventData = currEvent;
+        if(eventName == currEvent.name){
+          stakingEventData = currEvent.events;
           break;
         }
       }
@@ -407,6 +407,15 @@ function listenToUtilityToken( member, mintingIntentHash ) {
         console.log(formattedTransactionReceipt);
         process.exit(1);
       }
+
+      var eventDataValues = {};
+
+      for(var sedi=0; i<stakingEventData.length; i++){
+        var event = stakingEventData[sedi];
+        eventDataValues[event.name] = event.value
+      }
+
+      eventDataValues = ([eventName], formattedTransactionReceipt)[eventName];
 
       logger.win("Staked", toDisplayST( toStakeAmount ) );
       const stakeReturnValues     = stakeTX.events.StakingIntentDeclared.returnValues
