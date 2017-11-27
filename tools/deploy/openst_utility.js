@@ -116,7 +116,7 @@ const performer = async function() {
   // TODO PRINT DEPLOYER BALANCE of 800M here
   customLogger.info("Transfering all ST Prime Base Tokens to STPrime Contract Address: "+simpleTokenPrimeContractAddress);
   var stPrimeUtilityContractInteract = new StPrimeContractInteract(simpleTokenPrimeContractAddress);
-  var stPrimeTransferResponse = await stPrimeUtilityContractInteract.initialize_transfer();
+  var stPrimeTransferResponse = await stPrimeUtilityContractInteract.initialize_transfer(deployerName);
   customLogger.info(stPrimeTransferResponse);
   customLogger.win("Transferred all ST Prime Base Tokens to STPrime Contract Address: "+simpleTokenPrimeContractAddress);
 
