@@ -17,15 +17,13 @@ const rootPrefix = '../..'
   , customLogger = require(rootPrefix+'/helpers/custom_console_logger')
   ;
 
-// TODO Colourful Logger Changes
-// TODO var VS const
+// TODO Break into methods
 // TODO Write to config.json and open_st_env_vars.sh
 // TODO write utilityChainOwner in config.json
-// Base tokens to Wei
 const performer = async function() {
 
   customLogger.log("Deployer Address: " + deployerAddress);
-  customLogger.log("Total ST Prime: " + coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY);
+  customLogger.log("Total ST Prime Which will be transferred: " + coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY);
   customLogger.log("Utility Chain Owner Address: " + utilityChainOwnerAddress);
 
   await new Promise(
@@ -60,7 +58,7 @@ const performer = async function() {
   customLogger.win(contractName + " Contract deployed ");
 
   // set ops address to UC registrar addr
-  const registrarContractAddress = registrarContractDeployResult.contractAddress
+  var registrarContractAddress = registrarContractDeployResult.contractAddress
     ,utilityRegistrarContractInteract = new UtilityRegistrarContractInteract(registrarContractAddress);
   customLogger.log('\nSetting Ops Address to Utility Chain Registrar Contract Address');
   var setOpsAddressresponse = await utilityRegistrarContractInteract.setOpsAddress(deployerName, registrarContractAddress);
@@ -90,7 +88,7 @@ const performer = async function() {
   customLogger.log(utiltiyContractDeployResponse);
   customLogger.win(contractName + " Contract deployed ");
 
-  const openSTUtilityContractAddress = utiltiyContractDeployResponse.contractAddress
+  var openSTUtilityContractAddress = utiltiyContractDeployResponse.contractAddress
     ,openStUtilityContractInteract = new OpenStUtilityContractInteract(openSTUtilityContractAddress);
 
   // initiate owner ship transfer to utilityChainOwnerAddress
@@ -110,7 +108,6 @@ const performer = async function() {
   var stPrimeContractResponse = await openStUtilityContractInteract.getSimpleTokenPrimeContractAddress();
   var simpleTokenPrimeContractAddress = stPrimeContractResponse.data.simpleTokenPrimeContractAddress;
   customLogger.win("ST Prime Contract Address: " + simpleTokenPrimeContractAddress);
-
 
   // Transfer all base tokens from deploy key to ST" contract address
   // TODO PRINT DEPLOYER BALANCE of 800M here
