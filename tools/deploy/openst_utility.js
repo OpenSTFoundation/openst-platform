@@ -10,19 +10,21 @@ const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix+'/config/core_addresses')
   , prompts = readline.createInterface(process.stdin, process.stdout)
   , deployerAddress = coreAddresses.getAddressForUser(deployerName)
-  , UtilityRegistrarContractInteract = require(rootPrefix+'/contract_interact/utility_registrar')
+  , UtilityRegistrarContractInteract = require(rootPrefix+'/lib/contract_interact/utility_registrar')
   , utilityChainOwnerAddress = coreAddresses.getAddressForUser('utilityChainOwner')
-  , OpenStUtilityContractInteract = require(rootPrefix+'/contract_interact/openst_utility')
-  , StPrimeContractInteract = require(rootPrefix+'/contract_interact/st_prime')
+  , OpenStUtilityContractInteract = require(rootPrefix+'/lib/contract_interact/openst_utility')
+  , StPrimeContractInteract = require(rootPrefix+'/lib/contract_interact/st_prime')
+  , customLogger = require(rootPrefix+'/custom_console_logger')
   ;
 
 // TODO Colourful Logger Changes
 // TODO var VS const
+// TODO Write to config.json and open_st_env_vars.sh
 const performer = async function() {
 
-  console.log("Deployer Address: " + deployerAddress);
-  console.log("Total ST Prime: " + coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY);
-  console.log("Utility Chain Registrar Address: " + coreAddresses.getAddressForUser('registrar'));
+  customLogger.log("Deployer Address: " + deployerAddress);
+  customLogger.log("Total ST Prime: " + coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY);
+  customLogger.log("Utility Chain Registrar Address: " + coreAddresses.getAddressForUser('registrar'));
 
   await new Promise(
     function (onResolve, onReject){
@@ -45,54 +47,69 @@ const performer = async function() {
      ,contractBin = coreAddresses.getBinForContract(contractName);
 
   console.log("Deploying Registrar Contract on UtilityChain");
-  var contractDeployTxReceipt = await deployHelper.perform(
+  customLogger.step("Deploying " + contractName + "Contract on UtilityChain");
+  var registrarContractDeployResult = await deployHelper.perform(
     contractName,
     web3Provider,
     contractAbi,
     contractBin,
     deployerName
   );
-  console.log(contractDeployTxReceipt);
-  console.log(contractName + " Contract deployed ");
+  customLogger.log(registrarContractDeployResult);
+  customLogger.win(contractName + " Contract deployed ");
 
-  // set ops address to VC registrar addr
-  const registrarContractAddress = contractDeployTxReceipt.contractAddress
+  // set ops address to UC registrar addr
+  const registrarContractAddress = registrarContractDeployResult.contractAddress
     ,utilityRegistrarContractInteract = new UtilityRegistrarContractInteract(registrarContractAddress);
-  // set ops address to VC registrar addr
-  var response = await utilityRegistrarContractInteract.setOpsAddress(deployerName, registrarContractAddress);
-  // initiate owner ship transfer to utilityChainOwnerAddress
-  var response = await utilityRegistrarContractInteract.initiateOwnerShipTransfer(deployerName, utilityChainOwnerAddress);
+  customLogger.log('\nSetting Ops Address to Utility Chain Registrar Address');
+  var setOpsAddressresponse = await utilityRegistrarContractInteract.setOpsAddress(deployerName, registrarContractAddress);
+  customLogger.info(setOpsAddressresponse);
+  customLogger.win('Ops Address Set to Value Utility Registrar Address');
 
+  // initiate owner ship transfer to utilityChainOwnerAddress
+  customLogger.log('\nInitiating Ownership Transfer of contract: '+ contractName + " to deployer: " +deployerName);
+  var initiateOwnershipTransferResponse = await utilityRegistrarContractInteract.initiateOwnerShipTransfer(deployerName, utilityChainOwnerAddress);
+  customLogger.info(initiateOwnershipTransferResponse);
+  customLogger.win('Completed Ownership transfer of contract: ' + contractName + ' to deployer: ' + deployerName);
 
   //deploy contract openSTUtility, auto deploys ST" contract
   var contractName = 'openSTUtility'
   ,contractAbi = coreAddresses.getAbiForContract(contractName)
   ,contractBin = coreAddresses.getBinForContract(contractName);
 
-  console.log("Deploying Registrar Contract on UtilityChain");
-  var contractDeployTxReceipt = await deployHelper.perform(
+  customLogger.log('\nDeploying Contract ' + contractName + ' on UtilityChain');
+  var utiltiyContractDeployResponse = await deployHelper.perform(
     contractName,
     web3Provider,
     contractAbi,
     contractBin,
     deployerName
   );
-  console.log(contractDeployTxReceipt);
-  console.log(contractName + " Contract deployed ");
+  customLogger.log(utiltiyContractDeployResponse);
+  customLogger.win(contractName + " Contract deployed ");
 
-  const openSTUtilityContractAddress = contractDeployTxReceipt.contractAddress
+  const openSTUtilityContractAddress = utiltiyContractDeployResponse.contractAddress
     ,openStUtilityContractInteract = new OpenStUtilityContractInteract(openSTUtilityContractAddress);
 
   // initiate owner ship transfer to utilityChainOwnerAddress
-  var response = await openStUtilityContractInteract.initiateOwnerShipTransfer(deployerName, utilityChainOwnerAddress);
+  customLogger.log('\nInitiating Ownership Transfer of contract: '+ contractName + " to deployer: " +deployerName);
+  var initiateOwnershipTransferResponse = await openStUtilityContractInteract.initiateOwnerShipTransfer(deployerName, utilityChainOwnerAddress);
+  customLogger.info(initiateOwnershipTransferResponse);
+  customLogger.win('Completed Ownership transfer of contract: ' + contractName + ' to deployer: ' + deployerName);
 
   // Query to get ST" Contract Address
-  var response = await openStUtilityContractInteract.getSimpleTokenPrimeContractAddress();
-  var simpleTokenPrimeContractAddress = response.data.simpleTokenPrimeContractAddress;
+  customLogger.info("Querying to get ST Prime Auto deployed contract address");
+  var stPrimeContractResponse = await openStUtilityContractInteract.getSimpleTokenPrimeContractAddress();
+  customLogger.win(stPrimeContractResponse);
+  var simpleTokenPrimeContractAddress = stPrimeContractResponse.data.simpleTokenPrimeContractAddress;
+  customLogger.win("ST Prime Contract Address: " + simpleTokenPrimeContractAddress);
+
 
   // Transfer all base tokens from deploy key to ST" contract address
-  var openStUtilityContractInteract = new StPrimeContractInteract(simpleTokenPrimeContractAddress);
-  var response = await openStUtilityContractInteract.initialize(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY);
+  customLogger.info("Transfering all ST Prime Base Tokens to STPrime Contract Address");
+  var stPrimeUtilityContractInteract = new StPrimeContractInteract(simpleTokenPrimeContractAddress);
+  var stPrimeTransferResponse = await stPrimeUtilityContractInteract.initialize(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY);
+  customLogger.win(stPrimeTransferResponse);
 
 };
 
