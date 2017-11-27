@@ -8,6 +8,7 @@
     "lint": "node node_modules/eslint/bin/eslint.js ."
   },
   "dependencies": {
+    "abi-decoder": "^1.0.9",
     "bignumber.js": "^4.1.0",
     "body-parser": "~1.15.2",
     "cookie-parser": "~1.4.3",
@@ -17,9 +18,9 @@
     "express-sanitized": "^0.5.1",
     "helmet": "^3.9.0",
     "morgan": "~1.7.0",
+    "readline": "^1.3.0",
     "request": "^2.81.0",
     "shortid": "^2.2.8",
-    "readline": "^1.3.0",
     "web3": "^1.0.0-beta.24"
   },
   "devDependencies": {
