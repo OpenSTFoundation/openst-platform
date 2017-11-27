@@ -3,6 +3,7 @@
 const rootPrefix = '..'
   , web3ValueRpcProvider = require(rootPrefix+'/lib/web3/providers/value_rpc')
   , web3UtilityWsProvider = require(rootPrefix+'/lib/web3/providers/utility_ws')
+  , eventsFormatter = require(rootPrefix+'lib/web3/events/formatter.js')
   , simpleTokenContractInteract = require(rootPrefix+'/lib/contract_interact/simpleToken')
   , coreAddresses = require(rootPrefix+'/config/core_addresses')
   , openSTValueContractName = 'openSTValue'
@@ -11,10 +12,10 @@ const rootPrefix = '..'
   , openSTValueContractInteract = new openSTValueContractInteractKlass()
 
   , openSTUtilityContractName = 'openSTUtility'
+  , openSTUtilityContractABI = coreAddresses.getAbiForContract(openSTUtilityContractName)
   , openSTUtilityContractAddress =  coreAddresses.getAddressForContract(openSTUtilityContractName)
   , openSTUtilityContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_utility')
   , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass()
-
   , BigNumber = require('bignumber.js');
 
 const FS = require('fs')
@@ -47,13 +48,13 @@ const toDisplayST = function ( num ) {
   var bigNum = new BigNumber( num );
   var fact = new BigNumber( 10 ).pow( 18 );
   return bigNum.dividedBy( fact ).toString( 10 ) + " ST";
-}
+};
 
 String.prototype.equalsIgnoreCase = function ( compareWith ) {
     var _self = this.toLowerCase();
     var _compareWith = String( compareWith ).toLowerCase();
     return _self == _compareWith;
-}
+};
 
 
 
@@ -113,7 +114,7 @@ const describeMember = function( member ) {
     logger.log( prop, "::", val);
   });
 
-}
+};
 
 const readlineInterface = readline.createInterface({
   input: process.stdin,
@@ -299,31 +300,30 @@ const checkAllowanceAndApproveIfNeeded = function(member, passphrase, toStakeAmo
     });
 };
 
-function listenToUtilityToken( member, mintingIntentHash ) {
-  const utilityChain = new Web3( coreConstants.OST_GETH_UTILITY_WS_PROVIDER );
-  const utilityTokenContract = (function () {
-    const ContractJson = require( reqPrefix + "/contracts/UtilityToken.json")
-          ,contractAddress = member.ERC20
-          ,contractAbi = JSON.parse( ContractJson.contracts["UtilityToken.sol:UtilityToken"].abi )
-          ,contract = new utilityChain.eth.Contract( contractAbi, contractAddress )
-    ;
-    contract.setProvider( utilityChain.currentProvider );
-    return contract;
-  })();
+function listenToUtilityToken( stakingIntentHash ) {
 
-  return new Promise( function(resolve, reject){
-    utilityTokenContract.events.MintingIntentConfirmed({})
+  return new Promise( function(onResolve, onReject){
+
+    const utilityTokenContract = new web3UtilityWsProvider.eth.Contract(
+      openSTUtilityContractABI,
+      openSTUtilityContractAddress
+    );
+    utilityTokenContract.events.StakingIntentConfirmed({})
       .on('error', function(errorObj){
         logger.error("Could not Subscribe to MintingIntentConfirmed");
-        reject();
+        onReject();
       })
       .on('data', function(eventObj) {
         logger.info("data :: MintingIntentConfirmed");
         const returnValues = eventObj.returnValues;
         if ( returnValues ) {
-          const _mintingIntentHash = returnValues._mintingIntentHash;
-          if ( mintingIntentHash.equalsIgnoreCase( _mintingIntentHash ) ) {
-            resolve( eventObj );
+          const _stakingIntentHash = returnValues._stakingIntentHash;
+
+          // We need to perform action only if the staking intent hash matches.
+          // Need this check this as there might be multiple stakes(by different member company) on same Utility chain.
+
+          if ( stakingIntentHash.equalsIgnoreCase( _stakingIntentHash ) ) {
+            onResolve( eventObj );
           }
         }
       });
@@ -337,6 +337,7 @@ function listenToUtilityToken( member, mintingIntentHash ) {
     , mintingIntentHash = null
     , utilityToken = null
     , _passphrase = null
+    , eventDataValues = null
   ;
   logger.step("Validate", VC);
 
@@ -385,19 +386,11 @@ function listenToUtilityToken( member, mintingIntentHash ) {
       }
 
       const formattedTransactionReceipt = result.data.formattedTransactionReceipt
-        , eventsData = formattedTransactionReceipt.eventsData
         , rawTxReceipt = result.data.rawTransactionReceipt;
 
-      var eventName = 'StakingIntentDeclared'
-        , stakingEventData = null;
+      var eventName = 'StakingIntentDeclared';
 
-      var eventDataValues = {};
-
-      for(var sedi=0; i<stakingEventData.length; i++){
-        var event = stakingEventData[sedi];
-        eventDataValues[event.name] = event.value
-      }
-      eventDataValues = ([eventName], formattedTransactionReceipt)[eventName];
+      eventDataValues = eventsFormatter.perform(formattedTransactionReceipt)[eventName];
 
       if (!eventDataValues){
         console.log( "Staking was not completed correctly: StakingIntentDeclared event didn't found in events data: \n");
@@ -409,47 +402,25 @@ function listenToUtilityToken( member, mintingIntentHash ) {
       }
 
       logger.win("Staked", toDisplayST( toStakeAmount ) );
-      const stakeReturnValues     = stakeTX.events.StakingIntentDeclared.returnValues
 
-            ,escrowUnlockHeight   = stakeReturnValues._escrowUnlockHeight
-            ,nonce                = stakeReturnValues._stakerNonce
-            ,stakeUT              = stakeReturnValues._amountUT
-            ,stakeST              = stakeReturnValues._amountST
-      ;
-      mintingIntentHash = stakeReturnValues._mintingIntentHash;
+      logger.info("eventDataValues:");
+      logger.info(eventDataValues);
 
-      logger.info("Transaction Hash:", stakeTX.transactionHash);
-      logger.info("EscrowUnlockHeight:", escrowUnlockHeight);
-      logger.info("Nonce:", nonce);
-      logger.info("Staked SimpleToken", toDisplayST( stakeST ) );
-      logger.info("Staked UtilityToken", stakeUT);
-      logger.info("MintingIntentHash", mintingIntentHash)
-      logger.info("Transaction Receipt");
-      console.log("\n------------------", JSON.stringify( stakeTX ), "\n------------------" );
-      return mintingIntentHash;
+      return eventDataValues;
     })
-    .then( function(mintingIntentHash) {
+    .then( function(eventDataValues) {
       logger.step("Waiting for Minting Intent Confirmation");
-      return listenToUtilityToken(selectedMember, mintingIntentHash);
+      return listenToUtilityToken(eventDataValues['_stakingIntentHash']);
     })
     .then( function(eventObj) {
-      logger.win("Received MintingIntentConfirmed");
-      logger.step("Process Staking on ValueChain");
-      return openSTValueContractInteract.processStaking(selectedMember.Reserve, selectedMember.UUID, mintingIntentHash );
+      logger.win("Received StakingIntentConfirmed");
+      logger.step("startinfg processStaking on ValueChain");
+      return openSTValueContractInteract.processStaking(selectedMember.Reserve, _passphrase, eventDataValues['_stakingIntentHash'] );
     })
     .then( function(){
       logger.win("Completed processing Stake");
-      logger.step("Unlocking Reserve on UtilityChain to mint");
-      return Geth.UtilityChain.eth.personal.unlockAccount( selectedMember.Reserve, _passphrase );
-    })
-    .then( function(){
-      logger.win("Unlocked Successfully");
       logger.step("Process Minting");
-      utilityToken = new UtilityToken(selectedMember.Reserve, selectedMember.ERC20);
-      return openSTUtilityContractInteract.processMinting(mintingIntentHash).send({
-        from: selectedMember.Reserve,
-        gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
-      })
+      return openSTUtilityContractInteract.processMinting(selectedMember.Reserve, _passphrase, eventDataValues['_stakingIntentHash'] )
     })
     .then( function(){
       logger.win("Minting Completed!");
