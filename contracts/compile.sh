@@ -17,15 +17,15 @@ echo ""
 echo "Compiling OpenSTUtility.sol"
 echo ""
 
-solc --abi --overwrite ../openst-protocol/contracts/utilityChain/OpenSTUtility.sol -o $ABIDIRUTILITY
-solc --bin --overwrite ../openst-protocol/contracts/utilityChain/OpenSTUtility.sol -o $BINDIRVALUE
+solc --abi --overwrite ../openst-protocol/contracts/OpenSTUtility.sol -o $ABIDIRUTILITY
+solc --bin --overwrite ../openst-protocol/contracts/OpenSTUtility.sol -o $BINDIRVALUE
 
 echo ""
 echo "Compiling OpenSTValue.sol"
 echo ""
 
-solc --abi --overwrite ../openst-protocol/contracts/valueChain/OpenSTValue.sol -o $ABIDIRUTILITY
-solc --bin --overwrite ../openst-protocol/contracts/valueChain/OpenSTValue.sol -o $BINDIRVALUE
+solc --abi --overwrite ../openst-protocol/contracts/OpenSTValue.sol -o $ABIDIRUTILITY
+solc --bin --overwrite ../openst-protocol/contracts/OpenSTValue.sol -o $BINDIRVALUE
 
 echo ""
 echo "Compiling Core.sol"
