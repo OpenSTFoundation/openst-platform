@@ -3,38 +3,23 @@
 const rootPrefix = '..'
   , web3ValueRpcProvider = require(rootPrefix+'/lib/web3/providers/value_rpc')
   , web3UtilityWsProvider = require(rootPrefix+'/lib/web3/providers/utility_ws')
-  , eventsFormatter = require(rootPrefix+'lib/web3/events/formatter.js')
+  , eventsFormatter = require(rootPrefix+'/lib/web3/events/formatter.js')
   , simpleTokenContractInteract = require(rootPrefix+'/lib/contract_interact/simpleToken')
   , coreAddresses = require(rootPrefix+'/config/core_addresses')
   , openSTValueContractName = 'openSTValue'
   , openSTValueContractAddress =  coreAddresses.getAddressForContract(openSTValueContractName)
   , openSTValueContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_value')
   , openSTValueContractInteract = new openSTValueContractInteractKlass()
-
   , openSTUtilityContractName = 'openSTUtility'
   , openSTUtilityContractABI = coreAddresses.getAbiForContract(openSTUtilityContractName)
   , openSTUtilityContractAddress =  coreAddresses.getAddressForContract(openSTUtilityContractName)
   , openSTUtilityContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_utility')
   , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass()
-  , BigNumber = require('bignumber.js');
-
-const FS = require('fs')
-  , Path = require('path')
-  , readline = require('readline')
-  , Web3 = require("web3")
-  , reqPrefix = ".."
-  , UtilityToken = require( reqPrefix + '/lib/bt')
-  , StakeContract = require(reqPrefix + '/lib/stakeContract')
-  , Geth = require(reqPrefix + "/lib/geth")
+  , BigNumber = require('bignumber.js')
   , logger = require(rootPrefix+'/helpers/custom_console_logger')
-  , Config = require(process.argv[2] || (reqPrefix + '/config.json') )
-  , coreConstants = require(reqPrefix + '/config/core_constants')
-  , coreAddresses = require(reqPrefix+'/config/core_addresses')
-  , FOUNDATION_ADDRESS = coreAddresses.getAddressForUser('foundation')
-  , REGISTRAR_ADDRESS = coreAddresses.getAddressForUser('registrar')
+  , Config = require(process.argv[2] || (rootPrefix + '/config.json') )
+  , readline = require('readline')
   , UC = "UtilityChain"
-  , UC_MAIN_NET_ID = 20171010
-  , VC_MAIN_NET_ID = 20171011
   , VC = "ValueChain"
   ;
 
@@ -55,29 +40,6 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
     var _compareWith = String( compareWith ).toLowerCase();
     return _self == _compareWith;
 };
-
-
-
-const ST = (function () {
-  const ContractJson = require( reqPrefix + "/contracts/SimpleToken.json")
-        ,contractAddress = coreAddresses.getAddressForContract('simpleToken')
-        ,contractAbi = JSON.parse( ContractJson.contracts["SimpleToken.sol:SimpleToken"].abi )
-        ,contract = new Geth.ValueChain.eth.Contract( contractAbi, contractAddress )
-  ;
-  contract.setProvider(Geth.ValueChain.currentProvider);
-  return contract;
-})();
-
-const stakingContract = (function () {
-  const ContractJson = require( reqPrefix + "/contracts/Staking.json")
-        ,contractAddress = coreAddresses.getAddressesForContract('staking')
-        ,contractAbi = JSON.parse( ContractJson.contracts["Staking.sol:Staking"].abi )
-        ,contract = new Geth.ValueChain.eth.Contract( contractAbi, contractAddress )
-  ;
-  contract.setProvider(Geth.ValueChain.currentProvider);
-  return contract;
-})();
-
 
 var is_uc_main_net = false
     ,is_vc_main_net = false
