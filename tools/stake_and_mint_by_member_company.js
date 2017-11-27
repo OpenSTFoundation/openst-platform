@@ -5,10 +5,16 @@ const rootPrefix = '..'
   , web3UtilityWsProvider = require(rootPrefix+'/lib/web3/providers/utility_ws')
   , simpleTokenContractInteract = require(rootPrefix+'/lib/contract_interact/simpleToken')
   , coreAddresses = require(rootPrefix+'/config/core_addresses')
-  , openSTContractName = 'openSTValue'
-  , openSTValueContractAddress =  coreAddresses.getAddressForContract(openSTContractName)
-  , openSTValueContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_value)
+  , openSTValueContractName = 'openSTValue'
+  , openSTValueContractAddress =  coreAddresses.getAddressForContract(openSTValueContractName)
+  , openSTValueContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_value')
   , openSTValueContractInteract = new openSTValueContractInteractKlass()
+
+  , openSTUtilityContractName = 'openSTUtility'
+  , openSTUtilityContractAddress =  coreAddresses.getAddressForContract(openSTUtilityContractName)
+  , openSTUtilityContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_utility')
+  , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass()
+
   , BigNumber = require('bignumber.js');
 
 const FS = require('fs')
@@ -372,30 +378,45 @@ function listenToUtilityToken( member, mintingIntentHash ) {
       return openSTValueContractInteract.stake(selectedMember.Reserve, selectedMember.UUID, toStakeAmount);
     })
     .then( function(result) {
+      if (result.isFailure()){
+        console.log( "Staking resulted in error: \n" );
+        console.log(result);
+        process.exit(1);
+      }
 
+      const formattedTransactionReceipt = result.data.formattedTransactionReceipt
+        , eventsData = formattedTransactionReceipt.eventsData
+        , rawTxReceipt = result.data.rawTransactionReceipt;
 
+      var eventName = 'StakingIntentDeclared'
+        , stakingEventData = null;
 
-      //Todo
-      //Todo
-      //Todo
-      //Todo
-      //Todo
+      for(var i=0; i<eventsData.length; i++){
+        var currEvent = eventsData[i];
+        if(currEvent==eventName){
+          stakingEventData = currEvent;
+          break;
+        }
+      }
 
+      if (!stakingEventData){
+        console.log( "Staking was not completed correctly: StakingIntentDeclared event didn't found in events data: \n");
+        console.log("rawTxReceipt is:\n");
+        console.log(rawTxReceipt);
+        console.log("\n\n formattedTransactionReceipt is:\n");
+        console.log(formattedTransactionReceipt);
+        process.exit(1);
+      }
 
-
-
-
-
-
-      const stakeTX = result.data.transactionReceipt;
       logger.win("Staked", toDisplayST( toStakeAmount ) );
-      const stakeReturnValues     = stakeTX.events.MintingIntentDeclared.returnValues
+      const stakeReturnValues     = stakeTX.events.StakingIntentDeclared.returnValues
+
             ,escrowUnlockHeight   = stakeReturnValues._escrowUnlockHeight
             ,nonce                = stakeReturnValues._stakerNonce
             ,stakeUT              = stakeReturnValues._amountUT
             ,stakeST              = stakeReturnValues._amountST
       ;
-      mintingIntentHash = stakeReturnValues._mintingIntentHash
+      mintingIntentHash = stakeReturnValues._mintingIntentHash;
 
       logger.info("Transaction Hash:", stakeTX.transactionHash);
       logger.info("EscrowUnlockHeight:", escrowUnlockHeight);
@@ -414,7 +435,7 @@ function listenToUtilityToken( member, mintingIntentHash ) {
     .then( function(eventObj) {
       logger.win("Received MintingIntentConfirmed");
       logger.step("Process Staking on ValueChain");
-      return stakeContract.processStaking(selectedMember.Reserve, selectedMember.UUID, mintingIntentHash );
+      return openSTValueContractInteract.processStaking(selectedMember.Reserve, selectedMember.UUID, mintingIntentHash );
     })
     .then( function(){
       logger.win("Completed processing Stake");
@@ -423,9 +444,9 @@ function listenToUtilityToken( member, mintingIntentHash ) {
     })
     .then( function(){
       logger.win("Unlocked Successfully");
-      logger.step("Process Minting")
+      logger.step("Process Minting");
       utilityToken = new UtilityToken(selectedMember.Reserve, selectedMember.ERC20);
-      return utilityToken._btInstance.methods.processMinting(mintingIntentHash).send({
+      return openSTUtilityContractInteract.processMinting(mintingIntentHash).send({
         from: selectedMember.Reserve,
         gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
       })
