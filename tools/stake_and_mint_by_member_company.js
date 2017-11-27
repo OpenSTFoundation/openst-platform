@@ -305,13 +305,13 @@ function listenToUtilityToken( member, mintingIntentHash ) {
     return contract;
   })();
 
-  return new Promise( (resolve, reject) => {
+  return new Promise( function(resolve, reject){
     utilityTokenContract.events.MintingIntentConfirmed({})
-      .on('error', (errorObj =>{
+      .on('error', function(errorObj){
         logger.error("Could not Subscribe to MintingIntentConfirmed");
         reject();
-      }))
-      .on('data', (eventObj => {
+      })
+      .on('data', function(eventObj) {
         logger.info("data :: MintingIntentConfirmed");
         const returnValues = eventObj.returnValues;
         if ( returnValues ) {
@@ -320,18 +320,17 @@ function listenToUtilityToken( member, mintingIntentHash ) {
             resolve( eventObj );
           }
         }
-      }))
-    ;
+      });
   });
 }
 
 (function () {
   var selectedMember = null
-      ,toStakeAmount  = null
-      ,stakeContract = null
-      ,mintingIntentHash = null
-      ,utilityToken = null
-      ,_passphrase = null
+    , toStakeAmount  = null
+    , stakeContract = null
+    , mintingIntentHash = null
+    , utilityToken = null
+    , _passphrase = null
   ;
   logger.step("Validate", VC);
 
@@ -408,21 +407,21 @@ function listenToUtilityToken( member, mintingIntentHash ) {
       console.log("\n------------------", JSON.stringify( stakeTX ), "\n------------------" );
       return mintingIntentHash;
     })
-    .then( mintingIntentHash => {
+    .then( function(mintingIntentHash) {
       logger.step("Waiting for Minting Intent Confirmation");
       return listenToUtilityToken(selectedMember, mintingIntentHash);
     })
-    .then( eventObj => {
+    .then( function(eventObj) {
       logger.win("Received MintingIntentConfirmed");
       logger.step("Process Staking on ValueChain");
       return stakeContract.processStaking(selectedMember.Reserve, selectedMember.UUID, mintingIntentHash );
     })
-    .then( _ => {
+    .then( function(){
       logger.win("Completed processing Stake");
       logger.step("Unlocking Reserve on UtilityChain to mint");
       return Geth.UtilityChain.eth.personal.unlockAccount( selectedMember.Reserve, _passphrase );
     })
-    .then( _ => {
+    .then( function(){
       logger.win("Unlocked Successfully");
       logger.step("Process Minting")
       utilityToken = new UtilityToken(selectedMember.Reserve, selectedMember.ERC20);
@@ -431,11 +430,11 @@ function listenToUtilityToken( member, mintingIntentHash ) {
         gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
       })
     })
-    .then( _ => {
+    .then( function(){
       logger.win("Minting Completed!");
       process.exit(0);
     })
-    .catch(reason => {
+    .catch(function(reason){
       _passphrase = null;
       if ( reason && reason.message ){
         logger.error( reason.message );
