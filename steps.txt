@@ -43,7 +43,7 @@ STEPS
 6) On development only - if simple contract is not deployed
     - On value chain machine
     - source test/open_st_env_vars.sh
-    - node test/deployOpenSTOnTestNet.js
+    - node test/deployOpenSTOnTestNetNew.js
     - populate OST_SIMPLE_TOKEN_CONTRACT_ADDR in test/open_st_env_vars.sh from config.json
 
     # Deploys SimpleToken contract on value chain

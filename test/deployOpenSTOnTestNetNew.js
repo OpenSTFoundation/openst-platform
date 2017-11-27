@@ -14,7 +14,9 @@ const rootPrefix = "..",
       coreAddresses = require(rootPrefix + '/config/core_addresses'),
       FOUNDATION = coreAddresses.getAddressForUser('foundation'),
       REGISTRAR = coreAddresses.getAddressForUser('registrar'),
-      REGISTRAR_KEY = coreAddresses.getPassphraseForUser('registrar')
+      REGISTRAR_KEY = coreAddresses.getPassphraseForUser('registrar'),
+      DEPLOYER = coreAddresses.getAddressForUser('deployer'),
+      DEPLOYER_KEY = coreAddresses.getPassphraseForUser('deployer')
   ;
 
 // These addresses may change during the script. So, these should not be const.
@@ -30,6 +32,7 @@ const STEP_PRE = "======================================================\n\x1b[3
 
 const MIN_FUND = (new BigNumber( 10 )).toPower( 18 );
 const _registrarName = "Registrar";
+const _deployerName = "Deployer";
 var ST = null;
 
 //Method to Log Step Description
@@ -135,49 +138,48 @@ function validateSimpleTokenFoundation() {
 }
 
 //Validate SimpleTokenFoundation Address.
-function validateRegistrar() {
-  logStep( "Validating",_registrarName );
-  logInfo(_registrarName, "@", REGISTRAR );
-  logInfo("Fetching",_registrarName,"balance on ValueChain");
-  return web3RpcValueProvider.eth.getBalance( REGISTRAR )
+function validateAndFundUser(userName, userAddress, userKey) {
+  logStep( "Validating",userName );
+  logInfo(userName, "@", userAddress );
+  logInfo("Fetching",userName,"balance on ValueChain");
+  return web3RpcValueProvider.eth.getBalance( userAddress )
   .catch( reason =>  {
-    logError( "Invalid",_registrarName ,"address" );
+    logError( "Invalid",userName ,"address" );
     catchAndExit( reason );
   })
   .then(balance => {
-    logInfo(_registrarName, "balance =", balance);
-    logInfo("Unlocking", _registrarName, "on ValueChain");
-    return web3RpcValueProvider.eth.personal.unlockAccount( REGISTRAR, REGISTRAR_KEY );
+    logInfo(userName, "balance =", balance);
+    logInfo("Unlocking", userName, "on ValueChain");
+    return web3RpcValueProvider.eth.personal.unlockAccount( userAddress, userKey );
   })
   .catch( reason =>  {
-    logError( "Failed to unlock", _registrarName );
+    logError( "Failed to unlock on ValueChain", userName );
     catchAndExit( reason );
   })
   .then( _ => {
-    logInfo("Fetching",_registrarName,"balance on UtilityChain");
-    return web3RpcUtilityProvider.eth.getBalance( REGISTRAR )
+    logInfo("Fetching",userName,"balance on UtilityChain");
+    return web3RpcUtilityProvider.eth.getBalance( userAddress )
     .catch( reason =>  {
-      logError( "Invalid",_registrarName ,"address" );
+      logError( "Invalid",userName ,"address" );
       catchAndExit( reason );
     })
     .then(balance => {
-      logInfo(_registrarName, "balance =", balance);
-      logInfo("Unlocking", _registrarName, "on UtilityChain");
-      return web3RpcValueProvider.eth.personal.unlockAccount( REGISTRAR, REGISTRAR_KEY );
+      logInfo(userName, "balance =", balance);
+      logInfo("Unlocking", userName, "on UtilityChain");
+      return web3RpcUtilityProvider.eth.personal.unlockAccount( userAddress, userKey );
     })
     .catch( reason =>  {
-      logError( "Failed to unlock", _registrarName );
+      logError( "Failed to unlock on Utility Chain", userName );
       catchAndExit( reason );
     })
   })
   .then(_ =>{
-    return fundAddressOnValueChain(REGISTRAR, _registrarName)
+    return fundAddressOnValueChain(userAddress, userName)
     .then(_ =>{
-      return fundAddressOnUtilityChain(REGISTRAR, _registrarName);
+      return fundAddressOnUtilityChain(userAddress, userName);
     });
   });
 }
-
 
 function fundAddressOnValueChain( accountAddress, addressName ) {
   return fundAddress(web3RpcValueProvider,"ValueChain", accountAddress, addressName);
@@ -355,7 +357,8 @@ function updateConfig() {
 
   validateValueChain()
     .then( validateSimpleTokenFoundation )
-    .then( validateRegistrar )
+    .then( validateAndFundUser(_registrarName, REGISTRAR, REGISTRAR_KEY) )
+    .then( validateAndFundUser(_deployerName, DEPLOYER, DEPLOYER_KEY) )
     .then( deploySimpleTokenContract )
     .then( setSimpleTokenRegistrar )
     .then( updateConfig )
