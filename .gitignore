@@ -51,9 +51,7 @@ test/pwvalue
 
 test/pwutility
 
-test/poa-genesis-utility.json
 
-test/poa-genesis-value.json
 
 package-lock.json
 
