@@ -339,7 +339,13 @@ function listenToUtilityToken( stakingIntentHash ) {
       logger.win("Stake Current Allowance validated");
 
       logger.step("Staking ", toDisplayST( toStakeAmount ) );
-      return openSTValueContractInteract.stake(selectedMember.Reserve, selectedMember.UUID, toStakeAmount);
+      return openSTValueContractInteract.stake(
+        selectedMember.Reserve,
+        _passphrase,
+        selectedMember.UUID,
+        toStakeAmount,
+        selectedMember.Reserve
+      );
     })
     .then( function(result) {
       if (result.isFailure()){
