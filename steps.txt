@@ -1,6 +1,15 @@
 STEPS
 
 1) export variables from open_st_env_vars.sh after reviewing the values
+    - set following env constants (Mandatory Steps for Staging and Production)
+        - OST_VALUE_CHAIN_ID
+        - OST_UTILITY_CHAIN_ID
+        - OST_DEPLOYER_ADDR (create and fund deployers on both chains)
+        - OST_DEPLOYER_PASSPHRASE
+        - OST_REGISTRAR_ADDR
+        - OST_REGISTRAR_PASSPHRASE
+        - OST_UTILITY_CHAIN_OWNER_ADDR
+        - OST_SIMPLE_TOKEN_CONTRACT_ADDR
 
     export OST_GETH_VALUE_RPC_PROVIDER='http://localhost:8545'
     export OST_GETH_VALUE_WS_PROVIDER='ws://localhost:18545'
@@ -75,11 +84,13 @@ STEPS
        var receiver = ''
        personal.unlockAccount(sender)
        eth.sendTransaction({from: sender, to: receiver, value: web3.toWei(10, "ether")})
-    - Verify if OST_DEPLOYER_ADDR has proper balance
+    - Verify if OST_DEPLOYER_ADDR has proper balance of utility chain
     - source test/open_st_env_vars.sh
     - node tools/deploy/openst_utility.js
 
 9) On Value Chain Machine
     - source test/open_st_env_vars.sh
     - node tools/deploy/register_utility_token_value.js
+
+10) - source test/open_st_env_vars.sh
 
