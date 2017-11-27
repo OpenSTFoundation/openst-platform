@@ -14,12 +14,35 @@ const rootPrefix = '../..'
   , logger = require(rootPrefix+'/helpers/custom_console_logger')
   , ValueRegistrar = require(rootPrefix+"/lib/contract_interact/value_registrar")
   , OpenstValueContract = require(rootPrefix+'/lib/contract_interact/openst_value')
+  , populateEnvVars = require(rootPrefix+"/lib/populate_env_vars.js")
 ;
 
+function updateConfig(valueRegistrarAddr, valueSTContractAddr) {
+
+  return new Promise( (resolve,reject) => {
+    logger.step("Updating Source file open_st_env_vars");
+    populateEnvVars.renderAndPopulate('valueRegistrar', {
+      ost_value_registrar_contract_address: valueRegistrarAddr
+    });
+
+    populateEnvVars.renderAndPopulate('valueOpenst', {
+      ost_openst_value_contract_address: valueSTContractAddr
+    });
+
+  })
+  .catch( reason =>  {
+    logger.error("Failed to populate open_st_env_vars.sh file!");
+    catchAndExit( reason );
+  })
+  .then( _ => {
+    logger.win("open_st_env_vars updated.");
+  });
+
+};
 
 const performer = async function() {
 
-  logger.info("Deploying Registrar on Value Chain");
+  logger.step("Deploying Registrar on Value Chain");
   logger.info("Deployer Address: " + deployerAddress);
 
   await new Promise(
@@ -41,7 +64,7 @@ const performer = async function() {
     ,contractAbi = coreAddresses.getAbiForContract(contractName)
     ,contractBin = coreAddresses.getBinForContract(contractName);
 
-  logger.info("Deploying Registrar Contract on ValueChain");
+  logger.step("Deploying Registrar Contract on ValueChain");
 
   var contractDeployTxReceipt = await deployHelper.perform(
     contractName,
@@ -55,7 +78,7 @@ const performer = async function() {
 
   var registrarContractAddr = contractDeployTxReceipt.contractAddress;
 
-  logger.info("Set ops address to deployer address: " + deployerAddress);
+  logger.step("Set ops address to deployer address: " + deployerAddress);
 
   const valueRegistrar = new ValueRegistrar(registrarContractAddr);
 
@@ -63,7 +86,7 @@ const performer = async function() {
 
   logger.win(" Ops address set to deployer address ");
 
-  logger.info("Deploying OpenST Value Contract on ValueChain");
+  logger.step("Deploying OpenST Value Contract on ValueChain");
 
   var contractName = 'openSTValue'
     ,contractAbi = coreAddresses.getAbiForContract(contractName)
@@ -89,7 +112,7 @@ const performer = async function() {
 
   var openstValueContractAddress = contractDeployTxReceipt.contractAddress;
 
-  logger.info("Transfering Ownership to STF");
+  logger.step("Transfering Ownership to STF");
 
   var openstValueContract = new OpenstValueContract(openstValueContractAddress);
 
@@ -99,6 +122,8 @@ const performer = async function() {
   );
 
   logger.win(" Ownership transfered ");
+
+  await updateConfig(registrarContractAddr, openstValueContractAddress);
 
   logger.win(" Deploy script 1 completed ");
 };
