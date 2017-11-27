@@ -71,7 +71,7 @@ const performer = async function() {
 
   var constructorArgs = [
     coreConstants.OST_VALUE_CHAIN_ID,
-    coreAddresses.getAddressesForContract("simpleToken"),
+    coreAddresses.getAddressForContract("simpleToken"),
     registrarContractAddr
   ]
 
@@ -93,13 +93,14 @@ const performer = async function() {
 
   var openstValueContract = new OpenstValueContract(openstValueContractAddress);
 
-  var contractDeployTxReceipt = await openstValueContract.initiateOwnerShipTransfer(
+  var contractDeployResponse = await openstValueContract.initiateOwnerShipTransfer(
     deployerName,
-    coreAddresses.getAddressForContract("foundation")
+    coreAddresses.getAddressForUser("foundation")
   );
 
   logger.win(" Ownership transfered ");
 
+  logger.win(" Deploy script 1 completed ");
 };
 
 performer();

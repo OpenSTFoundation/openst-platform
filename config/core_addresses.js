@@ -134,7 +134,7 @@ const coreAddresses = {
   getAddressesForContract: function(contractName) {
     var contractAddresses = allAddresses.contracts[contractName].address;
     if (!contractAddresses || !Array.isArray(contractAddresses) || contractAddresses.length===0) {
-      throw "Please pass valid contractName to get contract address";
+      throw "Please pass valid contractName to get contract address for: "+contractName;
     }
     return contractAddresses;
   },
