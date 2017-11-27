@@ -102,23 +102,23 @@ const performer = async function() {
   // Query to get ST" UUID
   customLogger.info("Querying to get ST Prime UUID");
   var stPrimeUUIDResponse = await openStUtilityContractInteract.getSimpleTokenPrimeUUID();
-  customLogger.win(stPrimeUUIDResponse);
   var simpleTokenPrimeUUID = stPrimeUUIDResponse.data.simpleTokenPrimeUUID;
   customLogger.win("ST Prime UUID: " + simpleTokenPrimeUUID);
 
   // Query to get ST" Contract Address
   customLogger.info("Querying to get ST Prime Auto deployed contract address");
   var stPrimeContractResponse = await openStUtilityContractInteract.getSimpleTokenPrimeContractAddress();
-  customLogger.win(stPrimeContractResponse);
   var simpleTokenPrimeContractAddress = stPrimeContractResponse.data.simpleTokenPrimeContractAddress;
   customLogger.win("ST Prime Contract Address: " + simpleTokenPrimeContractAddress);
 
 
   // Transfer all base tokens from deploy key to ST" contract address
-  customLogger.info("Transfering all ST Prime Base Tokens to STPrime Contract Address");
+  // TODO PRINT DEPLOYER BALANCE of 800M here
+  customLogger.info("Transfering all ST Prime Base Tokens to STPrime Contract Address: "+simpleTokenPrimeContractAddress);
   var stPrimeUtilityContractInteract = new StPrimeContractInteract(simpleTokenPrimeContractAddress);
-  var stPrimeTransferResponse = await stPrimeUtilityContractInteract.initialize(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY);
-  customLogger.win(stPrimeTransferResponse);
+  var stPrimeTransferResponse = await stPrimeUtilityContractInteract.initialize_transfer();
+  customLogger.info(stPrimeTransferResponse);
+  customLogger.win("Transferred all ST Prime Base Tokens to STPrime Contract Address: "+simpleTokenPrimeContractAddress);
 
 };
 

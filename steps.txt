@@ -1,19 +1,6 @@
 STEPS
 
-1) export OST_GETH_VALUE_RPC_PROVIDER='http://localhost:8545'
-   export OST_GETH_VALUE_WS_PROVIDER='ws://localhost:18545'
-
-   export OST_GETH_UTILITY_RPC_PROVIDER='http://localhost:9546'
-   export OST_GETH_UTILITY_WS_PROVIDER='ws://localhost:19546'
-
-   export OST_REGISTRAR_PASSPHRASE=''
-
-   export OST_FOUNDATION_ADDR=''
-   export OST_REGISTRAR_ADDR=''
-
-   export OST_SIMPLE_TOKEN_CONTRACT_ADDR=''
-   export OST_STAKING_CONTRACT_ADDR=''
-   export OST_UTILITY_TOKEN_CONTRACT_ADDR=''
+1) export variables from open_st_env_vars.sh after reviewing the values
 
 2)  In test/open_st_env_vars.sh, verify all the addressed if known else keep it blank
     - source test/open_st_env_vars.sh
@@ -23,22 +10,24 @@ STEPS
     - OST_UTILITY_CHAIN_ID
     - source test/open_st_env_vars.sh
 
-3) On Development only
+4) On Development only
    - cd test/
    - ./init_keys.sh
-   - populate OST_FOUNDATION_ADDR(SimpleTokenFoundation), OST_REGISTRAR_ADDR(ValueChain.Admin) from config.json to test/open_st_env_vars.sh
+   - populate OST_FOUNDATION_ADDR(SimpleTokenFoundation)) and OST_DEPLOYER_ADDR from config.json to test/open_st_env_vars.sh
    - source test/open_st_env_vars.sh
 
-3) On Development only
+5) On Development only
     - Verify genesis test/poa-genesis-value.json
     - Open a new Terminal and Run
     - cd test
     - ./run_value_chain.sh
 
-4) Verify test/poa-genesis-utility.json
+6) Verify test/poa-genesis-utility.json
    - Open a New Terminal
    - cd test
    - ./run_utility_chain.sh
+
+7) Verify OST_FOUNDATION_ADDR and OST_DEPLOYER_ADDR has sufficient balance.
 
 6) On development only - if simple contract is not deployed
     - On value chain machine
@@ -58,7 +47,7 @@ STEPS
 
 8) On Utility Chain Machine
     - source test/open_st_env_vars.sh
-    - node lib/deploy/utility_token.js
+    - node lib/deploy/utility_token_to_be_deleted.js
     - From contract deployment receipt populate OST_UTILITY_TOKEN_CONTRACT_ADDR in open_st_env_vars.sh
     - Populate utility_token contract address(config.Members.ERC20) in config.json
     - Populate UUID(config.Members.UUID) from console in config.json
