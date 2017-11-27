@@ -1,7 +1,7 @@
 {
     "SimpleTokenFoundation": "0xd6a7f124ac959674e2be9d283b924b8f613da0fb",
     "ValueChain": {
-        "SimpleToken": "0xF17B8fD3c64111a7cE417b660831cbd5243fAD65",
+        "SimpleToken": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
         "Stake": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
         "Admin": "0x1ba7322419165b97cb55d4c0704a755e0be76b87",
         "Deployer": "0xa8617cec54af04c8c25d60506a28b1eb8f1cf169",
@@ -20,7 +20,7 @@
                     "acme": "acmesecret"
                 }
             },
-            "Reserve": "0x791f332a056adc596f5ff33fe832cbed5d408b6e",
+            "Reserve": "0x5b33532e730a597075fa23857f65db3fa5ddda35",
             "ERC20": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
             "Callback": "https://acmecorp.com/call-back/simple-token/transaction",
             "CallbackAuth": {
