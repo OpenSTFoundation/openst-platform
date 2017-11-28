@@ -107,7 +107,9 @@ const performer = async function() {
     var nameResult = await openStUtilityContractInteract.getName();
     var conversionRateResult = await openStUtilityContractInteract.getConversationRate();
 
-    var registerUtilityTokenResponse = await openStValueContractInteract.registerUtilityToken(
+    const valueRegistrarContractInteract = new ValueRegistrarContractInteract(valueRegistrarContractAddress);
+
+    var registerUtilityTokenResponse = await valueRegistrarContractInteract.registerUtilityToken(
         symbolResult.data.symbol,
         nameResult.data.name,
         conversionRateResult.data.conversion_rate,
@@ -115,11 +117,12 @@ const performer = async function() {
         0,
         coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID,
         deployerName);
+
+    logger.info(JSON.stringify(registerUtilityTokenResponse))
     logger.win("Utility token registered on Value Chain.");
 
     //set ops address to VC registrar addr
     logger.step("Set Ops Address to Value Registrar.");
-    const valueRegistrarContractInteract = new ValueRegistrarContractInteract(valueRegistrarContractAddress);
 
     var setOpsAddressResponse = await valueRegistrarContractInteract.setOpsAddress(deployerName, valueRegistrarUser);
     logger.win("Registrar " + valueRegistrarUser + " is set to ValueRegistrarContract " + valueRegistrarContractAddress);
