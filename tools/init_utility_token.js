@@ -14,7 +14,8 @@ const rootPrefix = '..'
   , utilityRegistrarContractInteract = new UtilityRegistrarContractInteract(utilityRegistrarContractAddress)
   , valueRegistrarContractAddress = coreAddresses.getAddressForContract("valueRegistrar")
   , valueRegistrarContractInteract = new ValueRegistrarContractInteract( valueRegistrarContractAddress )
-  , utilityChainId = coreConstants.OST_VALUE_CHAIN_ID
+  , utilityChainId = coreConstants.OST_UTILITY_CHAIN_ID
+  , openSTUtilityAddr = coreAddresses.getAddressForContract("openSTUtility")
   , openSTValueAddr = coreAddresses.getAddressForContract("openSTValue")
 ;
 
@@ -125,7 +126,6 @@ InitUtilityToken.prototype = {
       return Promise.reject("Did not find RegisteredBrandedToken event payload!");
     }
 
-    // registerParams[ "_registry" ] = openSTValueAddr;
 
     const mustHaveParams = [ "_requester", "_token", "_uuid", "_symbol", "_name", "_conversionRate"];
 
@@ -160,6 +160,7 @@ InitUtilityToken.prototype = {
       registerParams["_uuid"]
     ).then( function(transactionReceiptResult) {
       console.log("registerOnVC :: transactionReceiptResult");
+      console.log( JSON.stringify(transactionReceiptResult, null, 2) );
       return Promise.resolve( transactionReceiptResult );
     });
 
