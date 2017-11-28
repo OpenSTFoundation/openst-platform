@@ -13,8 +13,7 @@ function define(name, value) {
 }
 
 // different gas values in hex code. taken from http://ethgasstation.info/
-const oneGW = '0x3B9ACA00' // 1 Gwei
-  , fiveGW = '0x12A05F200'; // 5 GWei
+const fiveGW = '0x12A05F200'; // 5 GWei
 
 // Default Gas
 define("OST_DEFAULT_GAS_PRICE", fiveGW);

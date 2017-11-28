@@ -19,11 +19,11 @@ const rootPrefix = '../..'
   , populateEnvVars = require(rootPrefix+"/lib/populate_env_vars.js")
   ;
 
-// TODO Break into methods
 const performer = async function() {
 
+  const stPrimeTotalSupplyInWei = web3Provider.utils.toWei( coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY ,"ether");
   customLogger.log("Deployer Address: " + deployerAddress);
-  customLogger.log("Total ST Prime Which will be transferred: " + coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY);
+  customLogger.log("Total ST Prime Which will be transferred: " + stPrimeTotalSupplyInWei);
   customLogger.log("Utility Chain Owner Address: " + utilityChainOwnerAddress);
   customLogger.log("Utility Chain Registrar User Address: " + utilityRegistrarAddress);
 
@@ -109,11 +109,27 @@ const performer = async function() {
   customLogger.win("ST Prime Contract Address: " + simpleTokenPrimeContractAddress);
 
   // Transfer all base tokens from deploy key to ST" contract address
-  // TODO PRINT DEPLOYER BALANCE of 800M here
+  var deployerBalance = await web3Provider.eth.getBalance(coreAddresses.getAddressForUser(deployerName));
+  customLogger.info("Deployer Balance in Wei: "+deployerBalance);
+
+  if (deployerBalance != stPrimeTotalSupplyInWei){
+    customLogger.error("deployer: " + deployerBalance +" doesn't have max total supply");
+    process.exit(0);
+  }
+
   customLogger.info("Transfering all ST Prime Base Tokens to STPrime Contract Address: "+simpleTokenPrimeContractAddress);
   var stPrimeUtilityContractInteract = new StPrimeContractInteract(simpleTokenPrimeContractAddress);
   var stPrimeTransferResponse = await stPrimeUtilityContractInteract.initialize_transfer(deployerName);
   customLogger.win("Transferred all ST Prime Base Tokens to STPrime Contract Address: "+simpleTokenPrimeContractAddress);
+
+  customLogger.info("Checking balance of simpleTokenPrimeContractAddress: "+simpleTokenPrimeContractAddress);
+  var simpleTokenPrimeContractBalance = await web3Provider.eth.getBalance(simpleTokenPrimeContractAddress);
+  customLogger.info(simpleTokenPrimeContractBalance);
+
+  if (simpleTokenPrimeContractBalance != stPrimeTotalSupplyInWei){
+    customLogger.error("simpleTokenPrimeContract: " + simpleTokenPrimeContractAddress +" doesn't have max total supply");
+    process.exit(0);
+  }
 
   customLogger.info("Updating env vars source file");
   populateEnvVars.renderAndPopulate('deployScript2AddressesTemplate', {
@@ -123,6 +139,8 @@ const performer = async function() {
   });
   customLogger.win("ENV vars Source file Updated");
   customLogger.win("Successfully Completed!!!");
+
+
 
 };
 
