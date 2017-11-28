@@ -20,8 +20,6 @@ const rootPrefix = '../..'
   ;
 
 // TODO Break into methods
-// Staging/production env
-// Write to utility_registrar_config.json?
 const performer = async function() {
 
   customLogger.log("Deployer Address: " + deployerAddress);
@@ -120,11 +118,14 @@ const performer = async function() {
   customLogger.info(stPrimeTransferResponse);
   customLogger.win("Transferred all ST Prime Base Tokens to STPrime Contract Address: "+simpleTokenPrimeContractAddress);
 
+  customLogger.info("Updating env vars source file");
   populateEnvVars.renderAndPopulate('deployScript2AddressesTemplate', {
     ost_utility_registrar_contract_addr: registrarContractAddress,
     ost_openstutility_contract_addr: openSTUtilityContractAddress,
     ost_openstutility_st_prime_uuid: simpleTokenPrimeUUID
   });
+  customLogger.win("ENV vars Source file Updated");
+  customLogger.win("Successfully Completed!!!");
 
 };
 
