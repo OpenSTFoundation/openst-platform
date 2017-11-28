@@ -47,6 +47,7 @@ function updateConfig(valueCoreContractAddr) {
 const performer = async function() {
 
     logger.step("Deploying Value Core Contract on Value Chain");
+    logger.info("Deployer Address: " + coreAddresses.getAddressForUser(deployerName));
     logger.info("Value Chain Registrar Contract Address: " + valueRegistrarUser);
     logger.info("Foundation Address: " + foundationAddress);
     logger.info("OpenST Utility Contract: " + openSTUtilityContractAddress);
