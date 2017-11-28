@@ -80,20 +80,18 @@ STEPS
     - node tools/deploy/openst_value.js
 
 8) To avoid deployment of same contract addresses On Utility Chain Machine
-    - Create a new OST_DEPLOYER_ADDR and fund it manually with sufficient ETH
-    - Use below code for funding
-      var sender = '';
-      var receiver = ''
-      personal.unlockAccount(sender)
-      eth.sendTransaction({from: sender, to: receiver, value: web3.toWei(10, "ether")})
-    - Verify if OST_DEPLOYER_ADDR has sufficient balance on UTILITY Chain
+    - Create a new OST_DEPLOYER_ADDR and fund it 800 Million manually with sufficient ETH
+    - Use below code for funding to OST_DEPLOYER_ADDR
+        var sender = '';
+        var receiver = ''
+        personal.unlockAccount(sender)
+        eth.sendTransaction({from: sender, to: receiver, value: web3.toWei(800000000, "ether")})
 
 9) On Utility Chain Machine
-    - in poa-genesis-utility.json alloc 800M base tokens to machine key(deployer)
-    - ./init_keys.sh
+    - on staging/production in poa-genesis-utility.json alloc 800M base tokens to machine key(deployer)
     - Restart Utility Chain
        ./run_utility_chain.sh
-    - Verify if OST_DEPLOYER_ADDR has 800M balance on utility chain
+    - Verify if OST_DEPLOYER_ADDR has exactly 800M balance on utility chain
     - source test/open_st_env_vars.sh
     - node tools/deploy/openst_utility.js
 
@@ -101,5 +99,21 @@ STEPS
     - source test/open_st_env_vars.sh
     - node tools/deploy/register_utility_token_value.js
 
-11) - source test/open_st_env_vars.sh
+
+11) Start Inter Comm on the foundation machine.
+    - source test/open_st_env_vars.sh
+    - node services/inter_comm/stake_and_mint.js
+
+12) In new terminal
+    source test/open_st_env_vars.sh
+    node
+    const rootPrefix = '.';
+    const coreAddresses = require(rootPrefix+'/config/core_addresses');
+    const initKlass = require('./tools/init_utility_token');
+    const initKlassObj = new initKlass;
+    var btSymbol = 'XYZ';
+    var btName = 'xyzCoin';
+    var btConversion = 10;
+
+    initKlassObj.propose(coreAddresses.getAddressForUser('foundation'), coreAddresses.getPassphraseForUser('foundation'), btSymbol, btName, btConversion);
 
