@@ -16,7 +16,7 @@ const rootPrefix = '../..'
     , logger = require(rootPrefix+'/helpers/custom_console_logger')
     ;
 
-function updateConfig(coreContractAddress) {
+function updateConfig(valueCoreContractAddr) {
 
     return new Promise(
       function (onResolve, onReject) {
@@ -117,6 +117,8 @@ const performer = async function() {
     await updateConfig(coreContractAddress);
 
     logger.win(" Deploy script 3 completed ");
+
+    process.exit(0);
 
 };
 
