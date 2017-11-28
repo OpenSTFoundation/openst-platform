@@ -3,14 +3,20 @@
 const rootPrefix = '..'
   , contractName = 'openSTUtility'
   , coreAddresses = require(rootPrefix+'/config/core_addresses')
+  , coreConstants = require(rootPrefix+"/config/core_constants")
   , openSTUtilityContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_utility')
   , UtilityRegistrarContractInteract = require( rootPrefix + '/lib/contract_interact/utility_registrar' )
+  , ValueRegistrarContractInteract = require( rootPrefix + '/lib/contract_interact/value_registrar' )
   , web3EventsFormatter = require(rootPrefix+'/lib/web3/events/formatter')
   , currContractAddr = coreAddresses.getAddressForContract(contractName)
   , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass( currContractAddr )
   , utilityRegistrarContractAddress = coreAddresses.getAddressForContract("utilityRegistrar")
   , utilityRegistrarContractInteract = new UtilityRegistrarContractInteract(utilityRegistrarContractAddress)
-  ;
+  , valueRegistrarContractAddress = coreAddresses.getAddressForContract("valueRegistrar")
+  , valueRegistrarContractInteract = new ValueRegistrarContractInteract( valueRegistrarContractAddress )
+  , utilityChainId = coreConstants.OST_VALUE_CHAIN_ID
+  , openSTValueAddr = coreAddresses.getAddressForContract("openSTValue")
+;
 
 
 const InitUtilityToken = function(autoApprove) {
@@ -46,7 +52,7 @@ InitUtilityToken.prototype = {
       if ( transactionReceiptResult.isSuccess() ) {
         if ( oThis.autoApprove ) {
           const formattedTransactionReceipt = transactionReceiptResult.data.formattedTransactionReceipt;
-          return oThis.registerOnUC(formattedTransactionReceipt);
+          return oThis.registerOnUtility(formattedTransactionReceipt);
         } else {
           return Promise.resolve(transactionReceiptResult);
         }
@@ -54,7 +60,7 @@ InitUtilityToken.prototype = {
     });
   },
 
-  registerOnUC: async function (formattedTransactionReceipt) {
+  registerOnUtility: async function (formattedTransactionReceipt) {
     const oThis = this
       , formattedEvents = await web3EventsFormatter.perform(formattedTransactionReceipt);
 
@@ -64,7 +70,11 @@ InitUtilityToken.prototype = {
       return Promise.reject("Did not find ProposedBrandedToken event payload!");
     }
 
+
     registerParams[ "_registry" ] = registerParams.address;
+    console.log(">> registerOnUtility :: registerParams \n\t", JSON.stringify(registerParams, null, 4) );
+
+    
 
     const mustHaveParams = ["_registry", "_requester", "_token", "_uuid", "_symbol", "_name", "_conversionRate"];
 
@@ -94,12 +104,78 @@ InitUtilityToken.prototype = {
       registerParams["_token"],
       registerParams["_uuid"],
     ).then( function(transactionReceiptResult) {
-      console.log("registerBrandedToken :: transactionReceiptResult");
+      console.log("registerOnUC :: transactionReceiptResult");
       console.log( JSON.stringify(transactionReceiptResult) );
+      const formattedTransactionReceipt = transactionReceiptResult.data.formattedTransactionReceipt;
+      return oThis.registerOnValue(formattedTransactionReceipt);
+    });
+  },
+
+  registerOnValue: async function ( formattedTransactionReceipt ) {
+    const oThis = this
+      , formattedEvents = await web3EventsFormatter.perform(formattedTransactionReceipt);
+
+
+    var registerParams = formattedEvents['RegisteredBrandedToken'];
+
+
+    console.log( "=====>", JSON.stringify( formattedEvents, null, 2) );
+
+    if ( !registerParams ) {
+      return Promise.reject("Did not find RegisteredBrandedToken event payload!");
+    }
+
+    // registerParams[ "_registry" ] = openSTValueAddr;
+
+    const mustHaveParams = [ "_requester", "_token", "_uuid", "_symbol", "_name", "_conversionRate"];
+
+    //Validate Params.
+    //..Create Array.some callback. It should return true if any param is missing. 
+    const isMissing = function ( eventName ) {
+      return (typeof registerParams[ eventName ] === "undefined");
+    }
+    //..Check it.
+    if ( mustHaveParams.some(isMissing) ) {
+      return Promise.reject("Required parameters missing. Can not perform registerUtilityToken. registerParams: ", JSON.stringify(registerParams) );
+    }
+
+    const registrarAddress  = coreAddresses.getAddressForUser('valueRegistrar')
+      , registrarPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar')
+    ;
+
+    console.log("\n registerOnValue valueRegistrar : ", registrarAddress);
+
+    console.log("registerParams", JSON.stringify(registerParams, null, 2) );
+
+
+    return valueRegistrarContractInteract.registerUtilityToken(
+      registrarAddress,
+      registrarPassphrase,
+      openSTValueAddr,
+      registerParams["_symbol"],
+      registerParams["_name"],
+      registerParams["_conversionRate"],
+      utilityChainId,
+      registerParams["_requester"],
+      registerParams["_uuid"]
+    ).then( function(transactionReceiptResult) {
+      console.log("registerOnVC :: transactionReceiptResult");
       return Promise.resolve( transactionReceiptResult );
     });
 
   }
+
+  // onRegisteredBrandedToken: function ( formattedTransactionReceipt ) {
+  //   const oThis = this
+  //     , formattedEvents = await web3EventsFormatter.perform(formattedTransactionReceipt);
+
+  //   var registerParams = formattedEvents['RegisteredBrandedToken'];
+
+  //   if ( !registerParams ) {
+  //     return Promise.reject("Did not find RegisteredBrandedToken event payload!");
+  //   }
+
+  // }
 
 };
 
