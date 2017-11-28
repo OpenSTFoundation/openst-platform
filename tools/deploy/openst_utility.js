@@ -69,7 +69,6 @@ const performer = async function() {
   // initiate owner ship transfer to utilityChainOwnerAddress
   customLogger.log('\nInitiating Ownership Transfer of contract: '+ contractName + " to deployer: " +deployerName);
   var initiateOwnershipTransferResponse = await utilityRegistrarContractInteract.initiateOwnerShipTransfer(deployerName, utilityChainOwnerAddress);
-  customLogger.info(initiateOwnershipTransferResponse);
   customLogger.win('Completed Ownership transfer of contract: ' + contractName + ' to deployer: ' + deployerName);
 
   //deploy contract openSTUtility, auto deploys ST" contract
@@ -95,7 +94,6 @@ const performer = async function() {
   // initiate owner ship transfer to utilityChainOwnerAddress
   customLogger.log('\nInitiating Ownership Transfer of contract: '+ contractName + " to deployer: " +deployerName);
   var initiateOwnershipTransferResponse = await openStUtilityContractInteract.initiateOwnerShipTransfer(deployerName, utilityChainOwnerAddress);
-  customLogger.info(initiateOwnershipTransferResponse);
   customLogger.win('Completed Ownership transfer of contract: ' + contractName + ' to deployer: ' + deployerName);
 
   // Query to get ST" UUID
@@ -115,7 +113,6 @@ const performer = async function() {
   customLogger.info("Transfering all ST Prime Base Tokens to STPrime Contract Address: "+simpleTokenPrimeContractAddress);
   var stPrimeUtilityContractInteract = new StPrimeContractInteract(simpleTokenPrimeContractAddress);
   var stPrimeTransferResponse = await stPrimeUtilityContractInteract.initialize_transfer(deployerName);
-  customLogger.info(stPrimeTransferResponse);
   customLogger.win("Transferred all ST Prime Base Tokens to STPrime Contract Address: "+simpleTokenPrimeContractAddress);
 
   customLogger.info("Updating env vars source file");

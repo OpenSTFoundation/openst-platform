@@ -94,7 +94,6 @@ const performer = async function() {
     const openStValueContractInteract = new OpenStValueContractInteract(openSTValueContractAddress);
 
     var addCoreResponse = await openStValueContractInteract.addCore(deployerName, coreContractAddress);
-    logger.info(addCoreResponse);
     logger.win("Core Contract " + coreContractAddress + " is added to Value Chain.");
 
     // Register Utility token on Value chain
@@ -113,7 +112,6 @@ const performer = async function() {
         0,
         coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID,
         deployerName);
-    logger.info(registerUtilityTokenResponse);
     logger.win("Utility token registered on Value Chain.");
 
     //set ops address to VC registrar addr
@@ -121,7 +119,6 @@ const performer = async function() {
     const valueRegistrarContractInteract = new ValueRegistrarContractInteract(valueRegistrarContractAddress);
 
     var setOpsAddressResponse = await valueRegistrarContractInteract.setOpsAddress(deployerName, valueRegistrarUser);
-    logger.info(setOpsAddressResponse);
     logger.win("Registrar " + valueRegistrarUser + " is set to ValueRegistrarContract " + valueRegistrarContractAddress);
 
     // Initiate Ownership transfer of Value registrar contract to STF
@@ -130,7 +127,6 @@ const performer = async function() {
         deployerName,
         foundationAddress
     );
-    logger.info(initiateOwnerShipTransferResponse);
     logger.win("Foundation " + foundationAddress + " is set to ValueRegistrarContract " + valueRegistrarContractAddress);
 
     // Add Core contract address to Environment config
