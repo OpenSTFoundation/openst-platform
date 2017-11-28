@@ -176,7 +176,7 @@ InitUtilityToken.prototype = {
   //     return Promise.reject("Did not find RegisteredBrandedToken event payload!");
   //   }
 
-  // }
+  // } 
 
 };
 
