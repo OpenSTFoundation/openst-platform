@@ -32,7 +32,7 @@ function updateConfig(valueRegistrarAddr, valueSTContractAddr) {
   })
   .catch( reason =>  {
     logger.error("Failed to populate open_st_env_vars.sh file!");
-    catchAndExit( reason );
+    process.exit(1);
   })
   .then( _ => {
     logger.win("open_st_env_vars updated.");

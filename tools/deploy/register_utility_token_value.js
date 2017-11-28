@@ -17,21 +17,21 @@ const rootPrefix = '../..'
     ;
 
 function updateConfig(valueCoreContractAddr) {
+
     return new Promise( (resolve,reject) => {
-      logger.step("Updating Source file open_st_env_vars");
-      populateEnvVars.renderAndPopulate('valueCore', {
-          ost_value_core_contract_address: valueCoreContractAddr
-      });
+        logger.step("Updating Source file open_st_env_vars");
+        populateEnvVars.renderAndPopulate('valueCore', {
+            ost_value_core_contract_address: valueCoreContractAddr
+        });
 
-  })
-  .catch( reason =>  {
-    logger.error("Failed to populate open_st_env_vars.sh file!");
-    catchAndExit( reason );
-  })
-  .then( _ => {
-    logger.win("open_st_env_vars updated.");
-  });
-
+    })
+    .catch( reason =>  {
+        logger.error("Failed to populate open_st_env_vars.sh file!");
+        process.exit(1);
+    })
+    .then( _ => {
+        logger.win("open_st_env_vars updated.");
+    });
 };
 
 const performer = async function() {
@@ -111,6 +111,8 @@ const performer = async function() {
 
     // Add Core contract address to Environment config
     await updateConfig(coreContractAddress);
+
+    logger.win(" Deploy script 3 completed ");
 
 };
 
