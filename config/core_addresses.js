@@ -88,12 +88,6 @@ const allAddresses = {
       bin: coreBins.utilityRegistrar
     },
 
-    staking: {
-      address: process.env.OST_STAKING_CONTRACT_ADDR,
-      abi: coreAbis.staking,
-      bin: coreBins.staking
-    },
-
     brandedToken: {
       address: process.env.OST_UTILITY_TOKEN_CONTRACT_ADDR,
       abi: coreAbis.brandedToken,
