@@ -5,23 +5,36 @@ const rootPrefix = '../..'
   , eventQueueManagerKlass = require(rootPrefix+'/lib/web3/events/queue_manager')
   , coreAddresses = require(rootPrefix+'/config/core_addresses')
   , openSTValueContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_value')
-  , openSTValueContractInteract = new openSTValueContractInteractKlass()
+  , web3WsProvider = require(rootPrefix+'/lib/web3/providers/value_ws')
+  , contractName = 'openSTValue'
+  , contractAbi = coreAddresses.getAbiForContract(contractName)
+  , currContractAddr = coreAddresses.getAddressForContract(contractName)
   , openSTUtilityContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_utility')
   , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass()
   , eventQueueManager = new eventQueueManagerKlass()
   ;
 
-const stakeAndMintInterComm = function() {
-  eventQueueManager.setProcessor(this.processor);
-  this.bindEvents();
-};
+const stakeAndMintInterComm = function() {};
 
 stakeAndMintInterComm.prototype = {
+
+  init: function () {
+    eventQueueManager.setProcessor(this.processor);
+    this.bindEvents();
+  },
+
+  listenToStakingIntentDeclared: function (onError, onData, onChange) {
+    var completeContract = new web3WsProvider.eth.Contract( contractAbi, currContractAddr );
+    return completeContract.events.StakingIntentDeclared({})
+      .on('error', onError)
+      .on('data', onData)
+      .on('changed', onChange);
+  },
 
   bindEvents: function () {
     logger.log("bindEvents binding StakingIntentDeclared");
 
-    openSTValueContractInteract.listenToStakingIntentDeclared(
+    this.listenToStakingIntentDeclared(
       stakeAndMintInterComm.onEventSubscriptionError,
       stakeAndMintInterComm.onEvent,
       stakeAndMintInterComm.onEvent
@@ -70,6 +83,6 @@ stakeAndMintInterComm.prototype = {
 
 };
 
-new stakeAndMintInterComm();
+new stakeAndMintInterComm().init();
 
 logger.win("InterComm Script for Stake and Mint initiated");
