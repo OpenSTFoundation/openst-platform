@@ -55,7 +55,7 @@ STEPS
     ./init_keys.sh
 
 3) On Development only
-    - Verify genesis test/poa-genesis-value.json
+    - Verify genesis file configurations test/poa-genesis-value.json
     - Open a new Terminal and Run
     - cd test
     - ./run_value_chain.sh
@@ -70,7 +70,6 @@ STEPS
        - On value chain machine
        - source test/open_st_env_vars.sh
        - node test/deployOpenSTOnTestNetNew.js
-       - populate OST_SIMPLE_TOKEN_CONTRACT_ADDR in test/open_st_env_vars.sh from config.json
 
 6) On Development only
       - Verify if OST_FOUNDATION_ADDR(SimpleTokenFoundation) and OST_DEPLOYER_ADDR is populated to test/open_st_env_vars.sh
@@ -84,12 +83,6 @@ STEPS
 8) On Utility Chain Machine
     //@Abhay: This needs to be done via code. genesis-utility will be distributed via S3.
     - in poa-genesis-utility.json alloc 800M base tokens to machine key
-    - Transfer sufficient fund to deployer
-
-       var sender = '';
-       var receiver = ''
-       personal.unlockAccount(sender)
-       eth.sendTransaction({from: sender, to: receiver, value: web3.toWei(10, "ether")})
     - Verify if OST_DEPLOYER_ADDR has proper balance of utility chain
     - source test/open_st_env_vars.sh
     - node tools/deploy/openst_utility.js
