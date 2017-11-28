@@ -14,6 +14,11 @@ const rootPrefix = '../..'
     , ValueRegistrarContractInteract = require(rootPrefix+'/lib/contract_interact/value_registrar')
     , populateEnvVars = require(rootPrefix+"/lib/populate_env_vars.js")
     , logger = require(rootPrefix+'/helpers/custom_console_logger')
+    , valueRegistrarContractAddress = coreAddresses.getAddressForContract("valueRegistrar")
+    , openSTUtilityContractAddress = coreAddresses.getAddressForContract("openSTUtility")
+    , openSTValueContractAddress = coreAddresses.getAddressForContract("openSTValue")
+    , valueRegistrarUser = coreAddresses.getAddressForUser("valueRegistrar")
+    , foundationAddress = coreAddresses.getAddressForUser("foundation")
     ;
 
 function updateConfig(valueCoreContractAddr) {
@@ -41,17 +46,36 @@ function updateConfig(valueCoreContractAddr) {
 const performer = async function() {
 
     logger.step("Deploying Value Core Contract on Value Chain");
-    logger.info("Value Chain Registrar Address: " + coreAddresses.getAddressForUser("valueRegistrar"));
+    logger.info("Value Chain Registrar Contract Address: " + valueRegistrarUser);
+    logger.info("Foundation Address: " + foundationAddress);
+    logger.info("OpenST Utility Contract: " + openSTUtilityContractAddress);
+    logger.info("OpenST Value Contract: " + openSTValueContractAddress);
+    logger.info("Value Chain Registrar User Address: " + valueRegistrarUser);
+
+    await new Promise(
+      function (onResolve, onReject){
+          prompts.question("Please verify all above details. Do you want to proceed? [Y/N]", function (intent) {
+              if (intent === 'Y') {
+                  logger.info('Great! Proceeding deployment.');
+                  prompts.close();
+                  onResolve();
+              } else {
+                  logger.error('Exiting deployment scripts. Change the env vars and re-run.');
+                  process.exit(1);
+              }
+          });
+      }
+    );
 
     // deploy Core contract
     var contractName = 'valueCore'
         ,contractAbi = coreAddresses.getAbiForContract(contractName)
         ,contractBin = coreAddresses.getBinForContract(contractName)
         ,constructorArgs = [
-        coreAddresses.getAddressForContract("valueRegistrar"),
+        valueRegistrarContractAddress,
         coreConstants.OST_VALUE_CHAIN_ID,
         coreConstants.OST_UTILITY_CHAIN_ID,
-        coreAddresses.getAddressForContract("openSTUtility")];
+        openSTUtilityContractAddress];
 
     var coreContractDeployResult = await deployHelper.perform(
         contractName,
@@ -67,8 +91,7 @@ const performer = async function() {
     // Add core to openst_value
     logger.step("Add Value Core contract on Value Chain.");
     const coreContractAddress = coreContractDeployResult.contractAddress;
-    const openSTValueContractAddress = coreAddresses.getAddressForContract("openSTValue"),
-          openStValueContractInteract = new OpenStValueContractInteract(openSTValueContractAddress);
+    const openStValueContractInteract = new OpenStValueContractInteract(openSTValueContractAddress);
 
     var addCoreResponse = await openStValueContractInteract.addCore(deployerName, coreContractAddress);
     logger.info(addCoreResponse);
@@ -76,8 +99,7 @@ const performer = async function() {
 
     // Register Utility token on Value chain
     logger.step("Register Utility token for STPrime on Value Chain.");
-    const openSTUtilityContractAddress = coreAddresses.getAddressForContract("openSTUtility"),
-          openStUtilityContractInteract = new OpenStUtilityContractInteract(openSTUtilityContractAddress);
+    const openStUtilityContractInteract = new OpenStUtilityContractInteract(openSTUtilityContractAddress);
 
     var symbolResult = await openStUtilityContractInteract.getSymbol();
     var nameResult = await openStUtilityContractInteract.getName();
@@ -96,22 +118,20 @@ const performer = async function() {
 
     //set ops address to VC registrar addr
     logger.step("Set Ops Address to Value Registrar.");
-    const registrarAddress = coreAddresses.getAddressForUser("valueRegistrar"),
-          valueRegistrarContractAddress = coreAddresses.getAddressForContract("valueRegistrar"),
-          valueRegistrarContractInteract = new ValueRegistrarContractInteract(valueRegistrarContractAddress);
+    const valueRegistrarContractInteract = new ValueRegistrarContractInteract(valueRegistrarContractAddress);
 
-    var setOpsAddressResponse = await valueRegistrarContractInteract.setOpsAddress(deployerName, registrarAddress);
+    var setOpsAddressResponse = await valueRegistrarContractInteract.setOpsAddress(deployerName, valueRegistrarUser);
     logger.info(setOpsAddressResponse);
-    logger.win("Registrar " + registrarAddress + " is set to ValueRegistrarContract " + valueRegistrarContractAddress);
+    logger.win("Registrar " + valueRegistrarUser + " is set to ValueRegistrarContract " + valueRegistrarContractAddress);
 
     // Initiate Ownership transfer of Value registrar contract to STF
     logger.step("Initiate Ownership transfer of Value registrar contract to STF.");
     var initiateOwnerShipTransferResponse = await valueRegistrarContractInteract.initiateOwnerShipTransfer(
         deployerName,
-        coreAddresses.getAddressForUser("foundation")
+        foundationAddress
     );
     logger.info(initiateOwnerShipTransferResponse);
-    logger.win("Foundation " + coreAddresses.getAddressForUser("foundation") + " is set to ValueRegistrarContract " + valueRegistrarContractAddress);
+    logger.win("Foundation " + foundationAddress + " is set to ValueRegistrarContract " + valueRegistrarContractAddress);
 
     // Add Core contract address to Environment config
     await updateConfig(coreContractAddress);
