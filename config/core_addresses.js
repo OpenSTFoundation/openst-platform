@@ -41,6 +41,11 @@ const allAddresses = {
     deployer: {
       address: process.env.OST_DEPLOYER_ADDR,
       passphrase: process.env.OST_DEPLOYER_PASSPHRASE
+    },
+
+    valueOps: {
+      address: process.env.OST_VALUE_OPS_ADDR,
+      passphrase: process.env.OST_VALUE_OPS_PASSPHRASE
     }
 
   },

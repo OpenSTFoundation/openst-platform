@@ -12,6 +12,7 @@ STEPS
         - OST_UTILITY_REGISTRAR_PASSPHRASE
         - OST_UTILITY_CHAIN_OWNER_ADDR
         - OST_SIMPLE_TOKEN_CONTRACT_ADDR
+        - OST_VALUE_OPS_ADDR
 
     export OST_GETH_VALUE_RPC_PROVIDER='http://localhost:8545'
     export OST_GETH_VALUE_WS_PROVIDER='ws://localhost:18545'
@@ -107,13 +108,15 @@ STEPS
 12) In new terminal
     source test/open_st_env_vars.sh
     node
-    const rootPrefix = '.';
-    const coreAddresses = require(rootPrefix+'/config/core_addresses');
-    const initKlass = require('./tools/init_utility_token');
-    const initKlassObj = new initKlass;
-    var btSymbol = 'XYZ';
-    var btName = 'xyzCoin';
-    var btConversion = 10;
+    (function () {
+        const rootPrefix = '.';
+        const coreAddresses = require(rootPrefix+'/config/core_addresses');
+        const initKlass = require('./tools/init_utility_token');
+        const initKlassObj = new initKlass;
+        var btSymbol = 'XYZsdasdas';
+        var btName = 'xyzCosadasin';
+        var btConversion = 10;
 
-    initKlassObj.propose(coreAddresses.getAddressForUser('foundation'), coreAddresses.getPassphraseForUser('foundation'), btSymbol, btName, btConversion);
+        initKlassObj.propose(coreAddresses.getAddressForUser('foundation'), coreAddresses.getPassphraseForUser('foundation'), btSymbol, btName, btConversion);
+    })();
 

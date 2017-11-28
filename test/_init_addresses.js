@@ -5,6 +5,7 @@ const _addresses = {
   "foundation": null,
   "admin":null,
   "deployer": null,
+  "opsAdd": null,
   "members": []
 };
 
@@ -33,6 +34,9 @@ function main( addressFile ) {
     } else if ( !_addresses.deployer ) {
       _addresses.deployer = thisAddress;
       updateDeployerAddress( thisAddress );
+    } else if ( !_addresses.opsAdd ) {
+      _addresses.opsAdd = thisAddress;
+      fundOpsAddress( thisAddress );
     } else if ( !_addresses.utilityChainOwnerAddress ) {
       _addresses.utilityChainOwnerAddress = thisAddress;
       updateUtilityChainOwnerAddress(thisAddress);
@@ -49,12 +53,9 @@ function main( addressFile ) {
       ost_foundation_address: _addresses.foundation,
       ost_value_registrar_address: _addresses.admin,
       ost_utility_registrar_address: _addresses.admin,
-      ost_utility_chain_owner_address: _addresses.utilityChainOwnerAddress
-    }
-  );
-
-  populateEnvVars.renderAndPopulate('deployer', {
-      ost_deployer_address: _addresses.deployer,
+      ost_utility_chain_owner_address: _addresses.utilityChainOwnerAddress,
+      ost_value_ops_address: _addresses.opsAdd,
+      ost_deployer_address: _addresses.deployer
     }
   );
 
@@ -71,6 +72,14 @@ function updateFoundationAddress( foundation ) {
   //Update poa-genesis-utility
   updateGenesisAlloc( poaGenesisUtility, foundation, "0x2000000000000000000000000000000000000000000000000000000000000000");
   writeJsonToFile(poaGenesisUtility, "./poa-genesis-utility.json");
+}
+
+function fundOpsAddress( opsAddress ) {
+
+  //Update poa-genesis-value
+  updateGenesisAlloc( poaGenesisValue, opsAddress, "0x200000000000000000000000000000000000000000000000000000000000000");
+  writeJsonToFile(poaGenesisValue, "./poa-genesis-value.json");
+
 }
 
 function updateAdminAddress( admin ) {

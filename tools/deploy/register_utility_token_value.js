@@ -4,6 +4,7 @@ const rootPrefix = '../..'
     , readline = require('readline')
     , config = require(rootPrefix + '/config.json')
     , deployerName = "deployer"
+    , valueOpsName = "valueOps"
     , web3Provider = require(rootPrefix+'/lib/web3/providers/value_rpc')
     , deployHelper = require('./helper')
     , coreConstants = require(rootPrefix+'/config/core_constants')
@@ -19,7 +20,10 @@ const rootPrefix = '../..'
     , openSTValueContractAddress = coreAddresses.getAddressForContract("openSTValue")
     , valueRegistrarUser = coreAddresses.getAddressForUser("valueRegistrar")
     , foundationAddress = coreAddresses.getAddressForUser("foundation")
+    , valueOpsAddress = coreAddresses.getAddressForUser(valueOpsName)
+    , valueOpsPassphrase = coreAddresses.getPassphraseForUser(valueOpsName)
     , deploymentOptions = { gasPrice: coreConstants.OST_VALUE_GAS_PRICE}
+    , deployerAddress = coreAddresses.getAddressForUser(deployerName)
     ;
 
 function updateConfig(valueCoreContractAddr) {
@@ -47,12 +51,13 @@ function updateConfig(valueCoreContractAddr) {
 const performer = async function() {
 
     logger.step("Deploying Value Core Contract on Value Chain");
-    logger.info("Deployer Address: " + coreAddresses.getAddressForUser(deployerName));
+    logger.info("Deployer Address: " + deployerAddress);
     logger.info("Value Chain Registrar Contract Address: " + valueRegistrarUser);
     logger.info("Foundation Address: " + foundationAddress);
     logger.info("OpenST Utility Contract: " + openSTUtilityContractAddress);
     logger.info("OpenST Value Contract: " + openSTValueContractAddress);
     logger.info("Value Chain Registrar User Address: " + valueRegistrarUser);
+    logger.info("Value Ops Address: " + valueOpsAddress);
 
     await new Promise(
       function (onResolve, onReject){
@@ -96,7 +101,11 @@ const performer = async function() {
     const coreContractAddress = coreContractDeployResult.contractAddress;
     const openStValueContractInteract = new OpenStValueContractInteract(openSTValueContractAddress);
 
-    var addCoreResponse = await openStValueContractInteract.addCore(deployerName, coreContractAddress);
+    const valueRegistrarContractInteract = new ValueRegistrarContractInteract(valueRegistrarContractAddress);
+
+    var addCoreResponse = await valueRegistrarContractInteract.addCore(valueOpsName,
+                                        openSTValueContractAddress, coreContractAddress);
+    logger.info(JSON.stringify(addCoreResponse));
     logger.win("Core Contract " + coreContractAddress + " is added to Value Chain.");
 
     // Register Utility token on Value chain
@@ -107,9 +116,15 @@ const performer = async function() {
     var nameResult = await openStUtilityContractInteract.getName();
     var conversionRateResult = await openStUtilityContractInteract.getConversationRate();
 
-    const valueRegistrarContractInteract = new ValueRegistrarContractInteract(valueRegistrarContractAddress);
+    logger.info("Symbol:"+symbolResult.data.symbol);
+    logger.info("Name:"+nameResult.data.name);
+    logger.info("ConversationRate:"+conversionRateResult.data.conversion_rate);
+
 
     var registerUtilityTokenResponse = await valueRegistrarContractInteract.registerUtilityToken(
+        valueOpsAddress,
+        valueOpsPassphrase,
+        openSTValueContractAddress,
         symbolResult.data.symbol,
         nameResult.data.name,
         conversionRateResult.data.conversion_rate,
@@ -118,7 +133,8 @@ const performer = async function() {
         coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID,
         deployerName);
 
-    logger.info(JSON.stringify(registerUtilityTokenResponse))
+    logger.info(JSON.stringify(registerUtilityTokenResponse));
+    logger.step("Register Utility token for STPrime on Value Chain.");
     logger.win("Utility token registered on Value Chain.");
 
     //set ops address to VC registrar addr

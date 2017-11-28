@@ -16,6 +16,7 @@ const rootPrefix = '../..'
   , OpenstValueContract = require(rootPrefix+'/lib/contract_interact/openst_value')
   , populateEnvVars = require(rootPrefix+"/lib/populate_env_vars.js")
   , foundationAddress = coreAddresses.getAddressForUser("foundation")
+  , valueOpsAddress = coreAddresses.getAddressForUser("valueOps")
   , simpleTokenAddress = coreAddresses.getAddressForContract("simpleToken")
   , deploymentOptions = { gasPrice: coreConstants.OST_VALUE_GAS_PRICE}
 ;
@@ -51,6 +52,7 @@ const performer = async function() {
   logger.step("Deploying Registrar on Value Chain");
   logger.info("Deployer Address: " + deployerAddress);
   logger.info("Foundation Address: " + foundationAddress);
+  logger.info("Value Ops Address: " + valueOpsAddress);
   logger.info("Simple Token Contract Address: " + simpleTokenAddress);
 
   await new Promise(
@@ -87,11 +89,11 @@ const performer = async function() {
 
   var registrarContractAddr = contractDeployTxReceipt.contractAddress;
 
-  logger.step("Set ops address to deployer address: " + deployerAddress);
+  logger.step("Set ops address to value ops user address: " + valueOpsAddress);
 
   const valueRegistrar = new ValueRegistrar(registrarContractAddr);
 
-  var resultHelper = await valueRegistrar.setOpsAddress(deployerName, deployerAddress);
+  var resultHelper = await valueRegistrar.setOpsAddress(deployerName, valueOpsAddress);
 
   logger.win(" Ops address set to deployer address ");
 

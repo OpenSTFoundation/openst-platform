@@ -20,6 +20,9 @@ geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE
 #Deployer Address
 geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE
 
+#Ops Address
+geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE
+
 #Member Company Address
 geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE
 
