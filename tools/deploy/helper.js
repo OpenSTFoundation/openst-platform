@@ -47,17 +47,20 @@ const deployHelper = {
                            contractAbi,
                            contractBin,
                            deployerName,
+                           customOptions,
                            constructorArgs) {
 
     const deployerAddr = coreAddresses.getAddressForUser(deployerName)
       , deployerAddrPassphrase = coreAddresses.getPassphraseForUser(deployerName);
 
-    const options = {
+    var options = {
       from: deployerAddr,
       gas: gasLimit,
       data: "0x" + contractBin,
       gasPrice: gasPrice
     };
+
+    Object.assign(options, customOptions)
 
     if (constructorArgs) {
       options.arguments = constructorArgs;

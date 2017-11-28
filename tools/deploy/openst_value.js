@@ -17,6 +17,7 @@ const rootPrefix = '../..'
   , populateEnvVars = require(rootPrefix+"/lib/populate_env_vars.js")
   , foundationAddress = coreAddresses.getAddressForUser("foundation")
   , simpleTokenAddress = coreAddresses.getAddressForContract("simpleToken")
+  , deploymentOptions = { gasPrice: coreConstants.OST_VALUE_GAS_PRICE}
 ;
 
 function updateConfig(valueRegistrarAddr, valueSTContractAddr) {
@@ -78,7 +79,8 @@ const performer = async function() {
     web3Provider,
     contractAbi,
     contractBin,
-    deployerName
+    deployerName,
+    deploymentOptions
   );
   logger.info(contractDeployTxReceipt);
   logger.win(contractName + " Contract deployed ");
@@ -111,6 +113,7 @@ const performer = async function() {
     contractAbi,
     contractBin,
     deployerName,
+    deploymentOptions,
     constructorArgs
   );
 

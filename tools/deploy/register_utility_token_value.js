@@ -19,6 +19,7 @@ const rootPrefix = '../..'
     , openSTValueContractAddress = coreAddresses.getAddressForContract("openSTValue")
     , valueRegistrarUser = coreAddresses.getAddressForUser("valueRegistrar")
     , foundationAddress = coreAddresses.getAddressForUser("foundation")
+    , deploymentOptions = { gasPrice: coreConstants.OST_VALUE_GAS_PRICE}
     ;
 
 function updateConfig(valueCoreContractAddr) {
@@ -83,6 +84,7 @@ const performer = async function() {
         contractAbi,
         contractBin,
         deployerName,
+        deploymentOptions,
         constructorArgs
     );
     logger.info(coreContractDeployResult);

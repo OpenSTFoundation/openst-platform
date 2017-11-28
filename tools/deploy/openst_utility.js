@@ -17,6 +17,7 @@ const rootPrefix = '../..'
   , StPrimeContractInteract = require(rootPrefix+'/lib/contract_interact/st_prime')
   , customLogger = require(rootPrefix+'/helpers/custom_console_logger')
   , populateEnvVars = require(rootPrefix+"/lib/populate_env_vars.js")
+  , deploymentOptions = { gasPrice: coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT}
   ;
 
 const performer = async function() {
@@ -53,7 +54,8 @@ const performer = async function() {
     web3Provider,
     contractAbi,
     contractBin,
-    deployerName
+    deployerName,
+    deploymentOptions
   );
   customLogger.log(registrarContractDeployResult);
   customLogger.win(contractName + " Contract deployed ");
@@ -83,6 +85,7 @@ const performer = async function() {
     contractAbi,
     contractBin,
     deployerName,
+    deploymentOptions,
     [coreConstants.OST_VALUE_CHAIN_ID, coreConstants.OST_UTILITY_CHAIN_ID, registrarContractAddress]
   );
   customLogger.log(utiltiyContractDeployResponse);
