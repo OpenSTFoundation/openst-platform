@@ -16,6 +16,27 @@ const rootPrefix = '../..'
     , logger = require(rootPrefix+'/helpers/custom_console_logger')
     ;
 
+function updateConfig(coreContractAddress) {
+
+    return new Promise(
+      function (onResolve, onReject) {
+          logger.step("Updating Source file open_st_env_vars");
+          populateEnvVars.renderAndPopulate('valueCore', {
+              ost_value_core_contract_address: valueCoreContractAddr
+          });
+
+          onResolve();
+      })
+      .then( function () {
+          logger.win("open_st_env_vars updated.");
+      })
+      .catch( function(reason)  {
+          logger.error("Failed to populate open_st_env_vars.sh file!");
+          logger.error(reason);
+          process.exit(1);
+      });
+
+};
 function updateConfig(valueCoreContractAddr) {
 
     return new Promise( (resolve,reject) => {

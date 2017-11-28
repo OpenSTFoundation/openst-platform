@@ -21,23 +21,26 @@ const rootPrefix = '../..'
 
 function updateConfig(valueRegistrarAddr, valueSTContractAddr) {
 
-  return new Promise( (resolve,reject) => {
-    logger.step("Updating Source file open_st_env_vars");
-    populateEnvVars.renderAndPopulate('valueRegistrar', {
-      ost_value_registrar_contract_address: valueRegistrarAddr
-    });
+  return new Promise(
+    function (onResolve, onReject) {
+      logger.step("Updating Source file open_st_env_vars");
+      populateEnvVars.renderAndPopulate('valueRegistrar', {
+        ost_value_registrar_contract_address: valueRegistrarAddr
+      });
 
-    populateEnvVars.renderAndPopulate('valueOpenst', {
-      ost_openst_value_contract_address: valueSTContractAddr
-    });
+      populateEnvVars.renderAndPopulate('valueOpenst', {
+        ost_openst_value_contract_address: valueSTContractAddr
+      });
 
+      onResolve();
   })
-  .catch( reason =>  {
-    logger.error("Failed to populate open_st_env_vars.sh file!");
-    process.exit(1);
-  })
-  .then( _ => {
+  .then( function () {
     logger.win("open_st_env_vars updated.");
+  })
+  .catch( function(reason)  {
+    logger.error("Failed to populate open_st_env_vars.sh file!");
+    logger.error(reason);
+    process.exit(1);
   });
 
 };
