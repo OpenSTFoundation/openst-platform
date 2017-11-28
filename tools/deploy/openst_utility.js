@@ -21,7 +21,7 @@ const rootPrefix = '../..'
 
 // TODO Break into methods
 // Staging/production env
-// Write to utility_registrar_config.json
+// Write to utility_registrar_config.json?
 const performer = async function() {
 
   customLogger.log("Deployer Address: " + deployerAddress);
