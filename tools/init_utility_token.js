@@ -72,7 +72,7 @@ InitUtilityToken.prototype = {
     //..Create Array.some callback. It should return true if any param is missing. 
     const isMissing = function ( eventName ) {
       return (typeof registerParams[ eventName ] === "undefined");
-    }
+    };
     //..Check it.
     if ( mustHaveParams.some(isMissing) ) {
       return Promise.reject("Required parameters missing. Can not perform registerBrandedToken. registerParams: ", JSON.stringify(registerParams) );
