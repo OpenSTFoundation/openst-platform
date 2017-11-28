@@ -64,13 +64,15 @@ const performer = async function() {
   var registrarContractAddress = registrarContractDeployResult.contractAddress
     ,utilityRegistrarContractInteract = new UtilityRegistrarContractInteract(registrarContractAddress);
   customLogger.log('\nSetting Ops Address to Utility Chain Registrar Contract Address');
-  var setOpsAddressresponse = await utilityRegistrarContractInteract.setOpsAddress(deployerName, utilityRegistrarAddress);
+  var setOpsAddressresponse = await utilityRegistrarContractInteract.setOpsAddress(deployerName,
+                                        utilityRegistrarAddress, deploymentOptions);
   customLogger.log(setOpsAddressresponse);
   customLogger.win('Ops Address Set to registrar contract address: '+ registrarContractAddress);
 
   // initiate owner ship transfer to utilityChainOwnerAddress
   customLogger.log('\nInitiating Ownership Transfer of contract: '+ contractName + " to deployer: " +deployerName);
-  var initiateOwnershipTransferResponse = await utilityRegistrarContractInteract.initiateOwnerShipTransfer(deployerName, utilityChainOwnerAddress);
+  var initiateOwnershipTransferResponse = await utilityRegistrarContractInteract.initiateOwnerShipTransfer(deployerName,
+                                                utilityChainOwnerAddress, deploymentOptions);
   customLogger.win('Completed Ownership transfer of contract: ' + contractName + ' to deployer: ' + deployerName);
 
   //deploy contract openSTUtility, auto deploys ST" contract
@@ -96,7 +98,8 @@ const performer = async function() {
 
   // initiate owner ship transfer to utilityChainOwnerAddress
   customLogger.log('\nInitiating Ownership Transfer of contract: '+ contractName + " to deployer: " +deployerName);
-  var initiateOwnershipTransferResponse = await openStUtilityContractInteract.initiateOwnerShipTransfer(deployerName, utilityChainOwnerAddress);
+  var initiateOwnershipTransferResponse = await openStUtilityContractInteract.
+                                                initiateOwnerShipTransfer(deployerName, utilityChainOwnerAddress, deploymentOptions);
   customLogger.win('Completed Ownership transfer of contract: ' + contractName + ' to deployer: ' + deployerName);
 
   // Query to get ST" UUID
