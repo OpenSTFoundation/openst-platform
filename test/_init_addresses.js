@@ -47,7 +47,8 @@ function main( addressFile ) {
 
   populateEnvVars.renderAndPopulate('address', {
       ost_foundation_address: _addresses.foundation,
-      ost_registrar_address: _addresses.admin
+      ost_registrar_address: _addresses.admin,
+      ost_utility_registrar_address: _addresses.admin
     }
   );
 

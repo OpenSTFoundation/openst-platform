@@ -12,6 +12,7 @@ const rootPrefix = '../..'
   , deployerAddress = coreAddresses.getAddressForUser(deployerName)
   , UtilityRegistrarContractInteract = require(rootPrefix+'/lib/contract_interact/utility_registrar')
   , utilityChainOwnerAddress = coreAddresses.getAddressForUser('utilityChainOwner')
+  , utilityRegistrarAddress = coreAddresses.getAddressForUser('utilityRegistrar')
   , OpenStUtilityContractInteract = require(rootPrefix+'/lib/contract_interact/openst_utility')
   , StPrimeContractInteract = require(rootPrefix+'/lib/contract_interact/st_prime')
   , customLogger = require(rootPrefix+'/helpers/custom_console_logger')
@@ -26,6 +27,7 @@ const performer = async function() {
   customLogger.log("Deployer Address: " + deployerAddress);
   customLogger.log("Total ST Prime Which will be transferred: " + coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY);
   customLogger.log("Utility Chain Owner Address: " + utilityChainOwnerAddress);
+  customLogger.log("Utility Chain Registrar User Address: " + utilityRegistrarAddress);
 
   await new Promise(
     function (onResolve, onReject){
@@ -62,7 +64,7 @@ const performer = async function() {
   var registrarContractAddress = registrarContractDeployResult.contractAddress
     ,utilityRegistrarContractInteract = new UtilityRegistrarContractInteract(registrarContractAddress);
   customLogger.log('\nSetting Ops Address to Utility Chain Registrar Contract Address');
-  var setOpsAddressresponse = await utilityRegistrarContractInteract.setOpsAddress(deployerName, registrarContractAddress);
+  var setOpsAddressresponse = await utilityRegistrarContractInteract.setOpsAddress(deployerName, utilityRegistrarAddress);
   customLogger.log(setOpsAddressresponse);
   customLogger.win('Ops Address Set to registrar contract address: '+ registrarContractAddress);
 
