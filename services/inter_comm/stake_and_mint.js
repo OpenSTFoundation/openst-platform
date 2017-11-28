@@ -22,9 +22,9 @@ stakeAndMintInterComm.prototype = {
     logger.log("bindEvents binding StakingIntentDeclared");
 
     openSTValueContractInteract.listenToStakingIntentDeclared(
-      interComm.onEventSubscriptionError,
-      interComm.onEvent,
-      interComm.onEvent
+      stakeAndMintInterComm.onEventSubscriptionError,
+      stakeAndMintInterComm.onEvent,
+      stakeAndMintInterComm.onEvent
     );
 
     logger.log("bindEvents done");
@@ -72,4 +72,4 @@ stakeAndMintInterComm.prototype = {
 
 new stakeAndMintInterComm();
 
-logger.win("interComm initiated");
+logger.win("InterComm Script for Stake and Mint initiated");
