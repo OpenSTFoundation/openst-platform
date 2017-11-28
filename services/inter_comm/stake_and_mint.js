@@ -23,15 +23,7 @@ stakeAndMintInterComm.prototype = {
     this.bindEvents();
   },
 
-  listenToStakingIntentDeclared: function (onError, onData, onChange) {
-    var completeContract = new web3WsProvider.eth.Contract( contractAbi, currContractAddr );
-    return completeContract.events.StakingIntentDeclared({})
-      .on('error', onError)
-      .on('data', onData)
-      .on('changed', onChange);
-  },
-
-  bindEvents: function () {
+  bindEvents: function(){
     logger.log("bindEvents binding StakingIntentDeclared");
 
     this.listenToStakingIntentDeclared(
@@ -41,7 +33,14 @@ stakeAndMintInterComm.prototype = {
     );
 
     logger.log("bindEvents done");
+  },
 
+  listenToStakingIntentDeclared: function (onError, onData, onChange) {
+    var completeContract = new web3WsProvider.eth.Contract( contractAbi, currContractAddr );
+    return completeContract.events.StakingIntentDeclared({})
+      .on('error', onError)
+      .on('data', onData)
+      .on('changed', onChange);
   },
 
   onEvent: function ( eventObj ) {

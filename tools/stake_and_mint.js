@@ -23,45 +23,41 @@ const rootPrefix = '..'
   , VC = "ValueChain"
   ;
 
-
-
-const toWeiST = ( amt => {
+const toWeiST = function(amt){
   return new BigNumber( 10 ).pow( 18 ).mul( amt );
-});
+};
 
-const toDisplayST = function ( num ) {
-  var bigNum = new BigNumber( num );
-  var fact = new BigNumber( 10 ).pow( 18 );
+const toDisplayST = function(num){
+  var bigNum = new BigNumber( num )
+    , fact = new BigNumber( 10 ).pow( 18 );
+
   return bigNum.dividedBy( fact ).toString( 10 ) + " ST";
 };
 
-String.prototype.equalsIgnoreCase = function ( compareWith ) {
-    var _self = this.toLowerCase();
-    var _compareWith = String( compareWith ).toLowerCase();
-    return _self == _compareWith;
+String.prototype.equalsIgnoreCase = function(compareWith){
+  var _self = this.toLowerCase()
+    , _compareWith = String( compareWith ).toLowerCase();
+
+  return _self == _compareWith;
 };
 
-var is_uc_main_net = false
-    ,is_vc_main_net = false
-;
-
 const describeChain = function(chainType, web3Provider) {
-  return web3Provider.eth.net.getId().then(
-    function(networkId){
+  return web3Provider.eth.net.getId()
+    .then(function(networkId){
       logger.info( chainType, "NetworkId: ", networkId );
       logger.info( VC, "HttpProvider.host: ", web3Provider.currentProvider.host );
     }
   )
 };
 
-const describeMember = function( member ) {
-  logger.step("Describing Member Config.", ( is_uc_main_net ? "Please Confirm these details." : "" ) );
+const describeMember = function(member) {
+  logger.step("Please Confirm these details.");
   logger.log("Name ::", member.Name);
   logger.log("Symbol ::", member.Symbol);
   logger.log("Reserve ::\x1b[31m", member.Reserve, logger.CONSOLE_RESET);
 
   var ignoreKeys = ["Name", "Symbol", "Reserve"]
-      ,allKeys = Object.keys( member )
+    , allKeys = Object.keys( member )
   ;
   allKeys.forEach(function ( prop ) {
     if ( ignoreKeys.includes( prop ) ) {
@@ -75,7 +71,6 @@ const describeMember = function( member ) {
 
     logger.log( prop, "::", val);
   });
-
 };
 
 const readlineInterface = readline.createInterface({
@@ -84,10 +79,7 @@ const readlineInterface = readline.createInterface({
   prompt: '>'
 });
 
-
-
 const listAllMembers = function() {
-  const is_on_main_net = is_uc_main_net || is_vc_main_net;
   console.log("\x1b[34m Welcome to Staking And Minting Tool \x1b[0m");
   logger.step("Please choose member to fund.");
 
@@ -157,7 +149,7 @@ const confirmMember = function(member) {
   });
 };
 
-const getMemberSTBalance = function( member ) {
+const getMemberSTBalance = function(member){
   return simpleTokenContractInteract.balanceOf( member.Reserve )
   .then( function(result){
     const memberBalance = result.data['balance'];
@@ -200,7 +192,7 @@ const askStakingAmount = function(bigNumBalance) {
   });
 };
 
-const getPassphrase = function( selectedMember ) {
+const getPassphrase = function(selectedMember){
   const hideConsoleString = "\x1b[8m";
   const resetConsoleString = "\x1b[0m";
   logger.step("Please provide member reserve passphrase.");
@@ -223,7 +215,7 @@ const getPassphrase = function( selectedMember ) {
     };
     readlineInterface.on("line", rlCallback);
   });
-}
+};
 
 const checkAllowanceAndApproveIfNeeded = function(member, passphrase, toStakeAmount) {
   return simpleTokenContractInteract.allowance(member.Reserve, openSTValueContractAddress)
@@ -263,7 +255,7 @@ const checkAllowanceAndApproveIfNeeded = function(member, passphrase, toStakeAmo
     });
 };
 
-function listenToUtilityToken( stakingIntentHash ) {
+function listenToUtilityToken(stakingIntentHash){
 
   return new Promise( function(onResolve, onReject){
 
@@ -377,21 +369,25 @@ function listenToUtilityToken( stakingIntentHash ) {
 
       return eventDataValues;
     })
-    .then( function(eventDataValues) {
+    .then(function(eventDataValues){
       logger.step("Waiting for Minting Intent Confirmation");
       return listenToUtilityToken(eventDataValues['_stakingIntentHash']);
     })
-    .then( function(eventObj) {
+    .then(function(eventObj){
       logger.win("Received StakingIntentConfirmed");
       logger.step("startinfg processStaking on ValueChain");
       return openSTValueContractInteract.processStaking(selectedMember.Reserve, _passphrase, eventDataValues['_stakingIntentHash'] );
     })
-    .then( function(){
+    .then(function(){
       logger.win("Completed processing Stake");
       logger.step("Process Minting");
-      return openSTUtilityContractInteract.processMinting(selectedMember.Reserve, _passphrase, eventDataValues['_stakingIntentHash'] )
+      return openSTUtilityContractInteract.processMinting(
+        selectedMember.Reserve,
+        _passphrase,
+        eventDataValues['_stakingIntentHash']
+      )
     })
-    .then( function(){
+    .then(function(){
       logger.win("Minting Completed!");
       process.exit(0);
     })
