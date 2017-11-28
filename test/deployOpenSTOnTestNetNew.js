@@ -14,8 +14,8 @@ const rootPrefix = "..",
       coreAddresses = require(rootPrefix + '/config/core_addresses'),
       FOUNDATION = coreAddresses.getAddressForUser('foundation'),
       FOUNDATION_PASSPHRASE = coreAddresses.getPassphraseForUser('foundation'),
-      REGISTRAR = coreAddresses.getAddressForUser('registrar'),
-      REGISTRAR_KEY = coreAddresses.getPassphraseForUser('registrar'),
+      REGISTRAR = coreAddresses.getAddressForUser('valueRegistrar'),
+      REGISTRAR_KEY = coreAddresses.getPassphraseForUser('valueRegistrar'),
       DEPLOYER = coreAddresses.getAddressForUser('deployer'),
       DEPLOYER_KEY = coreAddresses.getPassphraseForUser('deployer')
   ;

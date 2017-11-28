@@ -28,10 +28,9 @@ const allAddresses = {
       passphrase: ''
     },
 
-    // This is value chain registrar address
-    registrar: {
-      address: process.env.OST_REGISTRAR_ADDR,
-      passphrase: process.env.OST_REGISTRAR_PASSPHRASE
+    valueRegistrar: {
+      address: process.env.OST_VALUE_REGISTRAR_ADDR,
+      passphrase: process.env.OST_VALUE_REGISTRAR_PASSPHRASE
     },
 
     utilityRegistrar: {

@@ -13,7 +13,7 @@ const rootPrefix = '../..'
   , deployerAddress = coreAddresses.getAddressForUser(deployerName)
   , contractAbi = coreAddresses.getAbiForContract(contractName)
   , contractBin = coreAddresses.getBinForContract(contractName)
-  , registrarAddress = coreAddresses.getAddressForUser('registrar')
+  , registrarAddress = coreAddresses.getAddressForUser('utilityRegistrar')
   , simpleTokenAddress = coreAddresses.getAddressForContract('simpleToken');
 
 const performer = async function() {

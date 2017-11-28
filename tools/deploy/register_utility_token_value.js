@@ -37,7 +37,7 @@ function updateConfig(valueCoreContractAddr) {
 const performer = async function() {
 
     logger.step("Deploying Value Core Contract on Value Chain");
-    logger.info("Value Chain Registrar Address: " + coreAddresses.getAddressForUser("registrar"));
+    logger.info("Value Chain Registrar Address: " + coreAddresses.getAddressForUser("valueRegistrar"));
 
     // deploy Core contract
     var contractName = 'valueCore'
@@ -92,7 +92,7 @@ const performer = async function() {
 
     //set ops address to VC registrar addr
     logger.step("Set Ops Address to Value Registrar.");
-    const registrarAddress = coreAddresses.getAddressForUser("registrar"),
+    const registrarAddress = coreAddresses.getAddressForUser("valueRegistrar"),
           valueRegistrarContractAddress = coreAddresses.getAddressForContract("valueRegistrar"),
           valueRegistrarContractInteract = new ValueRegistrarContractInteract(valueRegistrarContractAddress);
 

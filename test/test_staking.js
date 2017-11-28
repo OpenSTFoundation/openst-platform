@@ -9,8 +9,8 @@ const BT = require('../lib/bt');
 const coreConstants = require('../config/core_constants')
       ,coreAddresses = require('../config/core_addresses')
       ,FOUNDATION = coreAddresses.getAddressForUser('foundation')
-      ,REGISTRAR = coreAddresses.getAddressForUser('registrar')
-      ,REGISTRAR_KEY = coreAddresses.getPassphraseForUser('registrar')
+      ,REGISTRAR = coreAddresses.getAddressForUser('utilityRegistrar')
+      ,REGISTRAR_KEY = coreAddresses.getPassphraseForUser('utilityRegistrar')
       ,SIMPLETOKEN_CONTRACT = coreAddresses.getAddressForContract('simpleToken')
       ,STAKE_CONTRACT = coreAddresses.getAddressesForContract('staking')
 ;

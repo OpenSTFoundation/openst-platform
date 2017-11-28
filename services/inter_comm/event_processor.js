@@ -4,7 +4,7 @@ const rootPrefix = '../..'
   , logger = require(rootPrefix+'/helpers/custom_console_logger')
   , utilityTokenContractInteractKlass = require(rootPrefix+'/lib/contract_interact/utilityToken')
   , coreAddresses = require(rootPrefix+'/config/core_addresses')
-  , registrarAddress = coreAddresses.getAddressForUser('registrar')
+  , registrarAddress = coreAddresses.getAddressForUser('utilityRegistrar')
   ;
 
 // contructor

@@ -299,7 +299,7 @@ MintingIntentHandler.prototype = {
     })
     .then(stakeAdmin => {
       stakeAdmin = stakeAdmin.toLowerCase();
-      var registrarAddress = coreAddresses.getAddressForUser('registrar');
+      var registrarAddress = coreAddresses.getAddressForUser('valueRegistrar');
       if ( stakeAdmin != registrarAddress ) {
         throw "stakingContract registrar verification failed";
       }

@@ -16,7 +16,7 @@ const reqPrefix = "../.."
       ,Config = require(reqPrefix + "/config.json")
       ,web3WsProvider = new Web3( coreConstants.OST_GETH_VALUE_WS_PROVIDER ) /* ValueChain WebSocket Address */
       ,FOUNDATION = coreAddresses.getAddressForUser('foundation')
-      ,REGISTRAR = coreAddresses.getAddressForUser('registrar')
+      ,REGISTRAR = coreAddresses.getAddressForUser('valueRegistrar')
       ,SIMPLETOKEN_CONTRACT = coreAddresses.getAddressForContract('simpleToken')
       ,STAKE_CONTRACT = coreAddresses.getAddressesForContract('staking')
 ;
