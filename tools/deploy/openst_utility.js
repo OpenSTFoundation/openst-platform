@@ -125,7 +125,7 @@ const performer = async function() {
 
   customLogger.info("Transfering all ST Prime Base Tokens to STPrime Contract Address: "+simpleTokenPrimeContractAddress);
   var stPrimeUtilityContractInteract = new StPrimeContractInteract(simpleTokenPrimeContractAddress);
-  var stPrimeTransferResponse = await stPrimeUtilityContractInteract.initialize_transfer(deployerName);
+  var stPrimeTransferResponse = await stPrimeUtilityContractInteract.initialize_transfer(deployerName, deploymentOptions);
   customLogger.win("Transferred all ST Prime Base Tokens to STPrime Contract Address: "+simpleTokenPrimeContractAddress);
 
   customLogger.info("Checking balance of simpleTokenPrimeContractAddress: "+simpleTokenPrimeContractAddress);
