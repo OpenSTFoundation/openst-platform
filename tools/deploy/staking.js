@@ -53,7 +53,7 @@ const performer = async function() {
   var encodedABI = currContract.methods.setAdminAddress(registrarAddress).encodeABI();
   var transactionReceipt = await contractHelper.safeSend(web3RpcProvider, stakingContractAddr, encodedABI, deployerName,
     {
-      gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+      gasPrice: coreConstants.OST_VALUE_GAS_PRICE
     });
 
   console.log(transactionReceipt);

@@ -268,7 +268,7 @@ function setSimpleTokenRegistrar() {
     logInfo("Setting", _registrarName ,"Address to", REGISTRAR);
     return ST.methods.setAdminAddress( REGISTRAR ).send({
       from: FOUNDATION,
-      gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+      gasPrice: coreConstants.OST_VALUE_GAS_PRICE
     }).catch( reason =>  {
       logError("Failed to set", _registrarName, "Address");
       catchAndExit();

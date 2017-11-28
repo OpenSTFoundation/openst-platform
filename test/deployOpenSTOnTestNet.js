@@ -228,7 +228,7 @@ function setSimpleTokenRegistrar( deployMeta ) {
     logInfo("Setting", _registrarName ,"Address to", REGISTRAR);
     return ST.methods.setAdminAddress( REGISTRAR ).send({
         from: FOUNDATION,
-        gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+        gasPrice: coreConstants.OST_VALUE_GAS_PRICE
       }).catch( reason =>  {
       logError("Failed to set", _registrarName, "Address");
       catchAndExit();
@@ -313,7 +313,7 @@ function deployStakeContract( deployMeta ) {
     const stakeContract = new StakeContract(FOUNDATION, stake)
     return stakeContract._instance.methods.setAdminAddress( REGISTRAR ).send({
       from: FOUNDATION,
-      gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+      gasPrice: coreConstants.OST_VALUE_GAS_PRICE
     })
   })
   .then( _ =>{
@@ -332,7 +332,7 @@ function finalizeSimpleTokenContract( deployMeta ) {
   .then( _ => {
     return ST.methods.finalize().send({
       from: REGISTRAR,
-      gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+      gasPrice: coreConstants.OST_VALUE_GAS_PRICE
     }).then( receipt => {
       if ( ("Finalized") in receipt.events ) {
         logWin("SimpleTokenContract Finalized");
@@ -362,7 +362,7 @@ function fundMember( member ) {
       logStep("Grant", member.Name, "with" , grantInST.toString( 10 ), "ST");
       return ST.methods.transfer( member.Reserve, grant.toString( 10 ) ).send({
         from: FOUNDATION,
-        gasPrice: coreConstants.OST_DEFAULT_GAS_PRICE
+        gasPrice: coreConstants.OST_VALUE_GAS_PRICE
       });
     })
     .then(_ => {

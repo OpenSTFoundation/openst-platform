@@ -16,7 +16,13 @@ function define(name, value) {
 const fiveGW = '0x12A05F200'; // 5 GWei
 
 // Default Gas
-define("OST_DEFAULT_GAS_PRICE", fiveGW);
+define("OST_VALUE_GAS_PRICE", fiveGW);
+
+// Zero gas constant to deploy on Utility Chain
+define("OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT", '0x');
+
+// Non Zero gas constant to on Utility Chain
+define("OST_UTILITY_GAS_PRICE", fiveGW);
 
 // Total ST' Supply on utility chain
 define('OST_UTILITY_STPRIME_TOTAL_SUPPLY', process.env.OST_UTILITY_STPRIME_TOTAL_SUPPLY);

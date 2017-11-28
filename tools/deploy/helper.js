@@ -7,7 +7,7 @@
 
 const rootPrefix = '../..'
   , coreConstants = require(rootPrefix+'/config/core_constants')
-  , fiveGW = coreConstants.OST_DEFAULT_GAS_PRICE
+  , fiveGW = coreConstants.OST_VALUE_GAS_PRICE
   , gasPrice = fiveGW
   , gasLimit = 9000000 // TODO: Right now this is the max for any contract to be deployed. We should get it dynamically for each contract.
   , coreAddresses = require(rootPrefix + '/config/core_addresses');
