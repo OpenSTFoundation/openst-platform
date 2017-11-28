@@ -15,6 +15,8 @@ const rootPrefix = '../..'
   , ValueRegistrar = require(rootPrefix+"/lib/contract_interact/value_registrar")
   , OpenstValueContract = require(rootPrefix+'/lib/contract_interact/openst_value')
   , populateEnvVars = require(rootPrefix+"/lib/populate_env_vars.js")
+  , foundationAddress = coreAddresses.getAddressForUser("foundation")
+  , simpleTokenAddress = coreAddresses.getAddressForContract("simpleToken")
 ;
 
 function updateConfig(valueRegistrarAddr, valueSTContractAddr) {
@@ -44,6 +46,8 @@ const performer = async function() {
 
   logger.step("Deploying Registrar on Value Chain");
   logger.info("Deployer Address: " + deployerAddress);
+  logger.info("Foundation Address: " + foundationAddress);
+  logger.info("Simple Token Contract Address: " + simpleTokenAddress);
 
   await new Promise(
     function (onResolve, onReject){
@@ -94,7 +98,7 @@ const performer = async function() {
 
   var constructorArgs = [
     coreConstants.OST_VALUE_CHAIN_ID,
-    coreAddresses.getAddressForContract("simpleToken"),
+    simpleTokenAddress,
     registrarContractAddr
   ]
 
@@ -118,7 +122,7 @@ const performer = async function() {
 
   var contractDeployResponse = await openstValueContract.initiateOwnerShipTransfer(
     deployerName,
-    coreAddresses.getAddressForUser("foundation")
+    foundationAddress
   );
 
   logger.win(" Ownership transfered ");
