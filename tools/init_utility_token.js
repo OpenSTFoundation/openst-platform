@@ -78,8 +78,8 @@ InitUtilityToken.prototype = {
       return Promise.reject("Required parameters missing. Can not perform registerBrandedToken. registerParams: ", JSON.stringify(registerParams) );
     }
 
-    const registrarAddress  = coreAddresses.getAddressForUser('registrar')
-      , registrarPassphrase = coreAddresses.getPassphraseForUser('registrar')
+    const registrarAddress  = coreAddresses.getAddressForUser('utilityRegistrar')
+      , registrarPassphrase = coreAddresses.getPassphraseForUser('utilityRegistrar')
     ;
 
 
