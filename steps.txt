@@ -89,9 +89,11 @@ STEPS
     - Verify if OST_DEPLOYER_ADDR has sufficient balance on UTILITY Chain
 
 9) On Utility Chain Machine
-    //@Abhay: This needs to be done via code. genesis-utility will be distributed via S3.
-    - in poa-genesis-utility.json alloc 800M base tokens to machine key
-    - Verify if OST_DEPLOYER_ADDR has proper balance of utility chain
+    - in poa-genesis-utility.json alloc 800M base tokens to machine key(deployer)
+    - ./init_keys.sh
+    - Restart Utility Chain
+       ./run_utility_chain.sh
+    - Verify if OST_DEPLOYER_ADDR has 800M balance on utility chain
     - source test/open_st_env_vars.sh
     - node tools/deploy/openst_utility.js
 
