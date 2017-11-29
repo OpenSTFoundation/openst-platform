@@ -19,17 +19,20 @@ const stakeAndMintInterComm = function() {};
 stakeAndMintInterComm.prototype = {
 
   init: function () {
-    eventQueueManager.setProcessor(this.processor);
-    this.bindEvents();
+    var oThis = this;
+
+    eventQueueManager.setProcessor(oThis.processor);
+    oThis.bindEvents();
   },
 
   bindEvents: function(){
+    var oThis = this;
     logger.log("bindEvents binding StakingIntentDeclared");
 
-    this.listenToStakingIntentDeclared(
-      stakeAndMintInterComm.onEventSubscriptionError,
-      stakeAndMintInterComm.onEvent,
-      stakeAndMintInterComm.onEvent
+    oThis.listenToStakingIntentDeclared(
+      oThis.onEventSubscriptionError,
+      oThis.onEvent,
+      oThis.onEvent
     );
 
     logger.log("bindEvents done");
@@ -37,7 +40,9 @@ stakeAndMintInterComm.prototype = {
 
   listenToStakingIntentDeclared: function (onError, onData, onChange) {
     var completeContract = new web3WsProvider.eth.Contract( contractAbi, currContractAddr );
-    return completeContract.events.StakingIntentDeclared({})
+    completeContract.setProvider(web3WsProvider.currentProvider);
+
+    completeContract.events.StakingIntentDeclared({})
       .on('error', onError)
       .on('data', onData)
       .on('changed', onChange);
@@ -67,7 +72,7 @@ stakeAndMintInterComm.prototype = {
       , chainIdUtility = returnValues._chainIdUtility; // TODO - use this later for getting the corresponding registrar address
 
 
-    openSTUtilityContractInteract.confirmStakingIntent(
+    return openSTUtilityContractInteract.confirmStakingIntent(
       uuid,
       coreAddresses.getAddressForUser('utilityRegistrar'),
       coreAddresses.getPassphraseForUser('utilityRegistrar'),
