@@ -96,8 +96,6 @@ const performer = async function() {
 
   var resultHelper = await valueRegistrar.setOpsAddress(deployerName, valueOpsAddress);
 
-  logger.win(" Ops address set to deployer address ");
-
   logger.step("Verifying if ops address is set properly of not: " + valueOpsAddress);
 
   var opsAddress = await valueRegistrar.getOpsAddress();
@@ -107,6 +105,8 @@ const performer = async function() {
     process.exit(0);
   }
 
+  logger.win(" Ops address set to deployer address ");
+  
   logger.step("Deploying OpenST Value Contract on ValueChain");
 
   var contractName = 'openSTValue'
