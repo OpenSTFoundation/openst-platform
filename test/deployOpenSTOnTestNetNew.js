@@ -318,33 +318,15 @@ function deploySimpleTokenContract() {
   });
 }
 
+function updateEnvVars() {
 
-function updateConfig() {
-  logStep("Updating Config");
-  Config.ValueChain.SimpleToken = SIMPLETOKEN_CONTRACT; /* Allowed Usage */
-  const json = JSON.stringify(Config, null, 4);
-
-  return new Promise( (resolve,reject) => {
-    FS.writeFile(Path.join(__dirname, '/../config.json'), json, err => err ? reject(err) : resolve() );
-  })
-  .catch( reason =>  {
-    logError("Failed to update Config file!");
+  populateEnvVars.renderAndPopulate('contract', {
+    ost_simpletoken_contract_address: SIMPLETOKEN_CONTRACT,
+    ost_stake_contract_address: ''
+  }).catch( reason =>  {
+    logError("Failed to populate open_st_env_vars.sh file!");
     catchAndExit( reason );
-  })
-  .then( _ => {
-    logWin("Config updated.");
-  })
-  .then (_ => {
-    populateEnvVars.renderAndPopulate('contract', {
-      ost_simpletoken_contract_address: SIMPLETOKEN_CONTRACT,
-      ost_stake_contract_address: ''
-    });
-  })
-  .catch( reason =>  {
-   logError("Failed to populate open_st_env_vars.sh file!");
-    catchAndExit( reason );
-  })
-  .then( _ => {
+  }).then( _ => {
     logWin("open_st_env_vars updated.");
   });
 }
@@ -358,7 +340,7 @@ function updateConfig() {
     .then( validateAndFundUser(VALUE_DEPLOYER, VALUE_DEPLOYER_ADDR, VALUE_DEPLOYER_PASSPHRASE) )
     .then( deploySimpleTokenContract )
     .then( setSimpleTokenRegistrar )
-    .then( updateConfig )
+    .then( updateEnvVars )
     .then( _ => {
       console.log("✅ OpenST has been deployed successfully!");
       console.log("👊 Have Fun!");
