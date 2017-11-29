@@ -9,10 +9,6 @@ const reqPrefix         = ".."
   , responseHelper      = require(reqPrefix + "/lib/formatter/response")
 ;
 
-//Old things. To be removed.
-const BrandedTokenJson = require(reqPrefix + "/contracts/old/UtilityToken.json");
-const BrandedTokenContract = BrandedTokenJson.contracts['UtilityToken.sol:UtilityToken'];
-
 
 
 
@@ -29,8 +25,6 @@ module.exports = function( member ) {
     , web3                  = btContractInteract.getWeb3Provider()
   ;
 
-  Assert.strictEqual(typeof callbackUrl, 'string', `callbackUrl must be of type 'string'`);
-
   const router = Express.Router();
   const auditLog = {};
 
@@ -45,6 +39,9 @@ module.exports = function( member ) {
   }
 
   function addTransaction(body) {
+    if ( !callbackUrl ) {
+      return;
+    }
     body.date = new Date;
     body.symbol = erc20.symbol;
     addLog(body.from || body.sender, body);
@@ -61,8 +58,8 @@ module.exports = function( member ) {
     return new BigNumber( weiValue );
   }
 
-  router.get('/owner', function(req, res, next) {
-    btContractInteract.getOwner()
+  router.get('/reserve', function(req, res, next) {
+    btContractInteract.getReserve()
       .then( response => {
         response.renderResponse( res );
       })
@@ -139,6 +136,15 @@ module.exports = function( member ) {
       .catch(next);
   });
 
+  router.get('/newkey', function(req, res, next) {
+    btContractInteract.newUserAccount()
+      .then( response => {
+        response.renderResponse( res );
+      })
+      .catch(next);
+    //
+  });
+
   router.get('/transfer', function(req, res, next) {
     const sender = req.query.sender;
     const recipient = req.query.to;
@@ -207,21 +213,7 @@ module.exports = function( member ) {
   //   next();
   // });
 
-  router.get('/newkey', function(req, res, next) {
-    const web3RpcProvider = require('../lib/web3/providers/utility_rpc');
-    web3RpcProvider.eth.personal.newAccount().then(address => {
-      return responseHelper.successWithData({
-        address: address
-      });
-    })
-    .catch( error => {
-      return responseHelper.error("rt_bt_nk.1", "Something went wrong");
-    })
-    .then( response => {
-      response.renderResponse( res );
-    })
-    .catch(next);
-  });
+
 
   return router;
 }

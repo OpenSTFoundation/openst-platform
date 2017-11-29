@@ -1,24 +1,11 @@
 {
-    "Members": [
-        {
-            "Name": "ACMEcorp",
-            "Decimals": 18,
-            "Symbol": "ACME",
-            "ChainId": "0x0000000000000000000000000000000000000000000000000000000000000000",
-            "ConversionRate": 10,
-            "Route": "/acme",
-            "ApiAuth": {
-                "users": {
-                    "acme": "acmesecret"
-                }
-            },
-            "Reserve": "",
-            "ERC20": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
-            "Callback": "https://acmecorp.com/call-back/simple-token/transaction",
-            "CallbackAuth": {
-                "user": "*******",
-                "pass": "*******"
-            }
-        }
-    ]
+    "SimpleTokenFoundation": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
+    "ValueChain": {
+        "SimpleToken": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
+        "Stake": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
+        "Admin": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
+        "Deployer": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
+        "UtilityChainOwnerAddress": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01"
+    },
+    "Members": []
 }

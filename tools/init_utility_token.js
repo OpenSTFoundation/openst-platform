@@ -6,27 +6,33 @@ const fs = require('fs')
 ;
 
 //All other requires.
-const rootPrefix = '..'
-  , coreAddresses = require(rootPrefix+'/config/core_addresses')
-  , coreConstants = require(rootPrefix+"/config/core_constants")
-  , openSTUtilityContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_utility')
-  , UtilityRegistrarContractInteract = require( rootPrefix + '/lib/contract_interact/utility_registrar' )
-  , ValueRegistrarContractInteract = require( rootPrefix + '/lib/contract_interact/value_registrar' )
-  , web3EventsFormatter = require(rootPrefix+'/lib/web3/events/formatter')
+const rootPrefix  = '..'
+  , coreAddresses                       = require( rootPrefix+'/config/core_addresses')
+  , coreConstants                       = require( rootPrefix+"/config/core_constants")
+  , openSTUtilityContractInteractKlass  = require( rootPrefix+'/lib/contract_interact/openst_utility')
+  , UtilityRegistrarContractInteract    = require( rootPrefix + '/lib/contract_interact/utility_registrar' )
+  , ValueRegistrarContractInteract      = require( rootPrefix + '/lib/contract_interact/value_registrar' )
+  , web3EventsFormatter                 = require( rootPrefix+'/lib/web3/events/formatter')
+  , StPrimeKlass                        = require( rootPrefix + '/lib/contract_interact/st_prime' )
+  , logger                              = require( rootPrefix + '/helpers/custom_console_logger')
 ;
 
 
 //All other const
-const contractName = 'openSTUtility'
-  , currContractAddr = coreAddresses.getAddressForContract(contractName)
-  , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass( currContractAddr )
-  , utilityRegistrarContractAddress = coreAddresses.getAddressForContract("utilityRegistrar")
-  , utilityRegistrarContractInteract = new UtilityRegistrarContractInteract(utilityRegistrarContractAddress)
-  , valueRegistrarContractAddress = coreAddresses.getAddressForContract("valueRegistrar")
-  , valueRegistrarContractInteract = new ValueRegistrarContractInteract( valueRegistrarContractAddress )
-  , utilityChainId = coreConstants.OST_UTILITY_CHAIN_ID
-  , openSTUtilityAddr = coreAddresses.getAddressForContract("openSTUtility")
-  , openSTValueAddr = coreAddresses.getAddressForContract("openSTValue")
+const contractName                    = 'openSTUtility'
+  , currContractAddr                  = coreAddresses.getAddressForContract(contractName)
+  , openSTUtilityContractInteract     = new openSTUtilityContractInteractKlass( currContractAddr )
+  , utilityRegistrarContractAddress   = coreAddresses.getAddressForContract("utilityRegistrar")
+  , utilityRegistrarContractInteract  = new UtilityRegistrarContractInteract(utilityRegistrarContractAddress)
+  , valueRegistrarContractAddress     = coreAddresses.getAddressForContract("valueRegistrar")
+  , valueRegistrarContractInteract    = new ValueRegistrarContractInteract( valueRegistrarContractAddress )
+  , utilityChainId                    = coreConstants.OST_UTILITY_CHAIN_ID
+  , openSTUtilityAddr                 = coreAddresses.getAddressForContract("openSTUtility")
+  , openSTValueAddr                   = coreAddresses.getAddressForContract("openSTValue")
+  // , stPrimeAddress        = coreAddresses.getAddressesForContract( "stPrime" )
+  , stPrimeAddress                    = null
+  , stPrime                           = new StPrimeKlass( stPrimeAddress )
+
 ;
 
 
@@ -39,7 +45,38 @@ const InitUtilityToken = function(autoApprove) {
 InitUtilityToken.prototype = {
   constructor: InitUtilityToken
 
+  , memberDefaults : null /* Member Config Object */
+
   , autoApprove: true /* Setting this flag to true, auto approves the regitration. To be used by Bot Api */
+
+  , newMemberWithConfig: function ( symbol, name, apiAuthUser, apiAuthSecret, callbackUrl ) {
+    const oThis = this;
+
+    logger.step("Creating new member account");
+    return stPrime.newMemberManagedAccount()
+      .then( response => {
+        if ( !response.isSuccess() ) {
+          logger.error("Failed to create new member account");
+          return Promise.reject({});
+        } else {
+          const mcAddress = response.data.address
+            , mcPassphrase = stPrime.getMemberPassphrase( mcAddress )
+          ;
+          logger.info("Address :: ", mcAddress, "Passphrase :: ", mcPassphrase);
+          logger.win("New Member company address :: ", mcAddress);
+          
+          return oThis.generateMemberDefaults(mcAddress, symbol, apiAuthUser, apiAuthSecret, callbackUrl)
+            .then( config => {
+              return {
+                "address"       : mcAddress
+                , "passphrase"  : mcPassphrase
+                , "config"      : config
+              };
+            });
+          ;
+        }
+      })
+  }
 
   , propose: function (
     senderAddress,
@@ -50,6 +87,8 @@ InitUtilityToken.prototype = {
   ) {
     const oThis = this;
 
+    logger.step("Proposing Branded Token for senderAddress: ", senderAddress);
+
     return openSTUtilityContractInteract.proposeBrandedToken(
       senderAddress,
       senderPassphrase,
@@ -58,8 +97,10 @@ InitUtilityToken.prototype = {
       conversionRate
     ).then(function(transactionReceiptResult){
 
-      console.log("propossedBrandedToken :: transactionReceiptResult");
-      console.log( JSON.stringify(transactionReceiptResult) );
+      logger.info("propossedBrandedToken :: transactionReceiptResult");
+      logger.info( JSON.stringify(transactionReceiptResult) );
+      logger.win("propossedBrandedToken successfull");
+      
 
       if ( transactionReceiptResult.isSuccess() ) {
         if ( oThis.autoApprove ) {
@@ -73,18 +114,23 @@ InitUtilityToken.prototype = {
   }
 
   , registerOnUtility: async function (formattedTransactionReceipt) {
-    const oThis = this
-      , formattedEvents = await web3EventsFormatter.perform(formattedTransactionReceipt);
+    const oThis = this;
+
+    logger.step("registerOnUtility called.");
+    logger.info("formattedTransactionReceipt\n", JSON.stringify( formattedTransactionReceipt ) );
+
+    const formattedEvents = await web3EventsFormatter.perform(formattedTransactionReceipt);
 
     var registerParams = formattedEvents['ProposedBrandedToken'];
 
     if ( !registerParams ) {
+      logger.error("Did not find ProposedBrandedToken event payload!");
       return Promise.reject("Did not find ProposedBrandedToken event payload!");
     }
 
 
     registerParams[ "_registry" ] = registerParams.address;
-    console.log(">> registerOnUtility :: registerParams \n\t", JSON.stringify(registerParams, null, 4) );
+
 
     
 
@@ -96,14 +142,16 @@ InitUtilityToken.prototype = {
       return (typeof registerParams[ eventName ] === "undefined");
     };
     //..Check it.
-    if ( mustHaveParams.some(isMissing) ) {
-      return Promise.reject("Required parameters missing. Can not perform registerBrandedToken. registerParams: ", JSON.stringify(registerParams) );
+    var missingParam = mustHaveParams.find(isMissing)
+    if ( missingParam ) {
+      logger.error("registerOnUtility :: Required parameters missing. missingParam :", missingParam);
+      logger.log("registerOnUtility :: registerParams \n\t", JSON.stringify(registerParams, null, 4) );
+      return Promise.reject( "Required parameters missing." );
     }
 
     const registrarAddress  = coreAddresses.getAddressForUser('utilityRegistrar')
       , registrarPassphrase = coreAddresses.getPassphraseForUser('utilityRegistrar')
     ;
-
 
     return utilityRegistrarContractInteract.registerBrandedToken(
       registrarAddress,
@@ -116,24 +164,28 @@ InitUtilityToken.prototype = {
       registerParams["_token"],
       registerParams["_uuid"],
     ).then( function(transactionReceiptResult) {
-      console.log("registerOnUC :: transactionReceiptResult");
-      console.log( JSON.stringify(transactionReceiptResult) );
+      logger.win("registerOnUC Successfull. transactionReceiptResult");
+      logger.log( JSON.stringify(transactionReceiptResult) );
       const formattedTransactionReceipt = transactionReceiptResult.data.formattedTransactionReceipt;
       return oThis.registerOnValue(formattedTransactionReceipt);
     });
   }
 
   , registerOnValue: async function ( formattedUtilityReceipt ) {
-    const oThis = this
-      , formattedEvents = await web3EventsFormatter.perform( formattedUtilityReceipt );
+    const oThis = this;
 
+    logger.step("registerOnValue called.");
+    logger.info("registerOnValue :: formattedTransactionReceipt\n", JSON.stringify( formattedUtilityReceipt ) );
+
+    const formattedEvents = await web3EventsFormatter.perform( formattedUtilityReceipt );
 
     var registerParams = formattedEvents['RegisteredBrandedToken'];
 
 
-    console.log( "=====>", JSON.stringify( formattedEvents, null, 2) );
+    
 
     if ( !registerParams ) {
+      logger.error("registerOnValue :: Did not find RegisteredBrandedToken event payload!");
       return Promise.reject("Did not find RegisteredBrandedToken event payload!");
     }
 
@@ -146,7 +198,10 @@ InitUtilityToken.prototype = {
       return (typeof registerParams[ eventName ] === "undefined");
     }
     //..Check it.
-    if ( mustHaveParams.some(isMissing) ) {
+    var missingParam = mustHaveParams.find(isMissing)
+    if ( missingParam ) {
+      logger.error("registerOnValue :: Required parameters missing. missingParam :", missingParam);
+      logger.log( JSON.stringify( formattedEvents, null, 2) );
       return Promise.reject("Required parameters missing. Can not perform registerUtilityToken. registerParams: ", JSON.stringify(registerParams) );
     }
 
@@ -154,9 +209,9 @@ InitUtilityToken.prototype = {
       , registrarPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar')
     ;
 
-    console.log("\n registerOnValue valueRegistrar : ", registrarAddress);
+    logger.log("\n registerOnValue valueRegistrar : ", registrarAddress);
 
-    console.log("registerParams", JSON.stringify(registerParams, null, 2) );
+    logger.log("registerParams", JSON.stringify(registerParams, null, 2) );
 
 
     return valueRegistrarContractInteract.registerUtilityToken(
@@ -170,8 +225,8 @@ InitUtilityToken.prototype = {
       registerParams["_requester"],
       registerParams["_uuid"]
     ).then( function(transactionReceiptResult) {
-      console.log("registerOnVC :: transactionReceiptResult");
-      console.log( JSON.stringify(transactionReceiptResult, null, 2) );
+      logger.win("registerOnVC Successfull. transactionReceiptResult ::");
+      logger.log( JSON.stringify(transactionReceiptResult, null, 2) );
 
       const formattedValueReceipt = transactionReceiptResult.data.formattedTransactionReceipt;
 
@@ -180,9 +235,10 @@ InitUtilityToken.prototype = {
   }
 
   , registerOnConfig: async function ( formattedUtilityReceipt, formattedValueReceipt ) {
+    const oThis = this;
+    logger.step("registerOnConfig called.");
 
-    const oThis = this
-      , utilityEvents = await web3EventsFormatter.perform( formattedUtilityReceipt )
+    const utilityEvents = await web3EventsFormatter.perform( formattedUtilityReceipt )
       , valueEvents =  await web3EventsFormatter.perform( formattedValueReceipt )
     ;
 
@@ -190,23 +246,17 @@ InitUtilityToken.prototype = {
     var utilityOutput = utilityEvents[ "RegisteredBrandedToken" ]
       , valueOutput   = valueEvents[ "UtilityTokenRegistered" ]
       , newMember = {
-        "Name":             valueOutput[ "_name" ]
-        ,"Symbol":          valueOutput[ "_symbol" ]
-        ,"ChainId":         valueOutput[ "_chainIdUtility" ]
-        ,"ConversionRate":  valueOutput[ "_conversionRate" ]
-        ,"Decimals":        valueOutput[ "_decimals" ]
-        ,"Reserve":         valueOutput[ "_stakingAccount" ]
-        ,"UUID":            valueOutput[ "_uuid" ]
-        ,"SimpleStake":     valueOutput[ "stake" ]
-        ,"ERC20":       utilityOutput[ "_token" ] 
+        "Name"            : valueOutput[ "_name" ]
+        ,"Symbol"         : valueOutput[ "_symbol" ]
+        ,"ChainId"        : valueOutput[ "_chainIdUtility" ]
+        ,"ConversionRate" : valueOutput[ "_conversionRate" ]
+        ,"Decimals"       : valueOutput[ "_decimals" ]
+        ,"Reserve"        : valueOutput[ "_stakingAccount" ]
+        ,"UUID"           : valueOutput[ "_uuid" ]
+        ,"SimpleStake"    : valueOutput[ "stake" ]
+        ,"ERC20"       : utilityOutput[ "_token" ] 
       }
     ;
-
-
-
-
-
-
 
     const config = require(rootPrefix + "/config")
       , members = config.Members
@@ -218,24 +268,7 @@ InitUtilityToken.prototype = {
     });
 
     if ( !currentMember ) {
-      const lowerSymbol = ( currSym ).toLowerCase()
-            ,routePath  = lowerSymbol 
-            ,uName      = lowerSymbol + "User"
-            ,uSecret    = lowerSymbol + "Secret"
-      ;
-
-      currentMember = {
-        Route: "/" + routePath,
-        "ApiAuth": {
-            "users": {
-                
-            }
-        },
-        "Callback": null
-      };
-
-      currentMember.ApiAuth.users[ uName ] = uSecret;
-
+      currentMember = oThis.getMemberDefaults( valueOutput[ "_stakingAccount" ], currSym );
       members.unshift( currentMember );
     }
 
@@ -243,15 +276,72 @@ InitUtilityToken.prototype = {
       currentMember[ mKey ] = newMember[ mKey ];
     }
 
-    console.log("New Config:", JSON.stringify( currentMember ) );
+    logger.log("New Config:", JSON.stringify( currentMember ) );
 
     return new Promise( (resolve,reject) => {
       const json = JSON.stringify(config, null, 4);
-      console.log("Updating Config File:" , path.join(__dirname, '/' + rootPrefix + '/config.json'));
+      logger.log("Updating Config File:" , path.join(__dirname, '/' + rootPrefix + '/config.json'));
       fs.writeFile(path.join(__dirname, '/' + rootPrefix + '/config.json'), json, err => err ? reject(err) : resolve() );
-      console.log("Config file updated!");
+      logger.log("Config file updated!");
     });
   }
+  , getMemberDefaults: function ( reserve, symbol, apiAuthUser, apiAuthSecret, callbackUrl) {
+    const oThis = this;
+    const lowerSymbol = ( symbol ).toLowerCase()
+    const routePath = "/" + lowerSymbol;
+
+    if ( oThis.memberDefaults ) {
+      return oThis.memberDefaults;
+    }
+
+    if ( !apiAuthUser ) {
+      apiAuthUser = lowerSymbol + "User";
+    }
+
+    if ( !apiAuthSecret ) {
+      apiAuthSecret = lowerSymbol + "Secret";
+    }
+
+    var currentMember = oThis.memberDefaults = {
+      "Reserve"   : reserve || null
+      , "Symbol"  : symbol
+      , "Route"   :  routePath
+      , "ApiAuth" : {
+        "users"   : {}
+      }
+      , "Callback": callbackUrl
+    };
+
+    currentMember.ApiAuth.users[ apiAuthUser ] = apiAuthSecret;
+
+    logger.info("New member config defaults generated.", oThis.memberDefaults);
+
+    return oThis.memberDefaults;
+
+  }
+
+  , generateMemberDefaults: function ( reserve, symbol, apiAuthUser, apiAuthSecret, callbackUrl) {
+    const oThis = this;
+    oThis.memberDefaults = null;
+
+    const config = require(rootPrefix + "/config")
+      , members = config.Members
+    ;
+
+    var newDefaults = oThis.getMemberDefaults( reserve, symbol, apiAuthUser, apiAuthSecret, callbackUrl)
+
+    members.unshift( newDefaults );
+
+    return new Promise( (resolve,reject) => {
+      const json = JSON.stringify(config, null, 4);
+      logger.log("Updating Config File:" , path.join(__dirname, '/' + rootPrefix + '/config.json'));
+      fs.writeFile(path.join(__dirname, '/' + rootPrefix + '/config.json'), json, err => err ? reject(err) : resolve() );
+      logger.log("Config file updated!");
+    }).then( _ => {
+      return newDefaults;
+    });
+  }
+  
 
 };
 
