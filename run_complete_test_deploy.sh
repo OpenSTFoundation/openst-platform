@@ -5,7 +5,7 @@ echo "START: node test/deployOpenSTOnTestNetNew.js"
 echo "=================================================================================================================================================================="
 
 source test/open_st_env_vars.sh
-node test/deployOpenSTOnTestNetNew.js
+node test/deployAndFinalizeSimpleTokenContract.js
 
 echo "=================================================================================================================================================================="
 echo "END: node test/deployOpenSTOnTestNetNew.js"
