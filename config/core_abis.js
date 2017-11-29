@@ -16,7 +16,8 @@ const coreAbis = {
     valueRegistrar: JSON.parse(fs.readFileSync('./contracts/abi/Registrar.abi', "utf8")),
     utilityRegistrar: JSON.parse(fs.readFileSync('./contracts/abi/Registrar.abi', "utf8")),
     staking: '',
-    brandedToken: JSON.parse(fs.readFileSync('./contracts/abi/BrandedToken.abi', "utf8"))
+    brandedToken: JSON.parse(fs.readFileSync('./contracts/abi/BrandedToken.abi', "utf8")),
+    simpleStake: JSON.parse(fs.readFileSync('./contracts/abi/SimpleStake.abi', "utf8"))
   };
 
 module.exports = coreAbis;
