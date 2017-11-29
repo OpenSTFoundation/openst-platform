@@ -1,13 +1,23 @@
 "use strict";
 
+//All node module requires.
+const fs = require('fs')
+  , path = require('path')
+;
+
+//All other requires.
 const rootPrefix = '..'
-  , contractName = 'openSTUtility'
   , coreAddresses = require(rootPrefix+'/config/core_addresses')
   , coreConstants = require(rootPrefix+"/config/core_constants")
   , openSTUtilityContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_utility')
   , UtilityRegistrarContractInteract = require( rootPrefix + '/lib/contract_interact/utility_registrar' )
   , ValueRegistrarContractInteract = require( rootPrefix + '/lib/contract_interact/value_registrar' )
   , web3EventsFormatter = require(rootPrefix+'/lib/web3/events/formatter')
+;
+
+
+//All other const
+const contractName = 'openSTUtility'
   , currContractAddr = coreAddresses.getAddressForContract(contractName)
   , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass( currContractAddr )
   , utilityRegistrarContractAddress = coreAddresses.getAddressForContract("utilityRegistrar")
@@ -27,10 +37,11 @@ const InitUtilityToken = function(autoApprove) {
 };
 
 InitUtilityToken.prototype = {
+  constructor: InitUtilityToken
 
-  autoApprove: true, /* Setting this flag to true, auto approves the regitration. To be used by Bot Api */
+  , autoApprove: true /* Setting this flag to true, auto approves the regitration. To be used by Bot Api */
 
-  propose: function (
+  , propose: function (
     senderAddress,
     senderPassphrase,
     symbol,
@@ -59,9 +70,9 @@ InitUtilityToken.prototype = {
         }
       }
     });
-  },
+  }
 
-  registerOnUtility: async function (formattedTransactionReceipt) {
+  , registerOnUtility: async function (formattedTransactionReceipt) {
     const oThis = this
       , formattedEvents = await web3EventsFormatter.perform(formattedTransactionReceipt);
 
@@ -110,11 +121,11 @@ InitUtilityToken.prototype = {
       const formattedTransactionReceipt = transactionReceiptResult.data.formattedTransactionReceipt;
       return oThis.registerOnValue(formattedTransactionReceipt);
     });
-  },
+  }
 
-  registerOnValue: async function ( formattedTransactionReceipt ) {
+  , registerOnValue: async function ( formattedUtilityReceipt ) {
     const oThis = this
-      , formattedEvents = await web3EventsFormatter.perform(formattedTransactionReceipt);
+      , formattedEvents = await web3EventsFormatter.perform( formattedUtilityReceipt );
 
 
     var registerParams = formattedEvents['RegisteredBrandedToken'];
@@ -161,22 +172,86 @@ InitUtilityToken.prototype = {
     ).then( function(transactionReceiptResult) {
       console.log("registerOnVC :: transactionReceiptResult");
       console.log( JSON.stringify(transactionReceiptResult, null, 2) );
-      return Promise.resolve( transactionReceiptResult );
-    });
 
+      const formattedValueReceipt = transactionReceiptResult.data.formattedTransactionReceipt;
+
+      return oThis.registerOnConfig( formattedUtilityReceipt, formattedValueReceipt );
+    });
   }
 
-  // onRegisteredBrandedToken: function ( formattedTransactionReceipt ) {
-  //   const oThis = this
-  //     , formattedEvents = await web3EventsFormatter.perform(formattedTransactionReceipt);
+  , registerOnConfig: async function ( formattedUtilityReceipt, formattedValueReceipt ) {
 
-  //   var registerParams = formattedEvents['RegisteredBrandedToken'];
+    const oThis = this
+      , utilityEvents = await web3EventsFormatter.perform( formattedUtilityReceipt )
+      , valueEvents =  await web3EventsFormatter.perform( formattedValueReceipt )
+    ;
 
-  //   if ( !registerParams ) {
-  //     return Promise.reject("Did not find RegisteredBrandedToken event payload!");
-  //   }
 
-  // } 
+    var utilityOutput = utilityEvents[ "RegisteredBrandedToken" ]
+      , valueOutput   = valueEvents[ "UtilityTokenRegistered" ]
+      , newMember = {
+        "Name":             valueOutput[ "_name" ]
+        ,"Symbol":          valueOutput[ "_symbol" ]
+        ,"ChainId":         valueOutput[ "_chainIdUtility" ]
+        ,"ConversionRate":  valueOutput[ "_conversionRate" ]
+        ,"Decimals":        valueOutput[ "_decimals" ]
+        ,"Reserve":         valueOutput[ "_stakingAccount" ]
+        ,"UUID":            valueOutput[ "_uuid" ]
+        ,"SimpleStake":     valueOutput[ "stake" ]
+        ,"ERC20":       utilityOutput[ "_token" ] 
+      }
+    ;
+
+
+
+
+
+
+
+    const config = require(rootPrefix + "/config")
+      , members = config.Members
+      , currSym = valueOutput["_symbol"]
+    ;
+
+    var currentMember = members.find( function ( member ) {
+      return member.Symbol === currSym;
+    });
+
+    if ( !currentMember ) {
+      const lowerSymbol = ( currSym ).toLowerCase()
+            ,routePath  = lowerSymbol 
+            ,uName      = lowerSymbol + "User"
+            ,uSecret    = lowerSymbol + "Secret"
+      ;
+
+      currentMember = {
+        Route: "/" + routePath,
+        "ApiAuth": {
+            "users": {
+                
+            }
+        },
+        "Callback": null
+      };
+
+      currentMember.ApiAuth.users[ uName ] = uSecret;
+
+      members.unshift( currentMember );
+    }
+
+    for ( var mKey in newMember ) {
+      currentMember[ mKey ] = newMember[ mKey ];
+    }
+
+    console.log("New Config:", JSON.stringify( currentMember ) );
+
+    return new Promise( (resolve,reject) => {
+      const json = JSON.stringify(config, null, 4);
+      console.log("Updating Config File:" , path.join(__dirname, '/' + rootPrefix + '/config.json'));
+      fs.writeFile(path.join(__dirname, '/' + rootPrefix + '/config.json'), json, err => err ? reject(err) : resolve() );
+      console.log("Config file updated!");
+    });
+  }
 
 };
 
