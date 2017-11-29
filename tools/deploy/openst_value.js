@@ -98,6 +98,15 @@ const performer = async function() {
 
   logger.win(" Ops address set to deployer address ");
 
+  logger.step("Verifying if ops address is set properly of not: " + valueOpsAddress);
+
+  var opsAddress = await valueRegistrar.getOpsAddress();
+
+  if (web3Provider.utils.toChecksumAddress(opsAddress.data.address) != web3Provider.utils.toChecksumAddress(valueOpsAddress)) {
+    logger.error("Exiting the deployment as setops address doesn't match");
+    process.exit(0);
+  }
+
   logger.step("Deploying OpenST Value Contract on ValueChain");
 
   var contractName = 'openSTValue'
