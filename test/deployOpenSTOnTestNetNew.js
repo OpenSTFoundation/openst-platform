@@ -15,7 +15,7 @@ const rootPrefix = "..",
       FOUNDATION = coreAddresses.getAddressForUser('foundation'),
       FOUNDATION_PASSPHRASE = coreAddresses.getPassphraseForUser('foundation'),
       REGISTRAR = coreAddresses.getAddressForUser('valueRegistrar'),
-      REGISTRAR_KEY = coreAddresses.getPassphraseForUser('valueRegistrar'),
+      REGISTRAR_PASSPHRASE = coreAddresses.getPassphraseForUser('valueRegistrar'),
       VALUE_DEPLOYER = 'valueDeployer',
       VALUE_DEPLOYER_ADDR = coreAddresses.getAddressForUser(VALUE_DEPLOYER),
       VALUE_DEPLOYER_PASSPHRASE = coreAddresses.getPassphraseForUser(VALUE_DEPLOYER)
@@ -318,6 +318,28 @@ function deploySimpleTokenContract() {
   });
 }
 
+function finalizeSimpleTokenContract() {
+  logStep("Finalize SimpleTokenContract");
+
+  logInfo("Unlocking", _registrarName);
+  return web3RpcValueProvider.eth.personal.unlockAccount( REGISTRAR, REGISTRAR_PASSPHRASE )
+    .then(function(){
+      return ST.methods.finalize().send({
+        from: REGISTRAR,
+        gasPrice: coreConstants.OST_VALUE_GAS_PRICE
+      }).then( function(receipt){
+        if ( ("Finalized") in receipt.events ) {
+          logWin("SimpleTokenContract Finalized");
+          return;
+        } else {
+          logError("Finalized event missing in receipt" );
+          catchAndExit( JSON.stringify(receipt, null, 2) );
+        }
+      });
+    });
+
+}
+
 function updateEnvVars() {
 
  populateEnvVars.renderAndPopulate('contract', {
@@ -331,11 +353,12 @@ function updateEnvVars() {
 
   validateValueChain()
     .then( validateSimpleTokenFoundation )
-    .then( validateAndFundUser(_registrarName, REGISTRAR, REGISTRAR_KEY) )
+    .then( validateAndFundUser(_registrarName, REGISTRAR, REGISTRAR_PASSPHRASE) )
     .then( validateAndFundUser(VALUE_DEPLOYER, VALUE_DEPLOYER_ADDR, VALUE_DEPLOYER_PASSPHRASE) )
     .then( deploySimpleTokenContract )
     .then( setSimpleTokenRegistrar )
     .then( updateEnvVars )
+    .then( finalizeSimpleTokenContract )
     .then( _ => {
       console.log("✅ OpenST has been deployed successfully!");
       console.log("👊 Have Fun!");
