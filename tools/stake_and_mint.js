@@ -263,6 +263,8 @@ function listenToUtilityToken(stakingIntentHash){
       openSTUtilityContractABI,
       openSTUtilityContractAddress
     );
+
+    utilityTokenContract.setProvider(web3UtilityWsProvider.currentProvider);
     utilityTokenContract.events.StakingIntentConfirmed({})
       .on('error', function(errorObj){
         logger.error("Could not Subscribe to StakingIntentConfirmed");
@@ -288,9 +290,6 @@ function listenToUtilityToken(stakingIntentHash){
 (function () {
   var selectedMember = null
     , toStakeAmount  = null
-    , stakeContract = null
-    , mintingIntentHash = null
-    , utilityToken = null
     , _passphrase = null
     , eventDataValues = null
   ;
@@ -339,7 +338,7 @@ function listenToUtilityToken(stakingIntentHash){
         selectedMember.Reserve
       );
     })
-    .then( function(result) {
+    .then( async function(result) {
       if (result.isFailure()){
         console.log( "Staking resulted in error: \n" );
         console.log(result);
@@ -349,9 +348,10 @@ function listenToUtilityToken(stakingIntentHash){
       const formattedTransactionReceipt = result.data.formattedTransactionReceipt
         , rawTxReceipt = result.data.rawTransactionReceipt;
 
-      var eventName = 'StakingIntentDeclared';
+      var eventName = 'StakingIntentDeclared'
+        , formattedEventData = await eventsFormatter.perform(formattedTransactionReceipt);
 
-      eventDataValues = eventsFormatter.perform(formattedTransactionReceipt)[eventName];
+      eventDataValues = formattedEventData[eventName];
 
       if (!eventDataValues){
         console.log( "Staking was not completed correctly: StakingIntentDeclared event didn't found in events data: \n");
@@ -376,7 +376,11 @@ function listenToUtilityToken(stakingIntentHash){
     .then(function(eventObj){
       logger.win("Received StakingIntentConfirmed");
       logger.step("startinfg processStaking on ValueChain");
-      return openSTValueContractInteract.processStaking(selectedMember.Reserve, _passphrase, eventDataValues['_stakingIntentHash'] );
+      return openSTValueContractInteract.processStaking(
+        selectedMember.Reserve,
+        _passphrase,
+        eventDataValues['_stakingIntentHash']
+      );
     })
     .then(function(){
       logger.win("Completed processing Stake");

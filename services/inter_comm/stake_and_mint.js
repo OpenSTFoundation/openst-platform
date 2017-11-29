@@ -6,12 +6,22 @@ const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix+'/config/core_addresses')
   , openSTValueContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_value')
   , web3WsProvider = require(rootPrefix+'/lib/web3/providers/value_ws')
-  , contractName = 'openSTValue'
-  , contractAbi = coreAddresses.getAbiForContract(contractName)
-  , currContractAddr = coreAddresses.getAddressForContract(contractName)
+
+  , openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
+  , openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
+
+  , openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility')
+  , openSTUtilityCurrContractAddr = coreAddresses.getAddressForContract('openSTUtility')
+
   , openSTUtilityContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_utility')
   , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass()
   , eventQueueManager = new eventQueueManagerKlass()
+  , utilityRegistrarAddr = coreAddresses.getAddressForUser('utilityRegistrar')
+  , utilityRegistrarPassphrase = coreAddresses.getPassphraseForUser('utilityRegistrar')
+
+  , utilityRegistrarContractAddress = coreAddresses.getAddressForContract("utilityRegistrar")
+  , utilityRegistrarContractInteractKlass = require( rootPrefix + '/lib/contract_interact/utility_registrar' )
+  , utilityRegistrarContractInteract = new utilityRegistrarContractInteractKlass(utilityRegistrarContractAddress)
   ;
 
 const stakeAndMintInterComm = function() {};
@@ -39,7 +49,7 @@ stakeAndMintInterComm.prototype = {
   },
 
   listenToStakingIntentDeclared: function (onError, onData, onChange) {
-    var completeContract = new web3WsProvider.eth.Contract( contractAbi, currContractAddr );
+    var completeContract = new web3WsProvider.eth.Contract( openSTValueContractAbi, openSTValueContractAddr );
     completeContract.setProvider(web3WsProvider.currentProvider);
 
     completeContract.events.StakingIntentDeclared({})
@@ -71,11 +81,11 @@ stakeAndMintInterComm.prototype = {
       , beneficiary = returnValues._beneficiary
       , chainIdUtility = returnValues._chainIdUtility; // TODO - use this later for getting the corresponding registrar address
 
-
-    return openSTUtilityContractInteract.confirmStakingIntent(
+    return utilityRegistrarContractInteract.confirmStakingIntent(
+      utilityRegistrarAddr,
+      utilityRegistrarPassphrase,
+      openSTUtilityCurrContractAddr,
       uuid,
-      coreAddresses.getAddressForUser('utilityRegistrar'),
-      coreAddresses.getPassphraseForUser('utilityRegistrar'),
       staker,
       stakerNonce,
       beneficiary,

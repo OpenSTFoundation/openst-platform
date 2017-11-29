@@ -11,6 +11,8 @@ echo "...Done Init"
 
 echo "Generate new addresses..."
 
+source ./open_st_env_vars.sh
+
 echo $OST_FOUNDATION_PASSPHRASE > ./pw
 #Foundation Address
 geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE
