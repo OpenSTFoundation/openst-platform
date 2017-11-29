@@ -370,7 +370,7 @@ function listenToUtilityToken(stakingIntentHash){
       return eventDataValues;
     })
     .then(function(eventDataValues){
-      logger.step("Waiting for Minting Intent Confirmation");
+      logger.step("Waiting for Staking Intent Confirmation ...");
       return listenToUtilityToken(eventDataValues['_stakingIntentHash']);
     })
     .then(function(eventObj){
