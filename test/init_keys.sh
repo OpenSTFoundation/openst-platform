@@ -17,7 +17,10 @@ geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE
 #Registrar Address of Value Chain
 geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE
 
-#Deployer Address
+# Value Chain Deployer Address
+geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE
+
+# Utility Chain Deployer Address
 geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE
 
 #Ops Address

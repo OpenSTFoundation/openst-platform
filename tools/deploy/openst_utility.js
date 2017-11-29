@@ -3,7 +3,7 @@
 const rootPrefix = '../..'
   , readline = require('readline')
   , config = require(rootPrefix + '/config.json')
-  , deployerName = 'deployer'
+  , deployerName = 'utilityDeployer'
   , web3Provider = require(rootPrefix+'/lib/web3/providers/utility_rpc')
   , deployHelper = require('./helper')
   , coreConstants = require(rootPrefix+'/config/core_constants')
@@ -20,6 +20,7 @@ const rootPrefix = '../..'
   , deploymentOptions = { gasPrice: coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT}
   ;
 
+// TODO Events validations
 const performer = async function() {
 
   const stPrimeTotalSupplyInWei = web3Provider.utils.toWei( coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY ,"ether");

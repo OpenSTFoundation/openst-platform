@@ -6,6 +6,8 @@ const _addresses = {
   "admin":null,
   "valueDeployer": null,
   "opsAdd": null,
+  "utilityChainOwnerAddress": null,
+  "utilityDeployer": null,
   "members": []
 };
 
@@ -27,10 +29,14 @@ function main( addressFile ) {
     if ( !_addresses.foundation ) {
       //First Address
       _addresses.foundation = thisAddress;
+      fundFoundationAddress(thisAddress);
     } else if ( !_addresses.admin ) {
       _addresses.admin = thisAddress;
     } else if ( !_addresses.valueDeployer ) {
       _addresses.valueDeployer = thisAddress;
+    } else if ( !_addresses.utilityDeployer ) {
+      _addresses.utilityDeployer = thisAddress;
+      fundUtilityDeployerAddress( thisAddress );
     } else if ( !_addresses.opsAdd ) {
       _addresses.opsAdd = thisAddress;
       fundOpsAddress( thisAddress );
@@ -43,6 +49,7 @@ function main( addressFile ) {
       updateMember( (_addresses.members.length - 1 ), thisAddress);
     }
   });
+
   writeJsonToFile( Config, '/../config.json', 4);
 
   populateEnvVars.renderAndPopulate('address', {
@@ -51,13 +58,14 @@ function main( addressFile ) {
       ost_utility_registrar_address: _addresses.admin,
       ost_utility_chain_owner_address: _addresses.utilityChainOwnerAddress,
       ost_value_ops_address: _addresses.opsAdd,
-      ost_value_deployer_address: _addresses.valueDeployer
+      ost_value_deployer_address: _addresses.valueDeployer,
+      ost_utility_deployer_address: _addresses.utilityDeployer
     }
   );
 
 }
 
-function updateFoundationAddress( foundation ) {
+function fundFoundationAddress( foundation ) {
 
   //Update poa-genesis-value
   updateGenesisAlloc( poaGenesisValue, foundation, "0x200000000000000000000000000000000000000000000000000000000000000");
@@ -74,6 +82,13 @@ function fundOpsAddress( opsAddress ) {
   updateGenesisAlloc( poaGenesisValue, opsAddress, "0x200000000000000000000000000000000000000000000000000000000000000");
   writeJsonToFile(poaGenesisValue, "./poa-genesis-value.json");
 
+}
+
+function fundUtilityDeployerAddress(utilityDeployerAddress) {
+
+  // Fund exactly 800 Million
+  updateGenesisAlloc( poaGenesisUtility, utilityDeployerAddress, "0x295BE96E640669720000000");
+  writeJsonToFile(poaGenesisUtility, "./poa-genesis-utility.json");
 }
 
 function updateGenesisAlloc( genesis, foundation, value ) {

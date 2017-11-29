@@ -50,7 +50,9 @@ STEPS
     export OST_UTILITY_STPRIME_TOTAL_SUPPLY=800000000
 
 2) cd test
-    ./init_keys.sh
+    - source test/open_st_env_vars.sh
+    - cd test
+    - ./init_keys.sh
 
 3) On Development only
     - Verify genesis file configurations test/poa-genesis-value.json
@@ -72,29 +74,17 @@ STEPS
     - source test/open_st_env_vars.sh
     - node tools/deploy/openst_value.js
 
-7) To avoid deployment of same contract addresses On Utility Chain Machine
-    - Create a new OST_DEPLOYER_ADDR and fund it 800 Million manually with sufficient ETH
-    - Use below code for funding to OST_DEPLOYER_ADDR
-        personal.newAccount('testtest')
-        var sender = '';
-        var receiver = ''
-        personal.unlockAccount(sender)
-        eth.sendTransaction({from: sender, to: receiver, value: web3.toWei(800000000, "ether")})
-        eth.getBalance(receiver)
-
-8) On Utility Chain Machine
-    - on staging/production in poa-genesis-utility.json alloc 800M base tokens to machine key(deployer)
-    - Restart Utility Chain
-       ./run_utility_chain.sh
-    - Verify if OST_DEPLOYER_ADDR has exactly 800M balance on utility chain
+7) On Utility Chain Machine
     - source test/open_st_env_vars.sh
+    - on staging/production in poa-genesis-utility.json alloc 800M base tokens to machine key(deployer)
+    - Verify if OST_DEPLOYER_UTILITY_ADDR has exactly 800M balance on utility chain
     - node tools/deploy/openst_utility.js
 
-9) On Value Chain Machine
+8) On Value Chain Machine
     - source test/open_st_env_vars.sh
     - node tools/deploy/register_utility_token_value.js
 
-10) In new terminal
+9) In new terminal
     source test/open_st_env_vars.sh
     node
     (function () {
@@ -109,7 +99,7 @@ STEPS
         initKlassObj.propose(coreAddresses.getAddressForUser('foundation'), coreAddresses.getPassphraseForUser('foundation'), btSymbol, btName, btConversion);
     })();
 
-11) Start Inter Comm on the foundation machine.
+10) Start Inter Comm on the foundation machine.
     - source test/open_st_env_vars.sh
     - node services/inter_comm/stake_and_mint.js
 

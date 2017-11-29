@@ -320,15 +320,10 @@ function deploySimpleTokenContract() {
 
 function updateEnvVars() {
 
-  populateEnvVars.renderAndPopulate('contract', {
-    ost_simpletoken_contract_address: SIMPLETOKEN_CONTRACT,
-    ost_stake_contract_address: ''
-  }).catch( reason =>  {
-    logError("Failed to populate open_st_env_vars.sh file!");
-    catchAndExit( reason );
-  }).then( _ => {
-    logWin("open_st_env_vars updated.");
+ populateEnvVars.renderAndPopulate('contract', {
+    ost_simpletoken_contract_address: SIMPLETOKEN_CONTRACT
   });
+  logWin("open_st_env_vars updated.");
 }
 
 //Self Executing Function.
