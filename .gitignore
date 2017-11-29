@@ -48,13 +48,6 @@ node_modules
 npm-debug.log
 .vscode
 
-
-test/pwvalue
-
-test/pwutility
-
-
-
 package-lock.json
 
 config.json
