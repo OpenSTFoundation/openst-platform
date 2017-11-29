@@ -68,6 +68,7 @@ stakeAndMintInterComm.prototype = {
 
 
     openSTUtilityContractInteract.confirmStakingIntent(
+      uuid,
       coreAddresses.getAddressForUser('utilityRegistrar'),
       coreAddresses.getPassphraseForUser('utilityRegistrar'),
       staker,
