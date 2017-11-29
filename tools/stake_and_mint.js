@@ -243,14 +243,14 @@ const checkAllowanceAndApproveIfNeeded = function(member, passphrase, toStakeAmo
       if ( !needsApproval ) {
         return true;
       }
-      logger.info("Approving StakingContract with " , toDisplayST(toStakeAmount));
+      logger.info("Approving openSTValue contract with " , toDisplayST(toStakeAmount));
       return simpleTokenContractInteract.approve(member.Reserve, passphrase, openSTValueContractAddress, toStakeAmount);
     })
     .then( function(){
       return simpleTokenContractInteract.allowance(member.Reserve, openSTValueContractAddress)
         .then( function(result) {
           const allowance = result.data.remaining;
-          logger.info("Current Allowance:",allowance);
+          logger.info("Current Allowance:", allowance);
         });
     });
 };
