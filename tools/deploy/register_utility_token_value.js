@@ -52,7 +52,6 @@ const performer = async function() {
 
     logger.step("Deploying Value Core Contract on Value Chain");
     logger.info("Deployer Address: " + deployerAddress);
-    logger.info("Value Chain Registrar Contract Address: " + valueRegistrarUser);
     logger.info("Foundation Address: " + foundationAddress);
     logger.info("OpenST Utility Contract: " + openSTUtilityContractAddress);
     logger.info("OpenST Value Contract: " + openSTValueContractAddress);
@@ -141,7 +140,17 @@ const performer = async function() {
     logger.step("Set Ops Address to Value Registrar.");
 
     var setOpsAddressResponse = await valueRegistrarContractInteract.setOpsAddress(deployerName, valueRegistrarUser);
-    logger.win("Registrar " + valueRegistrarUser + " is set to ValueRegistrarContract " + valueRegistrarContractAddress);
+
+    logger.step("Verifying if ops address is set properly of not: " + valueRegistrarUser);
+
+    var opsAddress = await valueRegistrarContractInteract.getOpsAddress();
+
+    if (web3Provider.utils.toChecksumAddress(opsAddress.data.address) != web3Provider.utils.toChecksumAddress(valueRegistrarUser)) {
+        logger.error("Exiting the deployment as setops address doesn't match");
+        process.exit(0);
+    }
+
+    logger.win(" Ops address set to ValueRegistrarContract address ");
 
     // Initiate Ownership transfer of Value registrar contract to STF
     logger.step("Initiate Ownership transfer of Value registrar contract to STF.");
@@ -149,7 +158,17 @@ const performer = async function() {
         deployerName,
         foundationAddress
     );
-    logger.win("Foundation " + foundationAddress + " is set to ValueRegistrarContract " + valueRegistrarContractAddress);
+
+    logger.step("Verifying Ownership transfer success");
+
+    var proposedOwnerResult = await valueRegistrarContractInteract.getOwner();
+
+    if (web3Provider.utils.toChecksumAddress(proposedOwnerResult.data.owner) != web3Provider.utils.toChecksumAddress(foundationAddress)) {
+        logger.error("Exiting the deployment as initialite ownership address doesn't match");
+        process.exit(0);
+    }
+
+    logger.win(" Ownership transfered to ValueRegistrarContract.");
 
     // Add Core contract address to Environment config
     await updateConfig(coreContractAddress);
