@@ -143,6 +143,15 @@ const performer = async function() {
     foundationAddress
   );
 
+  logger.step("Verifying Ownership transfer success");
+
+  var proposedOwnerResult = await openstValueContract.getOwner();
+
+  if (web3Provider.utils.toChecksumAddress(proposedOwnerResult.data.owner) != web3Provider.utils.toChecksumAddress(foundationAddress)) {
+    logger.error("Exiting the deployment as initialite ownership address doesn't match");
+    process.exit(0);
+  }
+
   logger.win(" Ownership transfered ");
 
   await updateConfig(registrarContractAddr, openstValueContractAddress);
