@@ -265,11 +265,11 @@ function listenToUtilityToken(stakingIntentHash){
     );
     utilityTokenContract.events.StakingIntentConfirmed({})
       .on('error', function(errorObj){
-        logger.error("Could not Subscribe to MintingIntentConfirmed");
+        logger.error("Could not Subscribe to StakingIntentConfirmed");
         onReject();
       })
       .on('data', function(eventObj) {
-        logger.info("data :: MintingIntentConfirmed");
+        logger.info("data :: StakingIntentConfirmed");
         const returnValues = eventObj.returnValues;
         if ( returnValues ) {
           const _stakingIntentHash = returnValues._stakingIntentHash;
