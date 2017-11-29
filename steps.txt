@@ -100,12 +100,7 @@ STEPS
     - source test/open_st_env_vars.sh
     - node tools/deploy/register_utility_token_value.js
 
-
-11) Start Inter Comm on the foundation machine.
-    - source test/open_st_env_vars.sh
-    - node services/inter_comm/stake_and_mint.js
-
-12) In new terminal
+11) In new terminal
     source test/open_st_env_vars.sh
     node
     (function () {
@@ -119,4 +114,9 @@ STEPS
 
         initKlassObj.propose(coreAddresses.getAddressForUser('foundation'), coreAddresses.getPassphraseForUser('foundation'), btSymbol, btName, btConversion);
     })();
+
+12) Start Inter Comm on the foundation machine.
+    - source test/open_st_env_vars.sh
+    - node services/inter_comm/stake_and_mint.js
+
 
