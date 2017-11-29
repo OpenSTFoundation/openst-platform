@@ -10,7 +10,9 @@ const rootPrefix = '../..'
   , fiveGW = coreConstants.OST_VALUE_GAS_PRICE
   , gasPrice = fiveGW
   , gasLimit = 9000000 // TODO: Right now this is the max for any contract to be deployed. We should get it dynamically for each contract.
-  , coreAddresses = require(rootPrefix + '/config/core_addresses');
+  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , logger = require(rootPrefix+'/helpers/custom_console_logger')
+  , web3EventsFormatter = require(rootPrefix+'/lib/web3/events/formatter');
 
 const _private = {
 
@@ -110,7 +112,22 @@ const deployHelper = {
       receipt: transactionReceipt,
       contractAddress: contractAddress
     });
+  },
+
+  assertEvent: async function(formattedTransactionReceipt, eventName){
+    var formattedEvents = await web3EventsFormatter.perform(formattedTransactionReceipt);
+    var eventData = formattedEvents[eventName];
+    if ( eventData === undefined ||  eventData == '') {
+      logger.error("Event: "+eventName+ " is not found");
+      logger.info(" eventData ");
+      logger.info(eventData);
+      process.exit(0);
+    } else {
+      logger.win(" event: "+eventName+ " is present in Reciept.");
+    };
   }
+
+
 };
 
 module.exports = deployHelper;

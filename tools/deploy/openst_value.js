@@ -21,7 +21,6 @@ const rootPrefix = '../..'
   , deploymentOptions = { gasPrice: coreConstants.OST_VALUE_GAS_PRICE}
 ;
 
-// TODO Events validations
 function updateConfig(valueRegistrarAddr, valueSTContractAddr) {
 
   return new Promise(

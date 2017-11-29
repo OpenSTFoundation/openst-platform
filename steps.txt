@@ -49,8 +49,10 @@ STEPS
 
     export OST_UTILITY_STPRIME_TOTAL_SUPPLY=800000000
 
-2) cd test
-    - source ./open_st_env_vars.sh
+2)  On Development Only
+    - rm -r test/st-poa-*
+    - source test/open_st_env_vars.sh
+    - cd test
     - ./init_keys.sh
 
 3) On Development only
@@ -59,13 +61,13 @@ STEPS
     - cd test
     - ./run_value_chain.sh
 
-4) Verify test/poa-genesis-utility.json
+4) On Development only
+   - Verify genesis file configurations test/poa-genesis-utility.json
    - Open a New Terminal
    - cd test
    - ./run_utility_chain.sh
 
-5) On development only
-   - On value chain machine
+5) On development only in value chain machine
    - source test/open_st_env_vars.sh
    - node test/deployOpenSTOnTestNetNew.js
 

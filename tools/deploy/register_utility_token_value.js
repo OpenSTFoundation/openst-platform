@@ -132,7 +132,9 @@ const performer = async function() {
         coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID,
         deployerName);
 
-    logger.info(JSON.stringify(registerUtilityTokenResponse));
+    logger.info(JSON.stringify(registerUtilityTokenResponse.data.formattedTransactionReceipt));
+    await deployHelper.assertEvent(registerUtilityTokenResponse.data.formattedTransactionReceipt, 'UtilityTokenRegistered');
+
     logger.step("Register Utility token for STPrime on Value Chain.");
     logger.win("Utility token registered on Value Chain.");
 
