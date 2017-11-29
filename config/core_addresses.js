@@ -97,6 +97,11 @@ const allAddresses = {
       address: process.env.OST_UTILITY_TOKEN_CONTRACT_ADDR,
       abi: coreAbis.brandedToken,
       bin: coreBins.brandedToken
+    },
+    simpleStake: {
+      address: null,
+      abi: coreAbis.simpleStake,
+      bin: coreBins.simpleStake
     }
   }
 };
@@ -110,7 +115,7 @@ for (var contractName in allAddresses.contracts) {
     for (var i = 0; i < addr.length; i++) {
       addrToContractNameMap[addr[i].toLowerCase()] = contractName;
     }
-  } else {
+  } else if ( addr != null && typeof addr !== "undefined") {
     addrToContractNameMap[addr.toLowerCase()] = contractName;
   }
 }
