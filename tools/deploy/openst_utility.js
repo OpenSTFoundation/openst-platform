@@ -64,16 +64,41 @@ const performer = async function() {
   // set ops address to UC registrar addr
   var registrarContractAddress = registrarContractDeployResult.contractAddress
     ,utilityRegistrarContractInteract = new UtilityRegistrarContractInteract(registrarContractAddress);
+
   customLogger.log('\nSetting Ops Address to Utility Chain Registrar Contract Address');
+
   var setOpsAddressresponse = await utilityRegistrarContractInteract.setOpsAddress(deployerName,
                                         utilityRegistrarAddress, deploymentOptions);
+
   customLogger.log(setOpsAddressresponse);
+
+  var getOpsAddressresponse = await utilityRegistrarContractInteract.getOpsAddress();
+
+  customLogger.log('Verifying if Ops Address Was Set to registrar contract address: '+ registrarContractAddress);
+
+  if (web3Provider.utils.toChecksumAddress(getOpsAddressresponse.data.address) !=
+      web3Provider.utils.toChecksumAddress(utilityRegistrarAddress)) {
+    customLogger.error("Exiting the deployment as setops address doesn't match");
+    process.exit(0);
+  }
+
   customLogger.win('Ops Address Set to registrar contract address: '+ registrarContractAddress);
 
   // initiate owner ship transfer to utilityChainOwnerAddress
   customLogger.log('\nInitiating Ownership Transfer of contract: '+ contractName + " to deployer: " +deployerName);
+
   var initiateOwnershipTransferResponse = await utilityRegistrarContractInteract.initiateOwnerShipTransfer(deployerName,
                                                 utilityChainOwnerAddress, deploymentOptions);
+
+  customLogger.log('\nVerifying Ownership Transfer of contract: '+ contractName + " to deployer: " +deployerName);
+
+  var proposedOwnerResult = await utilityRegistrarContractInteract.getOwner();
+
+  if (web3Provider.utils.toChecksumAddress(proposedOwnerResult.data.owner) != web3Provider.utils.toChecksumAddress(utilityChainOwnerAddress)) {
+    customLogger.error("Exiting the deployment as initialite ownership address doesn't match");
+    process.exit(0);
+  }
+
   customLogger.win('Completed Ownership transfer of contract: ' + contractName + ' to deployer: ' + deployerName);
 
   //deploy contract openSTUtility, auto deploys ST" contract
@@ -99,8 +124,19 @@ const performer = async function() {
 
   // initiate owner ship transfer to utilityChainOwnerAddress
   customLogger.log('\nInitiating Ownership Transfer of contract: '+ contractName + " to deployer: " +deployerName);
+
   var initiateOwnershipTransferResponse = await openStUtilityContractInteract.
-                                                initiateOwnerShipTransfer(deployerName, utilityChainOwnerAddress, deploymentOptions);
+      initiateOwnerShipTransfer(deployerName, utilityChainOwnerAddress, deploymentOptions);
+
+  customLogger.log('\nVerifying Ownership Transfer of contract: '+ contractName + " to deployer: " +deployerName);
+
+  var proposedOwnerResult = await openStUtilityContractInteract.getOwner();
+
+  if (web3Provider.utils.toChecksumAddress(proposedOwnerResult.data.owner) != web3Provider.utils.toChecksumAddress(utilityChainOwnerAddress)) {
+    customLogger.error("Exiting the deployment as initialite ownership for openStUtilityContractInteract address doesn't match");
+    process.exit(0);
+  }
+
   customLogger.win('Completed Ownership transfer of contract: ' + contractName + ' to deployer: ' + deployerName);
 
   // Query to get ST" UUID
