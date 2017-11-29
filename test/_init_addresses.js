@@ -4,7 +4,7 @@ const Path = require('path');
 const _addresses = {
   "foundation": null,
   "admin":null,
-  "deployer": null,
+  "valueDeployer": null,
   "opsAdd": null,
   "members": []
 };
@@ -27,19 +27,15 @@ function main( addressFile ) {
     if ( !_addresses.foundation ) {
       //First Address
       _addresses.foundation = thisAddress;
-      updateFoundationAddress( thisAddress );
     } else if ( !_addresses.admin ) {
       _addresses.admin = thisAddress;
-      updateAdminAddress( thisAddress );
-    } else if ( !_addresses.deployer ) {
-      _addresses.deployer = thisAddress;
-      updateDeployerAddress( thisAddress );
+    } else if ( !_addresses.valueDeployer ) {
+      _addresses.valueDeployer = thisAddress;
     } else if ( !_addresses.opsAdd ) {
       _addresses.opsAdd = thisAddress;
       fundOpsAddress( thisAddress );
     } else if ( !_addresses.utilityChainOwnerAddress ) {
       _addresses.utilityChainOwnerAddress = thisAddress;
-      updateUtilityChainOwnerAddress(thisAddress);
     }
     else {
       //Member Address
@@ -55,15 +51,13 @@ function main( addressFile ) {
       ost_utility_registrar_address: _addresses.admin,
       ost_utility_chain_owner_address: _addresses.utilityChainOwnerAddress,
       ost_value_ops_address: _addresses.opsAdd,
-      ost_deployer_address: _addresses.deployer
+      ost_value_deployer_address: _addresses.valueDeployer
     }
   );
 
 }
 
 function updateFoundationAddress( foundation ) {
-  //Update Config.
-  Config.SimpleTokenFoundation = foundation;
 
   //Update poa-genesis-value
   updateGenesisAlloc( poaGenesisValue, foundation, "0x200000000000000000000000000000000000000000000000000000000000000");
@@ -82,18 +76,6 @@ function fundOpsAddress( opsAddress ) {
 
 }
 
-function updateAdminAddress( admin ) {
-  Config.ValueChain.Admin = admin; /* Allowed Usage */
-}
-
-function updateDeployerAddress( deployer ) {
-  Config.ValueChain.Deployer = deployer; /* Allowed Usage */
-}
-
-function updateUtilityChainOwnerAddress( utilityChainOwnerAddress ) {
-  Config.ValueChain.UtilityChainOwnerAddress = utilityChainOwnerAddress; /* Allowed Usage */
-}
-
 function updateGenesisAlloc( genesis, foundation, value ) {
   const _alloc = genesis.alloc;
   _alloc[ foundation ] = { "balance" : value };
@@ -110,7 +92,6 @@ function updateMember( indx, memberReserveAddress ) {
   thisMember["Reserve"] = memberReserveAddress;
 
 }
-
 
 function writeJsonToFile( jsObject, relativeFilePath, tab_space ) {
   tab_space = tab_space || 2;

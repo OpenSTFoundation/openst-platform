@@ -4,8 +4,8 @@ STEPS
     - set following env constants (Mandatory Steps for Staging and Production)
         - OST_VALUE_CHAIN_ID
         - OST_UTILITY_CHAIN_ID
-        - OST_DEPLOYER_ADDR (create and fund deployers on both chains)
-        - OST_DEPLOYER_PASSPHRASE
+        - OST_VALUE_DEPLOYER_ADDR (create and fund deployers on both chains)
+        - OST_VALUE_DEPLOYER_PASSPHRASE
         - OST_VALUE_REGISTRAR_ADDR (create and fund registrar/intercom on both chains)
         - OST_UTILITY_REGISTRAR_ADDR (create and fund registrar/intercom on both chains)
         - OST_VALUE_REGISTRAR_PASSPHRASE
@@ -25,8 +25,8 @@ STEPS
 
     export OST_FOUNDATION_ADDR=''
 
-    export OST_DEPLOYER_ADDR=''
-    export OST_DEPLOYER_PASSPHRASE='testtest'
+    export OST_VALUE_DEPLOYER_ADDR=''
+    export OST_VALUE_DEPLOYER_PASSPHRASE='testtest'
 
     export OST_UTILITY_CHAIN_OWNER_ADDR=''
 
@@ -46,9 +46,6 @@ STEPS
 
     export OST_STAKING_CONTRACT_ADDR=''
     export OST_UTILITY_TOKEN_CONTRACT_ADDR=''
-
-    export OST_DEPLOYER_ADDR=''
-    export OST_DEPLOYER_PASSPHRASE='testtest'
 
     export OST_UTILITY_STPRIME_TOTAL_SUPPLY=800000000
 

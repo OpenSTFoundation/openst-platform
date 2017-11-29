@@ -3,7 +3,7 @@
 const rootPrefix = '../..'
   , readline = require('readline')
   , config = require(rootPrefix + '/config.json')
-  , deployerName = "deployer"
+  , deployerName = "valueDeployer"
   , web3Provider = require(rootPrefix+'/lib/web3/providers/value_rpc')
   , deployHelper = require('./helper')
   , coreConstants = require(rootPrefix+'/config/core_constants')

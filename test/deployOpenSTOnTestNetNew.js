@@ -16,8 +16,9 @@ const rootPrefix = "..",
       FOUNDATION_PASSPHRASE = coreAddresses.getPassphraseForUser('foundation'),
       REGISTRAR = coreAddresses.getAddressForUser('valueRegistrar'),
       REGISTRAR_KEY = coreAddresses.getPassphraseForUser('valueRegistrar'),
-      DEPLOYER = coreAddresses.getAddressForUser('deployer'),
-      DEPLOYER_KEY = coreAddresses.getPassphraseForUser('deployer')
+      VALUE_DEPLOYER = 'valueDeployer',
+      VALUE_DEPLOYER_ADDR = coreAddresses.getAddressForUser(VALUE_DEPLOYER),
+      VALUE_DEPLOYER_PASSPHRASE = coreAddresses.getPassphraseForUser(VALUE_DEPLOYER)
   ;
 
 // These addresses may change during the script. So, these should not be const.
@@ -33,7 +34,6 @@ const STEP_PRE = "======================================================\n\x1b[3
 
 const MIN_FUND = (new BigNumber( 10 )).toPower( 18 );
 const _registrarName = "Registrar";
-const _deployerName = "Deployer";
 var ST = null;
 
 //Method to Log Step Description
@@ -355,7 +355,7 @@ function updateConfig() {
   validateValueChain()
     .then( validateSimpleTokenFoundation )
     .then( validateAndFundUser(_registrarName, REGISTRAR, REGISTRAR_KEY) )
-    .then( validateAndFundUser(_deployerName, DEPLOYER, DEPLOYER_KEY) )
+    .then( validateAndFundUser(VALUE_DEPLOYER, VALUE_DEPLOYER_ADDR, VALUE_DEPLOYER_PASSPHRASE) )
     .then( deploySimpleTokenContract )
     .then( setSimpleTokenRegistrar )
     .then( updateConfig )
