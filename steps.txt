@@ -6,6 +6,8 @@ STEPS
         - OST_UTILITY_CHAIN_ID
         - OST_VALUE_DEPLOYER_ADDR (create and fund deployers on both chains)
         - OST_VALUE_DEPLOYER_PASSPHRASE
+        - OST_UTILITY_DEPLOYER_ADDR
+        - OST_UTILITY_DEPLOYER_PASSPHRASE
         - OST_VALUE_REGISTRAR_ADDR (create and fund registrar/intercom on both chains)
         - OST_UTILITY_REGISTRAR_ADDR (create and fund registrar/intercom on both chains)
         - OST_VALUE_REGISTRAR_PASSPHRASE
