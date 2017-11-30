@@ -33,8 +33,8 @@ function main () {
   const fundMember = require( rootPrefix + '/test/fundMember');
 
   const initKlassObj = new initKlass;
-  var btSymbol = 'L1Coin';
-  var btName = 'L1onCoin';
+  var btSymbol = 'ACME';
+  var btName = 'ACMECorpCoin';
   var apiAuthUser = "acme";
   var apiAuthSecret = "acmesecret";
   var btConversion = 10;
