@@ -22,7 +22,40 @@ function copyKeyToValueChain( memberAddress ) {
     , destFilePath = destDirPath + "/" + keyFileName
   ;
 
-  fs.createReadStream( sourcefilePath ).pipe( fs.createWriteStream( destFilePath ) );
+  console.log("sourcefilePath", sourcefilePath);
+  console.log("destFilePath", destFilePath);
+
+  const readStream = fs.createReadStream( sourcefilePath )
+    , writeStream  = fs.createWriteStream( destFilePath )
+  ;
+  
+  readStream.on("end", () => {
+    console.log("readStream end");
+  });
+
+  readStream.on("error", () => {
+    console.log("readStream ERROR");
+    console.log( arguments );
+  });
+
+  writeStream.on("end", () => {
+    console.log("writeStream end");
+  });
+
+  writeStream.on("error", () => {
+    console.log("writeStream ERROR");
+    console.log( arguments );
+  });
+
+
+
+
+  readStream.pipe( writeStream );
+  return new Promise( (resolve,reject) =>{
+    readStream.on('end', () => {
+      return resolve();
+    });
+  })
 
 }
 
@@ -33,10 +66,10 @@ function main () {
   const fundMember = require( rootPrefix + '/test/fundMember');
 
   const initKlassObj = new initKlass;
-  var btSymbol = 'ACME';
-  var btName = 'ACMECorpCoin';
-  var apiAuthUser = "acme";
-  var apiAuthSecret = "acmesecret";
+  var btSymbol = 'Pepo1';
+  var btName = 'PepoCoin1';
+  var apiAuthUser = "pc1";
+  var apiAuthSecret = "acmesecret1";
   var btConversion = 10;
   var apiCallbackUrl = "http://localhost:9000"
 
@@ -57,7 +90,9 @@ function main () {
     })
     .then( _ => {
       //Copy the key to value chain to enable staking and minting.
-      copyKeyToValueChain( memberAddress );     
+      return copyKeyToValueChain( memberAddress );     
+    })
+    .finally ( _ => {
       process.exit(0);
     })
   ;
