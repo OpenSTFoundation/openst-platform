@@ -6,6 +6,7 @@ const rootPrefix = '..'
   , eventsFormatter = require(rootPrefix+'/lib/web3/events/formatter.js')
   , simpleTokenContractInteract = require(rootPrefix+'/lib/contract_interact/simpleToken')
   , coreAddresses = require(rootPrefix+'/config/core_addresses')
+  , brandedTokenKlass = require(rootPrefix+'lib/contract_interact/branded_token')
   , openSTValueContractName = 'openSTValue'
   , openSTValueContractAddress =  coreAddresses.getAddressForContract(openSTValueContractName)
   , openSTValueContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_value')
@@ -22,6 +23,8 @@ const rootPrefix = '..'
   , UC = "UtilityChain"
   , VC = "ValueChain"
   ;
+
+var brandedToken = null;
 
 const toWeiST = function(amt){
   return new BigNumber( 10 ).pow( 18 ).mul( amt );
@@ -311,6 +314,9 @@ function listenToUtilityToken(stakingIntentHash){
     })
     .then( function(member){
       selectedMember = member;
+
+      brandedToken = new brandedTokenKlass(selectedMember);
+
       logger.step("Get Member ST Balance");
       return getMemberSTBalance( selectedMember );
     })
@@ -391,8 +397,24 @@ function listenToUtilityToken(stakingIntentHash){
         eventDataValues['_stakingIntentHash']
       )
     })
-    .then(function(){
+    .then(function (processMintingResult) {
       logger.win("Minting Completed!");
+      logger.win("Beneficiary Claiming Now!");
+      return brandedToken.claim(
+        selectedMember.Reserve,
+        _passphrase
+      );
+    })
+    .then(function(claimResult){
+      logger.log("Claiming Receipt below: ");
+      logger.log(JSON.stringify(claimResult));
+      logger.win("Claiming Completed by beneficiary!");
+    })
+    .then(async function () {
+      console.log("Beneficiary Address: "+ selectedMember.Reserve);
+      console.log("Beneficiary Balance: ");
+      console.log( await brandedToken.balanceOf(selectedMember.Reserve) );
+
       process.exit(0);
     })
     .catch(function(reason){
