@@ -1,6 +1,6 @@
 "use strict";
 
-const rootPrefix = '..'
+const rootPrefix = '../..'
   , web3ValueRpcProvider = require(rootPrefix+'/lib/web3/providers/value_rpc')
   , web3UtilityWsProvider = require(rootPrefix+'/lib/web3/providers/utility_ws')
   , eventsFormatter = require(rootPrefix+'/lib/web3/events/formatter.js')
@@ -91,7 +91,7 @@ const listAllMembers = function() {
     var member = Config.Members[ i ];
     console.log( i+1, " for ", member.Name, "(", member.Symbol ,")"  );
   }
-  
+
   return new Promise(function(resolve, reject) {
     readlineInterface.prompt();
     const rlCallback = function(line){
@@ -135,7 +135,7 @@ const confirmMember = function(member) {
         case "yes":
         case "y":
           readlineInterface.removeListener("line", rlCallback);
-          resolve( member );    
+          resolve( member );
         break;
         case "no":
         case "n":
@@ -152,12 +152,12 @@ const confirmMember = function(member) {
   });
 };
 
-const getMemberSTBalance = function(member){
-  return simpleTokenContractInteract.balanceOf( member.Reserve )
+const getSTBalance = function( address ){
+  return simpleTokenContractInteract.balanceOf( address )
   .then( function(result){
-    const memberBalance = result.data['balance'];
-    logger.info(member.Name, "has", toDisplayST(memberBalance) );
-    return new BigNumber(memberBalance);
+    const stBalance = result.data['balance'];
+    logger.info("Address", address, "has", toDisplayST(stBalance) );
+    return new BigNumber(stBalance);
   })
 };
 
@@ -220,20 +220,20 @@ const getPassphrase = function(selectedMember){
   });
 };
 
-const checkAllowanceAndApproveIfNeeded = function(member, passphrase, toStakeAmount) {
-  return simpleTokenContractInteract.allowance(member.Reserve, openSTValueContractAddress)
+const checkAllowanceAndApproveIfNeeded = function(stakerAddress, passphrase, toStakeAmount) {
+  return simpleTokenContractInteract.allowance(stakerAddress, openSTValueContractAddress)
     .then( function(result) {
       const allowance = result.data.remaining
         , bigNumAllowance = new BigNumber( allowance )
         , needsApproval = (bigNumAllowance != toStakeAmount);
 
-      logger.info(member.Name, "Allowance:", toDisplayST(allowance) );
+      logger.info("Staker Allowance:", toDisplayST(allowance) );
 
       if (needsApproval){
         if ( bigNumAllowance != 0 ) {
           logger.info("Resetting Allowance to 0");
           //Reset allowance
-          return simpleTokenContractInteract.approve(member.Reserve, passphrase, openSTValueContractAddress, 0)
+          return simpleTokenContractInteract.approve(stakerAddress, passphrase, openSTValueContractAddress, 0)
               .then( function() {
                 logger.info("Current Allowance has been set to 0");
                 return needsApproval;
@@ -247,10 +247,10 @@ const checkAllowanceAndApproveIfNeeded = function(member, passphrase, toStakeAmo
         return true;
       }
       logger.info("Approving openSTValue contract with " , toDisplayST(toStakeAmount));
-      return simpleTokenContractInteract.approve(member.Reserve, passphrase, openSTValueContractAddress, toStakeAmount);
+      return simpleTokenContractInteract.approve(stakerAddress, passphrase, openSTValueContractAddress, toStakeAmount);
     })
     .then( function(){
-      return simpleTokenContractInteract.allowance(member.Reserve, openSTValueContractAddress)
+      return simpleTokenContractInteract.allowance(stakerAddress, openSTValueContractAddress)
         .then( function(result) {
           const allowance = result.data.remaining;
           logger.info("Current Allowance:", allowance);
@@ -290,70 +290,54 @@ function listenToUtilityToken(stakingIntentHash){
   });
 }
 
-(function () {
+module.exports = function (stakerAddress, stakerPassphrase, beneficiary, toStakeAmount, utilityTokenInterfaceContract) {
+  toStakeAmount = toWeiST( toStakeAmount );
   var selectedMember = null
-    , toStakeAmount  = null
-    , _passphrase = null
     , eventDataValues = null
-    , stPrimeUUID = null
   ;
-  logger.step("Validate", VC);
 
-  describeChain(VC, web3ValueRpcProvider)
-    .then(function(){
-      logger.win(VC, "Validated");
-      logger.step("Validate", UC);
-      return describeChain(UC, web3UtilityWsProvider);
-    })
-    .then(function() {
-      logger.win(UC, "Validated");
-      return listAllMembers();
-    })
-    .then(function(member){
-      logger.step("Confirm Member");
-      return (confirmMember( member ) )
-    })
-    .then( async function(member){
-      selectedMember = member;
+  logger.step("Get ST of Staker");
 
-      var stPrimeUUIDResponse = await openSTUtilityContractInteract.getSimpleTokenPrimeUUID();
-      stPrimeUUID = stPrimeUUIDResponse.data.simpleTokenPrimeUUID;
-      logger.win("ST Prime UUID: " + stPrimeUUID);
-
-      brandedToken = new brandedTokenKlass(selectedMember);
-
-      logger.step("Get Member ST Balance");
-      return getMemberSTBalance( selectedMember );
-    })
-    .then(askStakingAmount)
-    .then(function(bigNumStakeAmount){
-      logger.step("Validate Stake Contract");
-      toStakeAmount = bigNumStakeAmount;
-      return getPassphrase( selectedMember );
-    })
-    .then( function(passphrase) {
-      logger.win("Member Reserve unlocked on", VC);
-      _passphrase = passphrase;
+  return getSTBalance( stakerAddress )
+    .then(function(bigSTBalance){
+      if ( bigSTBalance.lessThan( toStakeAmount ) ) {
+        logger.error("Insufficient ST Balance. Available ST Balance: ", bigSTBalance.toString( 10 ), "Amount to stake :", toStakeAmount.toString(10) );
+        return Promise.reject( "Insufficient ST Balance" );
+      }
       logger.step("Validate Current Allowance");
-      return checkAllowanceAndApproveIfNeeded(selectedMember, _passphrase, toStakeAmount) ;
+      return checkAllowanceAndApproveIfNeeded(stakerAddress, stakerPassphrase, toStakeAmount) ;
     })
-    .then( function() {
-      logger.win("Stake Current Allowance validated");
+    .then( _ => {
+      return utilityTokenInterfaceContract.getUuid().then( response => {
+        console.log( JSON.stringify( response ) );
+        return response.data.uuid;
+      });
+    })
+    .then( function( uuid ) {
+      logger.win("Staker Current Allowance validated");
 
       logger.step("Staking ", toDisplayST( toStakeAmount ) );
+      console.log(
+        stakerAddress, "\n",
+        stakerPassphrase,"\n",
+        uuid,"\n",
+        toStakeAmount.toString( 10 ),"\n",
+        beneficiary
+      );
+
       return openSTValueContractInteract.stake(
-        selectedMember.Reserve,
-        _passphrase,
-        stPrimeUUID,
-        toStakeAmount,
-        selectedMember.Reserve
+        stakerAddress,
+        stakerPassphrase,
+        uuid,
+        toStakeAmount.toString( 10 ),
+        beneficiary
       );
     })
     .then( async function(result) {
       if (result.isFailure()){
         console.log( "Staking resulted in error: \n" );
         console.log(result);
-        process.exit(1);
+        return Promise.reject( result );
       }
 
       const formattedTransactionReceipt = result.data.formattedTransactionReceipt
@@ -370,7 +354,7 @@ function listenToUtilityToken(stakingIntentHash){
         console.log(rawTxReceipt);
         console.log("\n\n formattedTransactionReceipt is:\n");
         console.log(formattedTransactionReceipt);
-        process.exit(1);
+        return Promise.reject( "Staking was not completed correctly: StakingIntentDeclared event didn't found in events data" );
       }
 
       logger.win("Staked", toDisplayST( toStakeAmount ) );
@@ -388,8 +372,8 @@ function listenToUtilityToken(stakingIntentHash){
       logger.win("Received StakingIntentConfirmed");
       logger.step("starting processStaking on ValueChain");
       return openSTValueContractInteract.processStaking(
-        selectedMember.Reserve,
-        _passphrase,
+        stakerAddress,
+        stakerPassphrase,
         eventDataValues['_stakingIntentHash']
       );
     })
@@ -397,17 +381,18 @@ function listenToUtilityToken(stakingIntentHash){
       logger.win("Completed processing Stake");
       logger.step("Process Minting");
       return openSTUtilityContractInteract.processMinting(
-        selectedMember.Reserve,
-        _passphrase,
+        stakerAddress,
+        stakerPassphrase,
         eventDataValues['_stakingIntentHash']
       )
     })
     .then(function (processMintingResult) {
       logger.win("Minting Completed!");
       logger.win("Beneficiary Claiming Now!");
-      return brandedToken.claim(
-        selectedMember.Reserve,
-        _passphrase
+      return utilityTokenInterfaceContract.claim(
+        stakerAddress,
+        stakerPassphrase,
+        beneficiary
       );
     })
     .then(function(claimResult){
@@ -416,21 +401,20 @@ function listenToUtilityToken(stakingIntentHash){
       logger.win("Claiming Completed by beneficiary!");
     })
     .then(async function () {
-      console.log("Beneficiary Address: "+ selectedMember.Reserve);
+      console.log("Beneficiary Address: "+ beneficiary);
       console.log("Beneficiary Balance: ");
-      console.log( await brandedToken.getBalanceOf(selectedMember.Reserve) );
-
-      process.exit(0);
+      console.log( await utilityTokenInterfaceContract.getBalanceOf( beneficiary ) );
+      return Promise.resolve({success: true});
     })
     .catch(function(reason){
-      _passphrase = null;
+      stakerPassphrase = null;
       if ( reason && reason.message ){
         logger.error( reason.message );
       }
       reason && console.log( reason );
-      process.exit(1);
+      return Promise.reject({success: true, reason: reason});
     })
   ;
-  _passphrase = null;
-})();
+  stakerPassphrase = null;
+};
 

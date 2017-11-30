@@ -25,7 +25,7 @@ const allAddresses = {
 
     utilityChainOwner: {
       address: process.env.OST_UTILITY_CHAIN_OWNER_ADDR,
-      passphrase: ''
+      passphrase: process.env.OST_UTILITY_CHAIN_OWNER_PASSPHRASE
     },
 
     valueRegistrar: {
