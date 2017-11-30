@@ -1,654 +1,549 @@
 {
-	"id": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
-	"name": "OpenST",
-	"description": "",
-	"order": [
-		"73e701fe-83cf-0dc5-1c76-c8640189bacd",
-		"9e394675-6b77-46fe-fae0-0fb9829b8722",
-		"85ad4f26-035f-3bd2-faea-492092cd1c03",
-		"3d3ebd9d-71bf-89c3-e668-d3a75f626eb1",
-		"afef5283-9461-41b1-48e3-76339dedcbe7",
-		"afeb66cf-1ae5-ae2f-bb2d-8570994060fb",
-		"d64cd2ed-084c-e239-3f92-9c30417f89c9",
-		"3c16c861-a7e1-9408-17fd-5fd9deba7810",
-		"e1b4dd45-27b5-a8a4-a64e-78a9a9ec9e9c",
-		"cb39e890-ec69-ad21-d42d-da2c0b47ab68",
-		"35fc586c-27e0-bb5b-0a0c-a0803f55f932",
-		"5657b465-09ea-f35c-a90c-e3801c4f3f9a",
-		"f4b7f162-1001-0324-ea31-8462f73720e5",
-		"4c041cd4-eb9a-4525-a761-94ea3c7c96f1",
-		"3af8d2de-61b9-fb50-681e-1fa087247ecf"
-	],
-	"folders": [],
-	"folders_order": [],
-	"timestamp": 1511015331105,
-	"owner": "806458",
-	"public": false,
-	"requests": [
+	"variables": [],
+	"info": {
+		"name": "OpenST",
+		"_postman_id": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
 		{
-			"id": "35fc586c-27e0-bb5b-0a0c-a0803f55f932",
-			"headers": "Authorization: Basic YWNtZTphY21lc2VjcmV0\n",
-			"headerData": [
-				{
-					"key": "Authorization",
-					"value": "Basic YWNtZTphY21lc2VjcmV0",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "{{route}}/transfer/?sender={{reserve}}&to={{user1}}&value=3",
-			"queryParams": [
-				{
-					"key": "sender",
-					"value": "{{reserve}}",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "to",
-					"value": "{{user1}}",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "value",
-					"value": "3",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "basicAuth",
-			"helperAttributes": {
-				"id": "basic",
-				"username": "acme",
-				"password": "acmesecret",
-				"saveToRequest": true
-			},
-			"time": 1511185217452,
-			"name": "Transfer :: From: Reserve To: user 1 Amount:3",
-			"description": "",
-			"collectionId": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
-			"responses": []
-		},
-		{
-			"id": "3af8d2de-61b9-fb50-681e-1fa087247ecf",
-			"headers": "Authorization: Basic YWNtZTphY21lc2VjcmV0\n",
-			"headerData": [
-				{
-					"key": "Authorization",
-					"value": "Basic YWNtZTphY21lc2VjcmV0",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "{{route}}/transfer/?sender={{user2}}&to={{reserve}}&value=3",
-			"queryParams": [
-				{
-					"key": "sender",
-					"value": "{{user2}}",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "to",
-					"value": "{{reserve}}",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "value",
-					"value": "3",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "basicAuth",
-			"helperAttributes": {
-				"id": "basic",
-				"username": "acme",
-				"password": "acmesecret",
-				"saveToRequest": true
-			},
-			"time": 1511185228060,
-			"name": "Transfer :: From: user 2 To: Reserve Amount: 3",
-			"description": "",
-			"collectionId": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
-			"responses": []
-		},
-		{
-			"id": "3c16c861-a7e1-9408-17fd-5fd9deba7810",
-			"headers": "Authorization: Basic YWNtZTphY21lc2VjcmV0\n",
-			"headerData": [
-				{
-					"key": "Authorization",
-					"value": "Basic YWNtZTphY21lc2VjcmV0",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "{{route}}/balanceOf/?owner={{reserve}}",
-			"queryParams": [
-				{
-					"key": "owner",
-					"value": "{{reserve}}",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "basicAuth",
-			"helperAttributes": {
-				"id": "basic",
-				"username": "acme",
-				"password": "acmesecret",
-				"saveToRequest": true
-			},
-			"time": 1511185210564,
-			"name": "Balance Of Reserve",
-			"description": "Gets the balance of reserve",
-			"collectionId": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
-			"responses": []
-		},
-		{
-			"id": "3d3ebd9d-71bf-89c3-e668-d3a75f626eb1",
-			"headers": "Authorization: Basic YWNtZTphY21lc2VjcmV0\n",
-			"headerData": [
-				{
-					"key": "Authorization",
-					"value": "Basic YWNtZTphY21lc2VjcmV0",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "{{route}}/symbol",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "basicAuth",
-			"helperAttributes": {
-				"id": "basic",
-				"username": "acme",
-				"password": "acmesecret",
-				"saveToRequest": true
-			},
-			"time": 1511185200623,
-			"name": "Get Member Symbol",
-			"description": "Fetch the name of Member",
-			"collectionId": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
-			"responses": []
-		},
-		{
-			"id": "4c041cd4-eb9a-4525-a761-94ea3c7c96f1",
-			"headers": "Authorization: Basic YWNtZTphY21lc2VjcmV0\n",
-			"headerData": [
-				{
-					"key": "Authorization",
-					"value": "Basic YWNtZTphY21lc2VjcmV0",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "{{route}}/transfer/?sender={{reserve}}&to={{user2}}&value=3",
-			"queryParams": [
-				{
-					"key": "sender",
-					"value": "{{reserve}}",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "to",
-					"value": "{{user2}}",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "value",
-					"value": "3",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "basicAuth",
-			"helperAttributes": {
-				"id": "basic",
-				"username": "acme",
-				"password": "acmesecret",
-				"saveToRequest": true
-			},
-			"time": 1511185224713,
-			"name": "Transfer :: From: Reserve To: user 2 Amount:3",
-			"description": "",
-			"collectionId": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
-			"responses": []
-		},
-		{
-			"id": "5657b465-09ea-f35c-a90c-e3801c4f3f9a",
-			"headers": "Authorization: Basic YWNtZTphY21lc2VjcmV0\n",
-			"headerData": [
-				{
-					"key": "Authorization",
-					"value": "Basic YWNtZTphY21lc2VjcmV0",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "{{route}}/transfer/?sender={{user1}}&to={{user2}}&value=3",
-			"queryParams": [
-				{
-					"key": "sender",
-					"value": "{{user1}}",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "to",
-					"value": "{{user2}}",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				},
-				{
-					"key": "value",
-					"value": "3",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "basicAuth",
-			"helperAttributes": {
-				"id": "basic",
-				"username": "acme",
-				"password": "acmesecret",
-				"saveToRequest": true
-			},
-			"time": 1511185219580,
-			"name": "Transfer :: From: User1 To: User2 Amount: 3",
-			"description": "",
-			"collectionId": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
-			"responses": []
-		},
-		{
-			"id": "73e701fe-83cf-0dc5-1c76-c8640189bacd",
-			"headers": "",
-			"headerData": [],
-			"url": "http://localhost:3000/newkey",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "normal",
-			"helperAttributes": {},
-			"time": 1511185194239,
-			"name": "NewKey",
-			"description": "Create a new user key",
-			"collectionId": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
-			"responses": []
-		},
-		{
-			"id": "85ad4f26-035f-3bd2-faea-492092cd1c03",
-			"headers": "Authorization: Basic YWNtZTphY21lc2VjcmV0\n",
-			"headerData": [
-				{
-					"key": "Authorization",
-					"value": "Basic YWNtZTphY21lc2VjcmV0",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "{{route}}/reserve",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "basicAuth",
-			"helperAttributes": {
-				"id": "basic",
-				"username": "acme",
-				"password": "acmesecret",
-				"saveToRequest": true
-			},
-			"time": 1511185198194,
-			"name": "Get Member Reserve Address",
-			"description": "Fetch the name of Member",
-			"collectionId": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
-			"responses": []
-		},
-		{
-			"id": "9e394675-6b77-46fe-fae0-0fb9829b8722",
-			"headers": "Authorization: Basic YWNtZTphY21lc2VjcmV0\n",
-			"headerData": [
-				{
-					"key": "Authorization",
-					"value": "Basic YWNtZTphY21lc2VjcmV0",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "{{route}}/name",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "basicAuth",
-			"helperAttributes": {
-				"id": "basic",
-				"username": "acme",
-				"password": "acmesecret",
-				"saveToRequest": true
-			},
-			"time": 1511185196288,
 			"name": "Get Member Name",
-			"description": "Fetch the name of Member",
-			"collectionId": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
-			"responses": []
-		},
-		{
-			"id": "afeb66cf-1ae5-ae2f-bb2d-8570994060fb",
-			"headers": "Authorization: Basic YWNtZTphY21lc2VjcmV0\n",
-			"headerData": [
-				{
-					"key": "Authorization",
-					"value": "Basic YWNtZTphY21lc2VjcmV0",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "{{route}}/totalSupply",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "basicAuth",
-			"helperAttributes": {
-				"id": "basic",
-				"username": "acme",
-				"password": "acmesecret",
-				"saveToRequest": true
-			},
-			"time": 1511185205599,
-			"name": "Get Total Supply",
-			"description": "Fetch the name of Member",
-			"collectionId": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
-			"responses": []
-		},
-		{
-			"id": "afef5283-9461-41b1-48e3-76339dedcbe7",
-			"headers": "Authorization: Basic YWNtZTphY21lc2VjcmV0\n",
-			"headerData": [
-				{
-					"key": "Authorization",
-					"value": "Basic YWNtZTphY21lc2VjcmV0",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "{{route}}/decimals",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "basicAuth",
-			"helperAttributes": {
-				"id": "basic",
-				"username": "acme",
-				"password": "acmesecret",
-				"saveToRequest": true
-			},
-			"time": 1511185203297,
-			"name": "Get Member Decimals",
-			"description": "Fetch the name of Member",
-			"collectionId": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
-			"responses": []
-		},
-		{
-			"id": "cb39e890-ec69-ad21-d42d-da2c0b47ab68",
-			"headers": "Authorization: Basic YWNtZTphY21lc2VjcmV0\n",
-			"headerData": [
-				{
-					"key": "Authorization",
-					"value": "Basic YWNtZTphY21lc2VjcmV0",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "{{route}}/balanceOf/?owner={{user1}}",
-			"queryParams": [
-				{
-					"key": "owner",
-					"value": "{{user1}}",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "basicAuth",
-			"helperAttributes": {
-				"id": "basic",
-				"username": "acme",
-				"password": "acmesecret",
-				"saveToRequest": true
-			},
-			"time": 1511185215160,
-			"name": "Balance of User 1",
-			"description": "",
-			"collectionId": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
-			"responses": []
-		},
-		{
-			"id": "d64cd2ed-084c-e239-3f92-9c30417f89c9",
-			"headers": "Authorization: Basic YWNtZTphY21lc2VjcmV0\n",
-			"headerData": [
-				{
-					"key": "Authorization",
-					"value": "Basic YWNtZTphY21lc2VjcmV0",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "{{route}}/allowance/?owner={{reserve}}&spender={{stakeContract}}",
-			"queryParams": [
-				{
-					"key": "owner",
-					"value": "{{reserve}}",
-					"equals": true,
-					"description": "",
-					"enabled": true
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "acme",
+						"password": "acmesecret",
+						"saveHelperData": true,
+						"showPassword": false
+					}
 				},
-				{
-					"key": "spender",
-					"value": "{{stakeContract}}",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "basicAuth",
-			"helperAttributes": {
-				"id": "basic",
-				"username": "acme",
-				"password": "acmesecret",
-				"saveToRequest": true
+				"url": "{{route}}/name",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Fetch the name of Member"
 			},
-			"time": 1511185207751,
-			"name": "Get Allowance",
-			"description": "Fetch the name of Member",
-			"collectionId": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
-			"responses": []
+			"response": []
 		},
 		{
-			"id": "e1b4dd45-27b5-a8a4-a64e-78a9a9ec9e9c",
-			"headers": "Authorization: Basic YWNtZTphY21lc2VjcmV0\n",
-			"headerData": [
-				{
-					"key": "Authorization",
-					"value": "Basic YWNtZTphY21lc2VjcmV0",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "{{route}}/getAllTxDetails/",
-			"queryParams": [],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "basicAuth",
-			"helperAttributes": {
-				"id": "basic",
-				"username": "acme",
-				"password": "acmesecret",
-				"saveToRequest": true
+			"name": "Get Reserve",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "acme",
+						"password": "acmesecret",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": "{{route}}/reserve",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Fetch the name of Member"
 			},
-			"time": 1511185212895,
+			"response": []
+		},
+		{
+			"name": "Get Member Symbol",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "acme",
+						"password": "acmesecret",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": "{{route}}/symbol",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Fetch the name of Member"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Member Decimals",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "acme",
+						"password": "acmesecret",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": "{{route}}/decimals",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Fetch the name of Member"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Total Supply",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "acme",
+						"password": "acmesecret",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": "{{route}}/totalSupply",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Fetch the name of Member"
+			},
+			"response": []
+		},
+		{
+			"name": "Balance Of Reserve",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "acme",
+						"password": "acmesecret",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": {
+					"raw": "{{route}}/balanceOf/?owner={{reserve}}",
+					"host": [
+						"{{route}}"
+					],
+					"path": [
+						"balanceOf",
+						""
+					],
+					"query": [
+						{
+							"key": "owner",
+							"value": "{{reserve}}",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Gets the balance of reserve"
+			},
+			"response": []
+		},
+		{
+			"name": "New User Key",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "acme",
+						"password": "acmesecret",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": "{{route}}/name",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Fetch the name of Member"
+			},
+			"response": []
+		},
+		{
 			"name": "getAllTxDetails",
-			"description": "Gets the balance of reserve",
-			"collectionId": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
-			"responses": []
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "acme",
+						"password": "acmesecret",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": "{{route}}/getAllTxDetails/",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Gets the balance of reserve"
+			},
+			"response": []
 		},
 		{
-			"id": "f4b7f162-1001-0324-ea31-8462f73720e5",
-			"headers": "Authorization: Basic YWNtZTphY21lc2VjcmV0\n",
-			"headerData": [
-				{
-					"key": "Authorization",
-					"value": "Basic YWNtZTphY21lc2VjcmV0",
-					"description": "",
-					"enabled": true
-				}
-			],
-			"url": "{{route}}/balanceOf/?owner={{user2}}",
-			"queryParams": [
-				{
-					"key": "owner",
-					"value": "{{user2}}",
-					"equals": true,
-					"description": "",
-					"enabled": true
-				}
-			],
-			"preRequestScript": null,
-			"pathVariables": {},
-			"pathVariableData": [],
-			"method": "GET",
-			"data": null,
-			"dataMode": "params",
-			"version": 2,
-			"tests": null,
-			"currentHelper": "basicAuth",
-			"helperAttributes": {
-				"id": "basic",
-				"username": "acme",
-				"password": "acmesecret",
-				"saveToRequest": true
+			"name": "Balance of User 1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "acme",
+						"password": "acmesecret",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": {
+					"raw": "{{route}}/balanceOf/?owner={{user1}}",
+					"host": [
+						"{{route}}"
+					],
+					"path": [
+						"balanceOf",
+						""
+					],
+					"query": [
+						{
+							"key": "owner",
+							"value": "{{user1}}",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
 			},
-			"time": 1511185221662,
+			"response": []
+		},
+		{
+			"name": "Transfer :: From: Reserve To: user 1 Amount:3",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "acme",
+						"password": "acmesecret",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": {
+					"raw": "{{route}}/transfer/?sender={{reserve}}&to={{user1}}&value=3",
+					"host": [
+						"{{route}}"
+					],
+					"path": [
+						"transfer",
+						""
+					],
+					"query": [
+						{
+							"key": "sender",
+							"value": "{{reserve}}",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "to",
+							"value": "{{user1}}",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "value",
+							"value": "3",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Transfer :: From: User1 To: User2 Amount: 3",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "acme",
+						"password": "acmesecret",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": {
+					"raw": "{{route}}/transfer/?sender={{user1}}&to={{user2}}&value=3",
+					"host": [
+						"{{route}}"
+					],
+					"path": [
+						"transfer",
+						""
+					],
+					"query": [
+						{
+							"key": "sender",
+							"value": "{{user1}}",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "to",
+							"value": "{{user2}}",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "value",
+							"value": "3",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
 			"name": "Balance of User 2",
-			"description": "",
-			"collectionId": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
-			"responses": []
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "acme",
+						"password": "acmesecret",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": {
+					"raw": "{{route}}/balanceOf/?owner={{user2}}",
+					"host": [
+						"{{route}}"
+					],
+					"path": [
+						"balanceOf",
+						""
+					],
+					"query": [
+						{
+							"key": "owner",
+							"value": "{{user2}}",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Transfer :: From: Reserve To: user 2 Amount:3",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "acme",
+						"password": "acmesecret",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": {
+					"raw": "{{route}}/transfer/?sender={{reserve}}&to={{user2}}&value=3",
+					"host": [
+						"{{route}}"
+					],
+					"path": [
+						"transfer",
+						""
+					],
+					"query": [
+						{
+							"key": "sender",
+							"value": "{{reserve}}",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "to",
+							"value": "{{user2}}",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "value",
+							"value": "3",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Transfer :: From: user 2 To: Reserve Amount: 3",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "acme",
+						"password": "acmesecret",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": {
+					"raw": "{{route}}/transfer/?sender={{user2}}&to={{reserve}}&value=3",
+					"host": [
+						"{{route}}"
+					],
+					"path": [
+						"transfer",
+						""
+					],
+					"query": [
+						{
+							"key": "sender",
+							"value": "{{user2}}",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "to",
+							"value": "{{reserve}}",
+							"equals": true,
+							"description": ""
+						},
+						{
+							"key": "value",
+							"value": "3",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
 		}
 	]
 }
