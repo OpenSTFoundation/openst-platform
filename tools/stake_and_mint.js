@@ -6,7 +6,7 @@ const rootPrefix = '..'
   , eventsFormatter = require(rootPrefix+'/lib/web3/events/formatter.js')
   , simpleTokenContractInteract = require(rootPrefix+'/lib/contract_interact/simpleToken')
   , coreAddresses = require(rootPrefix+'/config/core_addresses')
-  , brandedTokenKlass = require(rootPrefix+'lib/contract_interact/branded_token')
+  , brandedTokenKlass = require(rootPrefix+'/lib/contract_interact/branded_token')
   , openSTValueContractName = 'openSTValue'
   , openSTValueContractAddress =  coreAddresses.getAddressForContract(openSTValueContractName)
   , openSTValueContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_value')
@@ -381,7 +381,7 @@ function listenToUtilityToken(stakingIntentHash){
     })
     .then(function(eventObj){
       logger.win("Received StakingIntentConfirmed");
-      logger.step("startinfg processStaking on ValueChain");
+      logger.step("starting processStaking on ValueChain");
       return openSTValueContractInteract.processStaking(
         selectedMember.Reserve,
         _passphrase,
@@ -413,7 +413,7 @@ function listenToUtilityToken(stakingIntentHash){
     .then(async function () {
       console.log("Beneficiary Address: "+ selectedMember.Reserve);
       console.log("Beneficiary Balance: ");
-      console.log( await brandedToken.balanceOf(selectedMember.Reserve) );
+      console.log( await brandedToken.getBalanceOf(selectedMember.Reserve) );
 
       process.exit(0);
     })
