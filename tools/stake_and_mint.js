@@ -305,9 +305,9 @@ function listenToUtilityToken(stakingIntentHash){
       logger.win(UC, "Validated");
       return listAllMembers();
     })
-    .then(function(){
+    .then(function(member){
       logger.step("Confirm Member");
-      return (confirmMember( Config.Members[0] ) )
+      return (confirmMember( member ) )
     })
     .then( function(member){
       selectedMember = member;
