@@ -131,7 +131,7 @@ STEPS
 13) stake and mint process. To Get STPrime.
     //.. MANAGED_MEMBER_ADDRESS to Stake ST and get STPrime with member company as benificary.
     - source test/open_st_env_vars.sh
-    - node tools/stake_and_mint.js
+    - node tools/stake_and_mint/for_st_prime.js
 
 
 14) In node_terminal (Opened in step 10.)
@@ -157,4 +157,4 @@ STEPS
 
 15) stake and mint process to get BrandedToken
     - source test/open_st_env_vars.sh
-    - node tools/stake_and_mint.js
+    - node tools/stake_and_mint/for_branded_token.js
