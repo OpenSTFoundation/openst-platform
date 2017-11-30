@@ -195,7 +195,8 @@ const performer = async function() {
   populateEnvVars.renderAndPopulate('deployScript2AddressesTemplate', {
     ost_utility_registrar_contract_addr: registrarContractAddress,
     ost_openstutility_contract_addr: openSTUtilityContractAddress,
-    ost_openstutility_st_prime_uuid: simpleTokenPrimeUUID
+    ost_openstutility_st_prime_uuid: simpleTokenPrimeUUID,
+    ost_stprime_contract_addr: simpleTokenPrimeContractAddress
   });
   logger.win("ENV vars Source file Updated");
   logger.win("Successfully Completed!!!");
