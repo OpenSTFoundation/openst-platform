@@ -1,7 +1,6 @@
 "use strict";
 
 const rootPrefix = '../..'
-  , web3ValueRpcProvider = require(rootPrefix+'/lib/web3/providers/value_rpc')
   , web3UtilityWsProvider = require(rootPrefix+'/lib/web3/providers/utility_ws')
   , eventsFormatter = require(rootPrefix+'/lib/web3/events/formatter.js')
   , simpleTokenContractInteract = require(rootPrefix+'/lib/contract_interact/simpleToken')
