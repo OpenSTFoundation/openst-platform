@@ -31,6 +31,7 @@ function initST() {
 function fundMember( member ) {
   const grantInST = new BigNumber( 100 );
   const grant = new BigNumber(10).pow( 18 ).mul( grantInST ).toString( 10 );
+  logger.info("member.Reserve:", member.Reserve);
   return fundAddressOnValueChain(member.Reserve, member.Name)
     .then(_ =>{
       return fundAddressOnUtilityChain(member.Reserve, member.Name);
@@ -48,6 +49,7 @@ function fundMember( member ) {
   ;
 }
 function fundAddress(Chain, chainName, accountAddress, addressName ) {
+  addressName = addressName || "Address";
   logger.info("Fetch",addressName,"balance on",chainName);
   return Chain.eth.getBalance( accountAddress )
     .catch( reason =>  {
@@ -86,16 +88,17 @@ function fundAddress(Chain, chainName, accountAddress, addressName ) {
     });
 }
 function fundAddressOnValueChain( accountAddress, addressName ) {
-  return fundAddress(web3Utility,"ValueChain", accountAddress, addressName);
+  return fundAddress(web3Value,"ValueChain", accountAddress, addressName);
 }
 function fundAddressOnUtilityChain( accountAddress, addressName ) {
   return fundAddress(web3Utility,"UtilityChain", accountAddress, addressName);
 }
 
 
+var IS_RUN_FROM_CONSOLE = false;
 
 (async function () {
-  console.log("process.argv", process.argv);
+  initST();
 
   var initiatorFile =  process.argv[ 1 ] ? String(process.argv[ 1 ]).toLowerCase() : "";
   if ( !initiatorFile.endsWith("/test/fundmember.js") ) {
@@ -103,11 +106,13 @@ function fundAddressOnUtilityChain( accountAddress, addressName ) {
     return;
   }
 
+  IS_RUN_FROM_CONSOLE = true;
+
   logger.step("FOUNDATION:" , FOUNDATION);
   
 
   if ( process.argv[ 2 ] && String(process.argv[ 2 ]).length > 0 ) {
-    initST();
+    
     const inAddress = String(process.argv[ 2 ]);
     if ( inAddress.toLowerCase() === "allinconfig") {
       return Promise.all( Config.Members.map( fundMember ) )

@@ -7,12 +7,12 @@ const fs = require('fs')
 
 //All other requires.
 const rootPrefix  = '..'
-  , coreAddresses                       = require( rootPrefix+'/config/core_addresses')
-  , coreConstants                       = require( rootPrefix+"/config/core_constants")
-  , openSTUtilityContractInteractKlass  = require( rootPrefix+'/lib/contract_interact/openst_utility')
+  , coreAddresses                       = require( rootPrefix + '/config/core_addresses')
+  , coreConstants                       = require( rootPrefix + '/config/core_constants')
+  , openSTUtilityContractInteractKlass  = require( rootPrefix + '/lib/contract_interact/openst_utility')
   , UtilityRegistrarContractInteract    = require( rootPrefix + '/lib/contract_interact/utility_registrar' )
   , ValueRegistrarContractInteract      = require( rootPrefix + '/lib/contract_interact/value_registrar' )
-  , web3EventsFormatter                 = require( rootPrefix+'/lib/web3/events/formatter')
+  , web3EventsFormatter                 = require( rootPrefix + '/lib/web3/events/formatter')
   , StPrimeKlass                        = require( rootPrefix + '/lib/contract_interact/st_prime' )
   , logger                              = require( rootPrefix + '/helpers/custom_console_logger')
 ;
@@ -80,12 +80,13 @@ InitUtilityToken.prototype = {
 
   , propose: function (
     senderAddress,
-    senderPassphrase,
     symbol,
     name,
     conversionRate
   ) {
     const oThis = this;
+
+    const senderPassphrase = stPrime.getMemberPassphrase( senderAddress );
 
     logger.step("Proposing Branded Token for senderAddress: ", senderAddress);
 
@@ -95,21 +96,24 @@ InitUtilityToken.prototype = {
       symbol,
       name,
       conversionRate
-    ).then(function(transactionReceiptResult){
+    ).then(function( response ){
 
-      logger.info("propossedBrandedToken :: transactionReceiptResult");
-      logger.info( JSON.stringify(transactionReceiptResult) );
-      logger.win("propossedBrandedToken successfull");
-      
-
-      if ( transactionReceiptResult.isSuccess() ) {
-        if ( oThis.autoApprove ) {
-          const formattedTransactionReceipt = transactionReceiptResult.data.formattedTransactionReceipt;
-          return oThis.registerOnUtility(formattedTransactionReceipt);
-        } else {
-          return Promise.resolve(transactionReceiptResult);
-        }
+      if ( !response.isSuccess() ) {
+        logger.error("propossedBrandedToken failed!");
+        logger.log( JSON.stringify( response ) );
+        return response;
       }
+
+      logger.win("propossedBrandedToken successfull");
+      logger.log( JSON.stringify( response ) );
+
+      if ( oThis.autoApprove ) {
+        const formattedTransactionReceipt = response.data.formattedTransactionReceipt;
+        return oThis.registerOnUtility(formattedTransactionReceipt);
+      } else {
+        return response;
+      }
+
     });
   }
 
@@ -163,11 +167,18 @@ InitUtilityToken.prototype = {
       registerParams["_requester"],
       registerParams["_token"],
       registerParams["_uuid"],
-    ).then( function(transactionReceiptResult) {
-      logger.win("registerOnUC Successfull. transactionReceiptResult");
-      logger.log( JSON.stringify(transactionReceiptResult) );
-      const formattedTransactionReceipt = transactionReceiptResult.data.formattedTransactionReceipt;
-      return oThis.registerOnValue(formattedTransactionReceipt);
+    ).then( function( response ) {
+      if ( response.isSuccess() ) {
+        logger.win("registerOnUC Successfull. response");
+        logger.log( JSON.stringify( response ) );
+        const formattedTransactionReceipt = response.data.formattedTransactionReceipt;
+        return oThis.registerOnValue(formattedTransactionReceipt);        
+      } else {
+        logger.error("registerOnUC failed.");
+        logger.log( JSON.stringify( response ) );
+        return response;
+      }
+
     });
   }
 
@@ -224,11 +235,17 @@ InitUtilityToken.prototype = {
       utilityChainId,
       registerParams["_requester"],
       registerParams["_uuid"]
-    ).then( function(transactionReceiptResult) {
-      logger.win("registerOnVC Successfull. transactionReceiptResult ::");
-      logger.log( JSON.stringify(transactionReceiptResult, null, 2) );
+    ).then( function( response ) {
+      if ( !response.isSuccess() ) {
+        logger.error("registerOnVC Failed. response")
+        logger.log( JSON.stringify(response, null, 2) );
+        return response;
+      }
 
-      const formattedValueReceipt = transactionReceiptResult.data.formattedTransactionReceipt;
+      logger.win("registerOnVC Successfull. transactionReceiptResult ::");
+      logger.log( JSON.stringify(response, null, 2) );
+
+      const formattedValueReceipt = response.data.formattedTransactionReceipt;
 
       return oThis.registerOnConfig( formattedUtilityReceipt, formattedValueReceipt );
     });
