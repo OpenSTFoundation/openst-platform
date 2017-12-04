@@ -104,7 +104,7 @@ const allAddresses = {
     },
 
     brandedToken: {
-      address: process.env.OST_UTILITY_TOKEN_CONTRACT_ADDR,
+      address: null,
       abi: coreAbis.brandedToken,
       bin: coreBins.brandedToken
     },

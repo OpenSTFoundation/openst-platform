@@ -79,6 +79,20 @@ module.exports = function( member ) {
       .catch(next);
   });
 
+  router.get('/uuid', function(req, res, next) {
+    btContractInteract.getUuid()
+      .then( response => {
+        console.log( "then.response", JSON.stringify( response ) );
+        response.renderResponse( res );
+      })
+      .catch( reason => {
+        console.log( "catch.reason", reason.message );
+        throw reason;
+      })
+      .catch(next);
+  });
+
+
   router.get('/symbol', function(req, res, next) {
     btContractInteract.getSymbol()
       .then( response => {

@@ -166,7 +166,7 @@ const performer = async function() {
   logger.info("Deployer Balance in Wei: "+deployerBalanceInWei);
 
   if (deployerBalanceInWei != stPrimeTotalSupplyInWei){
-    logger.error("deployer: " + deployerBalanceInWei +" doesn't have max total supply");
+    logger.error("deployer: " + deployerName +" doesn't have max total supply");
     process.exit(0);
   }
 

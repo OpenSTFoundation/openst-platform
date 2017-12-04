@@ -70,26 +70,36 @@ STEPS
         const initKlass = require('./tools/init_utility_token');
         const initKlassObj = new initKlass;
 
-        var btSymbol = 'ACME';
-        var btName = 'ACMECoin';
+        var btSymbol = 'ACME1';
+        var btName = 'ACME1Coin';
         var btConversion = 10;
         var apiAuthUser = "acme";
         var apiAuthSecret = "acmesecret";
         var apiCallbackUrl = null;
-        var newMemberInfo = initKlassObj.newManagedMember(btSymbol, btName, apiAuthUser, apiAuthSecret, apiCallbackUrl);
-        var memberAddress = newMemberInfo.address; //<-- This is MANAGED_MEMBER_ADDRESS for next steps.
-        var memberPassphrase = newMemberInfo.passphrase;
+        var newMemberInfo = null;
+        var memberAddress = null;
+        var memberPassphrase = null;
 
+        (async function () {
+            newMemberInfo = await initKlassObj.newMemberWithConfig(btSymbol, btName, apiAuthUser, apiAuthSecret, apiCallbackUrl);
+            memberAddress = newMemberInfo.address; //<-- This is MANAGED_MEMBER_ADDRESS for next steps.
+            memberPassphrase = newMemberInfo.passphrase;
+        })();
+
+    
     //...DO NOT CLOSE THIS TERMINAL. OR at-least copy the logs for refrence.
 
 11) Copy Member keyfile to Value Chain Geth Node :: To Be Discussed
     Member keyfile is generated in UtilityChain geth node.
 
+
+    
+
 12) Grant for member company. In new Terminal.
 
     // Shortcut for Development: node test/fundMember.js [MANAGED_MEMBER_ADDRESS from step 9]
 
-    //.. Foundation to grant ST to MANAGED_MEMBER_ADDRESS.
+    //.. COMPANY to grant ST to MANAGED_MEMBER_ADDRESS.
 
     //.. SOMEONE needs to fund MANAGED_MEMBER_ADDRESS with ETH on valueChain. 
 
