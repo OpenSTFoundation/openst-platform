@@ -23,6 +23,11 @@ const allAddresses = {
       passphrase: process.env.OST_FOUNDATION_PASSPHRASE
     },
 
+    company: {
+      address: process.env.OST_COMPANY_ADDR,
+      passphrase: process.env.OST_COMPANY_PASSPHRASE
+    },
+
     utilityChainOwner: {
       address: process.env.OST_UTILITY_CHAIN_OWNER_ADDR,
       passphrase: process.env.OST_UTILITY_CHAIN_OWNER_PASSPHRASE
