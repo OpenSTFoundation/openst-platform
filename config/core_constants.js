@@ -22,7 +22,7 @@ define("OST_VALUE_GAS_PRICE", fiveGW);
 define("OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT", '0x');
 
 // Non Zero gas constant to on Utility Chain
-define("OST_UTILITY_GAS_PRICE", fiveGW);
+define("OST_UTILITY_GAS_PRICE", process.env.OST_UTILITY_GAS_PRICE);
 
 // Total ST' Supply on utility chain
 define('OST_UTILITY_STPRIME_TOTAL_SUPPLY', process.env.OST_UTILITY_STPRIME_TOTAL_SUPPLY);

@@ -4,6 +4,9 @@ export OST_GETH_VALUE_WS_PROVIDER='ws://localhost:18545'
 export OST_GETH_UTILITY_RPC_PROVIDER='http://localhost:9546'
 export OST_GETH_UTILITY_WS_PROVIDER='ws://localhost:19546'
 
+# five GWei for now.
+export OST_UTILITY_GAS_PRICE='0x12A05F200'
+
 export OST_VALUE_CHAIN_ID=2001
 export OST_UTILITY_CHAIN_ID=2000
 
