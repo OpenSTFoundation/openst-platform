@@ -120,19 +120,19 @@ function validateSimpleTokenFoundation() {
     logError( "Failed to unlock SimpleTokenFoundation" );
     catchAndExit( reason );
   })
-  .then( _ => {
-    logInfo("Fetching UtilityChain Balance of SimpleTokenFoundation");
-    return web3RpcUtilityProvider.eth.getBalance(FOUNDATION)
-    .catch( reason =>  {
-      logError( "Invalid SimpleTokenFoundation address" );
-      catchAndExit( reason );
-    })
-    .then( balance => {
-      logInfo("UtilityChain Balance of SimpleTokenFoundation =", balance);
-      logInfo("Unlocking SimpleTokenFoundation on UtilityChain");
-      return web3RpcUtilityProvider.eth.personal.unlockAccount( FOUNDATION, FOUNDATION_PASSPHRASE );
-    })
-  })
+  // .then( _ => {
+  //   logInfo("Fetching UtilityChain Balance of SimpleTokenFoundation");
+  //   return web3RpcUtilityProvider.eth.getBalance(FOUNDATION)
+  //   .catch( reason =>  {
+  //     logError( "Invalid SimpleTokenFoundation address" );
+  //     catchAndExit( reason );
+  //   })
+  //   .then( balance => {
+  //     logInfo("UtilityChain Balance of SimpleTokenFoundation =", balance);
+  //     logInfo("Unlocking SimpleTokenFoundation on UtilityChain");
+  //     return web3RpcUtilityProvider.eth.personal.unlockAccount( FOUNDATION, FOUNDATION_PASSPHRASE );
+  //   })
+  // })
   .then(_ => {
     logWin("SimpleTokenFoundation validated");
   });
@@ -157,28 +157,28 @@ function validateAndFundUser(userName, userAddress, userKey) {
     logError( "Failed to unlock on ValueChain", userName );
     catchAndExit( reason );
   })
-  .then( _ => {
-    logInfo("Fetching",userName,"balance on UtilityChain");
-    return web3RpcUtilityProvider.eth.getBalance( userAddress )
-    .catch( reason =>  {
-      logError( "Invalid",userName ,"address" );
-      catchAndExit( reason );
-    })
-    .then(balance => {
-      logInfo(userName, "balance =", balance);
-      logInfo("Unlocking", userName, "on UtilityChain");
-      return web3RpcUtilityProvider.eth.personal.unlockAccount( userAddress, userKey );
-    })
-    .catch( reason =>  {
-      logError( "Failed to unlock on Utility Chain", userName );
-      catchAndExit( reason );
-    })
-  })
+  // .then( _ => {
+  //   logInfo("Fetching",userName,"balance on UtilityChain");
+  //   return web3RpcUtilityProvider.eth.getBalance( userAddress )
+  //   .catch( reason =>  {
+  //     logError( "Invalid",userName ,"address" );
+  //     catchAndExit( reason );
+  //   })
+  //   .then(balance => {
+  //     logInfo(userName, "balance =", balance);
+  //     logInfo("Unlocking", userName, "on UtilityChain");
+  //     return web3RpcUtilityProvider.eth.personal.unlockAccount( userAddress, userKey );
+  //   })
+  //   .catch( reason =>  {
+  //     logError( "Failed to unlock on Utility Chain", userName );
+  //     catchAndExit( reason );
+  //   })
+  // })
   .then(_ =>{
     return fundAddressOnValueChain(userAddress, userName)
-    .then(_ =>{
-      return fundAddressOnUtilityChain(userAddress, userName);
-    });
+    // .then(_ =>{
+    //   return fundAddressOnUtilityChain(userAddress, userName);
+    // });
   });
 }
 
