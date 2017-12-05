@@ -84,6 +84,8 @@ STEPS
             newMemberInfo = await initKlassObj.newMemberWithConfig(btSymbol, btName, apiAuthUser, apiAuthSecret, apiCallbackUrl);
             memberAddress = newMemberInfo.address; //<-- This is MANAGED_MEMBER_ADDRESS for next steps.
             memberPassphrase = newMemberInfo.passphrase;
+            console.log("memberAddress :: ", memberAddress);
+            console.log("memberPassphrase :: ", memberPassphrase);
         })();
 
     
