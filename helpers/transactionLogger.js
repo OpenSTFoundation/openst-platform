@@ -63,27 +63,32 @@ TransactionLogger.prototype = {
 
   logWin: function () {
     logger.win.apply(logger, arguments);
-    this.writeToFile(arguments, 'Win');
+    this.writeToFile(arguments, 'WIN');
   },
 
   logStep: function () {
     logger.step.apply(logger, arguments);
-    this.writeToFile(arguments, 'Step');
+    this.writeToFile(arguments, 'STEP');
   },
 
   logInfo: function () {
     logger.info.apply(logger, arguments);
-    this.writeToFile(arguments, 'Info');
+    this.writeToFile(arguments, 'INFO');
   },
 
   logError: function () {
     logger.error.apply(logger, arguments);
-    this.writeToFile(arguments, 'Error');
+    this.writeToFile(arguments, 'ERROR');
   },
 
   logWarning: function () {
     logger.warn.apply(logger, arguments);
-    this.writeToFile(arguments, 'Warn');
+    this.writeToFile(arguments, 'WARN');
+  },
+
+  _logComplete: function () {
+    logger.info.apply(logger, arguments);
+    this.writeToFile(arguments, 'COMPLETE');
   },
 
   // how to make below methods private
@@ -132,12 +137,14 @@ TransactionLogger.prototype = {
   markSuccess: function () {
     _pending[ this.transactionParams.transactionUUID ] = false;
     delete _pending[ this.transactionParams.transactionUUID ];
+    this._logComplete("Transaction Success");
   },
 
   markFailed: function () {
     _failed[ this.transactionParams.transactionUUID ] = true;
     _pending[ this.transactionParams.transactionUUID ] = false;
     delete _pending[ this.transactionParams.transactionUUID ];
+    this._logComplete("Transaction Failed");
   }
 }
 
@@ -153,7 +160,6 @@ TransactionLogger.getTransactionLogs = function(memberSymbol, transactionUUID, c
       response =  responseHelper.error('h_tl_1', "Invalid transactionUUID");
       }
     else {
-      logger.info(data);
       var dataCopy = data;
       dataCopy = dataCopy.replace(/\r/gm , "");
       var stringLogs = dataCopy.split(/\n/);
@@ -164,7 +170,9 @@ TransactionLogger.getTransactionLogs = function(memberSymbol, transactionUUID, c
       });
 
       var returnObj = {
-        'logs' : logs
+        'logs' : logs,
+        "transactionUUID": transactionUUID,
+        "memberSymbol": memberSymbol
       };
       if ( unprocessedLogs.length ) {
         returnObj[ "unprocessed" ] = unprocessedLogs;
@@ -202,3 +210,76 @@ TransactionLogger.getFailedTransactions = function (memberSymbol, callback ) {
   response = responseHelper.successWithData( {"failed_transaction_uuids": filtered} );
   callback && callback( response );
 };
+
+TransactionLogger.debug = {
+
+
+  "findAllPending": function ( memberSymbol ) {
+    const oThis = this;
+
+    memberSymbol = memberSymbol || "";
+
+    if ( !memberSymbol.length ) {
+      console.log("Please specify memberSymbol");
+      return;
+    }
+
+    const symPrefix = memberSymbol + "-";
+    const allPromises = [];
+    fs.readdir( logFolder, function (err, fileNames) {
+        // "files" is an Array with files names
+        if (err) {
+          logger.error("Something went wrong");
+          logger.error( err );
+          return;
+        }
+
+        fileNames.forEach( fileName => {
+          if ( !fileName.startsWith( memberSymbol ) ) {
+            return;
+          }
+
+          var transactionUUID = fileName.replace( symPrefix, "" ).replace(".json" , "");
+
+          const txPromise = new Promise( (resolve, reject) => {
+            TransactionLogger.getTransactionLogs(memberSymbol, transactionUUID, function ( response ) {
+              oThis.processTransactionLog(response, resolve, reject);
+            });
+          });
+
+          allPromises.push( txPromise );          
+
+        });
+
+        Promise.all( allPromises )
+          .then(values => {
+            logger.win("============= All logs processed =============");
+          })
+        ;
+    });
+
+
+  },
+
+  "processTransactionLog": function ( getLogsResponse, resolve ) {
+    const oThis = this;
+
+    if ( !getLogsResponse.isSuccess() ) {
+      logger.error("Failed to read logs");
+      logger.info( JSON.stringify( getLogsResponse ) );
+      resolve("error");
+      return;
+    }
+
+    const logs = getLogsResponse.data.logs;
+    const completeLog = logs.find( log => {
+      return log.logLevel === "COMPLETE";
+    });
+
+    if ( !completeLog ) {
+      logger.info("Incomlete log found. transactionUUID = ", getLogsResponse.data.transactionUUID);
+    }
+    resolve("done");
+  }
+};
+
