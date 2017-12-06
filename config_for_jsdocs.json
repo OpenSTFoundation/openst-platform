@@ -16,8 +16,11 @@
     "copyright"             :  "@simpletokenfoundation",
     "includeDate"           : true,
     "theme"                 : "Lumen",
-    "cleverLinks": false,
-    "monospaceLinks": false,
+    "navType"               : "vertical",
+    "linenums"              : true,
+    "outputSourcePath"      : true,
+    "cleverLinks"           : false,
+    "monospaceLinks"        : false,
     "default": {
       "outputSourceFiles": true
     }
