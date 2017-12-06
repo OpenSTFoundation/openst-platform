@@ -12,8 +12,8 @@
   "recurseDepth": 5,
   "templates": {
     "systemName"            : "Simple Token Foundation",
-    "footer"                : "@simpletokenfoundation",
-    "copyright"             :  "@simpletokenfoundation",
+    "footer"                : "@simpletokenplatform",
+    "copyright"             :  "@simpletokenplatform",
     "includeDate"           : true,
     "theme"                 : "Lumen",
     "navType"               : "vertical",
