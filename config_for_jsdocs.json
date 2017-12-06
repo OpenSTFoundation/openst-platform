@@ -19,8 +19,8 @@
     "navType"               : "vertical",
     "linenums"              : true,
     "outputSourcePath"      : true,
-    "cleverLinks"           : false,
-    "monospaceLinks"        : false,
+    "cleverLinks"           : true,
+    "monospaceLinks"        : true,
     "default": {
       "outputSourceFiles": true
     }
