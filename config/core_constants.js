@@ -13,7 +13,11 @@ function define(name, value) {
 }
 
 // different gas values in hex code. taken from http://ethgasstation.info/
-const fiveGW = '0x12A05F200'; // 5 GWei
+const oneGW = '3B9ACA00'
+  , fiveGW = '0x12A05F200'
+  , texGW = '0x2540BE400'
+  , twentyFiveGW = '5D21DBA00'
+  , fiftyGW = 'BA43B7400';
 
 // Default Gas
 define("OST_VALUE_GAS_PRICE", fiveGW);
@@ -42,3 +46,5 @@ define('OST_GETH_UTILITY_WS_PROVIDER', process.env.OST_GETH_UTILITY_WS_PROVIDER)
 define('OST_UTILITY_CHAIN_ID', process.env.OST_UTILITY_CHAIN_ID);
 define('OST_OPENSTUTILITY_ST_PRIME_UUID', process.env.OST_OPENSTUTILITY_ST_PRIME_UUID);
 
+define('OST_VALUE_GAS_LIMIT', 4700000);
+define('OST_UTILITY_GAS_LIMIT', 9000000);

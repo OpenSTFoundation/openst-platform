@@ -16,9 +16,12 @@ const rootPrefix = '../..'
   , OpenStUtilityContractInteract = require(rootPrefix+'/lib/contract_interact/openst_utility')
   , StPrimeContractInteract = require(rootPrefix+'/lib/contract_interact/st_prime')
   , logger = require(rootPrefix+'/helpers/custom_console_logger')
-  , populateEnvVars = require(rootPrefix+"/lib/populate_env_vars.js")
-  , deploymentOptions = { gasPrice: coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT}
-  ;
+  , populateEnvVars = require(rootPrefix+"/lib/populate_env_vars.js");
+
+const deploymentOptions = {
+  gasPrice: coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT,
+  gasLimit: coreConstants.OST_UTILITY_GAS_LIMIT
+};
 
 const performer = async function() {
 

@@ -17,9 +17,12 @@ const rootPrefix = '../..'
   , populateEnvVars = require(rootPrefix+"/lib/populate_env_vars.js")
   , foundationAddress = coreAddresses.getAddressForUser("foundation")
   , valueOpsAddress = coreAddresses.getAddressForUser("valueOps")
-  , simpleTokenAddress = coreAddresses.getAddressForContract("simpleToken")
-  , deploymentOptions = { gasPrice: coreConstants.OST_VALUE_GAS_PRICE}
-;
+  , simpleTokenAddress = coreAddresses.getAddressForContract("simpleToken");
+
+const deploymentOptions = {
+  gasPrice: coreConstants.OST_VALUE_GAS_PRICE,
+  gasLimit: coreConstants.OST_VALUE_GAS_LIMIT
+};
 
 function updateConfig(valueRegistrarAddr, valueSTContractAddr) {
 

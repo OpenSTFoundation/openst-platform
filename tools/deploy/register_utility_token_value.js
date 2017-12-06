@@ -22,9 +22,13 @@ const rootPrefix = '../..'
     , foundationAddress = coreAddresses.getAddressForUser("foundation")
     , valueOpsAddress = coreAddresses.getAddressForUser(valueOpsName)
     , valueOpsPassphrase = coreAddresses.getPassphraseForUser(valueOpsName)
-    , deploymentOptions = { gasPrice: coreConstants.OST_VALUE_GAS_PRICE}
     , deployerAddress = coreAddresses.getAddressForUser(deployerName)
     ;
+
+const deploymentOptions = {
+  gasPrice: coreConstants.OST_VALUE_GAS_PRICE,
+  gasLimit: coreConstants.OST_VALUE_GAS_LIMIT
+};
 
 function updateConfig(valueCoreContractAddr) {
 
