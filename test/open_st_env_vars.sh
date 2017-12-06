@@ -1,3 +1,7 @@
+export HTTPS_KEY=''
+export HTTPS_CERT=''
+export HTTPS_PORT=443
+
 export OST_GETH_VALUE_RPC_PROVIDER='http://localhost:8545'
 export OST_GETH_VALUE_WS_PROVIDER='ws://localhost:18545'
 
