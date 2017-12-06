@@ -51,11 +51,23 @@ module.exports = function( member ) {
     RP.post({url: callbackUrl, json: true, body: body, auth: callbackAuth}, err => err ? console.error(err) : {} );
   }
 
-  function toBigNumberWei( value ) {
-    value = Number( value );
+  function toBigNumberWei( stringValue ) {
+    var value = Number( stringValue );
     Assert.strictEqual( isNaN( value ), false, `value must be of type 'Number'`);
-    const weiValue = web3.utils.toWei( value,"ether");
+
+    if ( typeof stringValue != 'string' ) {
+      stringValue = String( stringValue );
+    }
+
+    const weiValue = web3.utils.toWei( stringValue, "ether");
     return new BigNumber( weiValue );
+  }
+
+  function toETHfromWei( stringValue ) {
+    if ( typeof stringValue != 'string' ) {
+      stringValue = String( stringValue );
+    }
+    return web3.utils.fromWei( stringValue, "ether" );
   }
 
   router.get('/', function(req, res, next) {
@@ -118,7 +130,7 @@ module.exports = function( member ) {
     btContractInteract.getTotalSupply()
       .then( response => {
         if ( response && response.data && response.data.totalSupply ) {
-          response.data.totalSupply = web3.utils.fromWei( response.data.totalSupply, "ether" )
+          response.data.totalSupply = toETHfromWei( response.data.totalSupply);
           response.data.unit = memberSymbol;
         }
         response.renderResponse( res ); 
@@ -133,7 +145,7 @@ module.exports = function( member ) {
     btContractInteract.getAllowance(owner, spender)
       .then( response => {
         if ( response && response.data && response.data.allowance ) {
-          response.data.allowance = web3.utils.fromWei( response.data.allowance, "ether" )
+          response.data.allowance = toETHfromWei( response.data.allowance, "ether" );
         }
         response.renderResponse( res );   
       })
@@ -146,7 +158,7 @@ module.exports = function( member ) {
     btContractInteract.getBalanceOf(owner)
       .then( response => {
         if ( response && response.data && response.data.balance ) {
-          response.data.balance = web3.utils.fromWei( response.data.balance, "ether" );
+          response.data.balance = toETHfromWei( response.data.balance, "ether" );
           response.data.unit = memberSymbol;
           response.data.owner = owner;
         }
@@ -167,7 +179,7 @@ module.exports = function( member ) {
   router.get('/transfer', function(req, res, next) {
     const sender = req.query.sender;
     const recipient = req.query.to;
-    const amount = Number(req.query.value);
+    const amount = String(req.query.value);
     const tag = req.query.tag || "transfer";
 
     const amountInWei = toBigNumberWei( amount );
@@ -175,7 +187,7 @@ module.exports = function( member ) {
     btContractInteract.transfer(sender, recipient, amountInWei, tag)
       .then( response => {
         if ( response && response.data && response.data.amount ) {
-          response.data.amount = web3.utils.fromWei( response.data.amount, "ether" );
+          response.data.amount = toETHfromWei( response.data.amount, "ether" );
           response.data.unit = memberSymbol;
         }
         response.renderResponse( res );
