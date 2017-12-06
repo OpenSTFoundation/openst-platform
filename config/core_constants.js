@@ -19,6 +19,10 @@ const oneGW = '3B9ACA00'
   , twentyFiveGW = '0x5D21DBA00'
   , fiftyGW = '0xBA43B7400';
 
+define("HTTPS_KEY", process.env.HTTPS_KEY);
+define("HTTPS_CERT", process.env.HTTPS_CERT);
+define("HTTPS_PORT", process.env.HTTPS_PORT);
+
 // Gas price for value chain
 define("OST_VALUE_GAS_PRICE", process.env.OST_VALUE_GAS_PRICE);
 
