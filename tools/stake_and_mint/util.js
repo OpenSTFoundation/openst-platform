@@ -1,5 +1,30 @@
 "use strict";
 
+/**
+ * This is utility for performing stake and mint.<br><br>
+ *   Stake and mint is called in two variations:<br>
+ *     <ol>
+ *       <li>For branded token: {@link module:tools/stake_and_mint/for_branded_token}</li>
+ *       <li>For simple token prime: {@link module:tools/stake_and_mint/for_st_prime}</li>
+ *     </ol>
+ *
+ * This utility has common functionality which is required for both these variations.
+ * Following are the steps which are performed in here:
+ * <ol>
+ *  <li>Staker address approves openSTValue contract address for toStakeAmount.
+ *  We first check the current allowance and go for approval only when the current allowance and toStakeAmount
+ *  are different.</li>
+ *  <li>Staker address calls stake method of openSTValue contract. In the transaction receipt, we asset for StakingIntentDeclared event.</li>
+ *  <li>Wait for openSTUtility contract to give StakingIntentConfirmed event.
+ *  Proceed to next step if _stakingIntentHash in the event matches the same got in StakingIntentDeclared.</li>
+ *  <li>Staker address calls processStaking of openSTValue contract.</li>
+ *  <li>Staker address calls processMinting of openSTUtility contract.</li>
+ *  <li>Staker address calls claim of utilityTokenInterface contract.</li>
+ * </ol>
+ *
+ * @module tools/stake_and_mint/util
+ */
+
 const rootPrefix = '../..'
   , web3UtilityWsProvider = require(rootPrefix+'/lib/web3/providers/utility_ws')
   , eventsFormatter = require(rootPrefix+'/lib/web3/events/formatter.js')
@@ -22,10 +47,24 @@ const rootPrefix = '../..'
   , VC = "ValueChain"
   ;
 
-const toWeiST = function(amt){
-  return new BigNumber( 10 ).pow( 18 ).mul( amt );
+/**
+ * convert amount to wei
+ *
+ * @param {Bignumber} amount - The amount in ST
+ *
+ * @return {Bignumber} converted amount in wei.
+ */
+const toWeiST = function(amount){
+  return new BigNumber( 10 ).pow( 18 ).mul( amount );
 };
 
+/**
+ * display value in ST
+ *
+ * @param {Bignumber} num - number of ST wei
+ *
+ * @return {String} display value in ST
+ */
 const toDisplayST = function(num){
   var bigNum = new BigNumber( num )
     , fact = new BigNumber( 10 ).pow( 18 );
@@ -33,6 +72,13 @@ const toDisplayST = function(num){
   return bigNum.dividedBy( fact ).toString( 10 ) + " ST";
 };
 
+/**
+ * is equal ignoring case
+ *
+ * @param {String} compareWith - string to compare with
+ *
+ * @return {Bool} true when equal
+ */
 String.prototype.equalsIgnoreCase = function(compareWith){
   var _self = this.toLowerCase()
     , _compareWith = String( compareWith ).toLowerCase();
@@ -40,6 +86,14 @@ String.prototype.equalsIgnoreCase = function(compareWith){
   return _self == _compareWith;
 };
 
+/**
+ * Describe chain
+ *
+ * @param {String} chainType - Chain type
+ * @param {Web3} web3Provider - web3 provider
+ *
+ * @return {Promise<Number>}
+ */
 const describeChain = function(chainType, web3Provider) {
   return web3Provider.eth.net.getId()
     .then(function(networkId){
@@ -49,6 +103,12 @@ const describeChain = function(chainType, web3Provider) {
   )
 };
 
+/**
+ * Describe member
+ *
+ * @param {Object} member - member object
+ *
+ */
 const describeMember = function(member) {
   logger.step("Please Confirm these details.");
   logger.log("Name ::", member.Name);
@@ -72,51 +132,13 @@ const describeMember = function(member) {
   });
 };
 
-const readlineInterface = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-  prompt: '>'
-});
-
-const listAllMembers = function() {
-  console.log("\x1b[34m Welcome to Staking And Minting Tool \x1b[0m");
-  logger.step("Please choose member to fund.");
-
-  //List all available members.
-  for( var i =0; i < Config.Members.length; i++  ) {
-    var member = Config.Members[ i ];
-    console.log( i+1, " for ", member.Name, "(", member.Symbol ,")"  );
-  }
-
-  return new Promise(function(resolve, reject) {
-    readlineInterface.prompt();
-    const rlCallback = function(line){
-      console.log("listAllMembers :: line", line);
-      line = line.trim().toLowerCase();
-      switch ( line ) {
-        case "exit":
-        case "bye":
-          logger.log("Staking Aborted. Bye");
-          process.exit(0);
-        break;
-      }
-      var memberIndex = Number( line ) - 1;
-      console.log("Choosing Member : ", memberIndex);
-      if ( isNaN( memberIndex ) || memberIndex >= Config.Members.length ) {
-        console.log("\n");
-        logger.error("Invalid Option. Please try again.");
-        console.log("\n");
-        return;
-      }
-      console.log( rlCallback );
-      readlineInterface.removeListener("line", rlCallback);
-      const member = Config.Members[ memberIndex ];
-      resolve( member );
-    };
-    readlineInterface.on("line", rlCallback);
-  });
-};
-
+/**
+ * Get ST balance
+ *
+ * @param {String} address - Address to get the ST balance
+ *
+ * @return {Promise<BigNumber>}
+ */
 const getSTBalance = function( address ){
   return simpleTokenContractInteract.balanceOf( address )
   .then( function(result){
@@ -126,6 +148,15 @@ const getSTBalance = function( address ){
   })
 };
 
+/**
+ * Check allowance and approve if needed
+ *
+ * @param {String} stakerAddress - Staker address
+ * @param {String} passphrase - Staker address passphrase
+ * @param {Number} toStakeAmount - to stake amount
+ *
+ * @return {Promise}
+ */
 const checkAllowanceAndApproveIfNeeded = function(stakerAddress, passphrase, toStakeAmount) {
   return simpleTokenContractInteract.allowance(stakerAddress, openSTValueContractAddress)
     .then( function(result) {
@@ -164,6 +195,13 @@ const checkAllowanceAndApproveIfNeeded = function(stakerAddress, passphrase, toS
     });
 };
 
+/**
+ * Listen to utility token contract
+ *
+ * @param {String} stakingIntentHash - Staking intent hash
+ *
+ * @return {Promise}
+ */
 function listenToUtilityToken(stakingIntentHash){
 
   return new Promise( function(onResolve, onReject){
@@ -196,6 +234,17 @@ function listenToUtilityToken(stakingIntentHash){
   });
 }
 
+/**
+ * perform stake and mint
+ *
+ * @param {String} stakerAddress - Address of the staker
+ * @param {String} stakerPassphrase - Passphrase of staker address
+ * @param {String} beneficiary - Address of the beneficiary
+ * @param {Number} toStakeAmount - Amount to stake in ST
+ * @param {utilityTokenInterfaceKlass} utilityTokenInterfaceContract - Contract interact class object for utility token interface contract
+ *
+ * @return {Promise}
+ */
 module.exports = function (stakerAddress, stakerPassphrase, beneficiary, toStakeAmount, utilityTokenInterfaceContract) {
   toStakeAmount = toWeiST( toStakeAmount );
   var selectedMember = null
@@ -223,13 +272,6 @@ module.exports = function (stakerAddress, stakerPassphrase, beneficiary, toStake
       logger.win("Staker Current Allowance validated");
 
       logger.step("Staking ", toDisplayST( toStakeAmount ) );
-      console.log(
-        stakerAddress, "\n",
-        stakerPassphrase,"\n",
-        uuid,"\n",
-        toStakeAmount.toString( 10 ),"\n",
-        beneficiary
-      );
 
       return openSTValueContractInteract.stake(
         stakerAddress,
@@ -323,4 +365,3 @@ module.exports = function (stakerAddress, stakerPassphrase, beneficiary, toStake
   ;
   stakerPassphrase = null;
 };
-
