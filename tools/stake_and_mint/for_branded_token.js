@@ -1,7 +1,15 @@
 /**
- * Stake And Mint for Branded Token.
- * @module stake_and_mint/for_branded_token
- * @see stake_and_mint/for_branded_token
+ * This script does stake of simple token on the value chain and mint of branded token on the utility chain.
+ * Here staker account for ST and beneficiary account for branded token is assumed as member reserve address.<br><br>
+ *
+ *   Following are the steps which are performed in this script:<br>
+ *     <ol>
+ *       <li>Select the member company for which we want to do stake and mint.</li>
+ *       <li>Ask amount to be staked in ST and the passphrase of the member reserve using prompts.</li>
+ *       <li>Call stake and mint util for doing the actual transactions. ref: {@link module:tools/stake_and_mint/for_st_prime}</li>
+ *     <ol>
+ *
+ * @module tools/stake_and_mint/for_branded_token
  */
 
 "use strict";
