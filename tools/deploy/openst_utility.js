@@ -4,35 +4,35 @@ const rootPrefix = '../..'
   , readline = require('readline')
   , config = require(rootPrefix + '/config.json')
   , deployerName = 'utilityDeployer'
-  , web3Provider = require(rootPrefix+'/lib/web3/providers/utility_rpc')
+  , web3Provider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
   , deployHelper = require('./helper')
-  , coreConstants = require(rootPrefix+'/config/core_constants')
-  , coreAddresses = require(rootPrefix+'/config/core_addresses')
+  , coreConstants = require(rootPrefix + '/config/core_constants')
+  , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , prompts = readline.createInterface(process.stdin, process.stdout)
   , deployerAddress = coreAddresses.getAddressForUser(deployerName)
-  , UtilityRegistrarContractInteract = require(rootPrefix+'/lib/contract_interact/utility_registrar')
+  , UtilityRegistrarContractInteract = require(rootPrefix + '/lib/contract_interact/utility_registrar')
   , utilityChainOwnerAddress = coreAddresses.getAddressForUser('utilityChainOwner')
   , utilityRegistrarAddress = coreAddresses.getAddressForUser('utilityRegistrar')
-  , OpenStUtilityContractInteract = require(rootPrefix+'/lib/contract_interact/openst_utility')
-  , StPrimeContractInteract = require(rootPrefix+'/lib/contract_interact/st_prime')
-  , logger = require(rootPrefix+'/helpers/custom_console_logger')
-  , populateEnvVars = require(rootPrefix+"/lib/populate_env_vars.js");
+  , OpenStUtilityContractInteract = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , StPrimeContractInteract = require(rootPrefix + '/lib/contract_interact/st_prime')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , populateEnvVars = require(rootPrefix + "/lib/populate_env_vars.js");
 
 const deploymentOptions = {
   gasPrice: coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT,
   gasLimit: coreConstants.OST_UTILITY_GAS_LIMIT
 };
 
-const performer = async function() {
+const performer = async function () {
 
-  const stPrimeTotalSupplyInWei = web3Provider.utils.toWei( coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY ,"ether");
+  const stPrimeTotalSupplyInWei = web3Provider.utils.toWei(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY, "ether");
   logger.info("Deployer Address: " + deployerAddress);
   logger.info("Total ST Prime Which will be transferred: " + stPrimeTotalSupplyInWei);
   logger.info("Utility Chain Owner Address: " + utilityChainOwnerAddress);
   logger.info("Utility Chain Registrar User Address: " + utilityRegistrarAddress);
 
   await new Promise(
-    function (onResolve, onReject){
+    function (onResolve, onReject) {
       prompts.question("Please verify all above details. Do you want to proceed? [Y/N]", function (intent) {
         if (intent === 'Y') {
           logger.info('Great! Proceeding deployment.');
@@ -48,8 +48,8 @@ const performer = async function() {
 
   // deploy Registrar
   var contractName = 'utilityRegistrar'
-     ,contractAbi = coreAddresses.getAbiForContract(contractName)
-     ,contractBin = coreAddresses.getBinForContract(contractName);
+    , contractAbi = coreAddresses.getAbiForContract(contractName)
+    , contractBin = coreAddresses.getBinForContract(contractName);
 
   logger.step("Deploying " + contractName + "Contract on UtilityChain");
   var registrarContractDeployResult = await deployHelper.perform(
@@ -65,34 +65,34 @@ const performer = async function() {
 
   // set ops address to UC registrar addr
   var registrarContractAddress = registrarContractDeployResult.contractAddress
-    ,utilityRegistrarContractInteract = new UtilityRegistrarContractInteract(registrarContractAddress);
+    , utilityRegistrarContractInteract = new UtilityRegistrarContractInteract(registrarContractAddress);
 
   logger.log('\nSetting Ops Address to Utility Chain Registrar Contract Address');
 
   var setOpsAddressresponse = await utilityRegistrarContractInteract.setOpsAddress(deployerName,
-                                        utilityRegistrarAddress, deploymentOptions);
+    utilityRegistrarAddress, deploymentOptions);
 
   logger.log(setOpsAddressresponse.data.formattedTransactionReceipt);
 
   var getOpsAddressresponse = await utilityRegistrarContractInteract.getOpsAddress();
 
-  logger.log('Verifying if Ops Address Was Set to registrar contract address: '+ registrarContractAddress);
+  logger.log('Verifying if Ops Address Was Set to registrar contract address: ' + registrarContractAddress);
 
   if (web3Provider.utils.toChecksumAddress(getOpsAddressresponse.data.address) !=
-      web3Provider.utils.toChecksumAddress(utilityRegistrarAddress)) {
+    web3Provider.utils.toChecksumAddress(utilityRegistrarAddress)) {
     logger.error("Exiting the deployment as setops address doesn't match with contract ops address");
     process.exit(0);
   }
 
-  logger.win('Ops Address Set to registrar contract address: '+ registrarContractAddress);
+  logger.win('Ops Address Set to registrar contract address: ' + registrarContractAddress);
 
   // initiate owner ship transfer to utilityChainOwnerAddress
-  logger.log('\nInitiating Ownership Transfer of contract: '+ contractName + " to deployer: " +deployerName);
+  logger.log('\nInitiating Ownership Transfer of contract: ' + contractName + " to deployer: " + deployerName);
 
   var initiateOwnershipTransferResponse = await utilityRegistrarContractInteract.initiateOwnerShipTransfer(deployerName,
-                                                utilityChainOwnerAddress, deploymentOptions);
+    utilityChainOwnerAddress, deploymentOptions);
 
-  logger.log('\nVerifying Ownership Transfer of contract: '+ contractName + " to deployer: " +deployerName);
+  logger.log('\nVerifying Ownership Transfer of contract: ' + contractName + " to deployer: " + deployerName);
 
   var proposedOwnerResult = await utilityRegistrarContractInteract.getOwner();
 
@@ -105,8 +105,8 @@ const performer = async function() {
 
   //deploy contract openSTUtility, auto deploys ST" contract
   var contractName = 'openSTUtility'
-  ,contractAbi = coreAddresses.getAbiForContract(contractName)
-  ,contractBin = coreAddresses.getBinForContract(contractName);
+    , contractAbi = coreAddresses.getAbiForContract(contractName)
+    , contractBin = coreAddresses.getBinForContract(contractName);
 
   logger.log('\nDeploying Contract ' + contractName + ' on UtilityChain');
   var utiltiyContractDeployResponse = await deployHelper.perform(
@@ -122,20 +122,19 @@ const performer = async function() {
   logger.win(contractName + " Contract deployed ");
 
   var openSTUtilityContractAddress = utiltiyContractDeployResponse.contractAddress
-    ,openStUtilityContractInteract = new OpenStUtilityContractInteract(openSTUtilityContractAddress);
+    , openStUtilityContractInteract = new OpenStUtilityContractInteract(openSTUtilityContractAddress);
 
   // initiate owner ship transfer to utilityChainOwnerAddress
-  logger.log('\nInitiating Ownership Transfer of contract: '+ contractName + " to deployer: " +deployerName);
+  logger.log('\nInitiating Ownership Transfer of contract: ' + contractName + " to deployer: " + deployerName);
 
-  var initiateOwnershipTransferResponse = await openStUtilityContractInteract.
-      initiateOwnerShipTransfer(deployerName, utilityChainOwnerAddress, deploymentOptions);
+  var initiateOwnershipTransferResponse = await openStUtilityContractInteract.initiateOwnerShipTransfer(deployerName, utilityChainOwnerAddress, deploymentOptions);
 
-  logger.log('\nVerifying Ownership Transfer of contract: '+ contractName + " to deployer: " +deployerName);
+  logger.log('\nVerifying Ownership Transfer of contract: ' + contractName + " to deployer: " + deployerName);
 
   var proposedOwnerResult = await openStUtilityContractInteract.getOwner();
 
   if (web3Provider.utils.toChecksumAddress(proposedOwnerResult.data.owner) != web3Provider.utils.toChecksumAddress(utilityChainOwnerAddress)) {
-    logger.error("Exiting the deployment as initialite ownership for contract: "+contractName+" address doesn't match");
+    logger.error("Exiting the deployment as initialite ownership for contract: " + contractName + " address doesn't match");
     process.exit(0);
   }
 
@@ -166,30 +165,30 @@ const performer = async function() {
 
   // Transfer all base tokens from deploy key to ST" contract address
   var deployerBalanceInWei = await web3Provider.eth.getBalance(coreAddresses.getAddressForUser(deployerName));
-  logger.info("Deployer Balance in Wei: "+deployerBalanceInWei);
+  logger.info("Deployer Balance in Wei: " + deployerBalanceInWei);
 
-  if (deployerBalanceInWei != stPrimeTotalSupplyInWei){
-    logger.error("deployer: " + deployerName +" doesn't have max total supply");
+  if (deployerBalanceInWei != stPrimeTotalSupplyInWei) {
+    logger.error("deployer: " + deployerName + " doesn't have max total supply");
     process.exit(0);
   }
 
-  logger.info("Transfering all ST Prime Base Tokens to STPrime Contract Address: "+simpleTokenPrimeContractAddress);
+  logger.info("Transfering all ST Prime Base Tokens to STPrime Contract Address: " + simpleTokenPrimeContractAddress);
   var stPrimeUtilityContractInteract = new StPrimeContractInteract(simpleTokenPrimeContractAddress);
   var stPrimeTransferResponse = await stPrimeUtilityContractInteract.initialize_transfer(deployerName, deploymentOptions);
-  logger.win("Transferred all ST Prime Base Tokens to STPrime Contract Address: "+simpleTokenPrimeContractAddress);
+  logger.win("Transferred all ST Prime Base Tokens to STPrime Contract Address: " + simpleTokenPrimeContractAddress);
 
-  logger.info("Checking balance of simpleTokenPrimeContractAddress: "+simpleTokenPrimeContractAddress);
+  logger.info("Checking balance of simpleTokenPrimeContractAddress: " + simpleTokenPrimeContractAddress);
   var simpleTokenPrimeContractBalanceInWei = await web3Provider.eth.getBalance(simpleTokenPrimeContractAddress);
   logger.info(simpleTokenPrimeContractBalanceInWei);
 
-  if (simpleTokenPrimeContractBalanceInWei != stPrimeTotalSupplyInWei){
-    logger.error("simpleTokenPrimeContract: " + simpleTokenPrimeContractAddress +" doesn't have max total supply");
+  if (simpleTokenPrimeContractBalanceInWei != stPrimeTotalSupplyInWei) {
+    logger.error("simpleTokenPrimeContract: " + simpleTokenPrimeContractAddress + " doesn't have max total supply");
     process.exit(0);
   }
 
   var deployerBalanceInWeiAfterTransfer = await web3Provider.eth.getBalance(coreAddresses.getAddressForUser(deployerName));
-  logger.info("Deployer Balance in Wei After Transfer: "+deployerBalanceInWeiAfterTransfer);
-  if (deployerBalanceInWeiAfterTransfer != 0){
+  logger.info("Deployer Balance in Wei After Transfer: " + deployerBalanceInWeiAfterTransfer);
+  if (deployerBalanceInWeiAfterTransfer != 0) {
     logger.error("deployer balance should be 0 after transfer");
     process.exit(0);
   }

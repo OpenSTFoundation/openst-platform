@@ -6,13 +6,13 @@
  */
 
 const rootPrefix = '../..'
-  , coreConstants = require(rootPrefix+'/config/core_constants')
+  , coreConstants = require(rootPrefix + '/config/core_constants')
   , fiveGW = coreConstants.OST_VALUE_GAS_PRICE
   , gasPrice = fiveGW
   , gasLimit = coreConstants.OST_VALUE_GAS_LIMIT // this is taken by default if no value is passed from outside
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , logger = require(rootPrefix+'/helpers/custom_console_logger')
-  , web3EventsFormatter = require(rootPrefix+'/lib/web3/events/formatter');
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter');
 
 const _private = {
 
@@ -114,17 +114,18 @@ const deployHelper = {
     });
   },
 
-  assertEvent: async function(formattedTransactionReceipt, eventName){
+  assertEvent: async function (formattedTransactionReceipt, eventName) {
     var formattedEvents = await web3EventsFormatter.perform(formattedTransactionReceipt);
     var eventData = formattedEvents[eventName];
-    if ( eventData === undefined ||  eventData == '') {
-      logger.error("Event: "+eventName+ " is not found");
+    if (eventData === undefined || eventData == '') {
+      logger.error("Event: " + eventName + " is not found");
       logger.info(" eventData ");
       logger.info(eventData);
       process.exit(0);
     } else {
-      logger.win(" event: "+eventName+ " is present in Reciept.");
-    };
+      logger.win(" event: " + eventName + " is present in Reciept.");
+    }
+    ;
   }
 
 
