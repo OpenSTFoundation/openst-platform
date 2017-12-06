@@ -200,14 +200,33 @@ module.exports = function( member ) {
     new Promise( (resolve, reject) => {
        TransactionLogger.getTransactionLogs(memberSymbol, transactionUUID, resolve);   
     })
-    .then( response => {
-      response.renderResponse( res );
-    })
-    .catch(next)
+      .then( response => {
+        response.renderResponse( res );
+      })
+      .catch(next)
     ;
+  });
 
-    
-    // handle .catch next ?
+  router.get('/failed-transactions', function(req, res, next) {
+    new Promise( (resolve, reject) => {
+       TransactionLogger.getFailedTransactions(memberSymbol, resolve);   
+    })
+      .then( response => {
+        response.renderResponse( res );
+      })
+      .catch(next)
+    ;
+  });
+
+  router.get('/pending-transactions', function(req, res, next) {
+    new Promise( (resolve, reject) => {
+       TransactionLogger.getPendingTransactions(memberSymbol, resolve);   
+    })
+      .then( response => {
+        response.renderResponse( res );
+      })
+      .catch(next)
+    ;
   });
 
   // router.get('/transferFrom', function(req, res, next) {

@@ -4,58 +4,22 @@ const fs    = require('fs')
 ;
 
 //All the requires.
-const rootPrefix    = '..',
-    coreConstants   = require( rootPrefix + '/config/core_constants' ),
-    logFolder       = coreConstants.OST_TRANSACTION_LOGS_FOLDER,
-    logger          = require( rootPrefix + '/helpers/custom_console_logger' ),
-    responseHelper = require( rootPrefix+'/lib/formatter/response')
+const rootPrefix    = '..'
+  , coreConstants   = require( rootPrefix + '/config/core_constants' )
+  , logger          = require( rootPrefix + '/helpers/custom_console_logger' )
+  , responseHelper  = require( rootPrefix + '/lib/formatter/response')
 ;
 
-const TransactionLogger = module.exports = function ( transactionParams, memberSymbol ) {
+//All constants.
+const logFolder = coreConstants.OST_TRANSACTION_LOGS_FOLDER
+  , _pending = {}
+  , _failed = {}  
+;
 
-  this.transactionParams = transactionParams;
-
-  // how can we raise here if transactionUUID is missing in params
-  this.filePath = getLogFilePath(memberSymbol, transactionParams.transactionUUID);
-
-  this.logStep('Transaction Started With Params');
-  this.logStep(this.transactionParams);
-
-};
-
-TransactionLogger.getTransactionLogs = function(memberSymbol, transactionUUID, callback) {
-
-  const filePath = getLogFilePath(memberSymbol, transactionUUID);
-
-  fs.readFile(filePath, 'utf8', (err, data) => {
-    var response = null;
-    if (err) {
-      logger.error('error reading filePath: ', filePath, 'error : ', err);
-      response =  responseHelper.error('h_tl_1', "Invalid transactionUUID");
-      }
-    else {
-      logger.info(data);
-      var dataCopy = data;
-      dataCopy = dataCopy.replace(/\r/gm , "");
-      var stringLogs = dataCopy.split(/\n/);
-      var logs = [];
-      var unprocessedLogs = [];
-      stringLogs.forEach( function ( log ) {
-        return logProcessor( log, logs, unprocessedLogs);
-      });
-
-      var returnObj = {
-        'logs' : logs
-      };
-      if ( unprocessedLogs.length ) {
-        returnObj[ "unprocessed" ] = unprocessedLogs;
-      }
-      response =  responseHelper.successWithData( returnObj );
-    }
-    callback && callback(response);
-  });
-
-};
+//All internal methods
+const getLogFilePath = function (memberSymbol, transactionUUID) {
+  return logFolder + memberSymbol + '-' + transactionUUID + '.json';
+}
 
 const logProcessor = function ( log, logs, unprocessedLogs ) {
   if ( !log.length ) {
@@ -76,6 +40,24 @@ const logProcessor = function ( log, logs, unprocessedLogs ) {
     logger.error( ex );
   }
 };
+
+
+
+//Constructor.
+const TransactionLogger = module.exports = function ( transactionParams, memberSymbol ) {
+
+  this.transactionParams = transactionParams;
+
+  // how can we raise here if transactionUUID is missing in params
+  this.filePath = getLogFilePath(memberSymbol, transactionParams.transactionUUID);
+
+  this.logStep('Transaction Started With Params');
+  this.logStep(this.transactionParams);
+
+  this.markPending();
+
+};
+
 
 TransactionLogger.prototype = {
 
@@ -141,10 +123,82 @@ TransactionLogger.prototype = {
       "data": data
     };
     return JSON.stringify(buffer) + '\n';
+  },
+
+  markPending: function () {
+    _pending[ this.transactionParams.transactionUUID ] = true;
+  },
+
+  markSuccess: function () {
+    _pending[ this.transactionParams.transactionUUID ] = false;
+    delete _pending[ this.transactionParams.transactionUUID ];
+  },
+
+  markFailed: function () {
+    _failed[ this.transactionParams.transactionUUID ] = true;
+    _pending[ this.transactionParams.transactionUUID ] = false;
+    delete _pending[ this.transactionParams.transactionUUID ];
   }
-
 }
 
-const getLogFilePath = function (memberSymbol, transactionUUID) {
-  return logFolder + memberSymbol + '-' + transactionUUID + '.json';
-}
+//All Static Methods. Note: Static methods can not be called on instance.
+TransactionLogger.getTransactionLogs = function(memberSymbol, transactionUUID, callback) {
+
+  const filePath = getLogFilePath(memberSymbol, transactionUUID);
+
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    var response = null;
+    if (err) {
+      logger.error('error reading filePath: ', filePath, 'error : ', err);
+      response =  responseHelper.error('h_tl_1', "Invalid transactionUUID");
+      }
+    else {
+      logger.info(data);
+      var dataCopy = data;
+      dataCopy = dataCopy.replace(/\r/gm , "");
+      var stringLogs = dataCopy.split(/\n/);
+      var logs = [];
+      var unprocessedLogs = [];
+      stringLogs.forEach( function ( log ) {
+        return logProcessor( log, logs, unprocessedLogs);
+      });
+
+      var returnObj = {
+        'logs' : logs
+      };
+      if ( unprocessedLogs.length ) {
+        returnObj[ "unprocessed" ] = unprocessedLogs;
+      }
+      response =  responseHelper.successWithData( returnObj );
+    }
+    callback && callback(response);
+  });
+
+};
+
+TransactionLogger.getPendingTransactions = function (memberSymbol, callback ) {
+  var filtered = [];
+  Object.keys( _pending ).forEach( uuid => {
+    //To-Do: Validate memberSymbol.
+    if ( _pending[ uuid ] ) {
+      //Is still pending?
+      filtered.push( uuid );
+    }
+  });
+  response = responseHelper.successWithData( { "pending_transaction_uuids" : filtered} );
+  callback && callback( response );
+};
+
+
+TransactionLogger.getFailedTransactions = function (memberSymbol, callback ) {
+  var filtered = [];
+  Object.keys( _failed ).forEach( uuid => {
+    //To-Do: Validate memberSymbol.
+    if ( _pending[ uuid ] ) {
+      //Is still pending?
+      filtered.push( uuid );
+    }
+  });
+  response = responseHelper.successWithData( {"failed_transaction_uuids": filtered} );
+  callback && callback( response );
+};
