@@ -8,7 +8,59 @@
 	},
 	"item": [
 		{
+			"name": "HealthCheck",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": "{{route}}",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Fetch the name of Member"
+			},
+			"response": []
+		},
+		{
 			"name": "Get Member Name",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": "{{route}}/name",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": "Fetch the name of Member"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Member UUID",
 			"request": {
 				"auth": {
 					"type": "basic",

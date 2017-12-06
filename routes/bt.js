@@ -58,6 +58,11 @@ module.exports = function( member ) {
     return new BigNumber( weiValue );
   }
 
+  router.get('/', function(req, res, next) {
+    const rootResponse = responseHelper.successWithData({});
+    rootResponse.renderResponse( res );
+  });
+
   router.get('/reserve', function(req, res, next) {
     btContractInteract.getReserve()
       .then( response => {
