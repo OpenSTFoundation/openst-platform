@@ -16,17 +16,17 @@ function define(name, value) {
 const oneGW = '3B9ACA00'
   , fiveGW = '0x12A05F200'
   , texGW = '0x2540BE400'
-  , twentyFiveGW = '5D21DBA00'
-  , fiftyGW = 'BA43B7400';
+  , twentyFiveGW = '0x5D21DBA00'
+  , fiftyGW = '0xBA43B7400';
 
-// Default Gas
-define("OST_VALUE_GAS_PRICE", fiveGW);
+// Gas price for value chain
+define("OST_VALUE_GAS_PRICE", process.env.OST_VALUE_GAS_PRICE);
+
+// Gas price for utility chain
+define("OST_UTILITY_GAS_PRICE", process.env.OST_UTILITY_GAS_PRICE);
 
 // Zero gas constant to deploy on Utility Chain
 define("OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT", '0x');
-
-// Non Zero gas constant to on Utility Chain
-define("OST_UTILITY_GAS_PRICE", process.env.OST_UTILITY_GAS_PRICE);
 
 // Total ST' Supply on utility chain
 define('OST_UTILITY_STPRIME_TOTAL_SUPPLY', process.env.OST_UTILITY_STPRIME_TOTAL_SUPPLY);
