@@ -7,10 +7,8 @@ const Assert  = require("assert")
 const reqPrefix         = ".."
   , BTContractInteract  = require(reqPrefix + "/lib/contract_interact/branded_token")
   , responseHelper      = require(reqPrefix + "/lib/formatter/response")
+  , TransactionLogger   = require(reqPrefix + "/helpers/transactionLogger")
 ;
-
-
-
 
 /** Construct a new route for a specific BT.
  * @param {object} erc20 The ERC20 token to manage.
@@ -194,6 +192,15 @@ module.exports = function( member ) {
       })
       .catch(next)
     ;
+  });
+
+  router.get('/transaction-logs', function(req, res, next) {
+    const transactionUUID = req.query.transactionUUID;
+    var callBackFunction = function(response) {
+      response.renderResponse( res );
+    };
+    TransactionLogger.getTransactionLogs(memberSymbol, transactionUUID, callBackFunction);
+    // handle .catch next ?
   });
 
   // router.get('/transferFrom', function(req, res, next) {

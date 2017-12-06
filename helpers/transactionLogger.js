@@ -7,20 +7,74 @@ const fs    = require('fs')
 const rootPrefix    = '..',
     coreConstants   = require( rootPrefix + '/config/core_constants' ),
     logFolder       = coreConstants.OST_TRANSACTION_LOGS_FOLDER,
-    logger          = require( rootPrefix + '/helpers/custom_console_logger' )
+    logger          = require( rootPrefix + '/helpers/custom_console_logger' ),
+    responseHelper = require( rootPrefix+'/lib/formatter/response')
 ;
 
-const TransactionLogger = module.exports = function ( transactionParams ) {
+const TransactionLogger = module.exports = function ( transactionParams, memberSymbol ) {
 
   this.transactionParams = transactionParams;
 
   // how can we raise here if transactionUUID is missing in params
-  this.fileName = this.transactionParams.transactionUUID + '.json';
-  this.filePath = logFolder + this.fileName;
+  this.filePath = getLogFilePath(memberSymbol, transactionParams.transactionUUID);
 
   this.logStep('Transaction Started With Params');
   this.logStep(this.transactionParams);
 
+};
+
+TransactionLogger.getTransactionLogs = function(memberSymbol, transactionUUID, callback) {
+
+  const filePath = getLogFilePath(memberSymbol, transactionUUID);
+
+  fs.readFile(filePath, 'utf8', (err, data) => {
+    var response = null;
+    if (err) {
+      logger.error('error reading filePath: ', filePath, 'error : ', err);
+      response =  responseHelper.error('h_tl_1', err)
+      }
+    else {
+      logger.info(data);
+      var dataCopy = data;
+      dataCopy = dataCopy.replace(/\r/gm , "");
+      var stringLogs = dataCopy.split(/\n/);
+      var logs = [];
+      var unprocessedLogs = [];
+      stringLogs.forEach( function ( log ) {
+        return logProcessor( log, logs, unprocessedLogs);
+      });
+
+      var returnObj = {
+        'logs' : logs
+      };
+      if ( unprocessedLogs.length ) {
+        returnObj[ "unprocessed" ] = unprocessedLogs;
+      }
+      response =  responseHelper.successWithData( returnObj );
+    }
+    callback && callback(response);
+  });
+
+};
+
+const logProcessor = function ( log, logs, unprocessedLogs ) {
+  if ( !log.length ) {
+    return;
+  }
+  try {
+    var joLog = JSON.parse( log );
+    logs.push( joLog );
+    var strData = joLog.data;
+    try {
+      joLog.data = JSON.parse( strData );
+    } catch (ex ) {
+      //Ignore it. The data can be string.
+    }
+  } catch( ex ) {
+    unprocessedLogs.push( log );
+    logger.error("TransactionLogger :: getTransactionLogs :: failed to decode log. log:", log);
+    logger.error( ex );
+  }
 };
 
 TransactionLogger.prototype = {
@@ -59,7 +113,7 @@ TransactionLogger.prototype = {
     ;
 
     Object.values(args).forEach(function (arg) {
-      var formattedLine = oThis.formatLine(arg, time, logLevel);
+      var formattedLine = oThis.formatLineforLogFile(arg, time, logLevel);
       fs.appendFile(oThis.filePath, formattedLine, (err) => {
         if (err) {
           logger.error("couldn't append to log file" + err);
@@ -73,7 +127,7 @@ TransactionLogger.prototype = {
     return new Date();
   },
 
-  formatLine: function(data, time, logLevel) {
+  formatLineforLogFile: function(data, time, logLevel) {
     if ( typeof data != 'string' ) {
        if ( data instanceof Object ) {
          data = JSON.stringify( data );
@@ -89,4 +143,8 @@ TransactionLogger.prototype = {
     return JSON.stringify(buffer) + '\n';
   }
 
+}
+
+const getLogFilePath = function (memberSymbol, transactionUUID) {
+  return logFolder + memberSymbol + '-' + transactionUUID + '.json';
 }
