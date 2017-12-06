@@ -6,7 +6,7 @@
  *     <ol>
  *       <li>Call stake and mint util with required params for doing the actual transactions on contracts.
  *       ref: {@link module:tools/stake_and_mint/util}</li>
- *     <ol>
+ *     </ol>
  *
  * @module tools/stake_and_mint/for_st_prime
  */

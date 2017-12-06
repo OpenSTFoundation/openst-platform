@@ -10,7 +10,7 @@
  *       <li>Ask amount to be staked in ST and the passphrase of the member reserve using prompts.</li>
  *       <li>Call stake and mint util for doing the actual transactions on contracts.
  *       ref: {@link module:tools/stake_and_mint/util}</li>
- *     <ol>
+ *     </ol>
  *
  * @module tools/stake_and_mint/for_branded_token
  */
@@ -38,9 +38,11 @@ const rootPrefix = '../..'
 var brandedToken = null;
 
 /**
- * convert simple token to display text.
- * @param {Bignumber} num - The number to be converted into display string.
- * @return {string} The st prime to display.
+ * display value in ST
+ *
+ * @param {Bignumber} num - number of ST wei
+ *
+ * @return {String} display value in ST
  */
 const toDisplayST = function(num){
   var bigNum = new BigNumber( num )
@@ -50,9 +52,11 @@ const toDisplayST = function(num){
 };
 
 /**
- * compare with ignoring case.
- * @param {string} compareWith - The string is to be compared with caller.
- * @return {string} The st prime to display.
+ * is equal ignoring case
+ *
+ * @param {String} compareWith - string to compare with
+ *
+ * @return {Bool} true when equal
  */
 String.prototype.equalsIgnoreCase = function(compareWith){
   var _self = this.toLowerCase()
@@ -62,9 +66,12 @@ String.prototype.equalsIgnoreCase = function(compareWith){
 };
 
 /**
- * Describe chain details.
- * @param {string} chainType - Type of chain
- * @param {string} web3Provider - url of web3 provider.
+ * Describe chain
+ *
+ * @param {String} chainType - Chain type
+ * @param {Web3} web3Provider - web3 provider
+ *
+ * @return {Promise<Number>}
  */
 const describeChain = function(chainType, web3Provider) {
   return web3Provider.eth.net.getId()
@@ -75,7 +82,12 @@ const describeChain = function(chainType, web3Provider) {
     )
 };
 
-/** Describe Member details. */
+/**
+ * Describe member
+ *
+ * @param {Object} member - member object
+ *
+ */
 const describeMember = function(member) {
   logger.step("Please Confirm these details.");
   logger.log("Name ::", member.Name);
@@ -99,12 +111,18 @@ const describeMember = function(member) {
   });
 };
 
+/**
+ * @ignore
+ */
 const readlineInterface = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
   prompt: '>'
 });
 
+/**
+ * List all members
+ */
 const listAllMembers = function() {
   console.log("\x1b[34m Welcome to Staking And Minting Tool \x1b[0m");
   logger.step("Please choose member to fund.");
@@ -144,6 +162,13 @@ const listAllMembers = function() {
   });
 };
 
+/**
+ * Confirm member
+ *
+ * @param {Object} member
+ *
+ * @return {Promise<Object>}
+ */
 const confirmMember = function(member) {
   describeMember( member );
   console.log("\x1b[34m Are you sure you would like to continue with Staking And Minting ? Options:\x1b[0m");
@@ -175,6 +200,13 @@ const confirmMember = function(member) {
   });
 };
 
+/**
+ * Get member ST balance
+ *
+ * @param {Object} member - member whose ST balance is to be found
+ *
+ * @return {Promise<Number>}
+ */
 const getMemberSTBalance = function(member){
   return simpleTokenContractInteract.balanceOf( member.Reserve )
     .then( function(result){
@@ -184,6 +216,13 @@ const getMemberSTBalance = function(member){
     })
 };
 
+/**
+ * Ask staking amount
+ *
+ * @param {BigNumber} bigNumBalance - Balance in Big Number
+ *
+ * @return {Promise}
+ */
 const askStakingAmount = function(bigNumBalance) {
   return new Promise( function(resolve, reject) {
     console.log("Please mention the Simple Tokens to Assign.");
@@ -218,6 +257,13 @@ const askStakingAmount = function(bigNumBalance) {
   });
 };
 
+/**
+ * Get passphrase
+ *
+ * @param {Object} selectedMember - selected member object
+ *
+ * @return {Promise<String>}
+ */
 const getPassphrase = function(selectedMember){
   const hideConsoleString = "\x1b[8m";
   const resetConsoleString = "\x1b[0m";
@@ -243,6 +289,9 @@ const getPassphrase = function(selectedMember){
   });
 };
 
+/**
+ * Perform stake and mint for branded token
+ */
 (function () {
   var selectedMember = null
     , toStakeAmount  = null

@@ -86,7 +86,7 @@ Here staker account for ST and beneficiary account for branded token is assumed 
       <li>Ask amount to be staked in ST and the passphrase of the member reserve using prompts.</li>
       <li>Call stake and mint util for doing the actual transactions on contracts.
       ref: <a href="module-tools_stake_and_mint_util.html"><code>module:tools/stake_and_mint/util</code></a></li>
-    <ol></div>
+    </ol></div>
         
 
         
@@ -152,6 +152,302 @@ Here staker account for ST and beneficiary account for branded token is assumed 
             
 <hr>
 <dt>
+    <h4 class="name" id="~askStakingAmount"><span class="type-signature">&lt;inner> </span>askStakingAmount(bigNumBalance)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Ask staking amount
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>bigNumBalance</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">BigNumber</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Balance in Big Number</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~confirmMember"><span class="type-signature">&lt;inner> </span>confirmMember(member)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Confirm member
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>member</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Object></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
     <h4 class="name" id="~describeChain"><span class="type-signature">&lt;inner> </span>describeChain(chainType, web3Provider)</h4>
     
     
@@ -160,7 +456,7 @@ Here staker account for ST and beneficiary account for branded token is assumed 
 
     
     <div class="description">
-        Describe chain details.
+        Describe chain
     </div>
     
 
@@ -201,7 +497,7 @@ Here staker account for ST and beneficiary account for branded token is assumed 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">String</span>
 
 
 
@@ -212,7 +508,7 @@ Here staker account for ST and beneficiary account for branded token is assumed 
 
             
 
-            <td class="description last">Type of chain</td>
+            <td class="description last">Chain type</td>
         </tr>
 
     
@@ -225,7 +521,7 @@ Here staker account for ST and beneficiary account for branded token is assumed 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Web3</span>
 
 
 
@@ -236,7 +532,155 @@ Here staker account for ST and beneficiary account for branded token is assumed 
 
             
 
-            <td class="description last">url of web3 provider.</td>
+            <td class="description last">web3 provider</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Number></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~describeMember"><span class="type-signature">&lt;inner> </span>describeMember(member)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Describe member
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>member</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">member object</td>
         </tr>
 
     
@@ -304,7 +748,7 @@ Here staker account for ST and beneficiary account for branded token is assumed 
             
 <hr>
 <dt>
-    <h4 class="name" id="~describeMember"><span class="type-signature">&lt;inner> </span>describeMember()</h4>
+    <h4 class="name" id="~getMemberSTBalance"><span class="type-signature">&lt;inner> </span>getMemberSTBalance(member)</h4>
     
     
 </dt>
@@ -312,7 +756,303 @@ Here staker account for ST and beneficiary account for branded token is assumed 
 
     
     <div class="description">
-        Describe Member details.
+        Get member ST balance
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>member</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">member whose ST balance is to be found</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Number></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~getPassphrase"><span class="type-signature">&lt;inner> </span>getPassphrase(selectedMember)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Get passphrase
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>selectedMember</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">selected member object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;String></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~listAllMembers"><span class="type-signature">&lt;inner> </span>listAllMembers()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        List all members
     </div>
     
 
@@ -390,7 +1130,7 @@ Here staker account for ST and beneficiary account for branded token is assumed 
 
     
     <div class="description">
-        convert simple token to display text.
+        display value in ST
     </div>
     
 
@@ -442,7 +1182,7 @@ Here staker account for ST and beneficiary account for branded token is assumed 
 
             
 
-            <td class="description last">The number to be converted into display string.</td>
+            <td class="description last">number of ST wei</td>
         </tr>
 
     
@@ -506,7 +1246,7 @@ Here staker account for ST and beneficiary account for branded token is assumed 
     
             
 <div class="param-desc">
-    The st prime to display.
+    display value in ST
 </div>
 
 
@@ -517,7 +1257,7 @@ Here staker account for ST and beneficiary account for branded token is assumed 
     </dt>
     <dd>
         
-<span class="param-type">string</span>
+<span class="param-type">String</span>
 
 
 
@@ -586,7 +1326,7 @@ Here staker account for ST and beneficiary account for branded token is assumed 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2017-12-06T20:57:00+05:30
+		on 2017-12-06T21:12:06+05:30
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
