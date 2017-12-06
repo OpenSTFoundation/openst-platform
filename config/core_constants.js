@@ -1,5 +1,9 @@
 "use strict";
 
+const path = require('path')
+  , rootPrefix = ".."
+;
+
 /*
  * Constants file: Load constants from evvironment variables
  *
@@ -50,10 +54,26 @@ define('OST_GETH_UTILITY_WS_PROVIDER', process.env.OST_GETH_UTILITY_WS_PROVIDER)
 define('OST_UTILITY_CHAIN_ID', process.env.OST_UTILITY_CHAIN_ID);
 define('OST_OPENSTUTILITY_ST_PRIME_UUID', process.env.OST_OPENSTUTILITY_ST_PRIME_UUID);
 
-// file path of the member config file.
-define('OST_MEMBER_CONFIG_FILE_PATH', process.env.OST_MEMBER_CONFIG_FILE_PATH);
 
 define('OST_VALUE_GAS_LIMIT', 4700000);
 define('OST_UTILITY_GAS_LIMIT', 9000000);
 
-define('OST_TRANSACTION_LOGS_FOLDER', process.env.OST_TRANSACTION_LOGS_FOLDER);
+
+
+// file path of the member config file.
+var configFilePath = process.env.OST_MEMBER_CONFIG_FILE_PATH;
+if ( !path.isAbsolute( configFilePath ) ) {
+  configFilePath = path.join(__dirname, '/' + rootPrefix + '/' + configFilePath );  
+}
+define('OST_MEMBER_CONFIG_FILE_PATH', configFilePath);
+
+// Folder path of the transfer logs
+var txLogsFolder = process.env.OST_TRANSACTION_LOGS_FOLDER;
+if ( !path.isAbsolute( txLogsFolder ) ) {
+  txLogsFolder = path.join(__dirname, '/' + rootPrefix + '/' + txLogsFolder );  
+}
+define('OST_TRANSACTION_LOGS_FOLDER', txLogsFolder );
+
+
+
+

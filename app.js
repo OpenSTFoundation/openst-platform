@@ -4,6 +4,8 @@
  * Main application file
  *
  */
+
+//All Module Requires.
 const express = require('express')
   , path = require('path')
   , logger = require('morgan')
@@ -12,11 +14,21 @@ const express = require('express')
   , basicAuth = require('express-basic-auth')
   , helmet = require('helmet')
   , sanitizer = require('express-sanitized')
-  , app = express()
-  , config = require('./config.json')
-  , responseHelper = require('./lib/formatter/response')
-  , indexRoutes = require('./routes/index')
-  , btRoutes = require('./routes/bt');
+;
+
+//All the requires.
+const rootPrefix    = "."
+  , coreConstants   = require( rootPrefix + '/config/core_constants' )
+  , responseHelper  = require( rootPrefix + '/lib/formatter/response')
+  , indexRoutes     = require( rootPrefix + '/routes/index')
+  , btRoutes        = require( rootPrefix + '/routes/bt')
+  , config          = require( coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
+;
+
+console.log( "config file path:", coreConstants.OST_MEMBER_CONFIG_FILE_PATH );
+
+//Constants
+const app = express();
 
 app.use(logger('combined'));
 app.use(helmet());
