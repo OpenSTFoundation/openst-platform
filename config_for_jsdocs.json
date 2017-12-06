@@ -1,0 +1,25 @@
+{
+  "tags": {
+    "allowUnknownTags": true
+  },
+  "source": {
+    "include": ["tools/","services/"],
+    "exclude": [],
+    "includePattern": ".+\\.js(doc|x)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "plugins": [],
+  "recurseDepth": 5,
+  "templates": {
+    "systemName"            : "Simple Token Foundation",
+    "footer"                : "@simpletokenfoundation",
+    "copyright"             :  "@simpletokenfoundation",
+    "includeDate"           : true,
+    "theme"                 : "Lumen",
+    "cleverLinks": false,
+    "monospaceLinks": false,
+    "default": {
+      "outputSourceFiles": true
+    }
+  }
+}

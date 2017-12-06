@@ -1,3 +1,9 @@
+/**
+ * Stake And Mint for Simple Token Prime.
+ * @module stake_and_mint/for_st_prime
+ * @see Stake And Mint for Simple Token Prime
+ */
+
 (function () {
   const rootPrefix = "../.."
     , coreAddresses   = require( rootPrefix + '/config/core_addresses' )

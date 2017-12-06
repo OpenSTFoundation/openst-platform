@@ -26,6 +26,8 @@
   "devDependencies": {
     "eslint": "4.8.0",
     "ethereumjs-testrpc": "4.1.3",
+    "ink-docstrap": "^1.3.2",
+    "jsdoc": "~3.5.5",
     "mustache": "2.3.0"
   }
 }

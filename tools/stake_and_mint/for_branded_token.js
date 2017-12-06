@@ -1,3 +1,9 @@
+/**
+ * Stake And Mint for Branded Token.
+ * @module stake_and_mint/for_branded_token
+ * @see stake_and_mint/for_branded_token
+ */
+
 "use strict";
 
 const rootPrefix = '../..'
@@ -22,10 +28,11 @@ const rootPrefix = '../..'
 
 var brandedToken = null;
 
-const toWeiST = function(amt){
-  return new BigNumber( 10 ).pow( 18 ).mul( amt );
-};
-
+/**
+ * convert simple token to display text.
+ * @param {Bignumber} num - The number to be converted into display string.
+ * @return {string} The st prime to display.
+ */
 const toDisplayST = function(num){
   var bigNum = new BigNumber( num )
     , fact = new BigNumber( 10 ).pow( 18 );
@@ -33,6 +40,11 @@ const toDisplayST = function(num){
   return bigNum.dividedBy( fact ).toString( 10 ) + " ST";
 };
 
+/**
+ * compare with ignoring case.
+ * @param {string} compareWith - The string is to be compared with caller.
+ * @return {string} The st prime to display.
+ */
 String.prototype.equalsIgnoreCase = function(compareWith){
   var _self = this.toLowerCase()
     , _compareWith = String( compareWith ).toLowerCase();
@@ -40,6 +52,11 @@ String.prototype.equalsIgnoreCase = function(compareWith){
   return _self == _compareWith;
 };
 
+/**
+ * Describe chain details.
+ * @param {string} chainType - Type of chain
+ * @param {string} web3Provider - url of web3 provider.
+ */
 const describeChain = function(chainType, web3Provider) {
   return web3Provider.eth.net.getId()
     .then(function(networkId){
@@ -49,6 +66,7 @@ const describeChain = function(chainType, web3Provider) {
     )
 };
 
+/** Describe Member details. */
 const describeMember = function(member) {
   logger.step("Please Confirm these details.");
   logger.log("Name ::", member.Name);

@@ -1,0 +1,31 @@
+<html>
+<head>
+</head>
+<body style="background: transparent;">
+    <script src="scripts/docstrap.lib.js"></script>
+    <script src="scripts/lunr.min.js"></script>
+    <script src="scripts/fulltext-search.js"></script>
+
+    <script type="text/x-docstrap-searchdb">
+    {"modules.list.html":{"id":"modules.list.html","title":"Modules","body":" Simple Token Foundation Modules stake_and_mint/for_branded_tokenstake_and_mint/for_st_prime Modules × Search results Close @simpletokenfoundation "},"index.html":{"id":"index.html","title":"Index","body":" Simple Token Foundation Modules stake_and_mint/for_branded_tokenstake_and_mint/for_st_prime × Search results Close @simpletokenfoundation "},"module-stake_and_mint_for_branded_token.html":{"id":"module-stake_and_mint_for_branded_token.html","title":"Module: stake_and_mint/for_branded_token","body":" Simple Token Foundation Modules stake_and_mint/for_branded_tokenstake_and_mint/for_st_prime Module: stake_and_mint/for_branded_token Stake And Mint for Branded Token. See: stake_and_mint/for_branded_token Methods &lt;inner&gt; describeChain(chainType, web3Provider) Describe chain details. Parameters: Name Type Description chainType string Type of chain web3Provider string url of web3 provider. &lt;inner&gt; describeMember() Describe Member details. &lt;inner&gt; toDisplayST(num) convert simple token to display text. Parameters: Name Type Description num Bignumber The number to be converted into display string. Returns: The st prime to display. Type string × Search results Close @simpletokenfoundation "},"module-stake_and_mint_for_st_prime.html":{"id":"module-stake_and_mint_for_st_prime.html","title":"Module: stake_and_mint/for_st_prime","body":" Simple Token Foundation Modules stake_and_mint/for_branded_tokenstake_and_mint/for_st_prime Module: stake_and_mint/for_st_prime Stake And Mint for Simple Token Prime. See: Stake And Mint for Simple Token Prime × Search results Close @simpletokenfoundation "}}
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            Searcher.init();
+        });
+
+        $(window).on("message", function(msg) {
+            var msgData = msg.originalEvent.data;
+
+            if (msgData.msgid != "docstrap.quicksearch.start") {
+                return;
+            }
+
+            var results = Searcher.search(msgData.searchTerms);
+
+            window.parent.postMessage({"results": results, "msgid": "docstrap.quicksearch.done"}, "*");
+        });
+    </script>
+</body>
+</html>
