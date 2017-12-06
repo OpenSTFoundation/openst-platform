@@ -1,8 +1,7 @@
 {
-	"variables": [],
 	"info": {
 		"name": "OpenST",
-		"_postman_id": "1e6aaad3-1050-8fd8-9a38-0c4d26e1d26d",
+		"_postman_id": "73f4dbb2-5dd5-ec38-aaae-4604d25764ac",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
@@ -19,16 +18,18 @@
 						"showPassword": false
 					}
 				},
-				"url": "{{route}}",
 				"method": "GET",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0",
-						"description": ""
+						"value": "Basic YWNtZTphY21lc2VjcmV0"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "{{route}}",
 				"description": "Fetch the name of Member"
 			},
 			"response": []
@@ -45,16 +46,18 @@
 						"showPassword": false
 					}
 				},
-				"url": "{{route}}/name",
 				"method": "GET",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0",
-						"description": ""
+						"value": "Basic YWNtZTphY21lc2VjcmV0"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "{{route}}/name",
 				"description": "Fetch the name of Member"
 			},
 			"response": []
@@ -71,16 +74,18 @@
 						"showPassword": false
 					}
 				},
-				"url": "{{route}}/uuid",
 				"method": "GET",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
-						"description": ""
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "{{route}}/uuid",
 				"description": "Fetch the name of Member"
 			},
 			"response": []
@@ -97,16 +102,18 @@
 						"showPassword": false
 					}
 				},
-				"url": "{{route}}/reserve",
 				"method": "GET",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
-						"description": ""
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "{{route}}/reserve",
 				"description": "Fetch the name of Member"
 			},
 			"response": []
@@ -123,16 +130,18 @@
 						"showPassword": false
 					}
 				},
-				"url": "{{route}}/symbol",
 				"method": "GET",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
-						"description": ""
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "{{route}}/symbol",
 				"description": "Fetch the name of Member"
 			},
 			"response": []
@@ -149,16 +158,18 @@
 						"showPassword": false
 					}
 				},
-				"url": "{{route}}/decimals",
 				"method": "GET",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
-						"description": ""
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
 					}
 				],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "{{route}}/decimals",
 				"description": "Fetch the name of Member"
 			},
 			"response": []
@@ -175,17 +186,110 @@
 						"showPassword": false
 					}
 				},
-				"url": "{{route}}/totalSupply",
 				"method": "GET",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
-						"description": ""
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "{{route}}/totalSupply",
+				"description": "Fetch the name of Member"
+			},
+			"response": []
+		},
+		{
+			"name": "Pending Transactions",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
 					}
 				],
 				"body": {},
+				"url": "{{route}}/pending-transactions",
 				"description": "Fetch the name of Member"
+			},
+			"response": []
+		},
+		{
+			"name": "Failed Transactions",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
+					}
+				],
+				"body": {},
+				"url": "{{route}}/failed-transactions",
+				"description": "Fetch the name of Member"
+			},
+			"response": []
+		},
+		{
+			"name": "transaction-logs",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{route}}/transaction-logs/?transactionUUID=29d98d94-2969-4e24-ae55-3f397de5a8c4",
+					"host": [
+						"{{route}}"
+					],
+					"path": [
+						"transaction-logs",
+						""
+					],
+					"query": [
+						{
+							"key": "transactionUUID",
+							"value": "29d98d94-2969-4e24-ae55-3f397de5a8c4",
+							"equals": true
+						}
+					]
+				},
+				"description": "Gets the balance of reserve"
 			},
 			"response": []
 		},
@@ -201,6 +305,17 @@
 						"showPassword": false
 					}
 				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{route}}/balanceOf/?owner={{reserve}}",
 					"host": [
@@ -214,21 +329,10 @@
 						{
 							"key": "owner",
 							"value": "{{reserve}}",
-							"equals": true,
-							"description": ""
+							"equals": true
 						}
-					],
-					"variable": []
+					]
 				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
-						"description": ""
-					}
-				],
-				"body": {},
 				"description": "Gets the balance of reserve"
 			},
 			"response": []
@@ -245,43 +349,19 @@
 						"showPassword": false
 					}
 				},
-				"url": "{{route}}/newkey",
 				"method": "GET",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
-						"description": ""
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
 					}
 				],
-				"body": {},
-				"description": "Fetch the name of Member"
-			},
-			"response": []
-		},
-		{
-			"name": "getAllTxDetails",
-			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": {
-						"username": "{{api_user}}",
-						"password": "{{api_password}}",
-						"saveHelperData": true,
-						"showPassword": false
-					}
+				"body": {
+					"mode": "raw",
+					"raw": ""
 				},
-				"url": "{{route}}/getAllTxDetails/",
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0",
-						"description": ""
-					}
-				],
-				"body": {},
-				"description": "Gets the balance of reserve"
+				"url": "{{route}}/newkey",
+				"description": "Fetch the name of Member"
 			},
 			"response": []
 		},
@@ -297,6 +377,17 @@
 						"showPassword": false
 					}
 				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{route}}/balanceOf/?owner={{user1}}",
 					"host": [
@@ -310,22 +401,10 @@
 						{
 							"key": "owner",
 							"value": "{{user1}}",
-							"equals": true,
-							"description": ""
+							"equals": true
 						}
-					],
-					"variable": []
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
-						"description": ""
-					}
-				],
-				"body": {},
-				"description": ""
+					]
+				}
 			},
 			"response": []
 		},
@@ -341,6 +420,17 @@
 						"showPassword": false
 					}
 				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{route}}/transfer/?sender={{reserve}}&to={{user1}}&value=3",
 					"host": [
@@ -354,34 +444,20 @@
 						{
 							"key": "sender",
 							"value": "{{reserve}}",
-							"equals": true,
-							"description": ""
+							"equals": true
 						},
 						{
 							"key": "to",
 							"value": "{{user1}}",
-							"equals": true,
-							"description": ""
+							"equals": true
 						},
 						{
 							"key": "value",
 							"value": "3",
-							"equals": true,
-							"description": ""
+							"equals": true
 						}
-					],
-					"variable": []
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
-						"description": ""
-					}
-				],
-				"body": {},
-				"description": ""
+					]
+				}
 			},
 			"response": []
 		},
@@ -397,6 +473,14 @@
 						"showPassword": false
 					}
 				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
+					}
+				],
+				"body": {},
 				"url": {
 					"raw": "{{route}}/transfer/?sender={{user1}}&to={{user2}}&value=3",
 					"host": [
@@ -410,34 +494,20 @@
 						{
 							"key": "sender",
 							"value": "{{user1}}",
-							"equals": true,
-							"description": ""
+							"equals": true
 						},
 						{
 							"key": "to",
 							"value": "{{user2}}",
-							"equals": true,
-							"description": ""
+							"equals": true
 						},
 						{
 							"key": "value",
 							"value": "3",
-							"equals": true,
-							"description": ""
+							"equals": true
 						}
-					],
-					"variable": []
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
-						"description": ""
-					}
-				],
-				"body": {},
-				"description": ""
+					]
+				}
 			},
 			"response": []
 		},
@@ -453,6 +523,17 @@
 						"showPassword": false
 					}
 				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{route}}/balanceOf/?owner={{user2}}",
 					"host": [
@@ -466,22 +547,10 @@
 						{
 							"key": "owner",
 							"value": "{{user2}}",
-							"equals": true,
-							"description": ""
+							"equals": true
 						}
-					],
-					"variable": []
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
-						"description": ""
-					}
-				],
-				"body": {},
-				"description": ""
+					]
+				}
 			},
 			"response": []
 		},
@@ -497,6 +566,17 @@
 						"showPassword": false
 					}
 				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{route}}/transfer/?sender={{reserve}}&to={{user2}}&value=3",
 					"host": [
@@ -510,34 +590,20 @@
 						{
 							"key": "sender",
 							"value": "{{reserve}}",
-							"equals": true,
-							"description": ""
+							"equals": true
 						},
 						{
 							"key": "to",
 							"value": "{{user2}}",
-							"equals": true,
-							"description": ""
+							"equals": true
 						},
 						{
 							"key": "value",
 							"value": "3",
-							"equals": true,
-							"description": ""
+							"equals": true
 						}
-					],
-					"variable": []
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
-						"description": ""
-					}
-				],
-				"body": {},
-				"description": ""
+					]
+				}
 			},
 			"response": []
 		},
@@ -553,6 +619,17 @@
 						"showPassword": false
 					}
 				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{route}}/transfer/?sender={{user2}}&to={{reserve}}&value=3",
 					"host": [
@@ -566,34 +643,20 @@
 						{
 							"key": "sender",
 							"value": "{{user2}}",
-							"equals": true,
-							"description": ""
+							"equals": true
 						},
 						{
 							"key": "to",
 							"value": "{{reserve}}",
-							"equals": true,
-							"description": ""
+							"equals": true
 						},
 						{
 							"key": "value",
 							"value": "3",
-							"equals": true,
-							"description": ""
+							"equals": true
 						}
-					],
-					"variable": []
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
-						"description": ""
-					}
-				],
-				"body": {},
-				"description": ""
+					]
+				}
 			},
 			"response": []
 		}
