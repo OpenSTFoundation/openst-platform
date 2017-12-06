@@ -18,7 +18,6 @@
     "theme"                 : "Lumen",
     "navType"               : "vertical",
     "linenums"              : true,
-    "outputSourcePath"      : true,
     "cleverLinks"           : true,
     "monospaceLinks"        : true,
     "default": {
