@@ -31,7 +31,7 @@ TransactionLogger.getTransactionLogs = function(memberSymbol, transactionUUID, c
     var response = null;
     if (err) {
       logger.error('error reading filePath: ', filePath, 'error : ', err);
-      response =  responseHelper.error('h_tl_1', err)
+      response =  responseHelper.error('h_tl_1', "Invalid transactionUUID");
       }
     else {
       logger.info(data);
@@ -80,27 +80,27 @@ const logProcessor = function ( log, logs, unprocessedLogs ) {
 TransactionLogger.prototype = {
 
   logWin: function () {
-    logger.info(arguments);
+    logger.win.apply(logger, arguments);
     this.writeToFile(arguments, 'Win');
   },
 
   logStep: function () {
-    logger.info(arguments);
+    logger.step.apply(logger, arguments);
     this.writeToFile(arguments, 'Step');
   },
 
   logInfo: function () {
-    logger.info(arguments);
+    logger.info.apply(logger, arguments);
     this.writeToFile(arguments, 'Info');
   },
 
   logError: function () {
-    logger.error(arguments);
+    logger.error.apply(logger, arguments);
     this.writeToFile(arguments, 'Error');
   },
 
   logWarning: function () {
-    logger.error(arguments);
+    logger.warn.apply(logger, arguments);
     this.writeToFile(arguments, 'Warn');
   },
 

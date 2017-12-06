@@ -196,10 +196,17 @@ module.exports = function( member ) {
 
   router.get('/transaction-logs', function(req, res, next) {
     const transactionUUID = req.query.transactionUUID;
-    var callBackFunction = function(response) {
+
+    new Promise( (resolve, reject) => {
+       TransactionLogger.getTransactionLogs(memberSymbol, transactionUUID, resolve);   
+    })
+    .then( response => {
       response.renderResponse( res );
-    };
-    TransactionLogger.getTransactionLogs(memberSymbol, transactionUUID, callBackFunction);
+    })
+    .catch(next)
+    ;
+
+    
     // handle .catch next ?
   });
 
