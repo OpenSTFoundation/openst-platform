@@ -133,8 +133,8 @@ const listAllMembers = function() {
     console.log( i+1, " for ", member.Name, "(", member.Symbol ,")"  );
   }
 
+  readlineInterface.prompt();
   return new Promise(function(resolve, reject) {
-    readlineInterface.prompt();
     const rlCallback = function(line){
       console.log("listAllMembers :: line", line);
       line = line.trim().toLowerCase();
