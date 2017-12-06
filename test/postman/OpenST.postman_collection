@@ -13,18 +13,18 @@
 				"auth": {
 					"type": "basic",
 					"basic": {
-						"username": "acme",
-						"password": "acmesecret",
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
 						"saveHelperData": true,
 						"showPassword": false
 					}
 				},
-				"url": "{{route}}/name",
+				"url": "{{route}}/uuid",
 				"method": "GET",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
 						"description": ""
 					}
 				],
@@ -39,8 +39,8 @@
 				"auth": {
 					"type": "basic",
 					"basic": {
-						"username": "acme",
-						"password": "acmesecret",
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
 						"saveHelperData": true,
 						"showPassword": false
 					}
@@ -50,7 +50,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
 						"description": ""
 					}
 				],
@@ -65,8 +65,8 @@
 				"auth": {
 					"type": "basic",
 					"basic": {
-						"username": "acme",
-						"password": "acmesecret",
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
 						"saveHelperData": true,
 						"showPassword": false
 					}
@@ -76,7 +76,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
 						"description": ""
 					}
 				],
@@ -91,8 +91,8 @@
 				"auth": {
 					"type": "basic",
 					"basic": {
-						"username": "acme",
-						"password": "acmesecret",
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
 						"saveHelperData": true,
 						"showPassword": false
 					}
@@ -102,7 +102,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
 						"description": ""
 					}
 				],
@@ -117,8 +117,8 @@
 				"auth": {
 					"type": "basic",
 					"basic": {
-						"username": "acme",
-						"password": "acmesecret",
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
 						"saveHelperData": true,
 						"showPassword": false
 					}
@@ -128,7 +128,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
 						"description": ""
 					}
 				],
@@ -143,8 +143,8 @@
 				"auth": {
 					"type": "basic",
 					"basic": {
-						"username": "acme",
-						"password": "acmesecret",
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
 						"saveHelperData": true,
 						"showPassword": false
 					}
@@ -172,7 +172,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
 						"description": ""
 					}
 				],
@@ -187,18 +187,18 @@
 				"auth": {
 					"type": "basic",
 					"basic": {
-						"username": "acme",
-						"password": "acmesecret",
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
 						"saveHelperData": true,
 						"showPassword": false
 					}
 				},
-				"url": "{{route}}/name",
+				"url": "{{route}}/newkey",
 				"method": "GET",
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
 						"description": ""
 					}
 				],
@@ -213,8 +213,8 @@
 				"auth": {
 					"type": "basic",
 					"basic": {
-						"username": "acme",
-						"password": "acmesecret",
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
 						"saveHelperData": true,
 						"showPassword": false
 					}
@@ -239,8 +239,8 @@
 				"auth": {
 					"type": "basic",
 					"basic": {
-						"username": "acme",
-						"password": "acmesecret",
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
 						"saveHelperData": true,
 						"showPassword": false
 					}
@@ -268,7 +268,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
 						"description": ""
 					}
 				],
@@ -283,8 +283,8 @@
 				"auth": {
 					"type": "basic",
 					"basic": {
-						"username": "acme",
-						"password": "acmesecret",
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
 						"saveHelperData": true,
 						"showPassword": false
 					}
@@ -324,7 +324,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
 						"description": ""
 					}
 				],
@@ -339,8 +339,8 @@
 				"auth": {
 					"type": "basic",
 					"basic": {
-						"username": "acme",
-						"password": "acmesecret",
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
 						"saveHelperData": true,
 						"showPassword": false
 					}
@@ -380,7 +380,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
 						"description": ""
 					}
 				],
@@ -395,8 +395,8 @@
 				"auth": {
 					"type": "basic",
 					"basic": {
-						"username": "acme",
-						"password": "acmesecret",
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
 						"saveHelperData": true,
 						"showPassword": false
 					}
@@ -424,7 +424,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
 						"description": ""
 					}
 				],
@@ -439,8 +439,8 @@
 				"auth": {
 					"type": "basic",
 					"basic": {
-						"username": "acme",
-						"password": "acmesecret",
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
 						"saveHelperData": true,
 						"showPassword": false
 					}
@@ -480,7 +480,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
 						"description": ""
 					}
 				],
@@ -495,8 +495,8 @@
 				"auth": {
 					"type": "basic",
 					"basic": {
-						"username": "acme",
-						"password": "acmesecret",
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
 						"saveHelperData": true,
 						"showPassword": false
 					}
@@ -536,7 +536,7 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0",
 						"description": ""
 					}
 				],
