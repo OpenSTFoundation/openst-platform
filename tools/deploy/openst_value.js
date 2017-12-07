@@ -1,5 +1,29 @@
 "use strict";
 
+/**
+ * This is script for deploying registrar and open st value contract on value chain.<br><br>
+ *
+ *   Prerequisite:
+ *    <ol>
+ *       <li>Simple Token Contract Address</li>
+ *       <li>Foundation Address</li>
+ *       <li>Deployer address on value chain</li>
+ *       <li>Registrar Address</li>
+ *       <li>Ops Address</li>
+ *     </ol>
+ *
+ *   These are the following steps:<br>
+ *     <ol>
+ *       <li>Deploy Registrar Contract on Value Chain</li>
+ *       <li>Call setOpsAddress on registrar contract with the Ops Address</li>
+ *       <li>Deploy OpenST Value Contract on Value Chain</li>
+ *       <li>Transfer the ownership for openST value contract to foundation</li>
+ *     </ol>
+ *
+ *
+ * @module deploy/openst_value
+ */
+
 const rootPrefix = '../..'
   , readline = require('readline')
   , config = require(rootPrefix + '/config.json')
@@ -23,6 +47,16 @@ const deploymentOptions = {
   gasPrice: coreConstants.OST_VALUE_GAS_PRICE,
   gasLimit: coreConstants.OST_VALUE_GAS_LIMIT
 };
+
+/**
+ * Updates dynamic addresses generated in the deployment process to a persistant source file
+ * It would be used later on.
+ *
+ * @param {String} valueRegistrarContractAddress
+ * @param {String} valueSTContractAddress
+ *
+ * @return {}
+ */
 
 function updateConfig(valueRegistrarAddr, valueSTContractAddr) {
 
@@ -49,6 +83,14 @@ function updateConfig(valueRegistrarAddr, valueSTContractAddr) {
     });
 
 };
+
+/**
+ * It is the main performer method of this deployment script
+ *
+ * @param {}
+ *
+ * @return {}
+ */
 
 const performer = async function () {
 
