@@ -1,8 +1,11 @@
 "use strict";
 
-/*
- * Deploy contracts on value and utility chains
+/**
+ * This is utility class for deploying contract<br><br>
  *
+ * Ref: {@link module:DeployHelper}
+ *
+ * @module deploy/helper
  */
 
 const rootPrefix = '../..'
@@ -16,7 +19,14 @@ const rootPrefix = '../..'
 
 const _private = {
 
-  // Private method to wait for Transaction to be included in block
+  /**
+   * Wait for Transaction to be included in block
+   *
+   * @param {Web3} web3Provider - It could be value chain or utility chain provider
+   * @param {String} transactionHash - Hash for which receipt is required.
+   *
+   * @return {Promise<TransactionHash>}
+   */
   getReceipt: function (web3Provider, transactionHash) {
     return new Promise(function (onResolve, onReject) {
 
@@ -43,7 +53,28 @@ const _private = {
 
 };
 
+/**
+ * Deploy Helper class to perform deploy
+ *
+ * @exports deploy/DeployHelper
+ */
 const deployHelper = {
+
+  /**
+   * Method deploys contract
+   *
+   * @param {String} Contract Name to be deployed
+   * @param {Web3} Web3 Provider object
+   * @param {String} Contract Abi to be deployed
+   * @param {String} Contract Bin file to be deployed
+   * @param {String} Deployer name
+   * @param {Hash} Custom options like gasPrice Optional
+   * @param {Hash} Arguments to be passed while deploying contract
+   *
+   * @method
+   * @return {Promise<Object>}
+   *
+   */
   perform: async function (contractName,
                            web3Provider,
                            contractAbi,
