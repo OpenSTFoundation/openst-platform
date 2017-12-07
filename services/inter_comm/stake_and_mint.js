@@ -1,20 +1,33 @@
 "use strict";
 
+/**
+ * This script is intermediate communicator between value chain and utility chain. Used for the stake and mint process.
+ *
+ * <br>It listens to the openSTValue chain and respond to the openSTUtility chain.
+ *
+ * <br><br>Following are the steps which are performed in here:
+ * <ol>
+ *   <li> Set the processor on {@link module:lib/web3/events/queue_manager} </li>
+ *   <li> It waits for the event StakingIntentDeclared Raised by stake method called on openSTValue. </li>
+ *   <li> On the event arrival it initiate a task in the internal queue to run it with 6 blocks delay. </li>
+ *   <li> When the task executes it run the processor passed on step1. </li>
+ * </ol>
+ *
+ * @module services/inter_comm/stake_and_mint
+ *
+ */
+
 const rootPrefix = '../..'
   , logger = require(rootPrefix+'/helpers/custom_console_logger')
   , eventQueueManagerKlass = require(rootPrefix+'/lib/web3/events/queue_manager')
   , coreAddresses = require(rootPrefix+'/config/core_addresses')
-  , openSTValueContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_value')
   , web3WsProvider = require(rootPrefix+'/lib/web3/providers/value_ws')
 
   , openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
   , openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
 
-  , openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility')
   , openSTUtilityCurrContractAddr = coreAddresses.getAddressForContract('openSTUtility')
 
-  , openSTUtilityContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_utility')
-  , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass()
   , eventQueueManager = new eventQueueManagerKlass()
   , utilityRegistrarAddr = coreAddresses.getAddressForUser('utilityRegistrar')
   , utilityRegistrarPassphrase = coreAddresses.getPassphraseForUser('utilityRegistrar')
@@ -26,8 +39,17 @@ const rootPrefix = '../..'
 
 const stakeAndMintInterComm = function() {};
 
+
+/**
+ * Inter comm process for the stake and mint.
+ * @namespace stakeAndMintInterComm
+ */
 stakeAndMintInterComm.prototype = {
 
+  /**
+   * Starts the process of the script with initializing processor
+   * @memberOf stakeAndMintInterComm
+   */
   init: function () {
     var oThis = this;
 
@@ -35,6 +57,11 @@ stakeAndMintInterComm.prototype = {
     oThis.bindEvents();
   },
 
+  /**
+   *
+   * Bind to start listening the event stakingIntentDeclared
+   *
+   */
   bindEvents: function(){
     var oThis = this;
     logger.log("bindEvents binding StakingIntentDeclared");
@@ -48,6 +75,14 @@ stakeAndMintInterComm.prototype = {
     logger.log("bindEvents done");
   },
 
+  /**
+   * Listening the event stakingIntentDeclared
+   *
+   * @param {function} onError - The method to run on error.
+   * @param {function} onData - The method to run on success.
+   * @param {function} onChange - The method to run on changed.
+   *
+   */
   listenToStakingIntentDeclared: function (onError, onData, onChange) {
     var completeContract = new web3WsProvider.eth.Contract( openSTValueContractAbi, openSTValueContractAddr );
     completeContract.setProvider(web3WsProvider.currentProvider);
@@ -58,16 +93,33 @@ stakeAndMintInterComm.prototype = {
       .on('changed', onChange);
   },
 
+  /**
+   * to be executed in {@link module:lib/web3/events/queue_manager} when StakingIntentDeclared succeed.
+   *
+   * @param {Object} eventObj - Object of event.
+   *
+   */
   onEvent: function ( eventObj ) {
     eventQueueManager.addEditEventInQueue(eventObj);
   },
 
-  //Generic Method to log event subscription error
+  /**
+   * Generic Method to log event subscription error
+   *
+   * @param {Object} error - Object of event.
+   *
+   */
   onEventSubscriptionError: function ( error ) {
     logger.log("onEventSubscriptionError triggered");
     logger.error(error);
   },
 
+  /**
+   * Processor to be executed in {@link module:lib/web3/events/queue_manager} when StakingIntentDeclared succeed.
+   *
+   * @param {Object} eventObj - Object of event.
+   *
+   */
   processor: function (eventObj) {
     const oThis = this
       , returnValues = eventObj.returnValues
