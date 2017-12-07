@@ -1,5 +1,36 @@
 "use strict";
 
+/**
+ *
+ * This is script for deploying registrar, openSTUtility contract on utility chain.<br><br>
+ * It transfer all base tokens from deploer key to STPrime contract address. <br/><br/>
+ *
+ *   Prerequisite:
+ *    <ol>
+ *       <li>Deployer address on utility chain</li>
+ *       <li>Deployer should have exactly 800M base tokens</li>
+ *       <li>Utility Chain Owner User Address</li>
+ *       <li>Registrar Address</li>
+ *     </ol>
+ *
+ *   These are the following steps:<br>
+ *     <ol>
+ *       <li>In genesis.json alloc 800M base tokens to Deployer address</li>
+ *       <li>Deploy Registrar contract</li>
+ *       <li>Set ops address to registrar user address</li>
+ *       <li>Initiate ownership transfer to Utility Chain Owner User Address</li>
+ *       <li>Deploys openSTUtility contract. It auto deploys STPrime contract</li>
+ *       <li>Initiate owner ship transfer of openSTUtility contract to Utility Chain Owner User Address</li>
+ *       <li>Query openSTUtility contract to get STPrime Contract Address</li>
+ *       <li>Query openSTUtility contract to get STPrime UUID</li>
+ *       <li>Transfer 800M base tokens from machine key to STPrime contract address.</li>
+ *     </ol>
+ *
+ *
+ * @module tools/deploy/openst_utility
+ *
+ */
+
 const rootPrefix = '../..'
   , readline = require('readline')
   , config = require(rootPrefix + '/config.json')

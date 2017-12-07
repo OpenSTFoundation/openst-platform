@@ -21,7 +21,7 @@
  *     </ol>
  *
  *
- * @module deploy/openst_value
+ * @module tools/deploy/openst_value
  */
 
 const rootPrefix = '../..'
