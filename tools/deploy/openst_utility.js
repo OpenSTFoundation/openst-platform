@@ -51,7 +51,7 @@ const rootPrefix = '../..'
 
 const deploymentOptions = {
   gasPrice: coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT,
-  gasLimit: coreConstants.OST_UTILITY_GAS_LIMIT
+  gas: coreConstants.OST_UTILITY_GAS_LIMIT
 };
 
 const performer = async function () {

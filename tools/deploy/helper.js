@@ -93,7 +93,7 @@ const deployHelper = {
       gasPrice: gasPrice
     };
 
-    Object.assign(options, customOptions)
+    Object.assign(options, customOptions);
 
     if (constructorArgs) {
       options.arguments = constructorArgs;

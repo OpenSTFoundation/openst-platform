@@ -48,7 +48,7 @@ const rootPrefix = '../..'
 
 const deploymentOptions = {
   gasPrice: coreConstants.OST_VALUE_GAS_PRICE,
-  gasLimit: coreConstants.OST_VALUE_GAS_LIMIT
+  gas: coreConstants.OST_VALUE_GAS_LIMIT
 };
 
 
