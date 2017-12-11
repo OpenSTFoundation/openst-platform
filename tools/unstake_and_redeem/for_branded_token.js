@@ -1,19 +1,22 @@
 "use strict";
 
 const BigNumber = require('bignumber.js')
-  , readline = require('readline');
+  , readline = require('readline')
+;
 
 const rootPrefix = '../..'
   , web3UtilityRpcProvider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
   , web3ValueWsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
   , web3UtilityWsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , coreConstants   = require( rootPrefix + '/config/core_constants' )
   , brandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , Config = require(process.argv[2] || (rootPrefix + '/config.json'))
+  , Config = require( process.argv[2] || coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
   , eventsFormatter = require(rootPrefix + '/lib/web3/events/formatter.js')
   , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
-  , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility');
+  , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+;
 
 const openSTValueContractName = 'openSTValue'
   , UC = "UtilityChain"
@@ -23,17 +26,19 @@ const openSTValueContractName = 'openSTValue'
   , openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName)
   , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
   , openSTValueContractInteract = new openSTValueContractInteractKlass(openSTValueContractAddress)
-  , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass(openSTUtilityContractAddress);
+  , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass(openSTUtilityContractAddress)
+;
 
-var brandedToken = null
-  , selectedMember = null
-  , redeemerAddress = null
-  , redeemerPassphrase = null
-  , redeemerBtBalance = null
-  , toRedeemAmount = null
-  , redeemerNonce = null
-  , tokenUuid = null
-  , redemptionIntentHash = null;
+var brandedToken          = null
+  , selectedMember        = null
+  , redeemerAddress       = null
+  , redeemerPassphrase    = null
+  , redeemerBtBalance     = null
+  , toRedeemAmount        = null
+  , redeemerNonce         = null
+  , tokenUuid             = null
+  , redemptionIntentHash  = null
+;
 
 /**
  * @ignore

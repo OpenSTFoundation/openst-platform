@@ -26,18 +26,19 @@
  */
 
 const BigNumber = require('bignumber.js')
-  , readline = require('readline')
-  ;
+  , readline    = require('readline')
+;
 
 const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix+'/config/core_addresses')
+  , coreConstants = require( rootPrefix + '/config/core_constants' )
   , web3UtilityWsProvider = require(rootPrefix+'/lib/web3/providers/utility_ws')
   , eventsFormatter = require(rootPrefix+'/lib/web3/events/formatter.js')
   , logger = require(rootPrefix+'/helpers/custom_console_logger')
   , simpleTokenContractInteract = require(rootPrefix+'/lib/contract_interact/simpleToken')
   , openSTValueContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_value')
   , openSTUtilityContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_utility')
-  ;
+;
 
 const VC = "ValueChain"
   , openSTValueContractName = 'openSTValue'
@@ -47,7 +48,7 @@ const VC = "ValueChain"
   , openSTUtilityContractAddress =  coreAddresses.getAddressForContract(openSTUtilityContractName)
   , openSTValueContractInteract = new openSTValueContractInteractKlass()
   , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass()
-  ;
+;
 
 /**
  * convert amount to wei

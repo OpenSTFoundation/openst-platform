@@ -18,17 +18,16 @@
 const BigNumber = require('bignumber.js')
   , readline = require('readline');
 
-const rootPrefix = '../..'
-  , web3ValueRpcProvider = require(rootPrefix+'/lib/web3/providers/value_rpc')
-  , web3UtilityWsProvider = require(rootPrefix+'/lib/web3/providers/utility_ws')
-  , simpleTokenContractInteract = require(rootPrefix+'/lib/contract_interact/simpleToken')
-  , brandedTokenKlass = require(rootPrefix+'/lib/contract_interact/branded_token')
-  , stakeAndMintUtil = require(rootPrefix + "/tools/stake_and_mint/util")
-  , logger = require(rootPrefix+'/helpers/custom_console_logger')
-  , Config = require(process.argv[2] || (rootPrefix + '/config.json') );
-
-const UC = 'UtilityChain'
-  , VC = 'ValueChain';
+const rootPrefix                = '../..'
+  , web3ValueRpcProvider        = require( rootPrefix+'/lib/web3/providers/value_rpc' )
+  , web3UtilityWsProvider       = require( rootPrefix+'/lib/web3/providers/utility_ws' )
+  , simpleTokenContractInteract = require( rootPrefix+'/lib/contract_interact/simpleToken' )
+  , coreConstants               = require( rootPrefix + '/config/core_constants' )
+  , brandedTokenKlass           = require( rootPrefix+'/lib/contract_interact/branded_token' )
+  , stakeAndMintUtil            = require( rootPrefix + "/tools/stake_and_mint/util" )
+  , logger                      = require( rootPrefix+'/helpers/custom_console_logger' )
+  , Config                      = require( process.argv[2] || coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
+;
 
 var brandedToken = null;
 

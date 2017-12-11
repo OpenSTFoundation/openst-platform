@@ -11,10 +11,13 @@ const _addresses = {
   "members": []
 };
 
-const Config = require(process.argv[3] || '../config.json')
-  , poaGenesisValue = require("./poa-genesis-value.json")
-  , poaGenesisUtility = require("./poa-genesis-utility.json")
-  , populateEnvVars = require("../lib/populate_env_vars.js");
+const rootPrefix = ".."
+  , coreConstants   = require( rootPrefix + '/config/core_constants' )
+  , Config = require(process.argv[3] || coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
+  , poaGenesisValue = require( rootPrefix + "/test/poa-genesis-value.json" )
+  , poaGenesisUtility = require( rootPrefix + "/test/poa-genesis-utility.json")
+  , populateEnvVars = require( rootPrefix + "/lib/populate_env_vars.js")
+;
 
 function main( addressFile ) {
   const _path = Path.join(__dirname, addressFile );
@@ -50,7 +53,10 @@ function main( addressFile ) {
     }
   });
 
-  writeJsonToFile( Config, '/../config.json', 4);
+  var configFilePath = process.argv[3] || coreConstants.OST_MEMBER_CONFIG_FILE_PATH;
+  configFilePath = "/" + configFilePath;
+
+  writeJsonToFile( Config, configFilePath, 4);
 
   populateEnvVars.renderAndPopulate('address', {
       ost_foundation_address: _addresses.foundation,
@@ -111,7 +117,15 @@ function updateMember( indx, memberReserveAddress ) {
 function writeJsonToFile( jsObject, relativeFilePath, tab_space ) {
   tab_space = tab_space || 2;
   var json = JSON.stringify(jsObject, null, tab_space);
-  fs.writeFileSync(Path.join(__dirname, '/' + relativeFilePath ), json );
+
+  var jsonFilePath = relativeFilePath;
+  if ( !Path.isAbsolute( jsonFilePath ) ) {
+    jsonFilePath = Path.join(__dirname, '/' + relativeFilePath );
+  }
+
+  console.log("writeJsonToFile :: jsonFilePath :: ", jsonFilePath);
+
+  fs.writeFileSync(jsonFilePath, json );
 }
 
 main( process.argv[2] );

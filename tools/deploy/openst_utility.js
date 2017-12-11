@@ -33,7 +33,6 @@
 
 const rootPrefix = '../..'
   , readline = require('readline')
-  , config = require(rootPrefix + '/config.json')
   , deployerName = 'utilityDeployer'
   , web3Provider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
   , deployHelper = require('./helper')
