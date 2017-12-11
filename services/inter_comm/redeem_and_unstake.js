@@ -18,10 +18,10 @@
  */
 
 const rootPrefix = '../..'
-  , logger = require(rootPrefix+'/helpers/custom_console_logger')
-  , eventQueueManagerKlass = require(rootPrefix+'/lib/web3/events/queue_manager')
-  , coreAddresses = require(rootPrefix+'/config/core_addresses')
-  , web3WsProvider = require(rootPrefix+'/lib/web3/providers/utility_ws')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , eventQueueManagerKlass = require(rootPrefix + '/lib/web3/events/queue_manager')
+  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
 
   , openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
 
@@ -33,11 +33,12 @@ const rootPrefix = '../..'
   , valueRegistrarPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar')
 
   , valueRegistrarContractAddress = coreAddresses.getAddressForContract("valueRegistrar")
-  , valueRegistrarContractInteractKlass = require( rootPrefix + '/lib/contract_interact/value_registrar' )
+  , valueRegistrarContractInteractKlass = require(rootPrefix + '/lib/contract_interact/value_registrar')
   , valueRegistrarContractInteract = new valueRegistrarContractInteractKlass(valueRegistrarContractAddress)
-  ;
+;
 
-const redeemAndUnstakeInterComm = function() {};
+const redeemAndUnstakeInterComm = function () {
+};
 
 
 /**
@@ -62,9 +63,9 @@ redeemAndUnstakeInterComm.prototype = {
    * Bind to start listening the event RedemptionIntentDeclared
    *
    */
-  bindEvents: function(){
+  bindEvents: function () {
     var oThis = this;
-    logger.log("bindEvents binding StakingIntentDeclared");
+    logger.log("bindEvents binding RedemptionIntentDeclared");
 
     oThis.listenToRedemptionIntentDeclared(
       oThis.onEventSubscriptionError,
@@ -84,7 +85,7 @@ redeemAndUnstakeInterComm.prototype = {
    *
    */
   listenToRedemptionIntentDeclared: function (onError, onData, onChange) {
-    var completeContract = new web3WsProvider.eth.Contract( openSTUtilityContractAbi, openSTUtilityContractAddr );
+    var completeContract = new web3WsProvider.eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
     completeContract.setProvider(web3WsProvider.currentProvider);
 
     completeContract.events.RedemptionIntentDeclared({})
@@ -99,7 +100,7 @@ redeemAndUnstakeInterComm.prototype = {
    * @param {Object} eventObj - Object of event.
    *
    */
-  onEvent: function ( eventObj ) {
+  onEvent: function (eventObj) {
     eventQueueManager.addEditEventInQueue(eventObj);
   },
 
@@ -109,7 +110,7 @@ redeemAndUnstakeInterComm.prototype = {
    * @param {Object} error - Object of event.
    *
    */
-  onEventSubscriptionError: function ( error ) {
+  onEventSubscriptionError: function (error) {
     logger.log("onEventSubscriptionError triggered");
     logger.error(error);
   },
