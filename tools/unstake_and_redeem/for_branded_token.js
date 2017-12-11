@@ -477,10 +477,29 @@ const listenToRedemptionIntentConfirmed = function () {
 };
 
 const processRedeeming = function () {
-  openSTUtilityContractInteract
+
+  logger.win("Completed processing Reedeeming");
+  logger.step("Process Unstaking Now.");
+
+  return openSTUtilityContractInteract.processRedeeming(
+    redeemerAddress,
+    redeemerPassphrase,
+    redemptionIntentHash
+  );
+
 };
 
 const processUnstaking = function () {
+
+  logger.win("Completed processing Reedeeming");
+  logger.step("Process Unstaking Now.");
+
+  return openSTValueContractInteract.processUnstaking(
+    redeemerAddress,
+    redeemerPassphrase,
+    redemptionIntentHash
+  );
+
 };
 
 /**
