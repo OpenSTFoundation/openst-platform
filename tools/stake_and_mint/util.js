@@ -41,9 +41,7 @@ const rootPrefix = '../..'
   , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass()
   , BigNumber = require('bignumber.js')
   , logger = require(rootPrefix+'/helpers/custom_console_logger')
-  , Config = require(process.argv[2] || (rootPrefix + '/config.json') )
   , readline = require('readline')
-  , UC = "UtilityChain"
   , VC = "ValueChain"
   ;
 
