@@ -1,22 +1,25 @@
 "use strict";
 
 const rootPrefix = '../..'
-  , web3ValueRpcProvider = require(rootPrefix + '/lib/web3/providers/value_rpc')
   , web3UtilityRpcProvider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
+  , web3ValueWsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
   , web3UtilityWsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
-  , simpleTokenContractInteract = require(rootPrefix + '/lib/contract_interact/simpleToken')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , brandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
-  , stakeAndMintUtil = require(rootPrefix + "/tools/stake_and_mint/util")
   , openSTValueContractName = 'openSTValue'
   , openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName)
+  , openSTValueContractABI = coreAddresses.getAbiForContract(openSTValueContractName)
+  , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
+  , openSTValueContractInteract = new openSTValueContractInteractKlass(openSTValueContractAddress)
   , openSTUtilityContractName = 'openSTUtility'
-  , openSTUtilityContractABI = coreAddresses.getAbiForContract(openSTUtilityContractName)
   , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
+  , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass(openSTUtilityContractAddress)
   , BigNumber = require('bignumber.js')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , Config = require(process.argv[2] || (rootPrefix + '/config.json'))
   , readline = require('readline')
+  , eventsFormatter = require(rootPrefix + '/lib/web3/events/formatter.js')
   , UC = "UtilityChain"
   , VC = "ValueChain"
 ;
@@ -26,7 +29,10 @@ var brandedToken = null
   , redeemerAddress = null
   , redeemerPassphrase = null
   , redeemerBtBalance = null
-  , toRedeemAmount = null;
+  , toRedeemAmount = null
+  , redeemerNonce = null
+  , tokenUuid = null
+  , redemptionIntentHash = null;
 
 /**
  * @ignore
@@ -204,6 +210,22 @@ const confirmToken = function (member) {
 };
 
 /**
+ * Get uuid of the token
+ *
+ * @return {Promise}
+ */
+const getUuidForToken = async function () {
+  const getUuidResult = await brandedToken.getUuid();
+
+  if (getUuidResult.isSuccess()) {
+    tokenUuid = getUuidResult.data.uuid;
+    return Promise.resolve();
+  } else {
+    return Promise.reject('error in finding uuid of Member:', selectedMember);
+  }
+};
+
+/**
  * Ask redeemer address
  *
  * @return {Promise}
@@ -362,16 +384,99 @@ const setApprovalForopenSTUtilityContract = function () {
     });
 };
 
+/**
+ * Get nonce for redeeming
+ *
+ * @return {Promise}
+ */
 const getNonceForRedeeming = function () {
+  return openSTValueContractInteract.getNextNonce(redeemerAddress).then(
+    function (_out) {
+      redeemerNonce = _out;
+      return true;
+    }
+  )
 };
 
-const redeem = function () {
+const redeem = async function () {
+  const redeemResult = openSTUtilityContractInteract.redeem(
+    redeemerAddress,
+    redeemerPassphrase,
+    tokenUuid,
+    toRedeemAmount,
+    redeemerNonce
+  );
+
+  if (redeemResult.isSuccess()) {
+    const formattedTransactionReceipt = redeemResult.data.formattedTransactionReceipt;
+
+    const formattedTransactionReceipt = redeemResult.data.formattedTransactionReceipt
+      , rawTxReceipt = redeemResult.data.rawTransactionReceipt;
+
+    var eventName = 'RedemptionIntentDeclared'
+      , formattedEventData = await eventsFormatter.perform(formattedTransactionReceipt)
+      , eventDataValues = formattedEventData[eventName];
+
+    if (!eventDataValues) {
+      console.log("openSTUtilityContractInteract.redeem was not completed correctly: RedemptionIntentDeclared event didn't found in events data");
+      console.log("rawTxReceipt is:\n");
+      console.log(rawTxReceipt);
+      console.log("\n\n formattedTransactionReceipt is:\n");
+      console.log(formattedTransactionReceipt);
+      return Promise.reject("openSTUtilityContractInteract.redeem was not completed correctly: RedemptionIntentDeclared event didn't found in events data");
+    }
+
+    logger.win("Redeeming Done.", toDisplayInBaseUnit(toRedeemAmount));
+
+    logger.info("eventDataValues:");
+    logger.info(eventDataValues);
+
+    redemptionIntentHash = eventDataValues['_redemptionIntentHash'];
+
+    return Promise.resolve();
+  }
 };
 
+/**
+ * Listen to open st value
+ *
+ * @return {Promise}
+ */
 const listenToRedemptionIntentConfirmed = function () {
+
+  return new Promise(function (onResolve, onReject) {
+
+    const openSTValueContract = new web3ValueWsProvider.eth.Contract(
+      openSTValueContractABI,
+      openSTValueContractAddress
+    );
+
+    openSTValueContract.setProvider(web3ValueWsProvider.currentProvider);
+
+    openSTValueContract.events.RedemptionIntentConfirmed({})
+      .on('error', function (errorObj) {
+        logger.error("Could not Subscribe to RedemptionIntentConfirmed");
+        onReject();
+      })
+      .on('data', function (eventObj) {
+        logger.info("data :: RedemptionIntentConfirmed");
+        const returnValues = eventObj.returnValues;
+        if (returnValues) {
+          const _redemptionIntentHash = returnValues._redemptionIntentHash;
+
+          // We need to perform action only if the redemption intent hash matches.
+          // Need this check this as there might be multiple redeems(by different member company) on same Utility chain.
+
+          if (redemptionIntentHash.equalsIgnoreCase(_redemptionIntentHash)) {
+            onResolve(eventObj);
+          }
+        }
+      });
+  });
 };
 
 const processRedeeming = function () {
+  openSTUtilityContractInteract
 };
 
 const processUnstaking = function () {
@@ -385,18 +490,17 @@ const processUnstaking = function () {
     .then(describeUtilityChain)
     .then(listAllTokens)
     .then(confirmToken)
+    .then(getUuidForToken)
     .then(askRedeemerAddress)
     .then(askRedeemerPassphrase)
     .then(getRedeemerBTBalance)
     .then(askRedeemingAmount)
     .then(setApprovalForopenSTUtilityContract)
-
     .then(getNonceForRedeeming)
     .then(redeem)
     .then(listenToRedemptionIntentConfirmed)
     .then(processRedeeming)
     .then(processUnstaking)
-
     .then(function () {
       logger.win("Yoo.. Have Fun!!");
       process.exit(0);
