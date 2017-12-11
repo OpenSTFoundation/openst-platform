@@ -484,7 +484,7 @@ const processUnstaking = function () {
 };
 
 /**
- * Perform stake and mint for branded token
+ * Perform unstake and redeem for branded token
  */
 (function () {
   describeValueChain
