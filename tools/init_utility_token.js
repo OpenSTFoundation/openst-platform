@@ -1,5 +1,11 @@
 "use strict";
 
+/**
+ * This is utility class for Initializing Member Company <br><br>
+ *
+ * @module tools/init_utility_token
+ */
+
 //All node module requires.
 const fs = require('fs')
   , path = require('path')
@@ -35,7 +41,14 @@ const contractName                    = 'openSTUtility'
 
 ;
 
-
+/**
+ *
+ * @constructor
+ *
+ * @param {Boolean} autoApprove - Boolean governing if this member needs an
+ * approval of STC to stake & mint Branded Tokens
+ *
+ */
 const InitUtilityToken = function(autoApprove) {
   if (typeof autoApprove !== "undefined") {
     this.autoApprove = autoApprove;
@@ -43,12 +56,31 @@ const InitUtilityToken = function(autoApprove) {
 };
 
 InitUtilityToken.prototype = {
+
   constructor: InitUtilityToken
 
-  , memberDefaults : null /* Member Config Object */
+  /**
+   * Member Config Object initialize
+   */
+  , memberDefaults : null
 
-  , autoApprove: true /* Setting this flag to true, auto approves the regitration. To be used by Bot Api */
+  /**
+   * Setting this flag to true, auto approves the regitration. To be used by Bot Api
+   */
+  , autoApprove: true
 
+  /**
+   * Creates Config for a new Member Company
+   *
+   * @param {String} symbol - symbol which MC wants to use for BT
+   * @param {String} name - member company's name
+   * @param {String} apiAuthUser - username for HTTP AUTH (to be used in API calls)
+   * @param {String} apiAuthSecret - password for HTTP AUTH (to be used in calls)
+   * @param {String} callbackUrl - Member Company's URL which would be called as a callback
+   *
+   * @return {Object}
+   *
+   */
   , newMemberWithConfig: function ( symbol, name, apiAuthUser, apiAuthSecret, callbackUrl ) {
     const oThis = this;
 
@@ -78,6 +110,17 @@ InitUtilityToken.prototype = {
       })
   }
 
+  /**
+   * Proposes a Member Company
+   *
+   * @param {String} senderAddress - Address which is proposing this Member Company
+   * @param {String} symbol - symbol for BT which is being proposed
+   * @param {String} name - name for BT which is being proposed
+   * @param {String} conversionRate - conversion rate for BT (with respect to ST) which is being proposed
+   *
+   * @return {Result}
+   *
+   */
   , propose: function (
     senderAddress,
     symbol,
@@ -117,6 +160,14 @@ InitUtilityToken.prototype = {
     });
   }
 
+  /**
+   * Register a Member Company on Utility Chain
+   *
+   * @param {Result} formattedTransactionReceipt - Transaction Data from proposeBrandedToken method
+   *
+   * @return {Result}
+   *
+   */
   , registerOnUtility: async function (formattedTransactionReceipt) {
     const oThis = this;
 
@@ -182,6 +233,14 @@ InitUtilityToken.prototype = {
     });
   }
 
+  /**
+   * Register a Member Company on Value Chain
+   *
+   * @param {Result} formattedTransactionReceipt - Transaction Data from registerBrandedToken on utility method
+   *
+   * @return {Result}
+   *
+   */
   , registerOnValue: async function ( formattedUtilityReceipt ) {
     const oThis = this;
 
@@ -251,6 +310,15 @@ InitUtilityToken.prototype = {
     });
   }
 
+  /**
+   * Register a Member Company's Config
+   *
+   * @param {Result} formattedUtilityReceipt - Transaction Data from registerBrandedToken on utility method
+   * @param {Result} formattedValueReceipt - Transaction Data from registerBrandedToken on value method
+   *
+   * @return {Result}
+   *
+   */
   , registerOnConfig: async function ( formattedUtilityReceipt, formattedValueReceipt ) {
     const oThis = this;
     logger.step("registerOnConfig called.");
@@ -302,6 +370,19 @@ InitUtilityToken.prototype = {
       logger.log("Config file updated!");
     });
   }
+
+  /**
+   * Get Member Company's Default Config
+   *
+   * @param {String} reserve - address for Member Company's Reserve
+   * @param {String} symbol - symbol for BT which is being proposed
+   * @param {String} apiAuthUser - username for HTTP AUTH (to be used in API calls)
+   * @param {String} apiAuthSecret - password for HTTP AUTH (to be used in calls)
+   * @param {String} callbackUrl - Member Company's URL which would be called as a callback
+   *
+   * @return {Object}
+   *
+   */
   , getMemberDefaults: function ( reserve, symbol, apiAuthUser, apiAuthSecret, callbackUrl) {
     const oThis = this;
     const lowerSymbol = ( symbol ).toLowerCase()
