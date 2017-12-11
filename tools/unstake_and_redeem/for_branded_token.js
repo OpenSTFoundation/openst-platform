@@ -476,6 +476,11 @@ const listenToRedemptionIntentConfirmed = function () {
   });
 };
 
+/**
+ * Process redeeming
+ *
+ * @return {Promise}
+ */
 const processRedeeming = function () {
 
   logger.win("Completed processing Reedeeming");
@@ -489,6 +494,11 @@ const processRedeeming = function () {
 
 };
 
+/**
+ * Process unstaking
+ *
+ * @return {Promise}
+ */
 const processUnstaking = function () {
 
   logger.win("Completed processing Reedeeming");
