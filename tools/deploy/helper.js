@@ -121,11 +121,23 @@ const deployHelper = {
     await web3Provider.eth.personal.unlockAccount(deployerAddr, deployerAddrPassphrase);
 
     console.log("Deploying contract " + contractName);
+
+    var deployFailedReason = null;
     const transactionReceipt = await deploy().then(
       function (transactionHash) {
         return _private.getReceipt(web3Provider, transactionHash);
       }
-    );
+    ).catch(reason => {
+      deployFailedReason = reason;
+      console.log( deployFailedReason );
+      return null;
+    });
+
+    if ( deployFailedReason ) {
+      return Promise.reject( deployFailedReason );
+    }
+
+    console.log("deploy transactionReceipt ::", transactionReceipt);
 
     const contractAddress = transactionReceipt.contractAddress;
 

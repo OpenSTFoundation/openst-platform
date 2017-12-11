@@ -119,7 +119,7 @@ function writeJsonToFile( jsObject, relativeFilePath, tab_space ) {
   var json = JSON.stringify(jsObject, null, tab_space);
 
   var jsonFilePath = relativeFilePath;
-  if ( !path.isAbsolute( jsonFilePath ) ) {
+  if ( !Path.isAbsolute( jsonFilePath ) ) {
     jsonFilePath = Path.join(__dirname, '/' + relativeFilePath );
   }
 
