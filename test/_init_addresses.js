@@ -14,7 +14,8 @@ const _addresses = {
 const Config = require(process.argv[3] || '../config.json')
   , poaGenesisValue = require("./poa-genesis-value.json")
   , poaGenesisUtility = require("./poa-genesis-utility.json")
-  , populateEnvVars = require("../lib/populate_env_vars.js");
+  , populateEnvVars = require("../lib/populate_env_vars.js")
+;
 
 function main( addressFile ) {
   const _path = Path.join(__dirname, addressFile );
@@ -50,7 +51,10 @@ function main( addressFile ) {
     }
   });
 
-  writeJsonToFile( Config, '/../config.json', 4);
+  var configFilePath = process.argv[3] || '../config.json';
+  configFilePath = "/" + configFilePath;
+
+  writeJsonToFile( Config, configFilePath, 4);
 
   populateEnvVars.renderAndPopulate('address', {
       ost_foundation_address: _addresses.foundation,
