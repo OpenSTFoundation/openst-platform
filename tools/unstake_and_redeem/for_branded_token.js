@@ -111,8 +111,7 @@ const toDisplayInBaseUnit = function (weiAmount) {
  */
 const describeChain = function (chainType, web3Provider) {
   logger.step("Validate", chainType);
-  return web3Provider.eth.net.getId()
-    .then(function (networkId) {
+  return web3Provider.eth.net.getId().then(function (networkId) {
       logger.info(chainType, "NetworkId: ", networkId);
       logger.info(chainType, "HttpProvider.host: ", web3Provider.currentProvider.host);
       logger.win(chainType, "Validated");
@@ -276,7 +275,7 @@ const askRedeemerPassphrase = function () {
 
       readlineInterface.removeListener("line", rlCallback);
       redeemerPassphrase = passphrase;
-      resolve(passphrase);
+      resolve();
     };
     readlineInterface.on("line", rlCallback);
   });
@@ -289,8 +288,8 @@ const askRedeemerPassphrase = function () {
  *
  * @return {Promise<Number>}
  */
-const getRedeemerBTBalance = function (redeemer) {
-  return brandedToken.getBalanceOf(redeemer).then(
+const getRedeemerBTBalance = function () {
+  return brandedToken.getBalanceOf(redeemerAddress).then(
     function (res) {
       if (res.isSuccess()) {
         redeemerBtBalance = res.data.balance;
@@ -352,7 +351,7 @@ const setApprovalForopenSTUtilityContract = function () {
     .then(function (result) {
       const allowance = result.data.remaining
         , bigNumAllowance = new BigNumber(allowance)
-        , needsApproval = (bigNumAllowance != toStakeAmount);
+        , needsApproval = (bigNumAllowance != toRedeemAmount);
 
       logger.info("Redeemer Allowance for openSTUtility contract:", toDisplayInBaseUnit(allowance));
 
@@ -400,7 +399,7 @@ const getNonceForRedeeming = function () {
 };
 
 const redeem = async function () {
-  const redeemResult = openSTUtilityContractInteract.redeem(
+  const redeemResult = await openSTUtilityContractInteract.redeem(
     redeemerAddress,
     redeemerPassphrase,
     tokenUuid,
@@ -409,8 +408,6 @@ const redeem = async function () {
   );
 
   if (redeemResult.isSuccess()) {
-    const formattedTransactionReceipt = redeemResult.data.formattedTransactionReceipt;
-
     const formattedTransactionReceipt = redeemResult.data.formattedTransactionReceipt
       , rawTxReceipt = redeemResult.data.rawTransactionReceipt;
 
@@ -516,7 +513,7 @@ const processUnstaking = function () {
  * Perform unstake and redeem for branded token
  */
 (function () {
-  describeValueChain
+  describeValueChain()
     .then(describeUtilityChain)
     .then(listAllTokens)
     .then(confirmToken)
