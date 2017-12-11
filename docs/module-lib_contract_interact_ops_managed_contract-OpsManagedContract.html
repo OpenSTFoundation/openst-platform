@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Simple Token Foundation Index</title>
+	<title>Simple Token Foundation Class: OpsManagedContract</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -86,28 +86,551 @@
 		<div id="main">
 			
 
+	<h1 class="page-title">Class: OpsManagedContract</h1>
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="module-lib_contract_interact_ops_managed_contract.html">lib/contract_interact/ops_managed_contract</a>~</span>
+        
+        OpsManagedContract
+        </h2>
+        
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+<hr>
+<dt>
+    <h4 class="name" id="OpsManagedContract"><span class="type-signature"></span>new OpsManagedContract(contractAddress, web3RpcProvider, currContract, defaultGasPrice)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>contractAddress</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">address where Contract has been deployed</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>web3RpcProvider</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">webRpc provider of network where currContract has been deployed</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>currContract</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Contract Instance</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>defaultGasPrice</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">default Gas Price</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
 	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
 	
 
 
 
+	
+
+	
+
+	
+
+	
+</dl>
 
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+    
+    </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
 
 
+    <ul>
+        <li>OwnedContract</li>
+    </ul>
 
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id="getOpsAddress"><span class="type-signature"></span>getOpsAddress()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Get currContract's Ops Address
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
 
 
 
 	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Result</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setOpsAddress"><span class="type-signature"></span>setOpsAddress(defaultGasPrice, opsAddress, customOptions)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Set currContract's Ops Address
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>defaultGasPrice</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">default Gas Price</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opsAddress</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">address which is to be made Ops Address of currContract</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>customOptions</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">custom params for this transaction</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
 	
 
 
 
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Result</span>
 
 
 
+    </dd>
+</dl>
 
+
+        
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

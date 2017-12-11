@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Simple Token Foundation Module: tools/stake_and_mint/util</title>
+	<title>Simple Token Foundation Global</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -86,13 +86,14 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: tools/stake_and_mint/util</h1>
+	<h1 class="page-title">Global</h1>
 <section>
 
 <header>
     
+        <h2>
         
-            
+        </h2>
         
     
 </header>
@@ -102,33 +103,1039 @@
     <div class="container-overview">
     
         
-            <div class="description">This is utility for performing stake and mint.<br><br>
-  Stake and mint is called in two variations:<br>
-    <ol>
-      <li>For branded token: <a href="module-tools_stake_and_mint_for_branded_token.html"><code>module:tools/stake_and_mint/for_branded_token</code></a></li>
-      <li>For simple token prime: <a href="module-tools_stake_and_mint_for_st_prime.html"><code>module:tools/stake_and_mint/for_st_prime</code></a></li>
-    </ol>
 
-This utility has common functionality which is required for both these variations.
-Following are the steps which are performed in here:
-<ol>
- <li>Staker address approves openSTValue contract address for toStakeAmount.
- We first check the current allowance and go for approval only when the current allowance and toStakeAmount
- are different.</li>
- <li>Staker address calls stake method of openSTValue contract. In the transaction receipt, we asset for StakingIntentDeclared event.</li>
- <li>Wait for openSTUtility contract to give StakingIntentConfirmed event.
- Proceed to next step if _stakingIntentHash in the event matches the same got in StakingIntentDeclared.</li>
- <li>Staker address calls processStaking of openSTValue contract.</li>
- <li>Staker address calls processMinting of openSTUtility contract.</li>
- <li>Staker address calls claim of utilityTokenInterface contract.</li>
-</ol></div>
         
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id="askRedeemerAddress"><span class="type-signature"></span>askRedeemerAddress()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Ask redeemer address
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
 
         
             
 <hr>
 <dt>
-    <h4 class="name" id="module:tools/stake_and_mint/util"><span class="type-signature"></span>(require("tools/stake_and_mint/util"))(stakerAddress, stakerPassphrase, beneficiary, toStakeAmount, utilityTokenInterfaceContract)</h4>
+    <h4 class="name" id="askRedeemerPassphrase"><span class="type-signature"></span>askRedeemerPassphrase()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Ask redeemer passphrase
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="askRedeemingAmount"><span class="type-signature"></span>askRedeemingAmount()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Ask redeeming amount
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="confirmToken"><span class="type-signature"></span>confirmToken(member)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Confirm token
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>member</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Object></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="describeChain"><span class="type-signature"></span>describeChain(chainType, web3Provider)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Describe chain
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>chainType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Chain type</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>web3Provider</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Web3</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">web3 provider</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Number></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="describeToken"><span class="type-signature"></span>describeToken(member)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Describe token
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>member</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">member object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getRedeemerBTBalance"><span class="type-signature"></span>getRedeemerBTBalance(redeemer)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Get redeemer BT balance
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>redeemer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Address</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">redeemer adddress</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Number></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="listAllTokens"><span class="type-signature"></span>listAllTokens()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        List all members
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="module:tools/stake_and_mint/util"><span class="type-signature"></span>module:tools/stake_and_mint/util(stakerAddress, stakerPassphrase, beneficiary, toStakeAmount, utilityTokenInterfaceContract)</h4>
     
     
 </dt>
@@ -369,29 +1376,10 @@ Following are the steps which are performed in here:
 </dd>
 
         
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        <dl>
             
 <hr>
 <dt>
-    <h4 class="name" id="~checkAllowanceAndApproveIfNeeded"><span class="type-signature">&lt;inner> </span>checkAllowanceAndApproveIfNeeded(stakerAddress, passphrase, toStakeAmount)</h4>
+    <h4 class="name" id="setApprovalForopenSTUtilityContract"><span class="type-signature"></span>setApprovalForopenSTUtilityContract()</h4>
     
     
 </dt>
@@ -399,7 +1387,7 @@ Following are the steps which are performed in here:
 
     
     <div class="description">
-        Check allowance and approve if needed
+        Set approval for openSTUtility contract
     </div>
     
 
@@ -408,104 +1396,6 @@ Following are the steps which are performed in here:
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>stakerAddress</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="String.html">String</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Staker address</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>passphrase</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="String.html">String</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Staker address passphrase</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>toStakeAmount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">to stake amount</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -587,7 +1477,7 @@ Following are the steps which are performed in here:
             
 <hr>
 <dt>
-    <h4 class="name" id="~describeChain"><span class="type-signature">&lt;inner> </span>describeChain(chainType, web3Provider)</h4>
+    <h4 class="name" id="toDisplayInBaseUnit"><span class="type-signature"></span>toDisplayInBaseUnit(weiAmount)</h4>
     
     
 </dt>
@@ -595,7 +1485,7 @@ Following are the steps which are performed in here:
 
     
     <div class="description">
-        Describe chain
+        to display value in base unit
     </div>
     
 
@@ -630,603 +1520,7 @@ Following are the steps which are performed in here:
 
         <tr>
             
-                <td class="name"><code>chainType</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="String.html">String</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Chain type</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>web3Provider</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Web3</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">web3 provider</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise.&lt;Number></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="~describeMember"><span class="type-signature">&lt;inner> </span>describeMember(member)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Describe member
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>member</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">member object</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="~getSTBalance"><span class="type-signature">&lt;inner> </span>getSTBalance(address)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Get ST balance
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>address</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="String.html">String</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Address to get the ST balance</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise.&lt;BigNumber></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="~listenToUtilityToken"><span class="type-signature">&lt;inner> </span>listenToUtilityToken(stakingIntentHash)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Listen to utility token contract
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>stakingIntentHash</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="String.html">String</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Staking intent hash</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="~toDisplayST"><span class="type-signature">&lt;inner> </span>toDisplayST(num)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        display value in ST
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>num</code></td>
+                <td class="name"><code>weiAmount</code></td>
             
 
             <td class="type">
@@ -1243,7 +1537,7 @@ Following are the steps which are performed in here:
 
             
 
-            <td class="description last">number of ST wei</td>
+            <td class="description last">amount in wei</td>
         </tr>
 
     
@@ -1307,7 +1601,7 @@ Following are the steps which are performed in here:
     
             
 <div class="param-desc">
-    display value in ST
+    display value in base unit
 </div>
 
 
@@ -1319,158 +1613,6 @@ Following are the steps which are performed in here:
     <dd>
         
 <span class="param-type"><a href="String.html">String</a></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="~toWeiST"><span class="type-signature">&lt;inner> </span>toWeiST(amount)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        convert amount to wei
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>amount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Bignumber</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">The amount in ST</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    converted amount in wei.
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Bignumber</span>
 
 
 

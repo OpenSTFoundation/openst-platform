@@ -25,30 +25,32 @@
  */
 
 const rootPrefix = '../..'
-  , readline = require('readline')
-  , deployerName = "valueDeployer"
   , web3Provider = require(rootPrefix + '/lib/web3/providers/value_rpc')
   , deployHelper = require('./helper')
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , readline = require('readline')
   , prompts = readline.createInterface(process.stdin, process.stdout)
-  , deployerAddress = coreAddresses.getAddressForUser(deployerName)
-  , Assert = require('assert')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , ValueRegistrar = require(rootPrefix + "/lib/contract_interact/value_registrar")
   , OpenstValueContract = require(rootPrefix + '/lib/contract_interact/openst_value')
-  , populateEnvVars = require(rootPrefix + "/lib/populate_env_vars.js")
+  , populateEnvVars = require(rootPrefix + "/lib/populate_env_vars.js");
+
+// Different addresses used for deployment
+const deployerName = "valueDeployer"
+  , deployerAddress = coreAddresses.getAddressForUser(deployerName)
   , foundationAddress = coreAddresses.getAddressForUser("foundation")
   , valueOpsAddress = coreAddresses.getAddressForUser("valueOps")
   , simpleTokenAddress = coreAddresses.getAddressForContract("simpleToken");
 
+// Contract deployment options for value chain
 const deploymentOptions = {
   gasPrice: coreConstants.OST_VALUE_GAS_PRICE,
   gas: coreConstants.OST_VALUE_GAS_LIMIT
 };
 
 /**
- * Updates dynamic addresses generated in the deployment process to a persistant source file
+ * Updates dynamic addresses generated in the deployment process to a persistent source file
  * It would be used later on.
  *
  * @param {String} valueRegistrarContractAddress

@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Simple Token Foundation Index</title>
+	<title>Simple Token Foundation Module: services/inter_comm/redeem_and_unstake</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -86,28 +86,102 @@
 		<div id="main">
 			
 
+	<h1 class="page-title">Module: services/inter_comm/redeem_and_unstake</h1>
+<section>
+
+<header>
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">This script is intermediate communicator between value chain and utility chain. Used for the redeem and unstake.
+
+<br>It listens to the openSTValue chain and respond to the openSTUtility chain.
+
+<br><br>Following are the steps which are performed in here:
+<ol>
+  <li> Set the processor on <a href="module-lib_web3_events_queue_manager.html"><code>module:lib/web3/events/queue_manager</code></a> </li>
+  <li> It waits for the event StakingIntentDeclared Raised by stake method called on openSTValue. </li>
+  <li> On the event arrival it initiate a task in the internal queue to run it with 6 blocks delay. </li>
+  <li> When the task executes it run the processor passed on step1. </li>
+</ol></div>
+        
+
+        
+<dl class="details">
+    
+
 	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
 	
 
 
 
-
-
-
-
-
-
-
-
-	
 	
 
+	
+
+	
+
+	
+</dl>
 
 
+        
+    
+    </div>
 
+    
 
+    
 
+    
 
+    
+
+    
+        <h3 class="subsection-title">Namespaces</h3>
+
+        <dl>
+            <dt><a href="namespaces.html#module:services/inter_comm/redeem_and_unstake~redeemAndUnstakeInterComm"><a href="module-services_inter_comm_redeem_and_unstake-redeemAndUnstakeInterComm.html">redeemAndUnstakeInterComm</a></a></dt>
+            <dd></dd>
+        </dl>
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
 
 
 

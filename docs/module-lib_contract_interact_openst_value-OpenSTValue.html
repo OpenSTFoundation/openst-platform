@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Simple Token Foundation Module: tools/stake_and_mint/util</title>
+	<title>Simple Token Foundation Class: OpenSTValue</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -86,13 +86,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: tools/stake_and_mint/util</h1>
+	<h1 class="page-title">Class: OpenSTValue</h1>
 <section>
 
 <header>
     
+        <h2>
+            <span class="ancestors"><a href="module-lib_contract_interact_openst_value.html">lib/contract_interact/openst_value</a>~</span>
         
-            
+        OpenSTValue
+        </h2>
         
     
 </header>
@@ -102,42 +105,14 @@
     <div class="container-overview">
     
         
-            <div class="description">This is utility for performing stake and mint.<br><br>
-  Stake and mint is called in two variations:<br>
-    <ol>
-      <li>For branded token: <a href="module-tools_stake_and_mint_for_branded_token.html"><code>module:tools/stake_and_mint/for_branded_token</code></a></li>
-      <li>For simple token prime: <a href="module-tools_stake_and_mint_for_st_prime.html"><code>module:tools/stake_and_mint/for_st_prime</code></a></li>
-    </ol>
-
-This utility has common functionality which is required for both these variations.
-Following are the steps which are performed in here:
-<ol>
- <li>Staker address approves openSTValue contract address for toStakeAmount.
- We first check the current allowance and go for approval only when the current allowance and toStakeAmount
- are different.</li>
- <li>Staker address calls stake method of openSTValue contract. In the transaction receipt, we asset for StakingIntentDeclared event.</li>
- <li>Wait for openSTUtility contract to give StakingIntentConfirmed event.
- Proceed to next step if _stakingIntentHash in the event matches the same got in StakingIntentDeclared.</li>
- <li>Staker address calls processStaking of openSTValue contract.</li>
- <li>Staker address calls processMinting of openSTUtility contract.</li>
- <li>Staker address calls claim of utilityTokenInterface contract.</li>
-</ol></div>
-        
-
-        
-            
 <hr>
 <dt>
-    <h4 class="name" id="module:tools/stake_and_mint/util"><span class="type-signature"></span>(require("tools/stake_and_mint/util"))(stakerAddress, stakerPassphrase, beneficiary, toStakeAmount, utilityTokenInterfaceContract)</h4>
+    <h4 class="name" id="OpenSTValue"><span class="type-signature"></span>new OpenSTValue(contractAddress)</h4>
     
     
 </dt>
 <dd>
 
-    
-    <div class="description">
-        perform stake and mint
-    </div>
     
 
     
@@ -171,7 +146,7 @@ Following are the steps which are performed in here:
 
         <tr>
             
-                <td class="name"><code>stakerAddress</code></td>
+                <td class="name"><code>contractAddress</code></td>
             
 
             <td class="type">
@@ -188,103 +163,7 @@ Following are the steps which are performed in here:
 
             
 
-            <td class="description last">Address of the staker</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>stakerPassphrase</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="String.html">String</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Passphrase of staker address</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>beneficiary</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="String.html">String</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Address of the beneficiary</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>toStakeAmount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Amount to stake in ST</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>utilityTokenInterfaceContract</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">utilityTokenInterfaceKlass</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Contract interact class object for utility token interface contract</td>
+            <td class="description last">address on Value Chain where Contract has been deployed</td>
         </tr>
 
     
@@ -344,33 +223,23 @@ Following are the steps which are performed in here:
     
 
     
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
 </dd>
 
-        
     
     </div>
+
+    
+        <h3 class="subsection-title">Extends</h3>
+
+        
+
+
+    <ul>
+        <li>OpsManagedContract</li>
+    </ul>
+
 
     
 
@@ -391,7 +260,7 @@ Following are the steps which are performed in here:
             
 <hr>
 <dt>
-    <h4 class="name" id="~checkAllowanceAndApproveIfNeeded"><span class="type-signature">&lt;inner> </span>checkAllowanceAndApproveIfNeeded(stakerAddress, passphrase, toStakeAmount)</h4>
+    <h4 class="name" id="getHashUUID"><span class="type-signature"></span>getHashUUID(sym, name, chainIdValue, chainIdUtility, conversionRate, contractAddress)</h4>
     
     
 </dt>
@@ -399,7 +268,7 @@ Following are the steps which are performed in here:
 
     
     <div class="description">
-        Check allowance and approve if needed
+        Get hashed UUID on the basis of passed params
     </div>
     
 
@@ -434,7 +303,7 @@ Following are the steps which are performed in here:
 
         <tr>
             
-                <td class="name"><code>stakerAddress</code></td>
+                <td class="name"><code>sym</code></td>
             
 
             <td class="type">
@@ -451,14 +320,14 @@ Following are the steps which are performed in here:
 
             
 
-            <td class="description last">Staker address</td>
+            <td class="description last">symbol of token which is being proposed</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>passphrase</code></td>
+                <td class="name"><code>name</code></td>
             
 
             <td class="type">
@@ -475,14 +344,14 @@ Following are the steps which are performed in here:
 
             
 
-            <td class="description last">Staker address passphrase</td>
+            <td class="description last">name of token which is being proposed</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>toStakeAmount</code></td>
+                <td class="name"><code>chainIdValue</code></td>
             
 
             <td class="type">
@@ -499,138 +368,38 @@ Following are the steps which are performed in here:
 
             
 
-            <td class="description last">to stake amount</td>
+            <td class="description last">chain id of Value Chain where this token's transactions go</td>
         </tr>
 
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="~describeChain"><span class="type-signature">&lt;inner> </span>describeChain(chainType, web3Provider)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Describe chain
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>chainType</code></td>
+                <td class="name"><code>chainIdUtility</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">chain id of Utility Chain where this token's transactions go</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>conversionRate</code></td>
             
 
             <td class="type">
@@ -647,290 +416,14 @@ Following are the steps which are performed in here:
 
             
 
-            <td class="description last">Chain type</td>
+            <td class="description last">conversation rate of token which is being proposed with respet to Simple Token</td>
         </tr>
 
     
 
         <tr>
             
-                <td class="name"><code>web3Provider</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Web3</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">web3 provider</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise.&lt;Number></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="~describeMember"><span class="type-signature">&lt;inner> </span>describeMember(member)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Describe member
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>member</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Object</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">member object</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="~getSTBalance"><span class="type-signature">&lt;inner> </span>getSTBalance(address)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Get ST balance
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>address</code></td>
+                <td class="name"><code>contractAddress</code></td>
             
 
             <td class="type">
@@ -947,7 +440,7 @@ Following are the steps which are performed in here:
 
             
 
-            <td class="description last">Address to get the ST balance</td>
+            <td class="description last">address where this Symbol's contract is deployed</td>
         </tr>
 
     
@@ -1018,7 +511,7 @@ Following are the steps which are performed in here:
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;BigNumber></span>
+<span class="param-type"><a href="String.html">String</a></span>
 
 
 
@@ -1035,7 +528,7 @@ Following are the steps which are performed in here:
             
 <hr>
 <dt>
-    <h4 class="name" id="~listenToUtilityToken"><span class="type-signature">&lt;inner> </span>listenToUtilityToken(stakingIntentHash)</h4>
+    <h4 class="name" id="getRegistrar"><span class="type-signature"></span>getRegistrar()</h4>
     
     
 </dt>
@@ -1043,7 +536,105 @@ Following are the steps which are performed in here:
 
     
     <div class="description">
-        Listen to utility token contract
+        Get Register's address of this Contract
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="processStaking"><span class="type-signature"></span>processStaking(reserveAddress, reservePassphrase, stakingIntentHash)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Process Staking ST
     </div>
     
 
@@ -1074,6 +665,54 @@ Following are the steps which are performed in here:
     </thead>
 
     <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>reserveAddress</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">address who is staking ST</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>reservePassphrase</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">passphrase of reserveAddress</td>
+        </tr>
+
     
 
         <tr>
@@ -1095,7 +734,7 @@ Following are the steps which are performed in here:
 
             
 
-            <td class="description last">Staking intent hash</td>
+            <td class="description last">intent hash which was returned in event data of Stake method</td>
         </tr>
 
     
@@ -1166,7 +805,7 @@ Following are the steps which are performed in here:
     </dt>
     <dd>
         
-<span class="param-type">Promise</span>
+<span class="param-type">Result</span>
 
 
 
@@ -1183,7 +822,7 @@ Following are the steps which are performed in here:
             
 <hr>
 <dt>
-    <h4 class="name" id="~toDisplayST"><span class="type-signature">&lt;inner> </span>toDisplayST(num)</h4>
+    <h4 class="name" id="registerUtilityToken"><span class="type-signature"></span>registerUtilityToken(symbol, name, conversionRate, chainId, checkUuid, senderName)</h4>
     
     
 </dt>
@@ -1191,7 +830,7 @@ Following are the steps which are performed in here:
 
     
     <div class="description">
-        display value in ST
+        Register Utility Token
     </div>
     
 
@@ -1226,165 +865,37 @@ Following are the steps which are performed in here:
 
         <tr>
             
-                <td class="name"><code>num</code></td>
+                <td class="name"><code>symbol</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Bignumber</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">number of ST wei</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    display value in ST
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
 <span class="param-type"><a href="String.html">String</a></span>
 
 
 
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
             
-<hr>
-<dt>
-    <h4 class="name" id="~toWeiST"><span class="type-signature">&lt;inner> </span>toWeiST(amount)</h4>
-    
-    
-</dt>
-<dd>
+            </td>
 
-    
-    <div class="description">
-        convert amount to wei
-    </div>
-    
+            
 
-    
+            
 
-    
+            <td class="description last">symbol of token which is being proposed</td>
+        </tr>
 
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>amount</code></td>
+                <td class="name"><code>name</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Bignumber</span>
+<span class="param-type"><a href="String.html">String</a></span>
 
 
 
@@ -1395,7 +906,103 @@ Following are the steps which are performed in here:
 
             
 
-            <td class="description last">The amount in ST</td>
+            <td class="description last">name of token which is being proposed</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>conversionRate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">conversation rate of token which is being proposed with respet to Simple Token</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>chainId</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">chain id of Utility Chain where this token's transactions go</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>checkUuid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">UUID to validate token config</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>senderName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">name of sender who signs these transactions</td>
         </tr>
 
     
@@ -1458,10 +1065,6 @@ Following are the steps which are performed in here:
     <h5>Returns:</h5>
     
             
-<div class="param-desc">
-    converted amount in wei.
-</div>
-
 
 
 <dl>
@@ -1470,7 +1073,251 @@ Following are the steps which are performed in here:
     </dt>
     <dd>
         
-<span class="param-type">Bignumber</span>
+<span class="param-type">Result</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="stake"><span class="type-signature"></span>stake(reserveAddress, reservePassphrase, uuid, amountST, beneficiaryAddr)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Stake ST
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>reserveAddress</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">address who is staking ST</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>reservePassphrase</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">passphrase of reserveAddress</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>uuid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">UUID of staker</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>amountST</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">anount of ST being staked</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>beneficiaryAddr</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">address to which BT's would be credited</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Result</span>
 
 
 

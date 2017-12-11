@@ -3,9 +3,9 @@
 /**
  * This is utility class for deploying contract<br><br>
  *
- * Ref: {@link module:DeployHelper}
+ * Ref: {@link module:tools/deploy/DeployHelper}
  *
- * @module deploy/helper
+ * @module tools/deploy/helper
  */
 
 const rootPrefix = '../..'
@@ -56,22 +56,23 @@ const _private = {
 /**
  * Deploy Helper class to perform deploy
  *
- * @exports deploy/DeployHelper
+ * @exports tools/deploy/DeployHelper
  */
 const deployHelper = {
 
   /**
    * Method deploys contract
    *
-   * @param {String} Contract Name to be deployed
-   * @param {Web3} Web3 Provider object
-   * @param {String} Contract Abi to be deployed
-   * @param {String} Contract Bin file to be deployed
-   * @param {String} Deployer name
-   * @param {Hash} Custom options like gasPrice Optional
-   * @param {Hash} Arguments to be passed while deploying contract
+   * @param {String} contractName - Contract Name to be deployed
+   * @param {Web3} web3Provider - Web3 Provider object
+   * @param {String} contractAbi - Contract Abi to be deployed
+   * @param {String} contractBin - Contract Bin file to be deployed
+   * @param {String} deployerName - Deployer name
+   * @param {Object} [customOptions] - Custom options for value/utility chain
+   * @param {Object} [constructorArgs] - Arguments to be passed while deploying contract
    *
-   * @method
+   * @async
+   * @method perform
    * @return {Promise<Object>}
    *
    */

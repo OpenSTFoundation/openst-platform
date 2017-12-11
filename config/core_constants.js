@@ -16,13 +16,6 @@ function define(name, value) {
   });
 }
 
-// different gas values in hex code. taken from http://ethgasstation.info/
-const oneGW = '3B9ACA00'
-  , fiveGW = '0x12A05F200'
-  , texGW = '0x2540BE400'
-  , twentyFiveGW = '0x5D21DBA00'
-  , fiftyGW = '0xBA43B7400';
-
 define("HTTPS_KEY", process.env.HTTPS_KEY);
 define("HTTPS_CERT", process.env.HTTPS_CERT);
 define("HTTPS_PORT", process.env.HTTPS_PORT);
@@ -62,14 +55,14 @@ define('OST_UTILITY_GAS_LIMIT', 9000000);
 
 // file path of the member config file.
 var configFilePath = process.env.OST_MEMBER_CONFIG_FILE_PATH;
-if ( !path.isAbsolute( configFilePath ) ) {
-  configFilePath = path.join(__dirname, '/' + rootPrefix + '/' + configFilePath );
+if (!path.isAbsolute(configFilePath)) {
+  configFilePath = path.join(__dirname, '/' + rootPrefix + '/' + configFilePath);
 }
 define('OST_MEMBER_CONFIG_FILE_PATH', configFilePath);
 
 // Folder path of the transfer logs
 var txLogsFolder = process.env.OST_TRANSACTION_LOGS_FOLDER;
-if ( !path.isAbsolute( txLogsFolder ) ) {
-  txLogsFolder = path.join(__dirname, '/' + rootPrefix + '/' + txLogsFolder );
+if (!path.isAbsolute(txLogsFolder)) {
+  txLogsFolder = path.join(__dirname, '/' + rootPrefix + '/' + txLogsFolder);
 }
-define('OST_TRANSACTION_LOGS_FOLDER', txLogsFolder );
+define('OST_TRANSACTION_LOGS_FOLDER', txLogsFolder);
