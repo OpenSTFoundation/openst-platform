@@ -15,19 +15,20 @@
  * @module tools/stake_and_mint/for_branded_token
  */
 
+const BigNumber = require('bignumber.js')
+  , readline = require('readline');
+
 const rootPrefix = '../..'
   , web3ValueRpcProvider = require(rootPrefix+'/lib/web3/providers/value_rpc')
   , web3UtilityWsProvider = require(rootPrefix+'/lib/web3/providers/utility_ws')
   , simpleTokenContractInteract = require(rootPrefix+'/lib/contract_interact/simpleToken')
   , brandedTokenKlass = require(rootPrefix+'/lib/contract_interact/branded_token')
   , stakeAndMintUtil = require(rootPrefix + "/tools/stake_and_mint/util")
-  , BigNumber = require('bignumber.js')
   , logger = require(rootPrefix+'/helpers/custom_console_logger')
-  , Config = require(process.argv[2] || (rootPrefix + '/config.json') )
-  , readline = require('readline')
-  , UC = "UtilityChain"
-  , VC = "ValueChain"
-;
+  , Config = require(process.argv[2] || (rootPrefix + '/config.json') );
+
+const UC = 'UtilityChain'
+  , VC = 'ValueChain';
 
 var brandedToken = null;
 
