@@ -432,8 +432,9 @@ InitUtilityToken.prototype = {
 
     return new Promise( (resolve,reject) => {
       const json = JSON.stringify(config, null, 4);
-      logger.log("Updating Config File:" , path.join(__dirname, '/' + rootPrefix + '/config.json'));
-      fs.writeFile(path.join(__dirname, '/' + rootPrefix + '/config.json'), json, err => err ? reject(err) : resolve() );
+      const configFilePath = coreConstants.OST_MEMBER_CONFIG_FILE_PATH;
+      logger.log("Updating Config File:" , configFilePath );
+      fs.writeFile(configFilePath, json, err => err ? reject(err) : resolve() );
       logger.log("Config file updated!");
     }).then( _ => {
       return newDefaults;

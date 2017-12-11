@@ -23,13 +23,13 @@
 
 const rootPrefix = '../..'
   , readline = require('readline')
-  , config = require(rootPrefix + '/config.json')
   , deployerName = "valueDeployer"
   , valueOpsName = "valueOps"
   , web3Provider = require(rootPrefix + '/lib/web3/providers/value_rpc')
   , deployHelper = require('./helper')
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , config        = require( coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
   , prompts = readline.createInterface(process.stdin, process.stdout)
   , OpenStValueContractInteract = require(rootPrefix + '/lib/contract_interact/openst_value')
   , OpenStUtilityContractInteract = require(rootPrefix + '/lib/contract_interact/openst_utility')
