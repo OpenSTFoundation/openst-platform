@@ -5,7 +5,7 @@ const path = require('path')
 ;
 
 /*
- * Constants file: Load constants from evvironment variables
+ * Constants file: Load constants from environment variables
  *
  */
 
@@ -34,10 +34,13 @@ define("OST_VALUE_GAS_PRICE", process.env.OST_VALUE_GAS_PRICE);
 define("OST_UTILITY_GAS_PRICE", process.env.OST_UTILITY_GAS_PRICE);
 
 // Zero gas constant to deploy on Utility Chain
-define("OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT", '0x');
+define("OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT", '0x0');
 
 // Total ST' Supply on utility chain
 define('OST_UTILITY_STPRIME_TOTAL_SUPPLY', process.env.OST_UTILITY_STPRIME_TOTAL_SUPPLY);
+
+// ST' UUID on utility chain
+define('OST_OPENSTUTILITY_ST_PRIME_UUID', process.env.OST_OPENSTUTILITY_ST_PRIME_UUID);
 
 // Value Chain Geth
 define('OST_GETH_VALUE_RPC_PROVIDER', process.env.OST_GETH_VALUE_RPC_PROVIDER);
@@ -52,28 +55,21 @@ define('OST_GETH_UTILITY_WS_PROVIDER', process.env.OST_GETH_UTILITY_WS_PROVIDER)
 
 // Utility Chain ID
 define('OST_UTILITY_CHAIN_ID', process.env.OST_UTILITY_CHAIN_ID);
-define('OST_OPENSTUTILITY_ST_PRIME_UUID', process.env.OST_OPENSTUTILITY_ST_PRIME_UUID);
 
-
+// Gas limit on value and utility chains
 define('OST_VALUE_GAS_LIMIT', 4700000);
 define('OST_UTILITY_GAS_LIMIT', 9000000);
-
-
 
 // file path of the member config file.
 var configFilePath = process.env.OST_MEMBER_CONFIG_FILE_PATH;
 if ( !path.isAbsolute( configFilePath ) ) {
-  configFilePath = path.join(__dirname, '/' + rootPrefix + '/' + configFilePath );  
+  configFilePath = path.join(__dirname, '/' + rootPrefix + '/' + configFilePath );
 }
 define('OST_MEMBER_CONFIG_FILE_PATH', configFilePath);
 
 // Folder path of the transfer logs
 var txLogsFolder = process.env.OST_TRANSACTION_LOGS_FOLDER;
 if ( !path.isAbsolute( txLogsFolder ) ) {
-  txLogsFolder = path.join(__dirname, '/' + rootPrefix + '/' + txLogsFolder );  
+  txLogsFolder = path.join(__dirname, '/' + rootPrefix + '/' + txLogsFolder );
 }
 define('OST_TRANSACTION_LOGS_FOLDER', txLogsFolder );
-
-
-
-

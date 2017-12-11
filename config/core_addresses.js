@@ -11,9 +11,7 @@
 
 const relPath = ".."
   , coreAbis = require('./core_abis')
-  , coreBins = require('./core_bins')
-  , coreConstants = require('./core_constants')
-  , utilityRegistrarConfig = require(relPath+"/utility_registrar_config.json");
+  , coreBins = require('./core_bins');
 
 const allAddresses = {
   users: {
@@ -125,7 +123,7 @@ for (var contractName in allAddresses.contracts) {
     for (var i = 0; i < addr.length; i++) {
       addrToContractNameMap[addr[i].toLowerCase()] = contractName;
     }
-  } else if ( addr != null && typeof addr !== "undefined") {
+  } else if ( addr !== null && typeof addr !== "undefined") {
     addrToContractNameMap[addr.toLowerCase()] = contractName;
   }
 }
@@ -167,22 +165,6 @@ const coreAddresses = {
 
   getBinForContract: function(contractName) {
     return allAddresses.contracts[contractName].bin;
-  },
-
-  getUtilityRegistrarAddress: function(utilityChainId) {
-    var utilityChainObj = utilityRegistrarConfig[utilityChainId];
-    if (utilityChainObj) {
-      return utilityChainObj.registrarAddr;
-    }
-    return "";
-  },
-
-  getUtilityRegistrarPassphrase: function(utilityChainId) {
-    var utilityChainObj = utilityRegistrarConfig[utilityChainId];
-    if (utilityChainObj) {
-      return utilityChainObj.registrarPassphrase;
-    }
-    return "";
   }
 };
 

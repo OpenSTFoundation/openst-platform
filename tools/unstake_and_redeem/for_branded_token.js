@@ -1,33 +1,44 @@
 "use strict";
 
-const rootPrefix = '../..'
-  , web3ValueRpcProvider = require(rootPrefix + '/lib/web3/providers/value_rpc')
-  , web3UtilityRpcProvider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
-  , web3UtilityWsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
-  , simpleTokenContractInteract = require(rootPrefix + '/lib/contract_interact/simpleToken')
-  , coreConstants   = require( rootPrefix + '/config/core_constants' )
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , brandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
-  , stakeAndMintUtil = require(rootPrefix + "/tools/stake_and_mint/util")
-  , openSTValueContractName = 'openSTValue'
-  , openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName)
-  , openSTUtilityContractName = 'openSTUtility'
-  , openSTUtilityContractABI = coreAddresses.getAbiForContract(openSTUtilityContractName)
-  , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
-  , BigNumber = require('bignumber.js')
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , Config = require( process.argv[2] || coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
+const BigNumber = require('bignumber.js')
   , readline = require('readline')
-  , UC = "UtilityChain"
-  , VC = "ValueChain"
 ;
 
-var brandedToken = null
-  , selectedMember = null
-  , redeemerAddress = null
-  , redeemerPassphrase = null
-  , redeemerBtBalance = null
-  , toRedeemAmount = null;
+const rootPrefix = '../..'
+  , web3UtilityRpcProvider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
+  , web3ValueWsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
+  , web3UtilityWsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
+  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , coreConstants   = require( rootPrefix + '/config/core_constants' )
+  , brandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , Config = require( process.argv[2] || coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
+  , eventsFormatter = require(rootPrefix + '/lib/web3/events/formatter.js')
+  , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
+  , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+;
+
+const openSTValueContractName = 'openSTValue'
+  , UC = "UtilityChain"
+  , VC = "ValueChain"
+  , openSTUtilityContractName = 'openSTUtility'
+  , openSTValueContractABI = coreAddresses.getAbiForContract(openSTValueContractName)
+  , openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName)
+  , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
+  , openSTValueContractInteract = new openSTValueContractInteractKlass(openSTValueContractAddress)
+  , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass(openSTUtilityContractAddress)
+;
+
+var brandedToken          = null
+  , selectedMember        = null
+  , redeemerAddress       = null
+  , redeemerPassphrase    = null
+  , redeemerBtBalance     = null
+  , toRedeemAmount        = null
+  , redeemerNonce         = null
+  , tokenUuid             = null
+  , redemptionIntentHash  = null
+;
 
 /**
  * @ignore
@@ -105,8 +116,7 @@ const toDisplayInBaseUnit = function (weiAmount) {
  */
 const describeChain = function (chainType, web3Provider) {
   logger.step("Validate", chainType);
-  return web3Provider.eth.net.getId()
-    .then(function (networkId) {
+  return web3Provider.eth.net.getId().then(function (networkId) {
       logger.info(chainType, "NetworkId: ", networkId);
       logger.info(chainType, "HttpProvider.host: ", web3Provider.currentProvider.host);
       logger.win(chainType, "Validated");
@@ -205,6 +215,22 @@ const confirmToken = function (member) {
 };
 
 /**
+ * Get uuid of the token
+ *
+ * @return {Promise}
+ */
+const getUuidForToken = async function () {
+  const getUuidResult = await brandedToken.getUuid();
+
+  if (getUuidResult.isSuccess()) {
+    tokenUuid = getUuidResult.data.uuid;
+    return Promise.resolve();
+  } else {
+    return Promise.reject('error in finding uuid of Member:', selectedMember);
+  }
+};
+
+/**
  * Ask redeemer address
  *
  * @return {Promise}
@@ -254,7 +280,7 @@ const askRedeemerPassphrase = function () {
 
       readlineInterface.removeListener("line", rlCallback);
       redeemerPassphrase = passphrase;
-      resolve(passphrase);
+      resolve();
     };
     readlineInterface.on("line", rlCallback);
   });
@@ -267,8 +293,8 @@ const askRedeemerPassphrase = function () {
  *
  * @return {Promise<Number>}
  */
-const getRedeemerBTBalance = function (redeemer) {
-  return brandedToken.getBalanceOf(redeemer).then(
+const getRedeemerBTBalance = function () {
+  return brandedToken.getBalanceOf(redeemerAddress).then(
     function (res) {
       if (res.isSuccess()) {
         redeemerBtBalance = res.data.balance;
@@ -330,7 +356,7 @@ const setApprovalForopenSTUtilityContract = function () {
     .then(function (result) {
       const allowance = result.data.remaining
         , bigNumAllowance = new BigNumber(allowance)
-        , needsApproval = (bigNumAllowance != toStakeAmount);
+        , needsApproval = (bigNumAllowance != toRedeemAmount);
 
       logger.info("Redeemer Allowance for openSTUtility contract:", toDisplayInBaseUnit(allowance));
 
@@ -363,41 +389,150 @@ const setApprovalForopenSTUtilityContract = function () {
     });
 };
 
+/**
+ * Get nonce for redeeming
+ *
+ * @return {Promise}
+ */
 const getNonceForRedeeming = function () {
+  return openSTValueContractInteract.getNextNonce(redeemerAddress).then(
+    function (_out) {
+      redeemerNonce = _out;
+      return true;
+    }
+  )
 };
 
-const redeem = function () {
-};
+const redeem = async function () {
+  const redeemResult = await openSTUtilityContractInteract.redeem(
+    redeemerAddress,
+    redeemerPassphrase,
+    tokenUuid,
+    toRedeemAmount,
+    redeemerNonce
+  );
 
-const listenToRedemptionIntentConfirmed = function () {
-};
+  if (redeemResult.isSuccess()) {
+    const formattedTransactionReceipt = redeemResult.data.formattedTransactionReceipt
+      , rawTxReceipt = redeemResult.data.rawTransactionReceipt;
 
-const processRedeeming = function () {
-};
+    var eventName = 'RedemptionIntentDeclared'
+      , formattedEventData = await eventsFormatter.perform(formattedTransactionReceipt)
+      , eventDataValues = formattedEventData[eventName];
 
-const processUnstaking = function () {
+    if (!eventDataValues) {
+      console.log("openSTUtilityContractInteract.redeem was not completed correctly: RedemptionIntentDeclared event didn't found in events data");
+      console.log("rawTxReceipt is:\n");
+      console.log(rawTxReceipt);
+      console.log("\n\n formattedTransactionReceipt is:\n");
+      console.log(formattedTransactionReceipt);
+      return Promise.reject("openSTUtilityContractInteract.redeem was not completed correctly: RedemptionIntentDeclared event didn't found in events data");
+    }
+
+    logger.win("Redeeming Done.", toDisplayInBaseUnit(toRedeemAmount));
+
+    logger.info("eventDataValues:");
+    logger.info(eventDataValues);
+
+    redemptionIntentHash = eventDataValues['_redemptionIntentHash'];
+
+    return Promise.resolve();
+  }
 };
 
 /**
- * Perform stake and mint for branded token
+ * Listen to open st value
+ *
+ * @return {Promise}
+ */
+const listenToRedemptionIntentConfirmed = function () {
+
+  return new Promise(function (onResolve, onReject) {
+
+    const openSTValueContract = new web3ValueWsProvider.eth.Contract(
+      openSTValueContractABI,
+      openSTValueContractAddress
+    );
+
+    openSTValueContract.setProvider(web3ValueWsProvider.currentProvider);
+
+    openSTValueContract.events.RedemptionIntentConfirmed({})
+      .on('error', function (errorObj) {
+        logger.error("Could not Subscribe to RedemptionIntentConfirmed");
+        onReject();
+      })
+      .on('data', function (eventObj) {
+        logger.info("data :: RedemptionIntentConfirmed");
+        const returnValues = eventObj.returnValues;
+        if (returnValues) {
+          const _redemptionIntentHash = returnValues._redemptionIntentHash;
+
+          // We need to perform action only if the redemption intent hash matches.
+          // Need this check this as there might be multiple redeems(by different member company) on same Utility chain.
+
+          if (redemptionIntentHash.equalsIgnoreCase(_redemptionIntentHash)) {
+            onResolve(eventObj);
+          }
+        }
+      });
+  });
+};
+
+/**
+ * Process redeeming
+ *
+ * @return {Promise}
+ */
+const processRedeeming = function () {
+
+  logger.win("Completed processing Reedeeming");
+  logger.step("Process Unstaking Now.");
+
+  return openSTUtilityContractInteract.processRedeeming(
+    redeemerAddress,
+    redeemerPassphrase,
+    redemptionIntentHash
+  );
+
+};
+
+/**
+ * Process unstaking
+ *
+ * @return {Promise}
+ */
+const processUnstaking = function () {
+
+  logger.win("Completed processing Reedeeming");
+  logger.step("Process Unstaking Now.");
+
+  return openSTValueContractInteract.processUnstaking(
+    redeemerAddress,
+    redeemerPassphrase,
+    redemptionIntentHash
+  );
+
+};
+
+/**
+ * Perform unstake and redeem for branded token
  */
 (function () {
-  describeValueChain
+  describeValueChain()
     .then(describeUtilityChain)
     .then(listAllTokens)
     .then(confirmToken)
+    .then(getUuidForToken)
     .then(askRedeemerAddress)
     .then(askRedeemerPassphrase)
     .then(getRedeemerBTBalance)
     .then(askRedeemingAmount)
     .then(setApprovalForopenSTUtilityContract)
-
     .then(getNonceForRedeeming)
     .then(redeem)
     .then(listenToRedemptionIntentConfirmed)
     .then(processRedeeming)
     .then(processUnstaking)
-
     .then(function () {
       logger.win("Yoo.. Have Fun!!");
       process.exit(0);

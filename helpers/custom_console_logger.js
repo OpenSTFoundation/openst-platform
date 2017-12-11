@@ -23,51 +23,51 @@ const STEP_PRE = "";
 
 module.exports = {
   "STEP_PRE": STEP_PRE
-  ,"WARN_PRE": WARN_PRE
-  ,"WIN_PRE": WIN_PRE
-  ,"INFO_PRE": INFO_PRE
-  ,"ERR_PRE" : ERR_PRE
-  ,"CONSOLE_RESET" : CONSOLE_RESET
+  , "WARN_PRE": WARN_PRE
+  , "WIN_PRE": WIN_PRE
+  , "INFO_PRE": INFO_PRE
+  , "ERR_PRE": ERR_PRE
+  , "CONSOLE_RESET": CONSOLE_RESET
 
-  ,step : function() {
+  , step: function () {
     var args = [this.STEP_PRE];
     args = args.concat(Array.prototype.slice.call(arguments));
-    args.push( this.CONSOLE_RESET );
+    args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
   }
 
   //Method to Log Information
-  ,info: function() {
+  , info: function () {
     var args = [this.INFO_PRE];
     args = args.concat(Array.prototype.slice.call(arguments));
-    args.push( this.CONSOLE_RESET );
+    args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
   }
 
   //Method to Log Error.
-  ,error: function() {
+  , error: function () {
     var args = [this.ERR_PRE];
     args = args.concat(Array.prototype.slice.call(arguments));
-    args.push( this.CONSOLE_RESET );
+    args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
   }
 
-  ,warn: function () {
-    var args = [ this.WARN_PRE ];
+  , warn: function () {
+    var args = [this.WARN_PRE];
     args = args.concat(Array.prototype.slice.call(arguments));
-    args.push( this.CONSOLE_RESET );
+    args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
   }
 
   //Method to Log Success/Win.
-  ,win: function() {
-    var args = [ this.WIN_PRE ];
+  , win: function () {
+    var args = [this.WIN_PRE];
     args = args.concat(Array.prototype.slice.call(arguments));
-    args.push( this.CONSOLE_RESET );
+    args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
   }
 
-  ,log: function () {
+  , log: function () {
     console.log.apply(console, arguments);
   }
 };

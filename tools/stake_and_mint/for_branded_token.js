@@ -15,25 +15,18 @@
  * @module tools/stake_and_mint/for_branded_token
  */
 
-const rootPrefix = '../..'
-  , web3ValueRpcProvider = require(rootPrefix+'/lib/web3/providers/value_rpc')
-  , web3UtilityWsProvider = require(rootPrefix+'/lib/web3/providers/utility_ws')
-  , simpleTokenContractInteract = require(rootPrefix+'/lib/contract_interact/simpleToken')
-  , coreAddresses = require(rootPrefix+'/config/core_addresses')
-  , coreConstants = require( rootPrefix + '/config/core_constants' )
-  , brandedTokenKlass = require(rootPrefix+'/lib/contract_interact/branded_token')
-  , stakeAndMintUtil = require(rootPrefix + "/tools/stake_and_mint/util")
-  , openSTValueContractName = 'openSTValue'
-  , openSTValueContractAddress =  coreAddresses.getAddressForContract(openSTValueContractName)
-  , openSTUtilityContractName = 'openSTUtility'
-  , openSTUtilityContractABI = coreAddresses.getAbiForContract(openSTUtilityContractName)
-  , openSTUtilityContractAddress =  coreAddresses.getAddressForContract(openSTUtilityContractName)
-  , BigNumber = require('bignumber.js')
-  , logger = require(rootPrefix+'/helpers/custom_console_logger')
-  , Config = require(process.argv[2] || coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
-  , readline = require('readline')
-  , UC = "UtilityChain"
-  , VC = "ValueChain"
+const BigNumber = require('bignumber.js')
+  , readline = require('readline');
+
+const rootPrefix                = '../..'
+  , web3ValueRpcProvider        = require( rootPrefix+'/lib/web3/providers/value_rpc' )
+  , web3UtilityWsProvider       = require( rootPrefix+'/lib/web3/providers/utility_ws' )
+  , simpleTokenContractInteract = require( rootPrefix+'/lib/contract_interact/simpleToken' )
+  , coreConstants               = require( rootPrefix + '/config/core_constants' )
+  , brandedTokenKlass           = require( rootPrefix+'/lib/contract_interact/branded_token' )
+  , stakeAndMintUtil            = require( rootPrefix + "/tools/stake_and_mint/util" )
+  , logger                      = require( rootPrefix+'/helpers/custom_console_logger' )
+  , Config                      = require( process.argv[2] || coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
 ;
 
 var brandedToken = null;

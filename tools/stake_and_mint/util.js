@@ -25,28 +25,30 @@
  * @module tools/stake_and_mint/util
  */
 
+const BigNumber = require('bignumber.js')
+  , readline    = require('readline')
+;
+
 const rootPrefix = '../..'
+  , coreAddresses = require(rootPrefix+'/config/core_addresses')
+  , coreConstants = require( rootPrefix + '/config/core_constants' )
   , web3UtilityWsProvider = require(rootPrefix+'/lib/web3/providers/utility_ws')
   , eventsFormatter = require(rootPrefix+'/lib/web3/events/formatter.js')
+  , logger = require(rootPrefix+'/helpers/custom_console_logger')
   , simpleTokenContractInteract = require(rootPrefix+'/lib/contract_interact/simpleToken')
-  , coreAddresses   = require(rootPrefix+'/config/core_addresses')
-  , coreConstants   = require( rootPrefix + '/config/core_constants' )
-  , openSTValueContractName = 'openSTValue'
-  , openSTValueContractAddress =  coreAddresses.getAddressForContract(openSTValueContractName)
   , openSTValueContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_value')
-  , openSTValueContractInteract = new openSTValueContractInteractKlass()
+  , openSTUtilityContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_utility')
+;
+
+const VC = "ValueChain"
+  , openSTValueContractName = 'openSTValue'
   , openSTUtilityContractName = 'openSTUtility'
   , openSTUtilityContractABI = coreAddresses.getAbiForContract(openSTUtilityContractName)
+  , openSTValueContractAddress =  coreAddresses.getAddressForContract(openSTValueContractName)
   , openSTUtilityContractAddress =  coreAddresses.getAddressForContract(openSTUtilityContractName)
-  , openSTUtilityContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_utility')
+  , openSTValueContractInteract = new openSTValueContractInteractKlass()
   , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass()
-  , BigNumber = require('bignumber.js')
-  , logger = require(rootPrefix+'/helpers/custom_console_logger')
-  , Config = require(process.argv[2] || coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
-  , readline = require('readline')
-  , UC = "UtilityChain"
-  , VC = "ValueChain"
-  ;
+;
 
 /**
  * convert amount to wei
