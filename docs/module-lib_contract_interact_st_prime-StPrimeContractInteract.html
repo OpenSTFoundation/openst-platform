@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Simple Token Foundation Global</title>
+	<title>Simple Token Foundation Class: StPrimeContractInteract</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -86,13 +86,15 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Global</h1>
+	<h1 class="page-title">Class: StPrimeContractInteract</h1>
 <section>
 
 <header>
     
         <h2>
+            <span class="ancestors"><a href="module-lib_contract_interact_st_prime.html">lib/contract_interact/st_prime</a>~</span>
         
+        StPrimeContractInteract
         </h2>
         
     
@@ -103,8 +105,74 @@
     <div class="container-overview">
     
         
+<hr>
+<dt>
+    <h4 class="name" id="StPrimeContractInteract"><span class="type-signature"></span>new StPrimeContractInteract(contractAddress)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
 
         
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>contractAddress</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">address where Contract has been deployed</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
 <dl class="details">
     
 
@@ -144,7 +212,21 @@
 </dl>
 
 
-        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
     
     </div>
 
@@ -167,7 +249,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="askRedeemerAddress"><span class="type-signature"></span>askRedeemerAddress()</h4>
+    <h4 class="name" id="claim"><span class="type-signature"></span>claim(senderAddress, senderPassphrase, beneficiaryAddress)</h4>
     
     
 </dt>
@@ -175,301 +257,7 @@
 
     
     <div class="description">
-        Ask redeemer address
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="askRedeemerPassphrase"><span class="type-signature"></span>askRedeemerPassphrase()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Ask redeemer passphrase
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="askRedeemingAmount"><span class="type-signature"></span>askRedeemingAmount()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Ask redeeming amount
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="confirmToken"><span class="type-signature"></span>confirmToken(member)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Confirm token
+        Get passprhrase for a member company address
     </div>
     
 
@@ -504,7 +292,621 @@
 
         <tr>
             
-                <td class="name"><code>member</code></td>
+                <td class="name"><code>senderAddress</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">address of sender</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>senderPassphrase</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">passphrase of senderAddress</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>beneficiaryAddress</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">address where funds would be credited</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Result</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getBalanceOf"><span class="type-signature"></span>getBalanceOf(owner)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Get ST Prime Balance of an address
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>owner</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">address</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Result</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getMemberPassphrase"><span class="type-signature"></span>getMemberPassphrase(address)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Get passprhrase for a member company address
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>address</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">passphrase of this new account</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Result</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="getUuid"><span class="type-signature"></span>getUuid()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Get UUID
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Result</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="initialize_transfer"><span class="type-signature"></span>initialize_transfer(senderName, customOptions)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Initialize Transer of ST Prime
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>senderName</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">address who is initializing this transfer</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>customOptions</code></td>
             
 
             <td class="type">
@@ -521,7 +923,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last">custom params for this transaction</td>
         </tr>
 
     
@@ -592,7 +994,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;Object></span>
+<span class="param-type">Promise</span>
 
 
 
@@ -609,7 +1011,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="describeChain"><span class="type-signature"></span>describeChain(chainType, web3Provider)</h4>
+    <h4 class="name" id="newManagedAccount"><span class="type-signature"></span>newManagedAccount(passphrase)</h4>
     
     
 </dt>
@@ -617,7 +1019,7 @@
 
     
     <div class="description">
-        Describe chain
+        Create a new managed account
     </div>
     
 
@@ -652,7 +1054,7 @@
 
         <tr>
             
-                <td class="name"><code>chainType</code></td>
+                <td class="name"><code>passphrase</code></td>
             
 
             <td class="type">
@@ -669,31 +1071,7 @@
 
             
 
-            <td class="description last">Chain type</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>web3Provider</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Web3</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">web3 provider</td>
+            <td class="description last">passphrase of this new account</td>
         </tr>
 
     
@@ -764,7 +1142,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;Number></span>
+<span class="param-type">Result</span>
 
 
 
@@ -781,7 +1159,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="describeToken"><span class="type-signature"></span>describeToken(member)</h4>
+    <h4 class="name" id="newMemberManagedAccount"><span class="type-signature"></span>newMemberManagedAccount()</h4>
     
     
 </dt>
@@ -789,7 +1167,105 @@
 
     
     <div class="description">
-        Describe token
+        Create a new managed account for a Member Company
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Result</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="transfer"><span class="type-signature"></span>transfer(sender, recipient, amountInWei, tag)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Transfer ST Prime
     </div>
     
 
@@ -824,13 +1300,13 @@
 
         <tr>
             
-                <td class="name"><code>member</code></td>
+                <td class="name"><code>sender</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type"><a href="String.html">String</a></span>
 
 
 
@@ -841,222 +1317,20 @@
 
             
 
-            <td class="description last">member object</td>
+            <td class="description last">address of sender</td>
         </tr>
 
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="getNonceForRedeeming"><span class="type-signature"></span>getNonceForRedeeming()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Get nonce for redeeming
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="getRedeemerBTBalance"><span class="type-signature"></span>getRedeemerBTBalance(redeemer)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Get redeemer BT balance
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>redeemer</code></td>
+                <td class="name"><code>recipient</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Address</span>
+<span class="param-type"><a href="String.html">String</a></span>
 
 
 
@@ -1067,7 +1341,55 @@
 
             
 
-            <td class="description last">redeemer adddress</td>
+            <td class="description last">address of recipient</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>amountInWei</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">amount in wei which is to be transferred</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>tag</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">additional data that goes into this tranasction's log</td>
         </tr>
 
     
@@ -1138,971 +1460,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Promise.&lt;Number></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="getUuidForToken"><span class="type-signature">&lt;async> </span>getUuidForToken()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Get uuid of the token
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="listAllTokens"><span class="type-signature"></span>listAllTokens()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        List all members
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="listenToRedemptionIntentConfirmed"><span class="type-signature"></span>listenToRedemptionIntentConfirmed()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Listen to open st value
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="module:tools/stake_and_mint/util"><span class="type-signature"></span>module:tools/stake_and_mint/util(stakerAddress, stakerPassphrase, beneficiary, toStakeAmount, utilityTokenInterfaceContract)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        perform stake and mint
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>stakerAddress</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="String.html">String</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Address of the staker</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>stakerPassphrase</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="String.html">String</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Passphrase of staker address</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>beneficiary</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type"><a href="String.html">String</a></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Address of the beneficiary</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>toStakeAmount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Amount to stake in ST</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>utilityTokenInterfaceContract</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">utilityTokenInterfaceKlass</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Contract interact class object for utility token interface contract</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="processRedeeming"><span class="type-signature"></span>processRedeeming()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Process redeeming
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="processUnstaking"><span class="type-signature"></span>processUnstaking()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Process unstaking
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="setApprovalForopenSTUtilityContract"><span class="type-signature"></span>setApprovalForopenSTUtilityContract()</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Set approval for openSTUtility contract
-    </div>
-    
-
-    
-
-    
-
-    
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Promise</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="toDisplayInBaseUnit"><span class="type-signature"></span>toDisplayInBaseUnit(weiAmount)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        to display value in base unit
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>weiAmount</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Bignumber</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">amount in wei</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-<div class="param-desc">
-    display value in base unit
-</div>
-
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type"><a href="String.html">String</a></span>
+<span class="param-type">Result</span>
 
 
 
