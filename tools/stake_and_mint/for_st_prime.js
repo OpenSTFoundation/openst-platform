@@ -14,7 +14,6 @@
 (function () {
   const rootPrefix = "../.."
     , coreAddresses   = require( rootPrefix + '/config/core_addresses' )
-    , coreConstants   = require( rootPrefix + '/config/core_constants' )
     , util = require(rootPrefix + "/tools/stake_and_mint/util")
     , StPrimeKlass    = require( rootPrefix + '/lib/contract_interact/st_prime' )
     , stakerAddress = coreAddresses.getAddressForUser("utilityChainOwner")

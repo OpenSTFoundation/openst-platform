@@ -24,12 +24,13 @@
  * @module tools/deploy/openst_value
  */
 
+const readline = require('readline');
+
 const rootPrefix = '../..'
   , web3Provider = require(rootPrefix + '/lib/web3/providers/value_rpc')
-  , deployHelper = require('./helper')
+  , deployHelper = require(rootPrefix + '/tools/deploy/helper')
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , readline = require('readline')
   , prompts = readline.createInterface(process.stdin, process.stdout)
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , ValueRegistrar = require(rootPrefix + "/lib/contract_interact/value_registrar")
