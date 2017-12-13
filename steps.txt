@@ -49,7 +49,7 @@ STEPS
     - source test/open_st_env_vars.sh
     - on staging/production in poa-genesis-utility.json alloc 800M base tokens to machine key(deployer)
     - Verify if OST_DEPLOYER_UTILITY_ADDR has exactly 800M balance on utility chain
-    - node tools/deploy/openst_utility.js
+    - node tools/deploy/openst_stprime_registrar_utility.js
 
 8) On Value Chain Machine
     - source test/open_st_env_vars.sh
