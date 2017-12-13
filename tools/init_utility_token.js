@@ -197,7 +197,7 @@ InitUtilityToken.prototype = {
       return (typeof registerParams[ eventName ] === "undefined");
     };
     //..Check it.
-    var missingParam = mustHaveParams.find(isMissing)
+    var missingParam = mustHaveParams.find(isMissing);
     if ( missingParam ) {
       logger.error("registerOnUtility :: Required parameters missing. missingParam :", missingParam);
       logger.log("registerOnUtility :: registerParams \n\t", JSON.stringify(registerParams, null, 4) );
@@ -266,9 +266,9 @@ InitUtilityToken.prototype = {
     //..Create Array.some callback. It should return true if any param is missing. 
     const isMissing = function ( eventName ) {
       return (typeof registerParams[ eventName ] === "undefined");
-    }
+    };
     //..Check it.
-    var missingParam = mustHaveParams.find(isMissing)
+    var missingParam = mustHaveParams.find(isMissing);
     if ( missingParam ) {
       logger.error("registerOnValue :: Required parameters missing. missingParam :", missingParam);
       logger.log( JSON.stringify( formattedEvents, null, 2) );
@@ -296,7 +296,7 @@ InitUtilityToken.prototype = {
       registerParams["_uuid"]
     ).then( function( response ) {
       if ( !response.isSuccess() ) {
-        logger.error("registerOnVC Failed. response")
+        logger.error("registerOnVC Failed. response");
         logger.log( JSON.stringify(response, null, 2) );
         return response;
       }
@@ -385,7 +385,7 @@ InitUtilityToken.prototype = {
    */
   , getMemberDefaults: function ( reserve, symbol, apiAuthUser, apiAuthSecret, callbackUrl) {
     const oThis = this;
-    const lowerSymbol = ( symbol ).toLowerCase()
+    const lowerSymbol = ( symbol ).toLowerCase();
     const routePath = "/" + lowerSymbol;
 
     if ( oThis.memberDefaults ) {
@@ -426,7 +426,7 @@ InitUtilityToken.prototype = {
       , members = config.Members
     ;
 
-    var newDefaults = oThis.getMemberDefaults( reserve, symbol, apiAuthUser, apiAuthSecret, callbackUrl)
+    var newDefaults = oThis.getMemberDefaults( reserve, symbol, apiAuthUser, apiAuthSecret, callbackUrl);
 
     members.unshift( newDefaults );
 
