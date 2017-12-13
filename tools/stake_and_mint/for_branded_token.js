@@ -29,6 +29,9 @@ const rootPrefix                = '../..'
   , Config                      = require( process.argv[2] || coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
 ;
 
+const UC = "UtilityChain"
+  , VC = "ValueChain";
+
 var brandedToken = null;
 
 /**
