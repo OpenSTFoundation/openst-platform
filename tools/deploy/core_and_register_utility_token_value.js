@@ -91,13 +91,14 @@ function updateConfig(valueCoreContractAddr) {
 
 const performer = async function () {
 
-  logger.step("Deploying Value Core Contract on Value Chain");
   logger.info("Deployer Address: " + deployerAddress);
   logger.info("Foundation Address: " + foundationAddress);
-  logger.info("OpenST Utility Contract: " + openSTUtilityContractAddress);
-  logger.info("OpenST Value Contract: " + openSTValueContractAddress);
   logger.info("Value Chain Registrar User Address: " + valueRegistrarUser);
   logger.info("Value Ops Address: " + valueOpsAddress);
+
+  logger.info("Value Registrar Contract: " + valueRegistrarContractAddress);
+  logger.info("OpenST Utility Contract: " + openSTUtilityContractAddress);
+  logger.info("OpenST Value Contract: " + openSTValueContractAddress);
 
   await new Promise(
     function (onResolve, onReject) {
@@ -113,6 +114,8 @@ const performer = async function () {
       });
     }
   );
+
+  logger.step("Deploying Value Core Contract on Value Chain");
 
   // deploy Core contract
   var contractName = 'valueCore'
@@ -134,17 +137,19 @@ const performer = async function () {
     constructorArgs
   );
   logger.info(coreContractDeployResult);
-  logger.win(contractName + " Contract deployed ");
+
+  const coreContractAddress = coreContractDeployResult.contractAddress;
+  logger.win(contractName + " Contract deployed at " + coreContractAddress);
 
   // Add core to openst_value
   logger.step("Add Value Core contract on Value Chain.");
-  const coreContractAddress = coreContractDeployResult.contractAddress;
   const openStValueContractInteract = new OpenStValueContractInteract(openSTValueContractAddress);
 
   const valueRegistrarContractInteract = new ValueRegistrarContractInteract(valueRegistrarContractAddress);
 
   var addCoreResponse = await valueRegistrarContractInteract.addCore(valueOpsName,
     openSTValueContractAddress, coreContractAddress);
+
   logger.info(JSON.stringify(addCoreResponse));
   logger.win("Core Contract " + coreContractAddress + " is added to Value Chain.");
 

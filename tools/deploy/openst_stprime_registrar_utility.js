@@ -91,11 +91,12 @@ const performer = async function () {
     deploymentOptions
   );
   logger.log(registrarContractDeployResult);
-  logger.win(contractName + " Contract deployed ");
 
   // set ops address to UC registrar addr
   var registrarContractAddress = registrarContractDeployResult.contractAddress
     , utilityRegistrarContractInteract = new UtilityRegistrarContractInteract(registrarContractAddress);
+
+  logger.win(contractName + " Contract deployed at " + registrarContractAddress);
 
   logger.log('\nSetting Ops Address to Utility Chain Registrar Contract Address');
 
@@ -148,11 +149,13 @@ const performer = async function () {
     deploymentOptions,
     [coreConstants.OST_VALUE_CHAIN_ID, coreConstants.OST_UTILITY_CHAIN_ID, registrarContractAddress]
   );
+
   logger.log(utiltiyContractDeployResponse);
-  logger.win(contractName + " Contract deployed ");
 
   var openSTUtilityContractAddress = utiltiyContractDeployResponse.contractAddress
     , openStUtilityContractInteract = new OpenStUtilityContractInteract(openSTUtilityContractAddress);
+
+  logger.win(contractName + " Contract deployed at " + openSTUtilityContractAddress);
 
   // initiate owner ship transfer to utilityChainOwnerAddress
   logger.log('\nInitiating Ownership Transfer of contract: ' + contractName + " to deployer: " + deployerName);

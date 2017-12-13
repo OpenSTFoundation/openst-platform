@@ -131,10 +131,11 @@ const performer = async function () {
     deployerName,
     deploymentOptions
   );
+
   logger.info(contractDeployTxReceipt);
-  logger.win(contractName + " Contract deployed ");
 
   var registrarContractAddr = contractDeployTxReceipt.contractAddress;
+  logger.win(contractName + " Contract deployed at " + registrarContractAddr);
 
   logger.step("Set ops address to value ops user address: " + valueOpsAddress);
 
@@ -176,9 +177,9 @@ const performer = async function () {
   );
 
   logger.info(contractDeployTxReceipt);
-  logger.win(contractName + " Contract deployed ");
 
   var openstValueContractAddress = contractDeployTxReceipt.contractAddress;
+  logger.win(contractName + " Contract deployed at " + openstValueContractAddress);
 
   logger.step("Transfering Ownership to STF");
 
@@ -203,6 +204,7 @@ const performer = async function () {
   await updateConfig(registrarContractAddr, openstValueContractAddress);
 
   logger.win(" Deploy script 1 completed ");
+
 };
 
 performer();
