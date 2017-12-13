@@ -43,7 +43,7 @@ STEPS
 
 6) deploy contracts on value Chain
     - source test/open_st_env_vars.sh
-    - node tools/deploy/openst_value.js
+    - node tools/deploy/openst_and_registrar_value.js
 
 7) On Utility Chain Machine
     - source test/open_st_env_vars.sh
