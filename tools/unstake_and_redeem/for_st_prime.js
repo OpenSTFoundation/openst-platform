@@ -250,8 +250,45 @@ const getNonceForRedeeming = function () {
   )
 };
 
+/**
+ * Listen to open st value
+ *
+ * @return {Promise}
+ */
 const redeemSTPrime = async function () {
+  const redeemResult = await openSTUtilityContractInteract.redeemSTPrime(
+    redeemerAddress,
+    redeemerPassphrase,
+    toRedeemAmount,
+    redeemerNonce
+  );
 
+  if (redeemResult.isSuccess()) {
+    const formattedTransactionReceipt = redeemResult.data.formattedTransactionReceipt
+      , rawTxReceipt = redeemResult.data.rawTransactionReceipt;
+
+    var eventName = 'RedemptionIntentDeclared'
+      , formattedEventData = await eventsFormatter.perform(formattedTransactionReceipt)
+      , eventDataValues = formattedEventData[eventName];
+
+    if (!eventDataValues) {
+      console.log("openSTUtilityContractInteract.redeemSTPrime was not completed correctly: RedemptionIntentDeclared event didn't found in events data");
+      console.log("rawTxReceipt is:\n");
+      console.log(rawTxReceipt);
+      console.log("\n\n formattedTransactionReceipt is:\n");
+      console.log(formattedTransactionReceipt);
+      return Promise.reject("openSTUtilityContractInteract.redeemSTPrime was not completed correctly: RedemptionIntentDeclared event didn't found in events data");
+    }
+
+    logger.win("Redeeming Done.", toDisplayInBaseUnit(toRedeemAmount));
+
+    logger.info("eventDataValues:");
+    logger.info(eventDataValues);
+
+    redemptionIntentHash = eventDataValues['_redemptionIntentHash'];
+
+    return Promise.resolve();
+  }
 };
 
 /**
