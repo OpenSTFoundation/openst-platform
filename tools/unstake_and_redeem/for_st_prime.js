@@ -1,5 +1,24 @@
 "use strict";
 
+/**
+ * This script Redeem ST' on the utility chain and unstake ST' on Value chain <br><br>.
+ *
+ * Following are the steps which are performed in this script:<br>
+ *  <ol>
+ *    <li>Make sure Redeemer has ST'.</li>
+ *    <li>Query for nonce from openSTValue contract</li>
+ *    <li>Call redeemSTPrime method of openSTUtility contract. You will get RedemptionIntentDeclared event. Validate event and the event data.</li>
+ *    <li>Wait for openSTUtility contract to give StakingIntentConfirmed event.
+ *      Proceed to next step if _stakingIntentHash in the event matches the same got in StakingIntentDeclared.</li>
+ *    <li>Redeemer address calls processRedeeming of openSTUtility contract.</li>
+ *    <li>Redeemer address calls processUnstaking of openSTValue contract.</li>
+ *  </ol><br><br>
+ *  Note: No need to get uuid of ST', as openSTUtility already has uuidSTPrime.
+ *
+ * @module tools/unstake_and_redeem/for_st_prime
+ */
+
+
 const BigNumber = require('bignumber.js')
   , readline = require('readline')
 ;
@@ -12,6 +31,7 @@ const rootPrefix = '../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , StPrimeKlass = require( rootPrefix + '/lib/contract_interact/st_prime' )
 ;
 
 const openSTValueContractName = 'openSTValue'
@@ -23,6 +43,9 @@ const openSTValueContractName = 'openSTValue'
   , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
   , openSTValueContractInteract = new openSTValueContractInteractKlass(openSTValueContractAddress)
   , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass(openSTUtilityContractAddress)
+  // , stPrimeAddress        = coreAddresses.getAddressesForContract( "stPrime" )
+  , stPrimeAddress                    = null
+  , stPrime                           = new StPrimeKlass( stPrimeAddress )
 ;
 
 var redeemerAddress       = null
@@ -31,6 +54,7 @@ var redeemerAddress       = null
   , toRedeemAmount        = null
   , redeemerNonce         = null
   , redemptionIntentHash  = null
+  , redeemerSTPrimeBalance= null
 ;
 
 /**
@@ -97,13 +121,6 @@ const describeUtilityChain = function () {
 };
 
 /**
- * Get uuid of the token
- *
- * @return {Promise}
- */
-const getUuid = async function () {};
-
-/**
  * Ask redeemer address
  *
  * @return {Promise}
@@ -166,7 +183,18 @@ const askRedeemerPassphrase = function () {
  *
  * @return {Promise<Number>}
  */
-const getRedeemerSTPrimeBalance = function () {};
+const getRedeemerSTPrimeBalance = function (redeemer) {
+  return stPrime.getBalanceOf(redeemer).then(
+    function (res) {
+      if (res.isSuccess()) {
+        redeemerSTPrimeBalance = res.data.balance;
+        return Promise.resolve();
+      } else {
+        return Promise.reject('Unable to get STPrime balance of the redeemer.')
+      }
+    }
+  );
+};
 
 /**
  * Ask redeeming amount
@@ -222,7 +250,9 @@ const getNonceForRedeeming = function () {
   )
 };
 
-const redeemSTPrime = async function () {};
+const redeemSTPrime = async function () {
+
+};
 
 /**
  * Listen to open st value
