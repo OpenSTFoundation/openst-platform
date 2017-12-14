@@ -29,6 +29,7 @@ const rootPrefix = '../..'
   , web3UtilityWsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , eventsFormatter = require(rootPrefix + '/lib/web3/events/formatter.js')
   , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , StPrimeKlass = require( rootPrefix + '/lib/contract_interact/st_prime' )
@@ -50,7 +51,6 @@ const openSTValueContractName = 'openSTValue'
 
 var redeemerAddress       = null
   , redeemerPassphrase    = null
-  , redeemerBtBalance     = null
   , toRedeemAmount        = null
   , redeemerNonce         = null
   , redemptionIntentHash  = null
@@ -183,8 +183,8 @@ const askRedeemerPassphrase = function () {
  *
  * @return {Promise<Number>}
  */
-const getRedeemerSTPrimeBalance = function (redeemer) {
-  return stPrime.getBalanceOf(redeemer).then(
+const getRedeemerSTPrimeBalance = function () {
+  return stPrime.getBalanceOf(redeemerAddress).then(
     function (res) {
       if (res.isSuccess()) {
         redeemerSTPrimeBalance = res.data.balance;
@@ -224,7 +224,7 @@ const askRedeemingAmount = function () {
       }
       const bigNumRedeemingAmount = new BigNumber(line);
       logger.log("bigNumRedeemingAmount", bigNumRedeemingAmount);
-      if (bigNumRedeemingAmount.cmp(redeemerBtBalance) > 0) {
+      if (bigNumRedeemingAmount.cmp(redeemerSTPrimeBalance) > 0) {
         logger.error("Redeemer does not have sufficient branded tokens to redeem " + toDisplayInBaseUnit(bigNumRedeemingAmount));
         reject("Redeemer does not have sufficient branded tokens to redeem " + toDisplayInBaseUnit(bigNumRedeemingAmount));
       }
@@ -371,7 +371,6 @@ const processUnstaking = function () {
 (function () {
   describeValueChain()
     .then(describeUtilityChain)
-    .then(getUuid)
     .then(askRedeemerAddress)
     .then(askRedeemerPassphrase)
     .then(getRedeemerSTPrimeBalance)
