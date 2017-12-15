@@ -18,6 +18,7 @@ const rootPrefix = "..";
 
 const coreBins = {
   simpleToken: readFile(rootPrefix + '/contracts/bin/SimpleToken.bin', 'utf8'),
+  mockSimpleToken: readFile(rootPrefix + '/contracts/bin/MockToken.bin', 'utf8'),
   openSTUtility: readFile(rootPrefix + '/contracts/bin/OpenSTUtility.bin', 'utf8'),
   openSTValue: readFile(rootPrefix + '/contracts/bin/OpenSTValue.bin', 'utf8'),
   stPrime: readFile(rootPrefix + '/contracts/bin/STPrime.bin', 'utf8'),

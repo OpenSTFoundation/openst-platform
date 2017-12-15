@@ -19,6 +19,7 @@ const rootPrefix = "..";
 
 const coreAbis = {
   simpleToken: parseFile(rootPrefix + '/contracts/abi/SimpleToken.abi', "utf8"),
+  mockSimpleToken: parseFile(rootPrefix + '/contracts/abi/MockToken.abi', "utf8"),
   openSTUtility: parseFile(rootPrefix + '/contracts/abi/OpenSTUtility.abi', "utf8"),
   openSTValue: parseFile(rootPrefix + '/contracts/abi/OpenSTValue.abi', "utf8"),
   stPrime: parseFile(rootPrefix + '/contracts/abi/STPrime.abi', "utf8"),
