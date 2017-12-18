@@ -48,7 +48,7 @@ app.use('/', indexRoutes);
 // Mount member company routes
 for (var key in config.Members) {
   const member = config.Members[key];
-  member.Route = "/bt" + member.Route
+  member.Route = "/bt" + member.Route;
   console.log("Mounting branded token", member.Name, "on", member.Route);
   app.use(member.Route, basicAuth(member.ApiAuth), new btRoutes(member));
 }
