@@ -38,6 +38,7 @@ const contractName                    = 'openSTUtility'
   // , stPrimeAddress        = coreAddresses.getAddressesForContract( "stPrime" )
   , stPrimeAddress                    = null
   , stPrime                           = new StPrimeKlass( stPrimeAddress )
+  , configFilePath = coreConstants.OST_MEMBER_CONFIG_FILE_PATH
 
 ;
 
@@ -343,7 +344,7 @@ InitUtilityToken.prototype = {
       }
     ;
 
-    const config = require(rootPrefix + "/config")
+    const config = require(configFilePath)
       , members = config.Members
       , currSym = valueOutput["_symbol"]
     ;
@@ -365,9 +366,10 @@ InitUtilityToken.prototype = {
 
     return new Promise( (resolve,reject) => {
       const json = JSON.stringify(config, null, 4);
-      logger.log("Updating Config File:" , path.join(__dirname, '/' + rootPrefix + '/config.json'));
-      fs.writeFile(path.join(__dirname, '/' + rootPrefix + '/config.json'), json, err => err ? reject(err) : resolve() );
+      logger.log("Updating Config File:" , configFilePath );
+      fs.writeFile(configFilePath, json, err => err ? reject(err) : resolve() );
       logger.log("Config file updated!");
+
     });
   }
 
@@ -422,7 +424,7 @@ InitUtilityToken.prototype = {
     const oThis = this;
     oThis.memberDefaults = null;
 
-    const config = require(rootPrefix + "/config")
+    const config = require(configFilePath)
       , members = config.Members
     ;
 

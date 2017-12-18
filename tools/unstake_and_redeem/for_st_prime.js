@@ -203,7 +203,7 @@ const getRedeemerSTPrimeBalance = function () {
  */
 const askRedeemingAmount = function () {
   return new Promise(function (resolve, reject) {
-    console.log("Please mention the number of branded tokens to redeem.");
+    console.log("Please mention the number of STPrimes to redeem.");
     readlineInterface.prompt();
     const rlCallback = function (line) {
       console.log("askRedeemingAmount :: readlineInterface :: line", line);
