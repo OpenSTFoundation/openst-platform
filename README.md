@@ -20,7 +20,7 @@ OpenST Platform is a network of open utility chains, where Simple Token is stake
 
 `openst-platform` provides the middleware and application programming interface for a mainstream consumer application to integrate the OpenST protocol and platform into its backend.
 
-![](https://openstfoundation.github.io/openst-platform/illustrations/platform-illustration.png)
+<img src="https://openstfoundation.github.io/openst-platform/illustrations/platform-illustration.png" style="max-width: 100%;margin: 10px;" />
 
 ## Roadmap
 
