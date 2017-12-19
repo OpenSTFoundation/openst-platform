@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Simple Token Foundation Class: constructor</title>
+	<title>Simple Token Foundation Module: tools/unstake_and_redeem/for_st_prime</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -86,17 +86,10 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: constructor</h1>
+	<h1 class="page-title">Module: tools/unstake_and_redeem/for_st_prime</h1>
 <section>
 
 <header>
-    
-        <h2>
-            <span class="ancestors"><a href="module-lib_web3_events_processor.html">lib/web3/events/processor</a><a href="module-lib_web3_events_processor-EventProcessor.html">~EventProcessor</a>#</span>
-        
-        constructor
-        </h2>
-        
     
 </header>
 
@@ -105,14 +98,94 @@
     <div class="container-overview">
     
         
+            <div class="description">This script Redeem ST' on the utility chain and unstake ST' on Value chain <br><br>.
+
+Following are the steps which are performed in this script:<br>
+ <ol>
+   <li>Make sure Redeemer has ST'.</li>
+   <li>Query for nonce from openSTValue contract</li>
+   <li>Call redeemSTPrime method of openSTUtility contract. You will get RedemptionIntentDeclared event. Validate event and the event data.</li>
+   <li>Wait for openSTUtility contract to give StakingIntentConfirmed event.
+     Proceed to next step if _stakingIntentHash in the event matches the same got in StakingIntentDeclared.</li>
+   <li>Redeemer address calls processRedeeming of openSTUtility contract.</li>
+   <li>Redeemer address calls processUnstaking of openSTValue contract.</li>
+ </ol><br><br>
+ Note: No need to get uuid of ST', as openSTUtility already has uuidSTPrime.</div>
+        
+
+        
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
 <hr>
 <dt>
-    <h4 class="name" id="constructor"><span class="type-signature"></span>new constructor()</h4>
+    <h4 class="name" id="~askRedeemerAddress"><span class="type-signature">&lt;inner> </span>askRedeemerAddress()</h4>
     
     
 </dt>
 <dd>
 
+    
+    <div class="description">
+        Ask redeemer address
+    </div>
     
 
     
@@ -173,12 +246,92 @@
     
 
     
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
 </dd>
 
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~askRedeemerPassphrase"><span class="type-signature">&lt;inner> </span>askRedeemerPassphrase()</h4>
     
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Ask redeemer passphrase
     </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
 
     
 
@@ -191,7 +344,1091 @@
     
 
     
+    <h5>Returns:</h5>
+    
+            
 
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~askRedeemingAmount"><span class="type-signature">&lt;inner> </span>askRedeemingAmount()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Ask redeeming amount
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~describeChain"><span class="type-signature">&lt;inner> </span>describeChain(chainType, web3Provider)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Describe chain
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>chainType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Chain type</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>web3Provider</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Web3</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">web3 provider</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Number></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~getNonceForRedeeming"><span class="type-signature">&lt;inner> </span>getNonceForRedeeming()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Get nonce for redeeming
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~getRedeemerSTPrimeBalance"><span class="type-signature">&lt;inner> </span>getRedeemerSTPrimeBalance(redeemer)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Get redeemer BT balance
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>redeemer</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Address</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">redeemer adddress</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise.&lt;Number></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~listenToRedemptionIntentConfirmed"><span class="type-signature">&lt;inner> </span>listenToRedemptionIntentConfirmed()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Listen to open st value
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~processRedeeming"><span class="type-signature">&lt;inner> </span>processRedeeming()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Process redeeming
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~processUnstaking"><span class="type-signature">&lt;inner> </span>processUnstaking()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Process unstaking
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~redeemSTPrime"><span class="type-signature">&lt;async, inner> </span>redeemSTPrime()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Listen to open st value
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Promise</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="~toDisplayInBaseUnit"><span class="type-signature">&lt;inner> </span>toDisplayInBaseUnit(weiAmount)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        to display value in base unit
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>weiAmount</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Bignumber</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">amount in wei</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    display value in base unit
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type"><a href="String.html">String</a></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        </dl>
     
 
     
