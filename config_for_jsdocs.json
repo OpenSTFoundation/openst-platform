@@ -12,8 +12,8 @@
   "recurseDepth": 5,
   "templates": {
     "systemName"            : "Simple Token Foundation",
-    "footer"                : "@simpletokenplatform",
-    "copyright"             :  "@simpletokenplatform",
+    "footer"                : "Copyright 2017 OpenST Ltd.",
+    "copyright"             : "",
     "includeDate"           : true,
     "theme"                 : "lumen",
     "navType"               : "vertical",
@@ -23,5 +23,13 @@
     "default": {
       "outputSourceFiles": true
     }
+  },
+    "opts": {
+    "destination": "./docs/",
+    "encoding": "utf8",
+    "private": true,
+    "recurse": true,
+    "template": "./node_modules/ink-docstrap/template",
+    "readme": "./README.md"
   }
 }
