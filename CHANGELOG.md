@@ -58,15 +58,16 @@
 
 ### API
   - All branded token API have been moved to /bt/[SYMBOL]/
-  - Standard format for API.
+  - Standard format for API has been updated. New format:
   ```javascript
   {
-    success: true/false
+    success: true/false /*Indicates if API call was successful or not. */
     data: {
-      ...
+      ... /* Any data that is expected from API.*/
     },
-    error: {
-      ...
+    error: {  /* If an error occours, the error details */
+      code: "[ERROR_CODE]",
+      msg: "[ERROR_MESSAGE]"
     }
   }
   ```
