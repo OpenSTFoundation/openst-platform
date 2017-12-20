@@ -5,15 +5,19 @@
 ### Connecting Geth to Utility Chain
   - Users can donwload and execute shell script to connect to utility chain.
   - #### Main-Net Utility Chain
+      ```
       wget https://s3.amazonaws.com/assets.simpletoken.com/scripts/setup_uc_1411_node.sh
-      
       sh setup_uc_1411_node.sh
+      ```
       
   - #### Test-Net Utility Chain
+      ```
       wget https://s3.amazonaws.com/assets.simpletoken.com/scripts/setup_uc_1410_node.sh
-      
       sh setup_uc_1410_node.sh
+      ```
       
+### Development Environment
+  - Scripts to setup local Value Chain & Utility Chain for development/testing purposes have been provided. Please refer [test/README.md](test/README.md)
 
 ### Deployment
   - The Deployment script has been broken into three parts:
@@ -100,8 +104,3 @@
     - ##### /bt/[SYMBOL]/transaction-logs?transactionUUID=[TRANSACTION_UUID]
       - Returns the transaction logs associated with TRANSACTION_UUID.
       
-
-
-
-
-## [v 0.9.0](https://github.com/OpenSTFoundation/openst-platform/releases/tag/v0.9.0) (8 Nov 2017)
