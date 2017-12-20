@@ -108,3 +108,6 @@ API
       - Returns the transaction logs associated with TRANSACTION_UUID.
       
 ## [openst-platform v0.9.0](https://github.com/OpenSTFoundation/openst-platform/releases/tag/v0.9.0) November 8 2017
+Initial release of the OpenST platform as used in the demonstration video - https://youtu.be/-SxJ8c1Xh_A
+Starting the chains and the nodejs app starts a full dev environment to start building on top of the OpenST platform:
+https://github.com/OpenSTFoundation/openst-platform/blob/v0.9.0/test/README.md
