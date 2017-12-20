@@ -32,7 +32,7 @@
   > ./run_utility_chain.sh
   
 * Run complete test deploy
-  > cd ..
+  > cd openst-platform
   
   > source test/open_st_env_vars.sh
   
