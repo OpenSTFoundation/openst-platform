@@ -35,6 +35,7 @@ function main( addressFile ) {
       fundFoundationAddress(thisAddress);
     } else if ( !_addresses.admin ) {
       _addresses.admin = thisAddress;
+      fundRegistrarAddress(thisAddress);
     } else if ( !_addresses.valueDeployer ) {
       _addresses.valueDeployer = thisAddress;
     } else if ( !_addresses.utilityDeployer ) {
@@ -80,6 +81,18 @@ function fundFoundationAddress( foundation ) {
   //Update poa-genesis-utility
   updateGenesisAlloc( poaGenesisUtility, foundation, "0x2000000000000000000000000000000000000000000000000000000000000000");
   writeJsonToFile(poaGenesisUtility, "./poa-genesis-utility.json");
+}
+
+function fundRegistrarAddress(registrar) {
+
+  //Update poa-genesis-value
+  updateGenesisAlloc( poaGenesisValue, registrar, "0x200000000000000000000000000000000000000000000000000000000000000");
+  writeJsonToFile(poaGenesisValue, "./poa-genesis-value.json");
+
+  //Update poa-genesis-utility
+  updateGenesisAlloc( poaGenesisUtility, registrar, "0x2000000000000000000000000000000000000000000000000000000000000000");
+  writeJsonToFile(poaGenesisUtility, "./poa-genesis-utility.json");
+
 }
 
 function fundOpsAddress( opsAddress ) {
