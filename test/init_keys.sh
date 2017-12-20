@@ -41,7 +41,7 @@ geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE
 echo $OST_MANAGED_KEY_PASSPHRASE > ./pw
 geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE
 
-echo "...New addresses generated"s
+echo "...New addresses generated"
 
 echo "Sync keystores"
 #Copy all 
