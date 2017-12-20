@@ -1,39 +1,43 @@
 # Milestone 1 - demo instructions
 
-## install
+## Pre requisite installations 
 
-run (node version 8.7.0)
+* Install node version 8.7.0
+* Install geth version 1.7.0-stable-6c6c7b2a
 
-    npm install
+## Setup utility and value chains and Stake/Mint the Branded Tokens
 
-## setup
+* Go to repo directory
+  > cd openst-platform 
 
-    cd test
-    ./init_keys.sh
-    ./init_chain.sh
+* Install Packages
+  > npm install
 
-open two separate terminals and run:
+* Delete old chains
+  > rm -r test/st-poa-*
 
-    ./run_value_chain.sh
-    and ./run_utility_chain.sh
-
-in the original terminal:
-
-	cd ../tools
-	node deployContracts.js
-
-open two more terminals and run:
-
-    cd ../tools/EventListners
-    node ValueChainEventListener.js
-    and node UtilityTokenEventListner.js
-
-## run the demo to stake for ACME corp
-
-    cd test
-    node test_staking.js
-
-## run the API
+* Initialize keys
+  > cd test
+  > ./init_keys.sh
+  
+* Start Value Chain in a new Terminal
+  > cd openst-platform
+  > cd test
+  > ./run_value_chain.sh
+  
+* Start Utility Chain in a new Terminal
+  > cd openst-platform
+  > cd test
+  > ./run_utility_chain.sh
+  
+* Run complete test deploy
+  > cd openst-platform
+  > source test/open_st_env_vars.sh
+  > ./run_complete_test_deploy.sh
+  
+  
+  
+## Start Restful API
 
 on the machine where the utility chain runs
 

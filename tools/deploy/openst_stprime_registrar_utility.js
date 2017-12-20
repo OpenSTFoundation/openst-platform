@@ -41,8 +41,8 @@ const rootPrefix = '../..'
   , prompts = readline.createInterface(process.stdin, process.stdout)
   , deployerAddress = coreAddresses.getAddressForUser(deployerName)
   , UtilityRegistrarContractInteract = require(rootPrefix + '/lib/contract_interact/utility_registrar')
-  , utilityChainOwnerAddress = coreAddresses.getAddressForUser('utilityChainOwner')
   , utilityRegistrarAddress = coreAddresses.getAddressForUser('utilityRegistrar')
+  , foundationAddress = coreAddresses.getAddressForUser("foundation")
   , OpenStUtilityContractInteract = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , StPrimeContractInteract = require(rootPrefix + '/lib/contract_interact/st_prime')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
@@ -58,7 +58,7 @@ const performer = async function () {
   const stPrimeTotalSupplyInWei = web3Provider.utils.toWei(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY, "ether");
   logger.info("Deployer Address: " + deployerAddress);
   logger.info("Total ST Prime Which will be transferred: " + stPrimeTotalSupplyInWei);
-  logger.info("Utility Chain Owner Address: " + utilityChainOwnerAddress);
+  logger.info("Foundation Address: " + foundationAddress);
   logger.info("Utility Chain Registrar User Address: " + utilityRegistrarAddress);
 
   await new Promise(
@@ -117,17 +117,17 @@ const performer = async function () {
 
   logger.win('Ops Address Set to registrar contract address: ' + registrarContractAddress);
 
-  // initiate owner ship transfer to utilityChainOwnerAddress
-  logger.log('\nInitiating Ownership Transfer of contract: ' + contractName + " to deployer: " + deployerName);
+  // initiate owner ship transfer to foundationAddress
+  logger.log('\nInitiating Ownership Transfer of contract: ' + contractName + " from deployer: " + deployerName + " to foundation: "+ foundationAddress);
 
   var initiateOwnershipTransferResponse = await utilityRegistrarContractInteract.initiateOwnerShipTransfer(deployerName,
-    utilityChainOwnerAddress, deploymentOptions);
+      foundationAddress, deploymentOptions);
 
   logger.log('\nVerifying Ownership Transfer of contract: ' + contractName + " to deployer: " + deployerName);
 
   var proposedOwnerResult = await utilityRegistrarContractInteract.getOwner();
 
-  if (web3Provider.utils.toChecksumAddress(proposedOwnerResult.data.owner) != web3Provider.utils.toChecksumAddress(utilityChainOwnerAddress)) {
+  if (web3Provider.utils.toChecksumAddress(proposedOwnerResult.data.owner) != web3Provider.utils.toChecksumAddress(foundationAddress)) {
     logger.error("Exiting the deployment as initialite ownership address doesn't match with contract owner address");
     process.exit(0);
   }
@@ -157,16 +157,17 @@ const performer = async function () {
 
   logger.win(contractName + " Contract deployed at " + openSTUtilityContractAddress);
 
-  // initiate owner ship transfer to utilityChainOwnerAddress
-  logger.log('\nInitiating Ownership Transfer of contract: ' + contractName + " to deployer: " + deployerName);
+  // initiate owner ship transfer to foundationAddress
+  logger.log('\nInitiating Ownership Transfer of contract: ' + contractName + " from deployer: " + deployerName + " to foundationAddress: " + foundationAddress);
 
-  var initiateOwnershipTransferResponse = await openStUtilityContractInteract.initiateOwnerShipTransfer(deployerName, utilityChainOwnerAddress, deploymentOptions);
+  var initiateOwnershipTransferResponse = await openStUtilityContractInteract.initiateOwnerShipTransfer(deployerName,
+      foundationAddress, deploymentOptions);
 
   logger.log('\nVerifying Ownership Transfer of contract: ' + contractName + " to deployer: " + deployerName);
 
   var proposedOwnerResult = await openStUtilityContractInteract.getOwner();
 
-  if (web3Provider.utils.toChecksumAddress(proposedOwnerResult.data.owner) != web3Provider.utils.toChecksumAddress(utilityChainOwnerAddress)) {
+  if (web3Provider.utils.toChecksumAddress(proposedOwnerResult.data.owner) != web3Provider.utils.toChecksumAddress(foundationAddress)) {
     logger.error("Exiting the deployment as initialite ownership for contract: " + contractName + " address doesn't match");
     process.exit(0);
   }
