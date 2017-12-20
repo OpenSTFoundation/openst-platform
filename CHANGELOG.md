@@ -2,6 +2,19 @@
 
 ## [v 0.9.1](https://github.com/OpenSTFoundation/openst-platform/releases/tag/v0.9.1) (19 Dec 2017)
 
+### Connecting Geth to Utility Chain
+  - Users can donwload and execute shell script to connect to utility chain.
+  - #### Main-Net Utility Chain
+      wget https://s3.amazonaws.com/assets.simpletoken.com/scripts/setup_uc_1411_node.sh
+      
+      sh setup_uc_1411_node.sh
+      
+  - #### Test-Net Utility Chain
+      wget https://s3.amazonaws.com/assets.simpletoken.com/scripts/setup_uc_1410_node.sh
+      
+      sh setup_uc_1410_node.sh
+      
+
 ### Deployment
   - The Deployment script has been broken into three parts:
     - ##### tools/deploy/openst_and_registrar_value.js
@@ -26,16 +39,18 @@
       - Action: Confirms redemption intent on value chain.
     
 ### Tools
-  - ##### tools/stake_and_mint/for_st_prime.js
-    -  This script does stake of simple token on the value chain and mint of simple token prime on the utility chain.
-    -  By Default, Staker Address is Utility-Chain Owner Address
-  - ##### tools/stake_and_mint/for_st_prime.js
-    
-    
-    
-    
-
-  
+  - #### Stake And Mint Tools:
+    - ##### tools/stake_and_mint/for_st_prime.js
+      -  Stakes Simple-Token on the value chain and mints simple-token-prime on the utility chain.
+      -  By default, Staker Address is Utility-Chain Owner Address
+    - ##### tools/stake_and_mint/for_branded_token.js
+      - Stakes simple-token on the value chain and mints branded token on the utility chain.
+      
+  - #### Redeem And Unstake Tools:
+    - ##### tools/unstake_and_redeem/for_st_prime.js
+      - Redeems simple-token-prime on the utility chain and unstakes simple-token on the value chain.
+    - ##### tools/unstake_and_redeem/for_branded_token.js
+      - Redeems branded-token on the utility chain and unstakes simple-token on the value chain.
 
 ### API
   - All branded token API have been moved to /bt/[SYMBOL]/
