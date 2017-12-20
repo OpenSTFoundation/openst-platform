@@ -1,6 +1,6 @@
 # openst-platform changelog
 
-## [openst-platform v0.9.1](https://github.com/OpenSTFoundation/openst-platform/releases/tag/v0.9.1) December 19 2017
+### [openst-platform v0.9.1](https://github.com/OpenSTFoundation/openst-platform/releases/tag/v0.9.1) December 19 2017
 
 This release enables blockchain developers to replicate the OpenST protocol on the Ethereum mainnet, make use of the scalability and performance capabilities of OpenST defined side blockchains, and begin preparing branded token implementations.
 
@@ -107,7 +107,7 @@ API
     - /bt/[SYMBOL]/transaction-logs?transactionUUID=[TRANSACTION_UUID]
       - Returns the transaction logs associated with TRANSACTION_UUID.
       
-## [openst-platform v0.9.0](https://github.com/OpenSTFoundation/openst-platform/releases/tag/v0.9.0) November 8 2017
+### [openst-platform v0.9.0](https://github.com/OpenSTFoundation/openst-platform/releases/tag/v0.9.0) November 8 2017
 Initial release of the OpenST platform as used in the demonstration video - https://youtu.be/-SxJ8c1Xh_A
 
 Starting the chains and the nodejs app starts a full dev environment to start building on top of the OpenST platform:
