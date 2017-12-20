@@ -45,16 +45,16 @@ Services
 Tools
   - Stake And Mint Tools:
     - tools/stake_and_mint/for_st_prime.js
-      -  Stakes Simple-Token on the value chain and mints simple-token-prime on the utility chain.
+      -  Stakes `simple token` on the value chain and mints `simple token prime` on the utility chain.
       -  By default, Staker Address is Utility-Chain Owner Address
     - tools/stake_and_mint/for_branded_token.js
-      - Stakes simple-token on the value chain and mints branded token on the utility chain.
+      - Stakes `simple token` on the value chain and mints `branded token` on the utility chain.
       
   - Redeem And Unstake Tools:
     - tools/unstake_and_redeem/for_st_prime.js
-      - Redeems simple-token-prime on the utility chain and unstakes simple-token on the value chain.
+      - Redeems `simple token prime` on the utility chain and unstakes `simple token` on the value chain.
     - tools/unstake_and_redeem/for_branded_token.js
-      - Redeems branded-token on the utility chain and unstakes simple-token on the value chain.
+      - Redeems `branded token` on the utility chain and unstakes `simple-token` on the value chain.
 
 API
   - All branded token API have been moved to /bt/[SYMBOL]/
@@ -74,29 +74,29 @@ API
 
   - Available API
     - /bt/[SYMBOL]/
-      - Serves as health check for the branded token API(s).
+      - Serves as health check for the `branded token` API(s).
     - /bt/[SYMBOL]/reserve
-      - Returns the reserve address associated with branded token.
+      - Returns the reserve address associated with `branded token`.
     - /bt/[SYMBOL]/name
-      - Returns the branded token name.
+      - Returns the `branded token` name.
     - /bt/[SYMBOL]/uuid
-      - Returns the UUID of the branded token.
+      - Returns the UUID of the `branded token`.
     - /bt/[SYMBOL]/symbol
-      - Returns the symbol of the branded token.
+      - Returns the symbol of the `branded token`.
     - /bt/[SYMBOL]/decimals
-      - Returns the decimals configured in the branded token.
+      - Returns the decimals configured in the `branded token`.
     - /bt/[SYMBOL]/totalSupply 
-      - Returns the total supply of branded token.
+      - Returns the total supply of `branded token`.
     - /bt/[SYMBOL]/balanceOf?owner=[OWNER] 
-      - Returns the amount of branded token owned by the address [OWNER]
+      - Returns the amount of `branded token` owned by the address [OWNER]
     - /bt/[SYMBOL]/newkey 
       - Creates a new managed user key and returns the address.
     - /bt/[SYMBOL]/transfer?sender=[SENDER]&to=[RECIPIENT]&amount=[AMOUNT]&tag=[TRANSFER_TAG]. 
-      - Transfers specified [AMOUNT] branded tokens from SENDER address to RECIPIENT address.
+      - Transfers specified [AMOUNT] `branded tokens` from SENDER address to RECIPIENT address.
       - Also returns TRANSACTION_UUID generated for the transaction. This TRANSACTION_UUID can be used fetch transaction logs.
       - Notes: 
-        - RESERVE address must be SimpleToken Managed address created using tools/init_utility_token script.
-        - SENDER address must be SimpleToken Managed address created using /bt/[SYMBOL]/newkey Api.
+        - RESERVE address must be managed address created using tools/init_utility_token script.
+        - SENDER address must be managed address created using /bt/[SYMBOL]/newkey Api.
         - The RESERVE address also transfers ST Prime to the sender address if sender address does not have sufficient ST Prime to carry out the transfer.
     - /bt/[SYMBOL]/failed-transactions
       - Returns an array of failed TRANSACTION_UUID(s).
