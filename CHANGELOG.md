@@ -3,7 +3,7 @@
 [openst-platform v0.9.1](https://github.com/OpenSTFoundation/openst-platform/releases/tag/v0.9.1) December 19 2017
 ---
 
-This release enables blockchain developers to replicate the OpenST protocol on the Ethereum mainnet, make use of the scalability and performance capabilities of OpenST defined side blockchains, and begin preparing branded token implementations.
+This release enables developers to replicate the OpenST protocol on the Ethereum mainnet leveraging the scalability and performance capabilities of OpenST defined blockchains, and begin preparing branded token implementations.
 
 Connecting Geth to Utility Chain
   - Users can download and execute shell script to connect to utility chain.
@@ -23,7 +23,7 @@ Development Environment
   - Scripts to setup local Value Chain & Utility Chain for development/testing purposes have been provided. Please refer [test/README.md](test/README.md)
 
 Deployment
-  - The Deployment script has been broken into three parts:
+  - The Deployment script has been split into three parts:
     - tools/deploy/openst_and_registrar_value.js
       - Deploys Registrar Contract on value chain. 
       - Deploys OpenST Value Contract on value chain.
@@ -36,8 +36,8 @@ Deployment
 
 Services
   - Intercom Services:
-    Intercom services are responsible for transfering information between value chain & utility chain by listening to events.
-    The intercom transfers information using registrar contracs. Services:  
+    Intercom services are responsible for transferring information between value chain & utility chain by listening to events.
+    The intercom transfers information using registrar contracts. Services:  
     - services/inter_comm/stake_and_mint.js
       - Listens: StakingIntentDeclared event on value chain.
       - Action: confirms staking intent on utility chain.
