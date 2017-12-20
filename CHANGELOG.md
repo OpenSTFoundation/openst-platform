@@ -2,6 +2,8 @@
 
 ## [openst-platform v0.9.1](https://github.com/OpenSTFoundation/openst-platform/releases/tag/v0.9.1) December 19 2017
 
+This release enables blockchain developers to replicate the OpenST protocol on the Ethereum mainnet, make use of the scalability and performance capabilities of OpenST defined side blockchains, and begin preparing branded token implementations.
+
 Connecting Geth to Utility Chain
   - Users can download and execute shell script to connect to utility chain.
   - Main-Net Utility Chain
