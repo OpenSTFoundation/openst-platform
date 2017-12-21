@@ -15,7 +15,7 @@
     "footer"                : "@simpletokenplatform",
     "copyright"             :  "@simpletokenplatform",
     "includeDate"           : true,
-    "theme"                 : "Lumen",
+    "theme"                 : "lumen",
     "navType"               : "vertical",
     "linenums"              : true,
     "cleverLinks"           : true,

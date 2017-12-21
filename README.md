@@ -1,6 +1,10 @@
 # [OpenST platform](https://simpletoken.org) - bridging cryptocurrencies and mainstream consumer apps
 
-**warning: this is pre-alpha software and under heavy development**
+While OpenST 0.9 is available as-is for anyone to use, we caution that this is early stage software and under heavy ongoing development and improvement. Please report bugs and suggested improvements.
+
+Watch demo video of milestone 1 (will take you to [https://www.youtube.com/watch?v=-SxJ8c1Xh_A](https://www.youtube.com/watch?v=-SxJ8c1Xh_A))
+
+[![Milestone 1 demo video](https://img.youtube.com/vi/-SxJ8c1Xh_A/0.jpg)](https://www.youtube.com/watch?v=-SxJ8c1Xh_A)
 
 ## About Simple Token
 
@@ -16,7 +20,7 @@ OpenST Platform is a network of open utility chains, where Simple Token is stake
 
 `openst-platform` provides the middleware and application programming interface for a mainstream consumer application to integrate the OpenST protocol and platform into its backend.
 
-![](docs/platform-illustration.png)
+![](docs/illustrations/platform-illustration.png)
 
 ## Roadmap
 
@@ -29,7 +33,3 @@ Milestone 3 : Public Launch of Initial Member Companies (Q2 2018)
 Milestone 4 : 10 Founding Member Companies (Q3-Q4 2018)
 
 Milestone 5 : Consolidation of OpenST as open platform (2019)
-
-At the highest level this diagram represents past work and future roadmap items.  All milestones and work items are indicative only.
-
-![](docs/roadmap.png)

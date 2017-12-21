@@ -11,7 +11,7 @@
 	<![endif]-->
 	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
 
-	<link type="text/css" rel="stylesheet" href="styles/site.Lumen.css">
+	<link type="text/css" rel="stylesheet" href="styles/site.lumen.css">
 
 </head>
 
@@ -40,7 +40,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-lib_contract_helper_helper.html">lib/contract_helper/helper</a></li><li><a href="module-lib_contract_interact_branded_token.html">lib/contract_interact/branded_token</a></li><li><a href="module-lib_contract_interact_openst_utility.html">lib/contract_interact/openst_utility</a></li><li><a href="module-lib_contract_interact_openst_value.html">lib/contract_interact/openst_value</a></li><li><a href="module-lib_contract_interact_ops_managed_contract.html">lib/contract_interact/ops_managed_contract</a></li><li><a href="module-lib_contract_interact_owned_contract.html">lib/contract_interact/owned_contract</a></li><li><a href="module-lib_contract_interact_simple_stake.html">lib/contract_interact/simple_stake</a></li><li><a href="module-lib_contract_interact_simple_token.html">lib/contract_interact/simple_token</a></li><li><a href="module-lib_contract_interact_st_prime.html">lib/contract_interact/st_prime</a></li><li><a href="module-lib_contract_interact_utility_registrar.html">lib/contract_interact/utility_registrar</a></li><li><a href="module-lib_web3_events_formatter.html">lib/web3/events/formatter</a></li><li><a href="module-lib_web3_events_processor.html">lib/web3/events/processor</a></li><li><a href="module-lib_web3_events_queue_manager.html">lib/web3/events/queue_manager</a></li><li><a href="module-services_inter_comm_redeem_and_unstake.html">services/inter_comm/redeem_and_unstake</a></li><li><a href="module-services_inter_comm_stake_and_mint.html">services/inter_comm/stake_and_mint</a></li><li><a href="module-tools_deploy_DeployHelper.html">tools/deploy/DeployHelper</a></li><li><a href="module-tools_deploy_helper.html">tools/deploy/helper</a></li><li><a href="module-tools_deploy_openst_utility.html">tools/deploy/openst_utility</a></li><li><a href="module-tools_deploy_openst_value.html">tools/deploy/openst_value</a></li><li><a href="module-tools_deploy_register_utility_token_value.html">tools/deploy/register_utility_token_value</a></li><li><a href="module-tools_init_utility_token.html">tools/init_utility_token</a></li><li><a href="module-tools_stake_and_mint_for_branded_token.html">tools/stake_and_mint/for_branded_token</a></li><li><a href="module-tools_stake_and_mint_for_st_prime.html">tools/stake_and_mint/for_st_prime</a></li><li><a href="module-tools_stake_and_mint_util.html">tools/stake_and_mint/util</a></li>
+					<li><a href="module-lib_contract_helper_helper.html">lib/contract_helper/helper</a></li><li><a href="module-lib_contract_interact_branded_token.html">lib/contract_interact/branded_token</a></li><li><a href="module-lib_contract_interact_openst_utility.html">lib/contract_interact/openst_utility</a></li><li><a href="module-lib_contract_interact_openst_value.html">lib/contract_interact/openst_value</a></li><li><a href="module-lib_contract_interact_ops_managed_contract.html">lib/contract_interact/ops_managed_contract</a></li><li><a href="module-lib_contract_interact_owned_contract.html">lib/contract_interact/owned_contract</a></li><li><a href="module-lib_contract_interact_simple_stake.html">lib/contract_interact/simple_stake</a></li><li><a href="module-lib_contract_interact_simple_token.html">lib/contract_interact/simple_token</a></li><li><a href="module-lib_contract_interact_st_prime.html">lib/contract_interact/st_prime</a></li><li><a href="module-lib_contract_interact_utility_registrar.html">lib/contract_interact/utility_registrar</a></li><li><a href="module-lib_web3_events_formatter.html">lib/web3/events/formatter</a></li><li><a href="module-lib_web3_events_processor.html">lib/web3/events/processor</a></li><li><a href="module-lib_web3_events_queue_manager.html">lib/web3/events/queue_manager</a></li><li><a href="module-services_inter_comm_redeem_and_unstake.html">services/inter_comm/redeem_and_unstake</a></li><li><a href="module-services_inter_comm_stake_and_mint.html">services/inter_comm/stake_and_mint</a></li><li><a href="module-tools_deploy_DeployHelper.html">tools/deploy/DeployHelper</a></li><li><a href="module-tools_deploy_helper.html">tools/deploy/helper</a></li><li><a href="module-tools_deploy_openst_utility.html">tools/deploy/openst_utility</a></li><li><a href="module-tools_deploy_openst_value.html">tools/deploy/openst_value</a></li><li><a href="module-tools_deploy_register_utility_token_value.html">tools/deploy/register_utility_token_value</a></li><li><a href="module-tools_init_utility_token.html">tools/init_utility_token</a></li><li><a href="module-tools_stake_and_mint_for_branded_token.html">tools/stake_and_mint/for_branded_token</a></li><li><a href="module-tools_stake_and_mint_for_st_prime.html">tools/stake_and_mint/for_st_prime</a></li><li><a href="module-tools_stake_and_mint_util.html">tools/stake_and_mint/util</a></li><li><a href="module-tools_unstake_and_redeem_for_st_prime.html">tools/unstake_and_redeem/for_st_prime</a></li>
 				</ul>
 			</li>
 			
@@ -106,6 +106,23 @@
 
 
 
+    <section class="readme-section">
+        <article><h1><a href="https://simpletoken.org">OpenST platform</a> - bridging cryptocurrencies and mainstream consumer apps</h1><p><strong>warning: this is pre-alpha software and under heavy development</strong></p>
+<h2>About Simple Token</h2><p>Simple Token [“ST”] is an EIP20 token and OpenST is a protocol to support token economies in mainstream consumer applications. The business and technical challenge we set out to solve is to enable mainstream consumer applications to benefit from deploying their own branded crypto-backed token economies, in a scalable and cryptographically auditable manner, without needing to mint and maintain their own publicly-tradeable EIP20 tokens.</p>
+<p>The OpenST protocol enables the creation of utility tokens on a utility blockchain while the value of those tokens is backed by staked crypto-assets on a value blockchain.</p>
+<p>The OpenST Protocol establishes a bridge between two differently purposed blockchains.  A value blockchain, which is required in order to hold cryptographically secured valuable assets; and a utility blockchain, which has utility tokens in favor of which the assets are held on the value blockchain.</p>
+<h2>OpenST Platform</h2><p>OpenST Platform is a network of open utility chains, where Simple Token is staked on Ethereum mainnet to mint different branded tokens on the utility chains.  Each branded token serves the users of a different consumer application.  Users can earn and spend across these economies.</p>
+<p><code>openst-platform</code> provides the middleware and application programming interface for a mainstream consumer application to integrate the OpenST protocol and platform into its backend.</p>
+<p><img src="docs/platform-illustration.png" alt=""></p>
+<h2>Roadmap</h2><p>Milestone 1 : OpenST Platform v0.9 (7 November 2017)</p>
+<p>Milestone 2 : OpenST Platform v1.0 (Q1 2018)</p>
+<p>Milestone 3 : Public Launch of Initial Member Companies (Q2 2018)</p>
+<p>Milestone 4 : 10 Founding Member Companies (Q3-Q4 2018)</p>
+<p>Milestone 5 : Consolidation of OpenST as open platform (2019)</p>
+<p>At the highest level this diagram represents past work and future roadmap items.  All milestones and work items are indicative only.</p>
+<p><img src="docs/roadmap.png" alt=""></p></article>
+    </section>
+
 
 
 
@@ -155,7 +172,7 @@
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
 	
-		on 2017-12-12T11:41:08+05:30
+		on 2017-12-19T23:36:01+05:30
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
