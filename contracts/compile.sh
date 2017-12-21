@@ -14,6 +14,14 @@ solc --abi --optimize --optimize-runs 200 --overwrite ../openst-protocol/contrac
 solc --bin --optimize --optimize-runs 200 --overwrite ../openst-protocol/contracts/SimpleToken/SimpleToken.sol -o $BINDIRVALUE
 
 echo ""
+echo "Compiling MockToken.sol"
+echo ""
+
+solc --abi --optimize --optimize-runs 200 --overwrite ../openst-protocol/contracts/SimpleToken/MockToken.sol -o $ABIDIRUTILITY
+solc --bin --optimize --optimize-runs 200 --overwrite ../openst-protocol/contracts/SimpleToken/MockToken.sol -o $BINDIRVALUE
+
+
+echo ""
 echo "Compiling OpenSTUtility.sol"
 echo ""
 

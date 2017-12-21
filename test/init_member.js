@@ -66,10 +66,10 @@ function main () {
   const fundMember = require( rootPrefix + '/test/fundMember');
 
   const initKlassObj = new initKlass;
-  var btSymbol = 'Pepo1';
-  var btName = 'PepoCoin1';
-  var apiAuthUser = "pc1";
-  var apiAuthSecret = "acmesecret1";
+  var btSymbol = 'ACME';
+  var btName = 'Acme Coin';
+  var apiAuthUser = "acme";
+  var apiAuthSecret = "acmesecret";
   var btConversion = 10;
   var apiCallbackUrl = "http://localhost:9000"
 

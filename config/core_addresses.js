@@ -13,6 +13,20 @@ const relPath = ".."
   , coreAbis = require('./core_abis')
   , coreBins = require('./core_bins');
 
+var simpleTokenAbi, simpleTokenBin, simpleTokenAddr;
+
+if (process.env.USE_MOCK_SIMPLE_TOKEN != 1) {
+  console.log("Using Original Simple Token Contract");
+  simpleTokenAddr = process.env.OST_SIMPLE_TOKEN_CONTRACT_ADDR;
+  simpleTokenAbi = coreAbis.simpleToken;
+  simpleTokenBin = coreBins.simpleToken;
+} else {
+  console.log("Using Mock Simple Token Contract");
+  simpleTokenAddr = process.env.OST_SIMPLE_TOKEN_CONTRACT_ADDR;
+  simpleTokenAbi = coreAbis.mockSimpleToken;
+  simpleTokenBin = coreBins.mockSimpleToken;
+}
+
 const allAddresses = {
   users: {
 
@@ -59,10 +73,11 @@ const allAddresses = {
   },
 
   contracts: {
+
     simpleToken: {
-      address: process.env.OST_SIMPLE_TOKEN_CONTRACT_ADDR,
-      abi: coreAbis.simpleToken,
-      bin: coreBins.simpleToken
+      address: simpleTokenAddr,
+      abi: simpleTokenAbi,
+      bin: simpleTokenBin
     },
 
     openSTUtility: {
