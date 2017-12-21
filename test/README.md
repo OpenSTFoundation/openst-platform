@@ -48,7 +48,7 @@
   > ./run_utility_chain.sh
 ```
   
-### Bank in Terminal 1:
+### Back in Terminal 1:
 * Run the complete test suite
 ```
   > cd ..
