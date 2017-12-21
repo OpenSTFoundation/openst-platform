@@ -1,29 +1,29 @@
 {
   "id": "7c24dfd6-e127-955d-0dc2-e238b38fcfaa",
-  "name": "ACME_LocalHost_3000",
+  "name": "OpenST_env",
   "values": [
     {
       "enabled": true,
       "key": "route",
-      "value": "http://localhost:3000/bt/acme1",
+      "value": "http://localhost:3000/bt/acme",
       "type": "text"
     },
     {
       "enabled": true,
       "key": "reserve",
-      "value": "0xa72ef75e95e8fa21b2f2d155021c88226f049142",
+      "value": "",
       "type": "text"
     },
     {
       "enabled": true,
       "key": "user1",
-      "value": "0x784AC083047F6d2F0e8735578615238c38b53C51",
+      "value": "",
       "type": "text"
     },
     {
       "enabled": true,
       "key": "user2",
-      "value": "0x8cD85FD7Ae0CD7E89b2F9ddaA1dD262377C578F5",
+      "value": "",
       "type": "text"
     },
     {

@@ -63,6 +63,12 @@ String.prototype.equalsIgnoreCase = function (compareWith) {
   return _self == _compareWith;
 };
 
+
+const toWeiST = function(amount){
+  return new BigNumber( 10 ).pow( 18 ).mul( amount );
+};
+
+
 /**
  * Describe token
  *
@@ -332,7 +338,7 @@ const askRedeemingAmount = function () {
         logger.error("amount is not a number. amount:", line);
         return;
       }
-      const bigNumRedeemingAmount = new BigNumber(line);
+      const bigNumRedeemingAmount = toWeiST( new BigNumber(line) );
       logger.log("bigNumRedeemingAmount", bigNumRedeemingAmount);
       if (bigNumRedeemingAmount.cmp(redeemerBtBalance) > 0) {
         logger.error("Redeemer does not have sufficient branded tokens to redeem " + toDisplayInBaseUnit(bigNumRedeemingAmount));

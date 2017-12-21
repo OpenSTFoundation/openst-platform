@@ -7,7 +7,7 @@
 	},
 	"item": [
 		{
-			"name": "HealthCheck",
+			"name": "API Server HealthCheck",
 			"request": {
 				"auth": {
 					"type": "basic",
@@ -29,13 +29,12 @@
 					"mode": "raw",
 					"raw": ""
 				},
-				"url": "{{route}}",
-				"description": "Fetch the name of Member"
+				"url": "{{route}}"
 			},
 			"response": []
 		},
 		{
-			"name": "Get Member Name",
+			"name": "Get Branded Token Name",
 			"request": {
 				"auth": {
 					"type": "basic",
@@ -57,13 +56,12 @@
 					"mode": "raw",
 					"raw": ""
 				},
-				"url": "{{route}}/name",
-				"description": "Fetch the name of Member"
+				"url": "{{route}}/name"
 			},
 			"response": []
 		},
 		{
-			"name": "Get Member UUID",
+			"name": "Get Branded Token UUID",
 			"request": {
 				"auth": {
 					"type": "basic",
@@ -85,13 +83,12 @@
 					"mode": "raw",
 					"raw": ""
 				},
-				"url": "{{route}}/uuid",
-				"description": "Fetch the name of Member"
+				"url": "{{route}}/uuid"
 			},
 			"response": []
 		},
 		{
-			"name": "Get Reserve",
+			"name": "Get Branded Token Symbol",
 			"request": {
 				"auth": {
 					"type": "basic",
@@ -113,13 +110,12 @@
 					"mode": "raw",
 					"raw": ""
 				},
-				"url": "{{route}}/reserve",
-				"description": "Fetch the name of Member"
+				"url": "{{route}}/symbol"
 			},
 			"response": []
 		},
 		{
-			"name": "Get Member Symbol",
+			"name": "Get Branded Token Decimal Precision",
 			"request": {
 				"auth": {
 					"type": "basic",
@@ -141,13 +137,12 @@
 					"mode": "raw",
 					"raw": ""
 				},
-				"url": "{{route}}/symbol",
-				"description": "Fetch the name of Member"
+				"url": "{{route}}/decimals"
 			},
 			"response": []
 		},
 		{
-			"name": "Get Member Decimals",
+			"name": "Get Branded Token Total Supply",
 			"request": {
 				"auth": {
 					"type": "basic",
@@ -169,13 +164,12 @@
 					"mode": "raw",
 					"raw": ""
 				},
-				"url": "{{route}}/decimals",
-				"description": "Fetch the name of Member"
+				"url": "{{route}}/totalSupply"
 			},
 			"response": []
 		},
 		{
-			"name": "Get Total Supply",
+			"name": "Get Reserve Address",
 			"request": {
 				"auth": {
 					"type": "basic",
@@ -197,104 +191,12 @@
 					"mode": "raw",
 					"raw": ""
 				},
-				"url": "{{route}}/totalSupply",
-				"description": "Fetch the name of Member"
+				"url": "{{route}}/reserve"
 			},
 			"response": []
 		},
 		{
-			"name": "Pending Transactions",
-			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": {
-						"username": "{{api_user}}",
-						"password": "{{api_password}}",
-						"saveHelperData": true,
-						"showPassword": false
-					}
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
-					}
-				],
-				"body": {},
-				"url": "{{route}}/pending-transactions",
-				"description": "Fetch the name of Member"
-			},
-			"response": []
-		},
-		{
-			"name": "Failed Transactions",
-			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": {
-						"username": "{{api_user}}",
-						"password": "{{api_password}}",
-						"saveHelperData": true,
-						"showPassword": false
-					}
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
-					}
-				],
-				"body": {},
-				"url": "{{route}}/failed-transactions",
-				"description": "Fetch the name of Member"
-			},
-			"response": []
-		},
-		{
-			"name": "transaction-logs",
-			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": {
-						"username": "{{api_user}}",
-						"password": "{{api_password}}",
-						"saveHelperData": true,
-						"showPassword": false
-					}
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Basic YWNtZTphY21lc2VjcmV0"
-					}
-				],
-				"body": {},
-				"url": {
-					"raw": "{{route}}/transaction-logs/?transactionUUID=29d98d94-2969-4e24-ae55-3f397de5a8c4",
-					"host": [
-						"{{route}}"
-					],
-					"path": [
-						"transaction-logs",
-						""
-					],
-					"query": [
-						{
-							"key": "transactionUUID",
-							"value": "29d98d94-2969-4e24-ae55-3f397de5a8c4",
-							"equals": true
-						}
-					]
-				},
-				"description": "Gets the balance of reserve"
-			},
-			"response": []
-		},
-		{
-			"name": "Balance Of Reserve",
+			"name": "Current Balance of Reserve",
 			"request": {
 				"auth": {
 					"type": "basic",
@@ -332,84 +234,39 @@
 							"equals": true
 						}
 					]
-				},
-				"description": "Gets the balance of reserve"
-			},
-			"response": []
-		},
-		{
-			"name": "New User Key",
-			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": {
-						"username": "{{api_user}}",
-						"password": "{{api_password}}",
-						"saveHelperData": true,
-						"showPassword": false
-					}
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": "{{route}}/newkey",
-				"description": "Fetch the name of Member"
-			},
-			"response": []
-		},
-		{
-			"name": "Balance of User 1",
-			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": {
-						"username": "{{api_user}}",
-						"password": "{{api_password}}",
-						"saveHelperData": true,
-						"showPassword": false
-					}
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "Authorization",
-						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "{{route}}/balanceOf/?owner={{user1}}",
-					"host": [
-						"{{route}}"
-					],
-					"path": [
-						"balanceOf",
-						""
-					],
-					"query": [
-						{
-							"key": "owner",
-							"value": "{{user1}}",
-							"equals": true
-						}
-					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Transfer :: From: Reserve To: user 1 Amount:3",
+			"name": "Generate Key for New User",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": "{{route}}/newkey"
+			},
+			"response": []
+		},
+		{
+			"name": "Transfer 3 tokens from reserve to user1",
 			"request": {
 				"auth": {
 					"type": "basic",
@@ -462,7 +319,50 @@
 			"response": []
 		},
 		{
-			"name": "Transfer :: From: User1 To: User2 Amount: 3",
+			"name": "Current Balance of User1",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{route}}/balanceOf/?owner={{user1}}",
+					"host": [
+						"{{route}}"
+					],
+					"path": [
+						"balanceOf",
+						""
+					],
+					"query": [
+						{
+							"key": "owner",
+							"value": "{{user1}}",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Transfer 2 tokens from User1 to User2",
 			"request": {
 				"auth": {
 					"type": "basic",
@@ -482,7 +382,7 @@
 				],
 				"body": {},
 				"url": {
-					"raw": "{{route}}/transfer/?sender={{user1}}&to={{user2}}&value=3",
+					"raw": "{{route}}/transfer/?sender={{user1}}&to={{user2}}&value=2",
 					"host": [
 						"{{route}}"
 					],
@@ -503,7 +403,7 @@
 						},
 						{
 							"key": "value",
-							"value": "3",
+							"value": "2",
 							"equals": true
 						}
 					]
@@ -512,7 +412,7 @@
 			"response": []
 		},
 		{
-			"name": "Balance of User 2",
+			"name": "Current Balance of User2",
 			"request": {
 				"auth": {
 					"type": "basic",
@@ -555,7 +455,7 @@
 			"response": []
 		},
 		{
-			"name": "Transfer :: From: Reserve To: user 2 Amount:3",
+			"name": "Transfer 2 tokens from Reserve to User2",
 			"request": {
 				"auth": {
 					"type": "basic",
@@ -578,7 +478,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{route}}/transfer/?sender={{reserve}}&to={{user2}}&value=3",
+					"raw": "{{route}}/transfer/?sender={{reserve}}&to={{user2}}&value=2",
 					"host": [
 						"{{route}}"
 					],
@@ -599,7 +499,7 @@
 						},
 						{
 							"key": "value",
-							"value": "3",
+							"value": "2",
 							"equals": true
 						}
 					]
@@ -608,7 +508,7 @@
 			"response": []
 		},
 		{
-			"name": "Transfer :: From: user 2 To: Reserve Amount: 3",
+			"name": "Transfer 1 token from User2 to Reserve",
 			"request": {
 				"auth": {
 					"type": "basic",
@@ -631,7 +531,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "{{route}}/transfer/?sender={{user2}}&to={{reserve}}&value=3",
+					"raw": "{{route}}/transfer/?sender={{user2}}&to={{reserve}}&value=1",
 					"host": [
 						"{{route}}"
 					],
@@ -652,7 +552,95 @@
 						},
 						{
 							"key": "value",
-							"value": "3",
+							"value": "1",
+							"equals": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Pending Transactions",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
+					}
+				],
+				"body": {},
+				"url": "{{route}}/pending-transactions"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Failed Transactions",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic cGVwbzpwZXBvc2VjcmV0"
+					}
+				],
+				"body": {},
+				"url": "{{route}}/failed-transactions"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Transaction Logs",
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{api_user}}",
+						"password": "{{api_password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Basic YWNtZTphY21lc2VjcmV0"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "{{route}}/transaction-logs/?transactionUUID=",
+					"host": [
+						"{{route}}"
+					],
+					"path": [
+						"transaction-logs",
+						""
+					],
+					"query": [
+						{
+							"key": "transactionUUID",
+							"value": "",
 							"equals": true
 						}
 					]
