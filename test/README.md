@@ -59,7 +59,7 @@
 ## Stake Simple Tokens on value chain to mint Branded Tokens
 
 ### In Terminal 1:
-* Start the stake and mint intercom process while branded tokens are minting (NOTE: This process need to be running till Terminal 2 process ends)
+* Start the stake and mint intercom process while branded tokens are minted (NOTE: This process need to be running till Terminal 2 process ends)
 ```
   > cd openst-platform
   > source test/open_st_env_vars.sh
