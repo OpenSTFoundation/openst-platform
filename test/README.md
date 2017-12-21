@@ -1,4 +1,4 @@
-# Demo Instructions
+# Local Development Environment
 
 ## Prerequisite installations 
 
