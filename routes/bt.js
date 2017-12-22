@@ -15,7 +15,6 @@ const reqPrefix         = ".."
  * @param {object} erc20 The ERC20 token to manage.
  * @param {string} callbackUrl The callback URL for confirmed transactions.
  * @param {object?} callbackAuth Optional authentication object for callback requests.
- * @param {object?} Worker obj for logging purpose
  */
 module.exports = function( member ) {
   const btContractInteract  = new BTContractInteract( member )
