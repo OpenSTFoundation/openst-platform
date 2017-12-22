@@ -65,4 +65,33 @@ app.use(function (err, req, res, next) {
   return responseHelper.error('500', 'Something went wrong').renderResponse(res, 500);
 });
 
+//var redisClient = null;
+//var getRedisConnection = function(){
+//  if(redisClient == null){
+//    redisClient = redis.createClient();
+//    redisClient.on('connect', function() {
+//      console.log('connected');
+//    });
+//  }
+//};
+//
+//app.use('redisConnection', getRedisConnection());
+
+//var redisClient = null;
+//app.use(function() {
+//  if(redisClient == null){
+//    redisClient = redis.createClient();
+//    redisClient.on('connect', function() {
+//      console.log('connected');
+//    });
+//  }
+//});
+
+
+//client.on('connect', function() {
+//  console.log('connected');
+//});
+
+//app.use(client);
+
 module.exports = app;
