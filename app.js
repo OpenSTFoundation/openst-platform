@@ -33,17 +33,14 @@ const rootPrefix    = "."
   , config          = require( coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
 ;
 
-console.log( "config file path:", coreConstants.OST_MEMBER_CONFIG_FILE_PATH );
-
-
 if (cluster.isMaster) {
   // Set worker process title
   process.title = "OpenST-Platform node master";
 
   // Fork workers equal to number of CPUs
-  const numCPUs = require('os').cpus().length;
+  const numWorkers = process.env.WORKERS || require('os').cpus().length;
 
-  for (var i = 0; i < numCPUs; i++) {
+  for (var i = 0; i < numWorkers; i++) {
     cluster.fork();
   }
 
@@ -106,10 +103,9 @@ if (cluster.isMaster) {
   */
   app.use(sanitizer());
 
-// load index routes
   app.use('/', indexRoutes);
 
-// Mount member company routes
+  // Mount member company routes
   for (var key in config.Members) {
     const member = config.Members[key];
     member.Route = "/bt" + member.Route;
@@ -117,12 +113,12 @@ if (cluster.isMaster) {
     app.use(member.Route, basicAuth(member.ApiAuth), new btRoutes(member));
   }
 
-// catch 404 and forward to error handler
+  // catch 404 and forward to error handler
   app.use(function (req, res, next) {
     return responseHelper.error('404', 'Not Found').renderResponse(res, 404);
   });
 
-// error handler
+  // error handler
   app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     console.error(err);
