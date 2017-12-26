@@ -61,9 +61,10 @@ export USE_MOCK_SIMPLE_TOKEN=0
 
 # SUPPORTED CACHING ENGINES VALUES=> 'none', 'redis', 'memcache'
 export CACHING_ENGINE='none'
+export DEFAULT_TTL=3600 # In seconds
 
 # IF CACHING ENGINE == 'memcache'
-export MEMCACHE_SERVERS=['127.0.0.1:11211']
+export MEMCACHE_SERVERS='127.0.0.1:11211'
 
 # IF CACHING ENGINE == 'redis'
 export REDIS_HOST='127.0.0.1'

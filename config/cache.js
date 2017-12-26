@@ -18,3 +18,6 @@ function define(name, value) {
 
 define("REDIS_HOST", process.env.REDIS_HOST); // 172.16.0.139
 define("REDIS_PORT", process.env.REDIS_PORT); // 6379
+
+define("MEMCACHE_SERVERS", process.env.MEMCACHE_SERVERS);
+define("DEFAULT_TTL", process.env.DEFAULT_TTL); // In seconds
