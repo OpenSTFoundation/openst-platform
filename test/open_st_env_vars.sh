@@ -60,7 +60,7 @@ export OST_MEMBER_CONFIG_FILE_PATH='./config.json'
 export USE_MOCK_SIMPLE_TOKEN=0
 
 # SUPPORTED CACHING ENGINES VALUES=> 'none', 'redis', 'memcache'
-export CACHING_ENGINE='redis'
+export CACHING_ENGINE='none'
 
 # IF CACHING ENGINE == 'memcache'
 export MEMCACHE_SERVERS=['127.0.0.1:11211']
