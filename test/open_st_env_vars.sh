@@ -64,6 +64,7 @@ export CACHING_ENGINE='redis'
 
 # IF CACHING ENGINE == 'memcache'
 export MEMCACHE_SERVERS=['127.0.0.1:11211']
+
 # IF CACHING ENGINE == 'redis'
-export REDIS_SERVER='127.0.0.1'
+export REDIS_HOST='127.0.0.1'
 export REDIS_PORT=6379
