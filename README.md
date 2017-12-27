@@ -33,3 +33,5 @@ Milestone 3 : Public Launch of Initial Member Companies (Q2 2018)
 Milestone 4 : 10 Founding Member Companies (Q3-Q4 2018)
 
 Milestone 5 : Consolidation of OpenST as open platform (2019)
+
+
