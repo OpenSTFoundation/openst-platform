@@ -12,9 +12,9 @@
   "recurseDepth": 5,
   "templates": {
     "systemName"            : "Simple Token Foundation",
-    "footer"                : "@simpletokenplatform",
-    "copyright"             :  "@simpletokenplatform",
-    "includeDate"           : true,
+    "footer"                : "<style>.copyright, .jsdoc-message, footer { color: #555555;} footer { border-color:#eeeeee;} }</style>",
+    "copyright"             : "Copyright 2017 OpenST Ltd.",
+    "includeDate"           : false,
     "theme"                 : "lumen",
     "navType"               : "vertical",
     "linenums"              : true,
@@ -23,5 +23,13 @@
     "default": {
       "outputSourceFiles": true
     }
+  },
+    "opts": {
+    "destination": "./docs/",
+    "encoding": "utf8",
+    "private": true,
+    "recurse": true,
+    "template": "./node_modules/ink-docstrap/template",
+    "readme": "./README.md"
   }
 }
