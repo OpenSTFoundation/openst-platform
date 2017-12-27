@@ -14,7 +14,7 @@ The OpenST protocol enables the creation of utility tokens on a utility blockcha
 
 The OpenST Protocol establishes a bridge between two differently purposed blockchains.  A value blockchain, which is required in order to hold cryptographically secured valuable assets; and a utility blockchain, which has utility tokens in favor of which the assets are held on the value blockchain.
 
-## OpenST Platform
+## OpenST Platform   
 
 OpenST Platform is a network of open utility chains, where Simple Token is staked on Ethereum mainnet to mint different branded tokens on the utility chains.  Each branded token serves the users of a different consumer application.  Users can earn and spend across these economies.
 
@@ -22,7 +22,7 @@ OpenST Platform is a network of open utility chains, where Simple Token is stake
 
 <img src="https://openstfoundation.github.io/openst-platform/illustrations/platform-illustration.png" style="max-width: 100%;" />
 
-## Roadmap
+## Roadmap   
 
 Milestone 1 : OpenST Platform v0.9 (7 November 2017)
 
