@@ -99,6 +99,10 @@ if (cluster.isMaster) {
   app.use(bodyParser.urlencoded({extended: true}));
   app.use(cookieParser());
 
+  // requiring the cache implementer for setting up the cache client and connection
+
+  require(rootPrefix + '/lib/cache/implementer');
+
   /*
     The below peice of code should always be before routes.
     Docs: https://www.npmjs.com/package/express-sanitized
