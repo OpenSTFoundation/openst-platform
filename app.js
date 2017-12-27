@@ -16,9 +16,8 @@ const express = require('express')
   , helmet = require('helmet')
   , sanitizer = require('express-sanitized')
   , cluster = require('cluster')
-  , customMiddleware = require('./helpers/custom-middleware')
+  , customMiddleware = require('./helpers/custom_middleware')
   , http = require('http');
-;
 
 morgan.token('id', function getId (req) {
   return req.id;
@@ -33,6 +32,7 @@ const rootPrefix    = "."
   , config          = require( coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
 ;
 
+// if the process is a master.
 if (cluster.isMaster) {
   // Set worker process title
   process.title = "OpenST-Platform node master";
@@ -41,12 +41,13 @@ if (cluster.isMaster) {
   const numWorkers = process.env.WORKERS || require('os').cpus().length;
 
   for (var i = 0; i < numWorkers; i++) {
+    // Spawn a new worker process.
     cluster.fork();
   }
 
   // Worker started listening and is ready
   cluster.on('listening', function(worker, address) {
-    logger.info(`[worker-${worker.id} ] is listening`);
+    logger.info(`[worker-${worker.id} ] is listening to ${address.address}:${address.port}`);
   });
 
   // Worker came online. Will start listening shortly
@@ -54,12 +55,12 @@ if (cluster.isMaster) {
     logger.info(`[worker-${worker.id}] is online`);
   });
 
-  // When someone try to kill the worker
+  //  Called when all workers are disconnected and handles are closed.
   cluster.on('disconnect', function(worker) {
     logger.error(`[worker-${worker.id}] is disconnected`);
   });
 
-  // When worker existed
+  // When any of the workers die the cluster module will emit the 'exit' event.
   cluster.on('exit', function(worker, code, signal) {
     if (worker.exitedAfterDisconnect === true) {
       // don't restart worker as voluntary exit
@@ -83,6 +84,7 @@ if (cluster.isMaster) {
   });
 
 } else if (cluster.isWorker) {
+  // if the process is not a master
 
   // Set worker process title
   process.title = "OpenST-Platform node worker-"+cluster.worker.id;
