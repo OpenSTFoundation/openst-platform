@@ -1,4 +1,16 @@
-# openst-platform changelog
+## OpenST-platform v0.9.2
+
+This release enabled horizontal scaling of the restful APIs implementing the ability to launch a cluster of Node.js 
+processes to handle the load. Number of worker processes is based on number of CPUs and multiplication factor.
+
+Central caching was brought in to the API layer. Prior to this, "in process" caching was being used, 
+which became inconsistent in presence of multiple workers. Redis and Memcached were explored for in memory caching.
+Decision of which caching to use is governed by an ENV variable 'CACHING_ENGINE'.
+
+Detailed changelog:
+- Horizontal scaling of Restful API ([openst-platform#61](https://github.com/OpenSTFoundation/openst-platform/issues/61))
+- Replace "in process caching" with "in memory caching" ([openst-platform#62](https://github.com/OpenSTFoundation/openst-platform/issues/62))
+
 
 [openst-platform v0.9.1](https://github.com/OpenSTFoundation/openst-platform/releases/tag/v0.9.1) December 19 2017
 ---

@@ -68,3 +68,6 @@ if (!path.isAbsolute(txLogsFolder)) {
   txLogsFolder = path.join(__dirname, '/' + rootPrefix + '/' + txLogsFolder);
 }
 define('OST_TRANSACTION_LOGS_FOLDER', txLogsFolder);
+
+// ALLOWED VALUES => NONE/REDIS/MEMCACHED
+define('CACHING_ENGINE', process.env.CACHING_ENGINE);
