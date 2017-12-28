@@ -1,4 +1,4 @@
-## OpenST-platform v0.9.2 January 2017
+## OpenST-platform v0.9.2
 
 This release enabled horizontal scaling of the restful APIs implementing the ability to launch a cluster of Node.js 
 processes to handle the load. Number of worker processes is based on number of CPUs and multiplication factor.
