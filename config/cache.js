@@ -5,7 +5,7 @@ const path = require('path')
 ;
 
 /*
- * Constants file: Load constants from environment variables
+ * Constants file: Load constants related to cache from environment variables
  *
  */
 
