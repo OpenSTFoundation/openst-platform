@@ -7,9 +7,12 @@ Central caching was brought in to the API layer. Prior to this, "in process" cac
 which became inconsistent in presence of multiple workers. Redis and Memcached were explored for in memory caching.
 Decision of which caching to use is governed by an ENV variable 'CACHING_ENGINE'.
 
+Stake and mint related cache inconsistency bug was resolved.
+
 Detailed changelog:
 - Horizontal scaling of Restful API ([openst-platform#61](https://github.com/OpenSTFoundation/openst-platform/issues/61))
 - Replace "in process caching" with "in memory caching" ([openst-platform#62](https://github.com/OpenSTFoundation/openst-platform/issues/62))
+- Cache flush not happening in stake and mint for branded token ([openst-platform#76](https://github.com/OpenSTFoundation/openst-platform/issues/76))
 
 
 [openst-platform v0.9.1](https://github.com/OpenSTFoundation/openst-platform/releases/tag/v0.9.1) December 19 2017
