@@ -356,13 +356,13 @@ module.exports = function (stakerAddress, stakerPassphrase, beneficiary, toStake
     })
     .then(async function(){
       // pessimistically perform cache update
-      var cachedBalance = await openSTUtilityContractInteract.getBalanceFromCache(beneficiary);
+      var cachedBalance = await utilityTokenInterfaceContract.getBalanceFromCache(beneficiary);
 
       if(cachedBalance){
         // if cache value is present
         // add the amount which is minted and set the new value to cache.
         cachedBalance = new BigNumber(cachedBalance).plus(toStakeAmount.mul(conversionRate));
-        return openSTUtilityContractInteract.setBalanceToCache(cachedBalance)
+        return utilityTokenInterfaceContract.setBalanceToCache(beneficiary, cachedBalance)
       } else {
         // else do nothing
         return Promise.resolve();
