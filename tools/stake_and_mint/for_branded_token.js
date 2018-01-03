@@ -334,7 +334,8 @@ const getPassphrase = function(selectedMember){
         _passphrase,
         selectedMember.Reserve,
         toStakeAmount,
-        brandedToken
+        brandedToken,
+        selectedMember.ConversionRate
       );
     })
     .then(function () {

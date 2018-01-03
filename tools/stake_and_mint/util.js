@@ -245,13 +245,16 @@ function listenToUtilityToken(stakingIntentHash){
  * @param {String} beneficiary - Address of the beneficiary
  * @param {Number} toStakeAmount - Amount to stake in ST
  * @param {utilityTokenInterfaceKlass} utilityTokenInterfaceContract - Contract interact class object for utility token interface contract
+ * @param {Number} conversionRate - conversion rate from st to bt, default 1
+ *
  *
  * @return {Promise}
  */
-module.exports = function (stakerAddress, stakerPassphrase, beneficiary, toStakeAmount, utilityTokenInterfaceContract) {
+module.exports = function (stakerAddress, stakerPassphrase, beneficiary, toStakeAmount, utilityTokenInterfaceContract, conversionRate) {
   toStakeAmount = toWeiST( toStakeAmount );
   var selectedMember = null
     , eventDataValues = null
+    , conversionRate = conversionRate || 1
   ;
 
   logger.step("Get ST of Staker");
@@ -350,6 +353,20 @@ module.exports = function (stakerAddress, stakerPassphrase, beneficiary, toStake
       logger.log("Claiming Receipt below: ");
       logger.log(JSON.stringify(claimResult));
       logger.win("Claiming Completed by beneficiary!");
+    })
+    .then(async function(){
+      // pessimistically perform cache update
+      var cachedBalance = await openSTUtilityContractInteract.getBalanceFromCache(beneficiary);
+
+      if(cachedBalance){
+        // if cache value is present
+        // add the amount which is minted and set the new value to cache.
+        cachedBalance = new BigNumber(cachedBalance).plus(toStakeAmount.mul(conversionRate));
+        return openSTUtilityContractInteract.setBalanceToCache(cachedBalance)
+      } else {
+        // else do nothing
+        return Promise.resolve();
+      }
     })
     .then(async function () {
       console.log("Beneficiary Address: "+ beneficiary);

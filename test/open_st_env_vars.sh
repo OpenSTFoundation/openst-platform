@@ -61,6 +61,7 @@ export USE_MOCK_SIMPLE_TOKEN=0
 
 # SUPPORTED CACHING ENGINES VALUES=> 'none', 'redis', 'memcached'
 export CACHING_ENGINE='none'
+#export WORKERS=1 # only in case of in memory caching
 export DEFAULT_TTL=3600 # In seconds
 
 # IF CACHING ENGINE == 'memcached'
