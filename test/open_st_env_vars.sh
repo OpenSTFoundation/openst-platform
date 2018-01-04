@@ -71,3 +71,4 @@ export MEMCACHE_SERVERS='127.0.0.1:11211' # comma seperated eg: '127.0.0.1:11211
 export REDIS_HOST='127.0.0.1'
 export REDIS_PORT=6379
 export REDIS_PASS=st123
+export REDIS_TLS=0
