@@ -29,18 +29,18 @@ var appendRequest = function(message) {
 };
 
 module.exports = {
-  "STEP_PRE": STEP_PRE
-  , "WARN_PRE": WARN_PRE
-  , "WIN_PRE": WIN_PRE
-  , "INFO_PRE": INFO_PRE
-  , "ERR_PRE": ERR_PRE
+  "STEP_PRE": appendRequest(STEP_PRE)
+  , "WARN_PRE": appendRequest(WARN_PRE)
+  , "WIN_PRE": appendRequest(WIN_PRE)
+  , "INFO_PRE": appendRequest(INFO_PRE)
+  , "ERR_PRE": appendRequest(ERR_PRE)
   , "CONSOLE_RESET": CONSOLE_RESET
 
   , step: function () {
     var args = [this.STEP_PRE];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
-    console.log.apply(console, appendRequest(args));
+    console.log.apply(console, args);
   }
 
   //Method to Log Information
@@ -48,7 +48,7 @@ module.exports = {
     var args = [this.INFO_PRE];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
-    console.log.apply(console, appendRequest(args));
+    console.log.apply(console, args);
   }
 
   //Method to Log Error.
@@ -56,14 +56,14 @@ module.exports = {
     var args = [this.ERR_PRE];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
-    console.log.apply(console, appendRequest(args));
+    console.log.apply(console, args);
   }
 
   , warn: function () {
     var args = [this.WARN_PRE];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
-    console.log.apply(console, appendRequest(args));
+    console.log.apply(console, args);
   }
 
   //Method to Log Success/Win.
@@ -71,10 +71,10 @@ module.exports = {
     var args = [this.WIN_PRE];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
-    console.log.apply(console, appendRequest(args));
+    console.log.apply(console, args);
   }
 
   , log: function () {
-    console.log.apply(console, appendRequest(args));
+    console.log.apply(console, arguments);
   }
 };
