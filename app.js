@@ -8,7 +8,6 @@
 //All Module Requires.
 const express = require('express')
   , path = require('path')
-  // , morgan = require('morgan')
   , uuid = require('uuid')
   , createNamespace = require('continuation-local-storage').createNamespace
   , myRequest = createNamespace('my request')
@@ -22,9 +21,6 @@ const express = require('express')
   , customMiddleware = require('./helpers/custom_middleware')
   , http = require('http');
 
-// morgan.token('id', function getId (req) {
-//   return req.id;
-// });
 
 //All the requires.
 const rootPrefix    = "."
@@ -99,6 +95,7 @@ if (cluster.isMaster) {
   app.use(function(req, res, next) {
     myRequest.run(function() {
       myRequest.set('reqId', uuid.v4());
+      myRequest.set('workerId', cluster.worker.id);
       next();
     });
   });

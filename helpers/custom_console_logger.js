@@ -24,8 +24,20 @@ var getNamespace = require('continuation-local-storage').getNamespace;
 
 var appendRequest = function(message) {
     var myRequest = getNamespace('my request');
-    message = myRequest && myRequest.get('reqId') ? message + " reqId: " + myRequest.get('reqId') : message;
-    return message;
+    var newMessage = "";
+    if(myRequest){
+      if(myRequest.get('reqId')){
+        newMessage += ("[" + myRequest.get('reqId') + "]");
+      }
+      if(myRequest.get('workerId')){
+        newMessage += ("[Worker - " + myRequest.get('workerId') + "]");
+      }
+      var hrTime = process.hrtime();
+      newMessage += ("[" + (hrTime[0] * 1000000 + hrTime[1] / 1000) + "]");
+    }
+    newMessage += message;
+    // message = myRequest && myRequest.get('reqId') ? message + " reqId: " + myRequest.get('reqId') : message;
+    return newMessage;
 };
 
 module.exports = {
