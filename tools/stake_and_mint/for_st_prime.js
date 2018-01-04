@@ -21,10 +21,11 @@
     , beneficiary = coreAddresses.getAddressForUser("utilityChainOwner")
     , stPrimeContractAddress = coreAddresses.getAddressForContract("stPrime")
     , stPrime = new StPrimeKlass(stPrimeContractAddress)
+    , logger = require( rootPrefix+'/helpers/custom_console_logger' )
     , toStakeAmount = 100;
 
   util(stakerAddress, stakerPassphrase, beneficiary, toStakeAmount, stPrime).then(function () {
-    console.log("Yoo.. Have Fun!!");
+    logger.info("Yoo.. Have Fun!!");
     process.exit(0);
   });
 

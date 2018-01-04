@@ -217,7 +217,7 @@ TransactionLogger.debug = {
     memberSymbol = memberSymbol || "";
 
     if (!memberSymbol.length) {
-      console.log("Please specify memberSymbol");
+      logger.info("Please specify memberSymbol");
       return;
     }
 

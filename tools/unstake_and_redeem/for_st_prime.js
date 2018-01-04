@@ -127,10 +127,10 @@ const describeUtilityChain = function () {
  */
 const askRedeemerAddress = function () {
   return new Promise(function (resolve, reject) {
-    console.log("Please mention the address of the redeemer.");
+    logger.info("Please mention the address of the redeemer.");
     readlineInterface.prompt();
     const rlCallback = function (line) {
-      console.log("askRedeemerAddress :: readlineInterface :: line", line);
+      logger.info("askRedeemerAddress :: readlineInterface :: line", line);
       line = line.trim().toLowerCase();
 
       switch (line) {
@@ -160,10 +160,10 @@ const askRedeemerAddress = function () {
  */
 const askRedeemerPassphrase = function () {
   return new Promise(function (resolve, reject) {
-    console.log("Please mention the passphrase of the redeemer.");
+    logger.info("Please mention the passphrase of the redeemer.");
     readlineInterface.prompt();
     const rlCallback = function (line) {
-      console.log("askRedeemerAddress :: readlineInterface :: line", line);
+      logger.info("askRedeemerAddress :: readlineInterface :: line", line);
       line = line.trim();
 
       const passphrase = line;
@@ -203,10 +203,10 @@ const getRedeemerSTPrimeBalance = function () {
  */
 const askRedeemingAmount = function () {
   return new Promise(function (resolve, reject) {
-    console.log("Please mention the number of STPrimes to redeem.");
+    logger.info("Please mention the number of STPrimes to redeem.");
     readlineInterface.prompt();
     const rlCallback = function (line) {
-      console.log("askRedeemingAmount :: readlineInterface :: line", line);
+      logger.info("askRedeemingAmount :: readlineInterface :: line", line);
       line = line.trim().toLowerCase();
 
       switch (line) {
@@ -272,11 +272,11 @@ const redeemSTPrime = async function () {
       , eventDataValues = formattedEventData[eventName];
 
     if (!eventDataValues) {
-      console.log("openSTUtilityContractInteract.redeemSTPrime was not completed correctly: RedemptionIntentDeclared event didn't found in events data");
-      console.log("rawTxReceipt is:\n");
-      console.log(rawTxReceipt);
-      console.log("\n\n formattedTransactionReceipt is:\n");
-      console.log(formattedTransactionReceipt);
+      logger.info("openSTUtilityContractInteract.redeemSTPrime was not completed correctly: RedemptionIntentDeclared event didn't found in events data");
+      logger.info("rawTxReceipt is:\n");
+      logger.info(rawTxReceipt);
+      logger.info("\n\n formattedTransactionReceipt is:\n");
+      logger.info(formattedTransactionReceipt);
       return Promise.reject("openSTUtilityContractInteract.redeemSTPrime was not completed correctly: RedemptionIntentDeclared event didn't found in events data");
     }
 
@@ -388,7 +388,7 @@ const processUnstaking = function () {
       if (reason && reason.message) {
         logger.error(reason.message);
       }
-      reason && console.log(reason);
+      reason && logger.info(reason);
       process.exit(1);
     })
   ;

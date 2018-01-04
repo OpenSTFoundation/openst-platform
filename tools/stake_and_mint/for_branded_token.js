@@ -121,19 +121,19 @@ const readlineInterface = readline.createInterface({
  * List all members
  */
 const listAllMembers = function() {
-  console.log("\x1b[34m Welcome to Staking And Minting Tool \x1b[0m");
+  logger.info("\x1b[34m Welcome to Staking And Minting Tool \x1b[0m");
   logger.step("Please choose member to fund.");
 
   //List all available members.
   for( var i =0; i < Config.Members.length; i++  ) {
     var member = Config.Members[ i ];
-    console.log( i+1, " for ", member.Name, "(", member.Symbol ,")"  );
+    logger.info( i+1, " for ", member.Name, "(", member.Symbol ,")"  );
   }
 
   readlineInterface.prompt();
   return new Promise(function(resolve, reject) {
     const rlCallback = function(line){
-      console.log("listAllMembers :: line", line);
+      logger.info("listAllMembers :: line", line);
       line = line.trim().toLowerCase();
       switch ( line ) {
         case "exit":
@@ -143,14 +143,14 @@ const listAllMembers = function() {
           break;
       }
       var memberIndex = Number( line ) - 1;
-      console.log("Choosing Member : ", memberIndex);
+      logger.info("Choosing Member : ", memberIndex);
       if ( isNaN( memberIndex ) || memberIndex >= Config.Members.length ) {
-        console.log("\n");
+        logger.info("\n");
         logger.error("Invalid Option. Please try again.");
-        console.log("\n");
+        logger.info("\n");
         return;
       }
-      console.log( rlCallback );
+      logger.info( rlCallback );
       readlineInterface.removeListener("line", rlCallback);
       const member = Config.Members[ memberIndex ];
       resolve( member );
@@ -168,13 +168,13 @@ const listAllMembers = function() {
  */
 const confirmMember = function(member) {
   describeMember( member );
-  console.log("\x1b[34m Are you sure you would like to continue with Staking And Minting ? Options:\x1b[0m");
-  console.log("\x1b[32m yes \x1b[0m\t" , "To continue with Staking And Minting");
-  console.log("\x1b[31m no \x1b[0m\t" , "To quit the program");
+  logger.info("\x1b[34m Are you sure you would like to continue with Staking And Minting ? Options:\x1b[0m");
+  logger.info("\x1b[32m yes \x1b[0m\t" , "To continue with Staking And Minting");
+  logger.info("\x1b[31m no \x1b[0m\t" , "To quit the program");
   return new Promise( function(resolve, reject) {
     readlineInterface.prompt();
     const rlCallback = function(line) {
-      console.log("confirmMember :: readlineInterface :: line", line);
+      logger.info("confirmMember :: readlineInterface :: line", line);
       line = line.trim().toLowerCase();
       switch ( line ) {
         case "yes":
@@ -222,10 +222,10 @@ const getMemberSTBalance = function(member){
  */
 const askStakingAmount = function(bigNumBalance) {
   return new Promise( function(resolve, reject) {
-    console.log("Please mention the Simple Tokens to Assign.");
+    logger.info("Please mention the Simple Tokens to Assign.");
     readlineInterface.prompt();
     const rlCallback = function(line) {
-      console.log("askStakingAmount :: readlineInterface :: line", line);
+      logger.info("askStakingAmount :: readlineInterface :: line", line);
       line = line.trim().toLowerCase();
 
       switch(line) {
@@ -347,7 +347,7 @@ const getPassphrase = function(selectedMember){
       if ( reason && reason.message ){
         logger.error( reason.message );
       }
-      reason && console.log( reason );
+      reason && logger.info( reason );
       process.exit(1);
     })
   ;
