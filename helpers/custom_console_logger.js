@@ -20,6 +20,13 @@ const WIN_PRE = "";
 const WARN_PRE = "";
 const STEP_PRE = "";
 
+var getNamespace = require('continuation-local-storage').getNamespace;
+
+var appendRequest = function(message) {
+    var myRequest = getNamespace('my request');
+    message = myRequest && myRequest.get('reqId') ? message + " reqId: " + myRequest.get('reqId') : message;
+    return message;
+};
 
 module.exports = {
   "STEP_PRE": STEP_PRE
@@ -33,7 +40,7 @@ module.exports = {
     var args = [this.STEP_PRE];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
-    console.log.apply(console, args);
+    console.log.apply(console, appendRequest(args));
   }
 
   //Method to Log Information
@@ -41,7 +48,7 @@ module.exports = {
     var args = [this.INFO_PRE];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
-    console.log.apply(console, args);
+    console.log.apply(console, appendRequest(args));
   }
 
   //Method to Log Error.
@@ -49,14 +56,14 @@ module.exports = {
     var args = [this.ERR_PRE];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
-    console.log.apply(console, args);
+    console.log.apply(console, appendRequest(args));
   }
 
   , warn: function () {
     var args = [this.WARN_PRE];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
-    console.log.apply(console, args);
+    console.log.apply(console, appendRequest(args));
   }
 
   //Method to Log Success/Win.
@@ -64,10 +71,10 @@ module.exports = {
     var args = [this.WIN_PRE];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
-    console.log.apply(console, args);
+    console.log.apply(console, appendRequest(args));
   }
 
   , log: function () {
-    console.log.apply(console, arguments);
+    console.log.apply(console, appendRequest(args));
   }
 };

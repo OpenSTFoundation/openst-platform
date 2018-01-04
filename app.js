@@ -8,7 +8,10 @@
 //All Module Requires.
 const express = require('express')
   , path = require('path')
-  , morgan = require('morgan')
+  // , morgan = require('morgan')
+  , uuid = require('uuid')
+  , createNamespace = require('continuation-local-storage').createNamespace
+  , myRequest = createNamespace('my request')
   , logger = require('./helpers/custom_console_logger')
   , cookieParser = require('cookie-parser')
   , bodyParser = require('body-parser')
@@ -19,9 +22,9 @@ const express = require('express')
   , customMiddleware = require('./helpers/custom_middleware')
   , http = require('http');
 
-morgan.token('id', function getId (req) {
-  return req.id;
-});
+// morgan.token('id', function getId (req) {
+//   return req.id;
+// });
 
 //All the requires.
 const rootPrefix    = "."
@@ -93,7 +96,13 @@ if (cluster.isMaster) {
   const app = express();
 
   app.use(customMiddleware({worker_id: cluster.worker.id}));
-  app.use(morgan(':id :remote-addr - :remote-user [:date[clf]] :method :url :response-time HTTP/:http-version" :status :res[content-length] :referrer :user-agent'));
+  app.use(function(req, res, next) {
+    myRequest.run(function() {
+      myRequest.set('reqId', uuid.v4());
+      next();
+    });
+  });
+  // app.use(morgan(':id :remote-addr - :remote-user [:date[clf]] :method :url :response-time HTTP/:http-version" :status :res[content-length] :referrer :user-agent'));
   app.use(helmet());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: true}));
