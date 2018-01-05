@@ -47,7 +47,7 @@ module.exports = function( member ) {
     addLog(body.to, body);
     // Add a 1 second delay before firing the callback (this needs pub-sub)
     // TODO: use rsmq
-    RP.post({url: callbackUrl, json: true, body: body, auth: callbackAuth}, err => err ? console.error(err) : {} );
+    RP.post({url: callbackUrl, json: true, body: body, auth: callbackAuth}, err => err ? logger.error(err) : {} );
   }
 
   function toBigNumberWei( stringValue ) {
@@ -75,7 +75,7 @@ module.exports = function( member ) {
   });
 
   function appendRequestInfo(req) {
-    logger.info(`[req-${req.id}]`)
+    logger.requestStartLog(req.url);
   }
 
   router.get('/reserve', function(req, res, next) {
@@ -91,11 +91,11 @@ module.exports = function( member ) {
     appendRequestInfo(req);
     btContractInteract.getName()
       .then( response => {
-        console.log( "then.response", JSON.stringify( response ) );
+        logger.info( "then.response", JSON.stringify( response ) );
         response.renderResponse( res );
       })
       .catch( reason => {
-        console.log( "catch.reason", reason.message );
+        logger.info( "catch.reason", reason.message );
         throw reason;
       })
       .catch(next);
@@ -105,11 +105,11 @@ module.exports = function( member ) {
     appendRequestInfo(req);
     btContractInteract.getUuid()
       .then( response => {
-        console.log( "then.response", JSON.stringify( response ) );
+        logger.info( "then.response", JSON.stringify( response ) );
         response.renderResponse( res );
       })
       .catch( reason => {
-        console.log( "catch.reason", reason.message );
+        logger.info( "catch.reason", reason.message );
         throw reason;
       })
       .catch(next);

@@ -10,7 +10,7 @@ const express = require('express')
   , path = require('path')
   , uuid = require('uuid')
   , createNamespace = require('continuation-local-storage').createNamespace
-  , myRequest = createNamespace('my request')
+  , inputRequest = createNamespace('inputRequest')
   , logger = require('./helpers/custom_console_logger')
   , cookieParser = require('cookie-parser')
   , bodyParser = require('body-parser')
@@ -93,9 +93,11 @@ if (cluster.isMaster) {
 
   app.use(customMiddleware({worker_id: cluster.worker.id}));
   app.use(function(req, res, next) {
-    myRequest.run(function() {
-      myRequest.set('reqId', uuid.v4());
-      myRequest.set('workerId', cluster.worker.id);
+    inputRequest.run(function() {
+      inputRequest.set('reqId', uuid.v4());
+      inputRequest.set('workerId', cluster.worker.id);
+      var hrTime = process.hrtime();
+      inputRequest.set('startTime', hrTime);
       next();
     });
   });
