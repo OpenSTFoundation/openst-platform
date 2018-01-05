@@ -12,6 +12,7 @@ const express = require('express')
   , createNamespace = require('continuation-local-storage').createNamespace
   , inputRequest = createNamespace('inputRequest')
   , logger = require('./helpers/custom_console_logger')
+  , morgan = require('morgan')
   , cookieParser = require('cookie-parser')
   , bodyParser = require('body-parser')
   , basicAuth = require('express-basic-auth')
@@ -21,6 +22,10 @@ const express = require('express')
   , customMiddleware = require('./helpers/custom_middleware')
   , http = require('http');
 
+
+morgan.token('id', function getId (req) {
+    return req.id;
+});
 
 //All the requires.
 const rootPrefix    = "."
@@ -92,16 +97,16 @@ if (cluster.isMaster) {
   const app = express();
 
   app.use(customMiddleware({worker_id: cluster.worker.id}));
+  app.use(morgan('[:id] :remote-addr - :remote-user [:date[clf]] :method :url :response-time HTTP/:http-version" :status :res[content-length] :referrer :user-agent'));
   app.use(function(req, res, next) {
     inputRequest.run(function() {
-      inputRequest.set('reqId', uuid.v4());
+      inputRequest.set('reqId', req.id);
       inputRequest.set('workerId', cluster.worker.id);
       var hrTime = process.hrtime();
       inputRequest.set('startTime', hrTime);
       next();
     });
   });
-  // app.use(morgan(':id :remote-addr - :remote-user [:date[clf]] :method :url :response-time HTTP/:http-version" :status :res[content-length] :referrer :user-agent'));
   app.use(helmet());
   app.use(bodyParser.json());
   app.use(bodyParser.urlencoded({extended: true}));
@@ -123,7 +128,7 @@ if (cluster.isMaster) {
   for (var key in config.Members) {
     const member = config.Members[key];
     member.Route = "/bt" + member.Route;
-    console.log("Mounting branded token", member.Name, "on", member.Route, "on Worker", cluster.worker.id);
+    logger.info("Mounting branded token", member.Name, "on", member.Route, "on Worker", cluster.worker.id);
     app.use(member.Route, basicAuth(member.ApiAuth), new btRoutes(member));
   }
 
@@ -135,7 +140,7 @@ if (cluster.isMaster) {
   // error handler
   app.use(function (err, req, res, next) {
     // set locals, only providing error in development
-    console.error(err);
+    logger.error(err);
     return responseHelper.error('500', 'Something went wrong').renderResponse(res, 500);
   });
 

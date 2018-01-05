@@ -20,6 +20,7 @@
     "express-sanitized": "0.5.1",
     "helmet": "3.9.0",
     "memcached": "^2.2.2",
+    "morgan": "^1.9.0",
     "readline": "1.3.0",
     "redis": "^2.8.0",
     "request": "2.81.0",
