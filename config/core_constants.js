@@ -57,13 +57,9 @@ define('OST_UTILITY_GAS_LIMIT', 9000000);
 
 // file path of the member config file.
 var configFilePath = process.env.OST_MEMBER_CONFIG_FILE_PATH;
-console.log("configFilePath before");
-console.log(configFilePath);
 if (!path.isAbsolute(configFilePath)) {
   configFilePath = path.join(__dirname, '/' + rootPrefix + '/' + configFilePath);
 }
-console.log("configFilePath after");
-console.log(configFilePath);
 define('OST_MEMBER_CONFIG_FILE_PATH', configFilePath);
 
 // Folder path of the transfer logs
