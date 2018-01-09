@@ -32,11 +32,11 @@ before_script:
   - ./init_keys.sh
   - nohup ./run_value_chain.sh </dev/null >/dev/null 2>&1 &
   - nohup ./run_utility_chain.sh </dev/null >/dev/null 2>&1 &
+  - ps aux|grep 'run_value_chain'
+  - ps aux|grep 'run_utility_chain'
 script:
   - cd ..
-  - pwd
   - source test/open_st_env_vars.sh
-  - cat test/open_st_env_vars.sh
   - sh run_complete_test_deploy.sh
 after_script:
   - kill $(ps aux | grep 'run_value_chain' | awk '{print $2}')
