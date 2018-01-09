@@ -22,7 +22,7 @@ const rootPrefix = ".."
 console.log("OST_MEMBER_CONFIG_FILE_PATH");
 console.log(coreConstants.OST_MEMBER_CONFIG_FILE_PATH);
 
-console.log("Config");
+console.log("Config Object");
 console.log(Config);
 
 function main( addressFile ) {
