@@ -31,6 +31,7 @@ before_script:
   - ./init_keys.sh
   - nohup ./run_value_chain.sh </dev/null >/dev/null 2>&1 &
   - nohup ./run_utility_chain.sh </dev/null >/dev/null 2>&1 &
+  - pwd
   - cd ..
 script:
   - pwd
