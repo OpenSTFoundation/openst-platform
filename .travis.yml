@@ -1,0 +1,41 @@
+dist: trusty
+language: node_js
+sudo: required
+branches:
+  only:
+  - master
+  - develop
+notifications:
+  email:
+    recipients:
+      - devops@pepo.com
+      - deepesh@pepo.com
+      - abhay@pepo.com
+      - sunil@pepo.com
+    on_success: always
+    on_failure: always
+node_js:
+  - "8"
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install nodejs
+  - sudo apt-get install npm
+  - sudo apt-get install software-properties-common
+  - sudo add-apt-repository -y ppa:ethereum/ethereum
+  - sudo apt-get install ethereum
+install:
+  - npm install
+before_script:
+  - rm -r test/st-poa-*
+  - cd test
+  - ./init_keys.sh
+  - nohup ./run_value_chain.sh </dev/null >/dev/null 2>&1 &
+  - nohup ./run_utility_chain.sh </dev/null >/dev/null 2>&1 &
+  - cd ..
+script:
+  - pwd
+  - source test/open_st_env_vars.sh
+  - ./run_complete_test_deploy.sh
+after_script:
+  - kill $(ps aux | grep 'run_value_chain' | awk '{print $2}')
+  - kill $(ps aux | grep 'run_utility_chain' | awk '{print $2}')
