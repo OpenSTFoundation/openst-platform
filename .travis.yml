@@ -31,8 +31,8 @@ before_script:
   - cd test
   - sh init_keys.sh
   - cat open_st_env_vars.sh 
-  - nohup ./run_value_chain.sh </dev/null >/dev/null 2>&1 &
-  - nohup ./run_utility_chain.sh </dev/null >/dev/null 2>&1 &
+  - nohup sh run_value_chain.sh </dev/null >/dev/null 2>&1 &
+  - nohup sh run_utility_chain.sh </dev/null >/dev/null 2>&1 &
   - ps aux|grep 'run_value_chain'
   - ps aux|grep 'run_utility_chain'
 script:
