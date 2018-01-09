@@ -29,7 +29,8 @@ install:
 before_script:
   - rm -rf test/st-poa-*
   - cd test
-  - ./init_keys.sh
+  - sh init_keys.sh
+  - cat open_st_env_vars.sh 
   - nohup ./run_value_chain.sh </dev/null >/dev/null 2>&1 &
   - nohup ./run_utility_chain.sh </dev/null >/dev/null 2>&1 &
   - ps aux|grep 'run_value_chain'
