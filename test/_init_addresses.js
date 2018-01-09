@@ -11,8 +11,6 @@ const _addresses = {
   "members": []
 };
 
-console.log("OST_MEMBER_CONFIG_FILE_PATH");
-console.log(coreConstants.OST_MEMBER_CONFIG_FILE_PATH);
 
 const rootPrefix = ".."
   , coreConstants   = require( rootPrefix + '/config/core_constants' )
@@ -21,6 +19,9 @@ const rootPrefix = ".."
   , poaGenesisUtility = require( rootPrefix + "/test/poa-genesis-utility.json")
   , populateEnvVars = require( rootPrefix + "/lib/populate_env_vars.js")
 ;
+console.log("OST_MEMBER_CONFIG_FILE_PATH");
+console.log(coreConstants.OST_MEMBER_CONFIG_FILE_PATH);
+
 console.log("Config");
 console.log(Config);
 
