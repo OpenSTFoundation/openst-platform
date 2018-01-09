@@ -11,6 +11,9 @@ const _addresses = {
   "members": []
 };
 
+console.log("OST_MEMBER_CONFIG_FILE_PATH");
+console.log(coreConstants.OST_MEMBER_CONFIG_FILE_PATH);
+
 const rootPrefix = ".."
   , coreConstants   = require( rootPrefix + '/config/core_constants' )
   , Config = require(process.argv[3] || coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
@@ -18,9 +21,14 @@ const rootPrefix = ".."
   , poaGenesisUtility = require( rootPrefix + "/test/poa-genesis-utility.json")
   , populateEnvVars = require( rootPrefix + "/lib/populate_env_vars.js")
 ;
+console.log("Config");
+console.log(Config);
 
 function main( addressFile ) {
+  console.log("__dirname");
+  console.log(__dirname);
   const _path = Path.join(__dirname, addressFile );
+  console.log("_path"+_path);
   const fileContent = fs.readFileSync( _path, "utf8");
   fileContent.toString().split('\n').forEach(function (line, index) {
 
