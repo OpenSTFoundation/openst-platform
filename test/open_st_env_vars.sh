@@ -3,11 +3,11 @@ export HTTPS_CERT=''
 export HTTPS_PORT=443
 export OST_TRANSACTION_LOGS_FOLDER='./log/'
 
-export OST_GETH_VALUE_RPC_PROVIDER='http://127.0.0.1:8545'
-export OST_GETH_VALUE_WS_PROVIDER='ws://127.0.0.1:18545'
+export OST_GETH_VALUE_RPC_PROVIDER='http://localhost:8545'
+export OST_GETH_VALUE_WS_PROVIDER='ws://localhost:18545'
 
-export OST_GETH_UTILITY_RPC_PROVIDER='http://127.0.0.1:9546'
-export OST_GETH_UTILITY_WS_PROVIDER='ws://127.0.0.1:19546'
+export OST_GETH_UTILITY_RPC_PROVIDER='http://localhost:9546'
+export OST_GETH_UTILITY_WS_PROVIDER='ws://localhost:19546'
 
 # five GWei for now.
 export OST_UTILITY_GAS_PRICE='0x12A05F200'
