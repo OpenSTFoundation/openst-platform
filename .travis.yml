@@ -28,6 +28,8 @@ install:
   - npm install
 before_script:
   - rm -rf test/st-poa-*
+  - kill $(ps aux | grep 'run_value_chain' | awk '{print $2}')
+  - kill $(ps aux | grep 'run_utility_chain' | awk '{print $2}')
 script:
   - source test/open_st_env_vars.sh
   - cd test
