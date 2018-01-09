@@ -27,7 +27,8 @@ before_install:
 install:
   - npm install
 before_script:
-  - rm -r test/st-poa-*
+  - rm -rf test/st-poa-*
+  - pwd
   - cd test
   - ./init_keys.sh
   - nohup ./run_value_chain.sh </dev/null >/dev/null 2>&1 &
