@@ -24,6 +24,7 @@ before_install:
   - sudo add-apt-repository -y ppa:ethereum/ethereum
   - sudo apt-get update
   - sudo apt-get install ethereum
+  - geth version
 install:
   - npm install
 before_script:
