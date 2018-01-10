@@ -12,6 +12,10 @@ notifications:
       - deepesh@pepo.com
       - abhay@pepo.com
       - sunil@pepo.com
+      - kedar@pepo.com
+      - alpesh@pepo.com
+      - rachin@pepo.com
+      - puneet.khushwani@pepo.com
     on_success: always
     on_failure: always
 node_js:
