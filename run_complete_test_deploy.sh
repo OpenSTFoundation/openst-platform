@@ -16,7 +16,7 @@ echo "START: node tools/deploy/openst_and_registrar_value.js"
 echo "=================================================================================================================================================================="
 
 source test/open_st_env_vars.sh
-node tools/deploy/openst_and_registrar_value.js
+node tools/deploy/openst_and_registrar_value.js $1
 
 echo "=================================================================================================================================================================="
 echo "END: node tools/deploy/openst_and_registrar_value.js"
@@ -27,7 +27,7 @@ echo "START: node tools/deploy/openst_stprime_registrar_utility.js"
 echo "=================================================================================================================================================================="
 
 source test/open_st_env_vars.sh
-node tools/deploy/openst_stprime_registrar_utility.js
+node tools/deploy/openst_stprime_registrar_utility.js $1
 
 echo "=================================================================================================================================================================="
 echo "END: node tools/deploy/openst_stprime_registrar_utility.js"
@@ -38,7 +38,7 @@ echo "START: node tools/deploy/core_and_register_utility_token_value.js"
 echo "=================================================================================================================================================================="
 
 source test/open_st_env_vars.sh
-node tools/deploy/core_and_register_utility_token_value.js
+node tools/deploy/core_and_register_utility_token_value.js $1
 
 echo "=================================================================================================================================================================="
 echo "END: node tools/deploy/core_and_register_utility_token_value.js"
