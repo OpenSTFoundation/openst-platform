@@ -117,6 +117,8 @@ const performer = async function (argv) {
         });
       }
     );
+  } else {
+    prompts.close();
   }
 
   logger.step("Deploying Value Core Contract on Value Chain");

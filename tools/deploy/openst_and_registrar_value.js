@@ -119,6 +119,8 @@ const performer = async function (argv) {
         });
       }
     );
+  } else {
+    prompts.close();
   }
 
   var contractName = 'valueRegistrar'

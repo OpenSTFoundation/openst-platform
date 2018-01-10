@@ -78,6 +78,8 @@ const performer = async function (argv) {
         });
       }
     );
+  } else {
+    prompts.close();
   }
 
   // deploy Registrar
