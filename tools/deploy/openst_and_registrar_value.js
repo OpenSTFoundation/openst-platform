@@ -94,28 +94,34 @@ function updateConfig(valueRegistrarAddr, valueSTContractAddr) {
  * @return {}
  */
 
-const performer = async function () {
+const performer = async function (argv) {
 
+  const is_travis_ci_enabled = (argv[2] === 'travis');
   logger.step("Deploying Registrar on Value Chain");
   logger.info("Deployer Address: " + deployerAddress);
   logger.info("Foundation Address: " + foundationAddress);
   logger.info("Value Ops Address: " + valueOpsAddress);
   logger.info("Simple Token Contract Address: " + simpleTokenAddress);
+  logger.info("Travis CI enabled Status: " + is_travis_ci_enabled);
 
-  await new Promise(
-    function (onResolve, onReject) {
-      prompts.question("Please verify all above details. Do you want to proceed? [Y/N]", function (intent) {
-        if (intent === 'Y') {
-          logger.info('Great! Proceeding deployment.');
-          prompts.close();
-          onResolve();
-        } else {
-          logger.error('Exiting deployment scripts. Change the env vars and re-run.');
-          process.exit(1);
-        }
-      });
-    }
-  );
+  if (is_travis_ci_enabled === false ){
+    await new Promise(
+      function (onResolve, onReject) {
+        prompts.question("Please verify all above details. Do you want to proceed? [Y/N]", function (intent) {
+          if (intent === 'Y') {
+            logger.info('Great! Proceeding deployment.');
+            prompts.close();
+            onResolve();
+          } else {
+            logger.error('Exiting deployment scripts. Change the env vars and re-run.');
+            process.exit(1);
+          }
+        });
+      }
+    );
+  } else {
+    prompts.close();
+  }
 
   var contractName = 'valueRegistrar'
     , contractAbi = coreAddresses.getAbiForContract(contractName)
@@ -207,4 +213,5 @@ const performer = async function () {
 
 };
 
-performer();
+// process.argv[2] == travis means proceed deployment without prmpt else show prompt
+performer(process.argv);

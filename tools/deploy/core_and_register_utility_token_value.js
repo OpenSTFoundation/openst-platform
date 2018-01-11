@@ -89,8 +89,9 @@ function updateConfig(valueCoreContractAddr) {
  * @return {}
  */
 
-const performer = async function () {
+const performer = async function (argv) {
 
+  const is_travis_ci_enabled = (argv[2] === 'travis');
   logger.info("Deployer Address: " + deployerAddress);
   logger.info("Foundation Address: " + foundationAddress);
   logger.info("Value Chain Registrar User Address: " + valueRegistrarUser);
@@ -99,21 +100,26 @@ const performer = async function () {
   logger.info("Value Registrar Contract: " + valueRegistrarContractAddress);
   logger.info("OpenST Utility Contract: " + openSTUtilityContractAddress);
   logger.info("OpenST Value Contract: " + openSTValueContractAddress);
+  logger.info("Travis CI enabled Status: " + is_travis_ci_enabled);
 
-  await new Promise(
-    function (onResolve, onReject) {
-      prompts.question("Please verify all above details. Do you want to proceed? [Y/N]", function (intent) {
-        if (intent === 'Y') {
-          logger.info('Great! Proceeding deployment.');
-          prompts.close();
-          onResolve();
-        } else {
-          logger.error('Exiting deployment scripts. Change the env vars and re-run.');
-          process.exit(1);
-        }
-      });
-    }
-  );
+  if (is_travis_ci_enabled === false ) {
+    await new Promise(
+      function (onResolve, onReject) {
+        prompts.question("Please verify all above details. Do you want to proceed? [Y/N]", function (intent) {
+          if (intent === 'Y') {
+            logger.info('Great! Proceeding deployment.');
+            prompts.close();
+            onResolve();
+          } else {
+            logger.error('Exiting deployment scripts. Change the env vars and re-run.');
+            process.exit(1);
+          }
+        });
+      }
+    );
+  } else {
+    prompts.close();
+  }
 
   logger.step("Deploying Value Core Contract on Value Chain");
 
@@ -226,4 +232,5 @@ const performer = async function () {
 
 };
 
-performer();
+// process.argv[2] == travis means proceed deployment without prompt else show prompt
+performer(process.argv);

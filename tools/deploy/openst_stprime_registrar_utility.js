@@ -53,28 +53,34 @@ const deploymentOptions = {
   gas: coreConstants.OST_UTILITY_GAS_LIMIT
 };
 
-const performer = async function () {
+const performer = async function (argv) {
 
+  const is_travis_ci_enabled = (argv[2] === 'travis');
   const stPrimeTotalSupplyInWei = web3Provider.utils.toWei(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY, "ether");
   logger.info("Deployer Address: " + deployerAddress);
   logger.info("Total ST Prime Which will be transferred: " + stPrimeTotalSupplyInWei);
   logger.info("Foundation Address: " + foundationAddress);
   logger.info("Utility Chain Registrar User Address: " + utilityRegistrarAddress);
+  logger.info("Travis CI enabled Status: " + is_travis_ci_enabled);
 
-  await new Promise(
-    function (onResolve, onReject) {
-      prompts.question("Please verify all above details. Do you want to proceed? [Y/N]", function (intent) {
-        if (intent === 'Y') {
-          logger.info('Great! Proceeding deployment.');
-          prompts.close();
-          onResolve();
-        } else {
-          logger.info('Exiting deployment scripts. Change the env vars and re-run.');
-          process.exit(1);
-        }
-      });
-    }
-  );
+  if (is_travis_ci_enabled === false ) {
+    await new Promise(
+      function (onResolve, onReject) {
+        prompts.question("Please verify all above details. Do you want to proceed? [Y/N]", function (intent) {
+          if (intent === 'Y') {
+            logger.info('Great! Proceeding deployment.');
+            prompts.close();
+            onResolve();
+          } else {
+            logger.info('Exiting deployment scripts. Change the env vars and re-run.');
+            process.exit(1);
+          }
+        });
+      }
+    );
+  } else {
+    prompts.close();
+  }
 
   // deploy Registrar
   var contractName = 'utilityRegistrar'
@@ -240,4 +246,5 @@ const performer = async function () {
 
 };
 
-performer();
+// process.argv[2] == travis means proceed deployment without prompt else show prompt
+performer(process.argv);
