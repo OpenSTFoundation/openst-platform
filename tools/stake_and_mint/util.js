@@ -245,13 +245,16 @@ function listenToUtilityToken(stakingIntentHash){
  * @param {String} beneficiary - Address of the beneficiary
  * @param {Number} toStakeAmount - Amount to stake in ST
  * @param {utilityTokenInterfaceKlass} utilityTokenInterfaceContract - Contract interact class object for utility token interface contract
+ * @param {Number} conversionRate - conversion rate from st to bt, default 1
+ *
  *
  * @return {Promise}
  */
-module.exports = function (stakerAddress, stakerPassphrase, beneficiary, toStakeAmount, utilityTokenInterfaceContract) {
+module.exports = function (stakerAddress, stakerPassphrase, beneficiary, toStakeAmount, utilityTokenInterfaceContract, conversionRate) {
   toStakeAmount = toWeiST( toStakeAmount );
   var selectedMember = null
     , eventDataValues = null
+    , conversionRate = conversionRate || 1
   ;
 
   logger.step("Get ST of Staker");
@@ -267,7 +270,7 @@ module.exports = function (stakerAddress, stakerPassphrase, beneficiary, toStake
     })
     .then( _ => {
       return utilityTokenInterfaceContract.getUuid().then( response => {
-        console.log( JSON.stringify( response ) );
+        logger.info( JSON.stringify( response ) );
         return response.data.uuid;
       });
     })
@@ -286,8 +289,8 @@ module.exports = function (stakerAddress, stakerPassphrase, beneficiary, toStake
     })
     .then( async function(result) {
       if (result.isFailure()){
-        console.log( "Staking resulted in error: \n" );
-        console.log(result);
+        logger.info( "Staking resulted in error: \n" );
+        logger.info(result);
         return Promise.reject( result );
       }
 
@@ -300,11 +303,11 @@ module.exports = function (stakerAddress, stakerPassphrase, beneficiary, toStake
       eventDataValues = formattedEventData[eventName];
 
       if (!eventDataValues){
-        console.log( "Staking was not completed correctly: StakingIntentDeclared event didn't found in events data: \n");
-        console.log("rawTxReceipt is:\n");
-        console.log(rawTxReceipt);
-        console.log("\n\n formattedTransactionReceipt is:\n");
-        console.log(formattedTransactionReceipt);
+        logger.info( "Staking was not completed correctly: StakingIntentDeclared event didn't found in events data: \n");
+        logger.info("rawTxReceipt is:\n");
+        logger.info(rawTxReceipt);
+        logger.info("\n\n formattedTransactionReceipt is:\n");
+        logger.info(formattedTransactionReceipt);
         return Promise.reject( "Staking was not completed correctly: StakingIntentDeclared event didn't found in events data" );
       }
 
@@ -351,10 +354,24 @@ module.exports = function (stakerAddress, stakerPassphrase, beneficiary, toStake
       logger.log(JSON.stringify(claimResult));
       logger.win("Claiming Completed by beneficiary!");
     })
+    .then(async function(){
+      // pessimistically perform cache update
+      var cachedBalance = await utilityTokenInterfaceContract.getBalanceFromCache(beneficiary);
+
+      if(cachedBalance){
+        // if cache value is present
+        // add the amount which is minted and set the new value to cache.
+        cachedBalance = new BigNumber(cachedBalance).plus(toStakeAmount.mul(conversionRate));
+        return utilityTokenInterfaceContract.setBalanceToCache(beneficiary, cachedBalance)
+      } else {
+        // else do nothing
+        return Promise.resolve();
+      }
+    })
     .then(async function () {
-      console.log("Beneficiary Address: "+ beneficiary);
-      console.log("Beneficiary Balance: ");
-      console.log( await utilityTokenInterfaceContract.getBalanceOf( beneficiary ) );
+      logger.info("Beneficiary Address: "+ beneficiary);
+      logger.info("Beneficiary Balance: ");
+      logger.info( await utilityTokenInterfaceContract.getBalanceOf( beneficiary ) );
       return Promise.resolve({success: true});
     })
     .catch(function(reason){
@@ -362,7 +379,7 @@ module.exports = function (stakerAddress, stakerPassphrase, beneficiary, toStake
       if ( reason && reason.message ){
         logger.error( reason.message );
       }
-      reason && console.log( reason );
+      reason && logger.info( reason );
       return Promise.reject({success: true, reason: reason});
     })
   ;

@@ -3,11 +3,11 @@ export HTTPS_CERT=''
 export HTTPS_PORT=443
 export OST_TRANSACTION_LOGS_FOLDER='./log/'
 
-export OST_GETH_VALUE_RPC_PROVIDER='http://localhost:8545'
-export OST_GETH_VALUE_WS_PROVIDER='ws://localhost:18545'
+export OST_GETH_VALUE_RPC_PROVIDER='http://127.0.0.1:8545'
+export OST_GETH_VALUE_WS_PROVIDER='ws://127.0.0.1:18545'
 
-export OST_GETH_UTILITY_RPC_PROVIDER='http://localhost:9546'
-export OST_GETH_UTILITY_WS_PROVIDER='ws://localhost:19546'
+export OST_GETH_UTILITY_RPC_PROVIDER='http://127.0.0.1:9546'
+export OST_GETH_UTILITY_WS_PROVIDER='ws://127.0.0.1:19546'
 
 # five GWei for now.
 export OST_UTILITY_GAS_PRICE='0x12A05F200'
@@ -58,3 +58,17 @@ export OST_UTILITY_STPRIME_TOTAL_SUPPLY=800000000
 export OST_MEMBER_CONFIG_FILE_PATH='./config.json'
 
 export USE_MOCK_SIMPLE_TOKEN=0
+
+# SUPPORTED CACHING ENGINES VALUES=> 'none', 'redis', 'memcached'
+export CACHING_ENGINE='none'
+#export WORKERS=1 # only in case of in memory caching
+export DEFAULT_TTL=3600 # In seconds
+
+# IF CACHING ENGINE == 'memcached'
+export MEMCACHE_SERVERS='127.0.0.1:11211' # comma seperated eg: '127.0.0.1:11211, 192.168.1.101:11211' 
+
+# IF CACHING ENGINE == 'redis'
+export REDIS_HOST='127.0.0.1'
+export REDIS_PORT=6379
+export REDIS_PASS=st123
+export REDIS_TLS=0

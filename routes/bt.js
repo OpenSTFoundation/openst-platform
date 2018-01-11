@@ -8,6 +8,7 @@ const reqPrefix         = ".."
   , BTContractInteract  = require(reqPrefix + "/lib/contract_interact/branded_token")
   , responseHelper      = require(reqPrefix + "/lib/formatter/response")
   , TransactionLogger   = require(reqPrefix + "/helpers/transactionLogger")
+  , logger = require(reqPrefix + '/helpers/custom_console_logger')
 ;
 
 /** Construct a new route for a specific BT.
@@ -46,7 +47,7 @@ module.exports = function( member ) {
     addLog(body.to, body);
     // Add a 1 second delay before firing the callback (this needs pub-sub)
     // TODO: use rsmq
-    RP.post({url: callbackUrl, json: true, body: body, auth: callbackAuth}, err => err ? console.error(err) : {} );
+    RP.post({url: callbackUrl, json: true, body: body, auth: callbackAuth}, err => err ? logger.error(err) : {} );
   }
 
   function toBigNumberWei( stringValue ) {
@@ -73,7 +74,12 @@ module.exports = function( member ) {
     rootResponse.renderResponse( res );
   });
 
+  function appendRequestInfo(req) {
+    logger.requestStartLog(req.url);
+  }
+
   router.get('/reserve', function(req, res, next) {
+    appendRequestInfo(req);
     btContractInteract.getReserve()
       .then( response => {
         response.renderResponse( res );
@@ -82,26 +88,28 @@ module.exports = function( member ) {
   });
 
   router.get('/name', function(req, res, next) {
+    appendRequestInfo(req);
     btContractInteract.getName()
       .then( response => {
-        console.log( "then.response", JSON.stringify( response ) );
+        logger.info( "then.response", JSON.stringify( response ) );
         response.renderResponse( res );
       })
       .catch( reason => {
-        console.log( "catch.reason", reason.message );
+        logger.info( "catch.reason", reason.message );
         throw reason;
       })
       .catch(next);
   });
 
   router.get('/uuid', function(req, res, next) {
+    appendRequestInfo(req);
     btContractInteract.getUuid()
       .then( response => {
-        console.log( "then.response", JSON.stringify( response ) );
+        logger.info( "then.response", JSON.stringify( response ) );
         response.renderResponse( res );
       })
       .catch( reason => {
-        console.log( "catch.reason", reason.message );
+        logger.info( "catch.reason", reason.message );
         throw reason;
       })
       .catch(next);
@@ -109,6 +117,7 @@ module.exports = function( member ) {
 
 
   router.get('/symbol', function(req, res, next) {
+    appendRequestInfo(req);
     btContractInteract.getSymbol()
       .then( response => {
         response.renderResponse( res );
@@ -117,6 +126,7 @@ module.exports = function( member ) {
   });
 
   router.get('/decimals', function(req, res, next) {
+    appendRequestInfo(req);
     btContractInteract.getDecimals()
       .then( response => {
         response.renderResponse( res );
@@ -125,6 +135,7 @@ module.exports = function( member ) {
   });
 
   router.get('/totalSupply', function(req, res, next) {
+    appendRequestInfo(req);
     btContractInteract.getTotalSupply()
       .then( response => {
         if ( response && response.data && response.data.totalSupply ) {
@@ -137,6 +148,7 @@ module.exports = function( member ) {
   });
 
   router.get('/allowance', function(req, res, next) {
+    appendRequestInfo(req);
     const owner = req.query.owner;
     const spender = req.query.spender;
 
@@ -151,6 +163,7 @@ module.exports = function( member ) {
   });
 
   router.get('/balanceOf', function(req, res, next) {
+    appendRequestInfo(req);
     const owner = req.query.owner;
 
     btContractInteract.getBalanceOf(owner)
@@ -166,6 +179,7 @@ module.exports = function( member ) {
   });
 
   router.get('/newkey', function(req, res, next) {
+    appendRequestInfo(req);
     btContractInteract.newUserAccount()
       .then( response => {
         response.renderResponse( res );
@@ -175,6 +189,7 @@ module.exports = function( member ) {
   });
 
   router.get('/transfer', function(req, res, next) {
+    appendRequestInfo(req);
     const sender = req.query.sender;
     const recipient = req.query.to;
     const amount = String(req.query.value);
@@ -195,6 +210,7 @@ module.exports = function( member ) {
   });
 
   router.get('/transaction-logs', function(req, res, next) {
+    appendRequestInfo(req);
     const transactionUUID = req.query.transactionUUID;
 
     new Promise( (resolve, reject) => {
@@ -208,6 +224,7 @@ module.exports = function( member ) {
   });
 
   router.get('/failed-transactions', function(req, res, next) {
+    appendRequestInfo(req);
     new Promise( (resolve, reject) => {
        TransactionLogger.getFailedTransactions(memberSymbol, resolve);   
     })
@@ -219,6 +236,7 @@ module.exports = function( member ) {
   });
 
   router.get('/pending-transactions', function(req, res, next) {
+    appendRequestInfo(req);
     new Promise( (resolve, reject) => {
        TransactionLogger.getPendingTransactions(memberSymbol, resolve);   
     })

@@ -142,6 +142,9 @@ function validateAndFundUser(userName, userAddress, userKey) {
   logStep( "Validating",userName );
   logInfo(userName, "@", userAddress );
   logInfo("Fetching",userName,"balance on ValueChain");
+  console.log("userName:"+userName);
+  console.log("userAddress:"+userAddress);
+  console.log("userKey:"+userKey);
   return web3RpcValueProvider.eth.getBalance( userAddress )
   .catch( reason =>  {
     logError( "Invalid",userName ,"address" );

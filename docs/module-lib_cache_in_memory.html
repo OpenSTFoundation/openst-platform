@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Simple Token Foundation Module: lib/cache/in_memory</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.lumen.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Simple Token Foundation</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="namespaces.list.html" class="dropdown-toggle" data-toggle="dropdown">Namespaces<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-lib_web3_events_formatter-web3EventsDecoder.html">lib/web3/events/formatter~web3EventsDecoder</a></li><li><a href="module-lib_web3_events_formatter-web3EventsFormatter.html">lib/web3/events/formatter~web3EventsFormatter</a></li><li><a href="module-lib_web3_events_processor-EventProcessor.html">lib/web3/events/processor~EventProcessor</a></li><li><a href="module-lib_web3_events_queue_manager-EventQueueManager.html">lib/web3/events/queue_manager~EventQueueManager</a></li><li><a href="module-services_inter_comm_redeem_and_unstake-redeemAndUnstakeInterComm.html">services/inter_comm/redeem_and_unstake~redeemAndUnstakeInterComm</a></li><li><a href="module-services_inter_comm_stake_and_mint-stakeAndMintInterComm.html">services/inter_comm/stake_and_mint~stakeAndMintInterComm</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-lib_cache_implementer.html">lib/cache/implementer</a></li><li><a href="module-lib_cache_in_memory.html">lib/cache/in_memory</a></li><li><a href="module-lib_cache_memcached.html">lib/cache/memcached</a></li><li><a href="module-lib_cache_redis.html">lib/cache/redis</a></li><li><a href="module-lib_contract_helper_helper.html">lib/contract_helper/helper</a></li><li><a href="module-lib_contract_interact_branded_token.html">lib/contract_interact/branded_token</a></li><li><a href="module-lib_contract_interact_openst_utility.html">lib/contract_interact/openst_utility</a></li><li><a href="module-lib_contract_interact_openst_value.html">lib/contract_interact/openst_value</a></li><li><a href="module-lib_contract_interact_ops_managed_contract.html">lib/contract_interact/ops_managed_contract</a></li><li><a href="module-lib_contract_interact_owned_contract.html">lib/contract_interact/owned_contract</a></li><li><a href="module-lib_contract_interact_simple_stake.html">lib/contract_interact/simple_stake</a></li><li><a href="module-lib_contract_interact_simple_token.html">lib/contract_interact/simple_token</a></li><li><a href="module-lib_contract_interact_st_prime.html">lib/contract_interact/st_prime</a></li><li><a href="module-lib_contract_interact_utility_registrar.html">lib/contract_interact/utility_registrar</a></li><li><a href="module-lib_web3_events_formatter.html">lib/web3/events/formatter</a></li><li><a href="module-lib_web3_events_processor.html">lib/web3/events/processor</a></li><li><a href="module-lib_web3_events_queue_manager.html">lib/web3/events/queue_manager</a></li><li><a href="module-services_inter_comm_redeem_and_unstake.html">services/inter_comm/redeem_and_unstake</a></li><li><a href="module-services_inter_comm_stake_and_mint.html">services/inter_comm/stake_and_mint</a></li><li><a href="module-tools_deploy_DeployHelper.html">tools/deploy/DeployHelper</a></li><li><a href="module-tools_deploy_helper.html">tools/deploy/helper</a></li><li><a href="module-tools_deploy_openst_utility.html">tools/deploy/openst_utility</a></li><li><a href="module-tools_deploy_openst_value.html">tools/deploy/openst_value</a></li><li><a href="module-tools_deploy_register_utility_token_value.html">tools/deploy/register_utility_token_value</a></li><li><a href="module-tools_init_utility_token.html">tools/init_utility_token</a></li><li><a href="module-tools_stake_and_mint_for_branded_token.html">tools/stake_and_mint/for_branded_token</a></li><li><a href="module-tools_stake_and_mint_for_st_prime.html">tools/stake_and_mint/for_st_prime</a></li><li><a href="module-tools_stake_and_mint_util.html">tools/stake_and_mint/util</a></li><li><a href="module-tools_unstake_and_redeem_for_st_prime.html">tools/unstake_and_redeem/for_st_prime</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="EventQueueManager.constructor.html">EventQueueManager.constructor</a></li><li><a href="module-lib_contract_interact_branded_token-BrandedTokenContractInteract.html">lib/contract_interact/branded_token~BrandedTokenContractInteract</a></li><li><a href="module-lib_contract_interact_openst_utility-OpenStUtilityContractInteract.html">lib/contract_interact/openst_utility~OpenStUtilityContractInteract</a></li><li><a href="module-lib_contract_interact_openst_value-OpenSTValue.html">lib/contract_interact/openst_value~OpenSTValue</a></li><li><a href="module-lib_contract_interact_ops_managed_contract-OpsManagedContract.html">lib/contract_interact/ops_managed_contract~OpsManagedContract</a></li><li><a href="module-lib_contract_interact_owned_contract-OwnedContract.html">lib/contract_interact/owned_contract~OwnedContract</a></li><li><a href="module-lib_contract_interact_simple_stake-SimpleStake.html">lib/contract_interact/simple_stake~SimpleStake</a></li><li><a href="module-lib_contract_interact_st_prime-StPrimeContractInteract.html">lib/contract_interact/st_prime~StPrimeContractInteract</a></li><li><a href="module-lib_contract_interact_utility_registrar-UtilityRegistrar.html">lib/contract_interact/utility_registrar~UtilityRegistrar</a></li><li><a href="module-lib_contract_interact_utility_registrar-ValueRegistrar.html">lib/contract_interact/utility_registrar~ValueRegistrar</a></li><li><a href="module-lib_web3_events_processor-EventProcessor_constructor.html">lib/web3/events/processor~EventProcessor#constructor</a></li><li><a href="module-tools_init_utility_token-InitUtilityToken.html">tools/init_utility_token~InitUtilityToken</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#askRedeemerAddress">askRedeemerAddress</a></li><li><a href="global.html#askRedeemerPassphrase">askRedeemerPassphrase</a></li><li><a href="global.html#askRedeemingAmount">askRedeemingAmount</a></li><li><a href="global.html#confirmToken">confirmToken</a></li><li><a href="global.html#describeChain">describeChain</a></li><li><a href="global.html#describeToken">describeToken</a></li><li><a href="global.html#getNonceForRedeeming">getNonceForRedeeming</a></li><li><a href="global.html#getRedeemerBTBalance">getRedeemerBTBalance</a></li><li><a href="global.html#getUuidForToken">getUuidForToken</a></li><li><a href="global.html#listAllTokens">listAllTokens</a></li><li><a href="global.html#listenToRedemptionIntentConfirmed">listenToRedemptionIntentConfirmed</a></li><li><a href="global.html#processRedeeming">processRedeeming</a></li><li><a href="global.html#processUnstaking">processUnstaking</a></li><li><a href="global.html#setApprovalForopenSTUtilityContract">setApprovalForopenSTUtilityContract</a></li><li><a href="global.html#toDisplayInBaseUnit">toDisplayInBaseUnit</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	<h1 class="page-title">Module: lib/cache/in_memory</h1>
+<section>
+
+<header>
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description">Implementation of the caching layer using in-process memory.
+<b>NOTE: This should only be used for dev env having only one worker process,
+otherwise this will result in inconsistent cache.</b><br><br>
+
+<a href="module-lib_cache_implementer.html"><code>module:lib/cache/implementer</code></a> acts as a wrapper for this module.</div>
+        
+
+        
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+	<style>.copyright, .jsdoc-message, footer { color: #555555;} footer { border-color:#eeeeee;} }</style>
+
+
+	<span class="copyright">
+	Copyright 2017 OpenST Ltd.
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

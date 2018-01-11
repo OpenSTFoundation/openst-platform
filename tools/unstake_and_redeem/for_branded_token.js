@@ -141,19 +141,19 @@ const describeUtilityChain = function () {
  * List all members
  */
 const listAllTokens = function () {
-  console.log("\x1b[34m Welcome to Un Staking And Redeeming Tool \x1b[0m");
+  logger.info("\x1b[34m Welcome to Un Staking And Redeeming Tool \x1b[0m");
   logger.step("Please choose utility token to redeem.");
 
   //List all available members.
   for (var i = 0; i < Config.Members.length; i++) {
     var member = Config.Members[i];
-    console.log(i + 1, " for ", member.Name, "(", member.Symbol, ")");
+    logger.info(i + 1, " for ", member.Name, "(", member.Symbol, ")");
   }
 
   return new Promise(function (resolve, reject) {
     readlineInterface.prompt();
     const rlCallback = function (line) {
-      console.log("listAllMembers :: line", line);
+      logger.info("listAllMembers :: line", line);
       line = line.trim().toLowerCase();
       switch (line) {
         case "exit":
@@ -163,14 +163,14 @@ const listAllTokens = function () {
           break;
       }
       var memberIndex = Number(line) - 1;
-      console.log("Choosing utility token : ", memberIndex);
+      logger.info("Choosing utility token : ", memberIndex);
       if (isNaN(memberIndex) || memberIndex >= Config.Members.length) {
-        console.log("\n");
+        logger.info("\n");
         logger.error("Invalid Option. Please try again.");
-        console.log("\n");
+        logger.info("\n");
         return;
       }
-      console.log(rlCallback);
+      logger.info(rlCallback);
       readlineInterface.removeListener("line", rlCallback);
       const member = Config.Members[memberIndex];
       resolve(member);
@@ -189,13 +189,13 @@ const listAllTokens = function () {
 const confirmToken = function (member) {
   logger.step("Confirm Token");
   describeToken(member);
-  console.log("\x1b[34m Are you sure you would like to continue with Unstaking And Redeeming ? Options:\x1b[0m");
-  console.log("\x1b[32m yes \x1b[0m\t", "To continue with Unstaking And Redeeming");
-  console.log("\x1b[31m no \x1b[0m\t", "To quit the program");
+  logger.info("\x1b[34m Are you sure you would like to continue with Unstaking And Redeeming ? Options:\x1b[0m");
+  logger.info("\x1b[32m yes \x1b[0m\t", "To continue with Unstaking And Redeeming");
+  logger.info("\x1b[31m no \x1b[0m\t", "To quit the program");
   return new Promise(function (resolve, reject) {
     readlineInterface.prompt();
     const rlCallback = function (line) {
-      console.log("confirmMember :: confirmToken :: line", line);
+      logger.info("confirmMember :: confirmToken :: line", line);
       line = line.trim().toLowerCase();
       switch (line) {
         case "yes":
@@ -243,10 +243,10 @@ const getUuidForToken = async function () {
  */
 const askRedeemerAddress = function () {
   return new Promise(function (resolve, reject) {
-    console.log("Please mention the address of the redeemer.");
+    logger.info("Please mention the address of the redeemer.");
     readlineInterface.prompt();
     const rlCallback = function (line) {
-      console.log("askRedeemerAddress :: readlineInterface :: line", line);
+      logger.info("askRedeemerAddress :: readlineInterface :: line", line);
       line = line.trim().toLowerCase();
 
       switch (line) {
@@ -276,10 +276,10 @@ const askRedeemerAddress = function () {
  */
 const askRedeemerPassphrase = function () {
   return new Promise(function (resolve, reject) {
-    console.log("Please mention the passphrase of the redeemer.");
+    logger.info("Please mention the passphrase of the redeemer.");
     readlineInterface.prompt();
     const rlCallback = function (line) {
-      console.log("askRedeemerAddress :: readlineInterface :: line", line);
+      logger.info("askRedeemerAddress :: readlineInterface :: line", line);
       line = line.trim();
 
       const passphrase = line;
@@ -319,10 +319,10 @@ const getRedeemerBTBalance = function () {
  */
 const askRedeemingAmount = function () {
   return new Promise(function (resolve, reject) {
-    console.log("Please mention the number of branded tokens to redeem.");
+    logger.info("Please mention the number of branded tokens to redeem.");
     readlineInterface.prompt();
     const rlCallback = function (line) {
-      console.log("askRedeemingAmount :: readlineInterface :: line", line);
+      logger.info("askRedeemingAmount :: readlineInterface :: line", line);
       line = line.trim().toLowerCase();
 
       switch (line) {
@@ -427,11 +427,11 @@ const redeem = async function () {
       , eventDataValues = formattedEventData[eventName];
 
     if (!eventDataValues) {
-      console.log("openSTUtilityContractInteract.redeem was not completed correctly: RedemptionIntentDeclared event didn't found in events data");
-      console.log("rawTxReceipt is:\n");
-      console.log(rawTxReceipt);
-      console.log("\n\n formattedTransactionReceipt is:\n");
-      console.log(formattedTransactionReceipt);
+      logger.info("openSTUtilityContractInteract.redeem was not completed correctly: RedemptionIntentDeclared event didn't found in events data");
+      logger.info("rawTxReceipt is:\n");
+      logger.info(rawTxReceipt);
+      logger.info("\n\n formattedTransactionReceipt is:\n");
+      logger.info(formattedTransactionReceipt);
       return Promise.reject("openSTUtilityContractInteract.redeem was not completed correctly: RedemptionIntentDeclared event didn't found in events data");
     }
 
@@ -547,7 +547,7 @@ const processUnstaking = function () {
       if (reason && reason.message) {
         logger.error(reason.message);
       }
-      reason && console.log(reason);
+      reason && logger.info(reason);
       process.exit(1);
     })
   ;
