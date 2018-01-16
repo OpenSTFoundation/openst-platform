@@ -18,8 +18,7 @@ const validateArgs = function () {
   return web3RpcProvider;
 }
 
-const performer = async
-function () {
+const performer = async function () {
   if (process.argv.length != 3) {
     logger.error("Invalid arguments !!!");
     process.exit(0);
