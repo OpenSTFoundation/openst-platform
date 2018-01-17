@@ -4,15 +4,17 @@
 
 "use strict";
 
-const reqPrefix = ".";
+const reqPrefix = "."
+  , version = require('package.json').version
+  , btContract = require(reqPrefix + "/lib/contract_interact/branded_token");
 
 var OpenSTPlatform = function () {
   var oThis = this;
 
-  oThis.version = require('package.json').version;
+  oThis.version = version;
 
   oThis.contracts = {};
-  oThis.contracts.brandedToken = require(reqPrefix + "/lib/contract_interact/branded_token");
+  oThis.contracts.brandedToken = btContract;
 };
 
 module.exports = OpenSTPlatform;
