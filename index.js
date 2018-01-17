@@ -5,7 +5,7 @@
 "use strict";
 
 const reqPrefix = "."
-  , version = require('package.json').version
+  , version = require(reqPrefix + 'package.json').version
   , btContract = require(reqPrefix + "/lib/contract_interact/branded_token");
 
 var OpenSTPlatform = function () {
