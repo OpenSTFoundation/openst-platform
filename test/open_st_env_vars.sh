@@ -1,6 +1,3 @@
-export HTTPS_KEY=''
-export HTTPS_CERT=''
-export HTTPS_PORT=443
 export OST_TRANSACTION_LOGS_FOLDER='./log/'
 
 export OST_GETH_VALUE_RPC_PROVIDER='http://127.0.0.1:8545'

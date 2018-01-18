@@ -1,7 +1,7 @@
 "use strict";
 
 /*
- * Load all contract abi files
+ * Load all required contract abi files and export them
  *
  */
 
@@ -9,13 +9,13 @@ const fs = require('fs')
   , path = require('path')
 ;
 
+const rootPrefix = "..";
+
 function parseFile(filePath, options) {
   filePath = path.join(__dirname, '/' + filePath);
   const fileContent = fs.readFileSync(filePath, options || "utf8");
   return JSON.parse(fileContent);
 }
-
-const rootPrefix = "..";
 
 const coreAbis = {
   simpleToken: parseFile(rootPrefix + '/contracts/abi/SimpleToken.abi', "utf8"),

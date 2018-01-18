@@ -1,14 +1,15 @@
 "use strict";
 
-const path = require('path')
-  , rootPrefix = ".."
-;
-
 /*
  * Constants file: Load constants from environment variables
  *
  */
 
+const path = require('path');
+
+const rootPrefix = "..";
+
+// Define
 function define(name, value) {
   Object.defineProperty(exports, name, {
     value: value,
@@ -16,11 +17,12 @@ function define(name, value) {
   });
 }
 
-define("ENVIRONMENT", process.env.ENVIRONMENT);
-
-define("HTTPS_KEY", process.env.HTTPS_KEY);
-define("HTTPS_CERT", process.env.HTTPS_CERT);
-define("HTTPS_PORT", process.env.HTTPS_PORT);
+function absolutePath(filePath) {
+  if (!path.isAbsolute(filePath)) {
+    filePath = path.join(__dirname, '/' + rootPrefix + '/' + filePath);
+  }
+  return filePath;
+}
 
 // Gas price for value chain
 define("OST_VALUE_GAS_PRICE", process.env.OST_VALUE_GAS_PRICE);
@@ -56,18 +58,10 @@ define('OST_VALUE_GAS_LIMIT', 4700000);
 define('OST_UTILITY_GAS_LIMIT', 9000000);
 
 // file path of the member config file.
-var configFilePath = process.env.OST_MEMBER_CONFIG_FILE_PATH;
-if (!path.isAbsolute(configFilePath)) {
-  configFilePath = path.join(__dirname, '/' + rootPrefix + '/' + configFilePath);
-}
-define('OST_MEMBER_CONFIG_FILE_PATH', configFilePath);
+define('OST_MEMBER_CONFIG_FILE_PATH', absolutePath(process.env.OST_MEMBER_CONFIG_FILE_PATH));
 
 // Folder path of the transfer logs
-var txLogsFolder = process.env.OST_TRANSACTION_LOGS_FOLDER;
-if (!path.isAbsolute(txLogsFolder)) {
-  txLogsFolder = path.join(__dirname, '/' + rootPrefix + '/' + txLogsFolder);
-}
-define('OST_TRANSACTION_LOGS_FOLDER', txLogsFolder);
+define('OST_TRANSACTION_LOGS_FOLDER', absolutePath(process.env.OST_TRANSACTION_LOGS_FOLDER));
 
 // ALLOWED VALUES => NONE/REDIS/MEMCACHED
 define('CACHING_ENGINE', process.env.CACHING_ENGINE);

@@ -9,12 +9,15 @@
  *
  */
 
-const relPath = ".."
-  , coreAbis = require('./core_abis')
-  , coreBins = require('./core_bins');
+const rootPrefix = ".."
+  , coreAbis = require(rootPrefix + '/config/core_abis')
+  , coreBins = require(rootPrefix + '/config/core_bins');
 
 var simpleTokenAbi, simpleTokenBin, simpleTokenAddr;
 
+// Flag to do a mock deployment testing on MainNet
+// OpenST mockSimpleToken contract is used for deployment
+// and services
 if (process.env.USE_MOCK_SIMPLE_TOKEN != 1) {
   console.log("Using Original Simple Token Contract");
   simpleTokenAddr = process.env.OST_SIMPLE_TOKEN_CONTRACT_ADDR;

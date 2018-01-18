@@ -1,7 +1,7 @@
 "use strict";
 
 /*
- * Load all contract bin files
+ * Load all required contract bin files and export them
  *
  */
 
@@ -9,12 +9,12 @@ const fs = require('fs')
   , path = require('path')
 ;
 
+const rootPrefix = "..";
+
 function readFile(filePath, options) {
   filePath = path.join(__dirname, '/' + filePath);
   return fs.readFileSync(filePath, options || "utf8");
 }
-
-const rootPrefix = "..";
 
 const coreBins = {
   simpleToken: readFile(rootPrefix + '/contracts/bin/SimpleToken.bin', 'utf8'),

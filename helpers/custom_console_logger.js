@@ -20,21 +20,24 @@ const WIN_PRE = "";
 const WARN_PRE = "";
 const STEP_PRE = "";
 
-var getNamespace = require('continuation-local-storage').getNamespace;
+// Get common local storage namespace to read
+// request identifiers for debugging and logging
+var getNamespace = require('continuation-local-storage').getNamespace
+  , requestNamespace = getNamespace('inputRequest')
+;
 
 // Method to append Request in each log line.
 var appendRequest = function(message) {
-    var requestNamespace = getNamespace('inputRequest');
     var newMessage = "";
-    if(requestNamespace){
-      if(requestNamespace.get('reqId')){
-        newMessage += ("[" + requestNamespace.get('reqId') + "]");
+    if (requestNamespace) {
+      if (requestNamespace.get('reqId')) {
+        newMessage += "[" + requestNamespace.get('reqId') + "]";
       }
-      if(requestNamespace.get('workerId')){
-        newMessage += ("[Worker - " + requestNamespace.get('workerId') + "]");
+      if (requestNamespace.get('workerId')) {
+        newMessage += "[Worker - " + requestNamespace.get('workerId') + "]";
       }
       var hrTime = process.hrtime();
-      newMessage += ("[" + timeInMilli(hrTime) + "]");
+      newMessage += "[" + timeInMilli(hrTime) + "]";
     }
     newMessage += message;
     return newMessage;
@@ -47,9 +50,8 @@ var timeInMilli = function(hrTime) {
 
 // Find out the difference between request start time and complete time
 var calculateRequestTime = function() {
-  var requestNamespace = getNamespace('inputRequest');
   var reqTime = 0;
-  if(requestNamespace && requestNamespace.get('startTime')){
+  if (requestNamespace && requestNamespace.get('startTime')) {
     var hrTime = process.hrtime();
     reqTime = timeInMilli(hrTime) - timeInMilli(requestNamespace.get('startTime'));
   }
