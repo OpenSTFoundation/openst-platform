@@ -8,18 +8,21 @@ const rootPrefix = "."
   , version = require(rootPrefix + '/package.json').version
   , btContract = require(rootPrefix + "/lib/contract_interact/branded_token")
   , transactionLogger = require(rootPrefix + "/helpers/transactionLogger")
-  , address = require(rootPrefix + '/services/address');
+  , address = require(rootPrefix + '/services/address')
+  , proposeBt = require(rootPrefix + '/services/proposeBt');
 
-var OpenSTPlatform = function () {
-  var oThis = this;
+const OpenSTPlatform = function () {
+  const oThis = this;
 
   oThis.version = version;
 
   oThis.contracts = {};
   oThis.contracts.brandedToken = btContract;
 
-  // address related services.
-  oThis.address = address;
+  oThis.services = {
+    address: address,
+    proposeBt: proposeBt
+  };
 
   oThis.helpers = {};
   oThis.helpers.transactionLogger = transactionLogger;

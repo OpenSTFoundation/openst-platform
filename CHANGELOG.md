@@ -55,10 +55,10 @@ Services
   - Intercom Services:
     Intercom services are responsible for transferring information between value chain & utility chain by listening to events.
     The intercom transfers information using registrar contracts. Services:  
-    - services/inter_comm/stake_and_mint.js
+    - executables/inter_comm/stake_and_mint.js
       - Listens: StakingIntentDeclared event on value chain.
       - Action: confirms staking intent on utility chain.
-    - services/inter_comm/redeem_and_unstake.js
+    - executables/inter_comm/redeem_and_unstake.js
       - Listens: RedemptionIntentDeclared event on utility chain.
       - Action: Confirms redemption intent on value chain.
     

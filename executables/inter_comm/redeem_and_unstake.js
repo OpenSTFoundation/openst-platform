@@ -13,7 +13,7 @@
  *   <li> When the task executes it run the processor passed on step1. </li>
  * </ol>
  *
- * @module services/inter_comm/redeem_and_unstake
+ * @module executables/inter_comm/redeem_and_unstake
  *
  */
 

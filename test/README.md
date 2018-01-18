@@ -63,7 +63,7 @@
 ```
   > cd openst-platform
   > source test/open_st_env_vars.sh
-  > node services/inter_comm/stake_and_mint.js
+  > node executables/inter_comm/stake_and_mint.js
 ```
 
 ### In Terminal 4:
@@ -126,7 +126,7 @@
 ```
   > cd openst-platform
   > source test/open_st_env_vars.sh
-  > node services/inter_comm/redeem_and_unstake.js
+  > node executables/inter_comm/redeem_and_unstake.js
 ``` 
 
 ### In Terminal 2:

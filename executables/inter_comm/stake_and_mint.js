@@ -13,7 +13,7 @@
  *   <li> When the task executes it run the processor passed on step1. </li>
  * </ol>
  *
- * @module services/inter_comm/stake_and_mint
+ * @module executables/inter_comm/stake_and_mint
  *
  */
 
