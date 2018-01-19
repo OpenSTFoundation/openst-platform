@@ -9,7 +9,9 @@ const rootPrefix = "."
   , btContract = require(rootPrefix + "/lib/contract_interact/branded_token")
   , transactionLogger = require(rootPrefix + "/helpers/transactionLogger")
   , address = require(rootPrefix + '/services/address')
-  , proposeBt = require(rootPrefix + '/services/proposeBt');
+  , proposeBt = require(rootPrefix + '/services/on_boarding/proposeBt')
+  , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/getRegistrationStatus')
+  ;
 
 const OpenSTPlatform = function () {
   const oThis = this;
@@ -21,7 +23,10 @@ const OpenSTPlatform = function () {
 
   oThis.services = {
     address: address,
-    proposeBt: proposeBt
+    onBoarding: {
+      proposeBt: proposeBt,
+      getRegistrationStatus: getRegistrationStatus
+    }
   };
 
   oThis.helpers = {};

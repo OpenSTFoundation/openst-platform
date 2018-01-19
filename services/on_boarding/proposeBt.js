@@ -4,7 +4,7 @@
  * Propose
  */
 
-const rootPrefix = '..'
+const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   ;

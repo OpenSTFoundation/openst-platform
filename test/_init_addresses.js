@@ -55,7 +55,6 @@ function main( addressFile ) {
   });
 
   var configFilePath = process.argv[3] || coreConstants.OST_MEMBER_CONFIG_FILE_PATH;
-  configFilePath = configFilePath;
 
   writeJsonToFile( Config, configFilePath, 4);
 

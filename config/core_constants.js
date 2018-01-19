@@ -58,7 +58,7 @@ define('OST_VALUE_GAS_LIMIT', 4700000);
 define('OST_UTILITY_GAS_LIMIT', 9000000);
 
 // file path of the member config file.
-define('OST_MEMBER_CONFIG_FILE_PATH', absolutePath(process.env.OST_MEMBER_CONFIG_FILE_PATH));
+define('OST_MEMBER_CONFIG_FILE_PATH', './config.json');
 
 // Folder path of the transfer logs
 define('OST_TRANSACTION_LOGS_FOLDER', absolutePath(process.env.OST_TRANSACTION_LOGS_FOLDER));
