@@ -3,7 +3,15 @@
   "version": "0.9.2-beta.1",
   "private": true,
   "description": "OpenST Platform provides a web3 interface to tokenise mainstream consumer applications with crypto-assets on Ethereum",
-  "keywords": ["web3", "openst", "OST", "simpletoken", "utility-token", "ethereum", "erc20"],
+  "keywords": [
+    "web3",
+    "openst",
+    "OST",
+    "simpletoken",
+    "utility-token",
+    "ethereum",
+    "erc20"
+  ],
   "homepage": "https://simpletoken.org",
   "author": "OpenST Ltd.",
   "license": "GNU LESSER GENERAL PUBLIC LICENSE",
@@ -15,7 +23,7 @@
     "url": "https://github.com/OpenSTFoundation/openst-platform/issues"
   },
   "engines": {
-    "node" : ">=8.6.0"
+    "node": ">=8.6.0"
   },
   "scripts": {
     "start": "index.js",
@@ -23,6 +31,7 @@
     "lint": "node node_modules/eslint/bin/eslint.js ."
   },
   "dependencies": {
+    "@openstfoundation/openst-cache": "^0.9.2-beta.5",
     "abi-decoder": "1.0.9",
     "bignumber.js": "4.1.0",
     "continuation-local-storage": "^3.2.1",
