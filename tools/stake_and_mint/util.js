@@ -31,7 +31,6 @@ const BigNumber = require('bignumber.js')
 
 const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix+'/config/core_addresses')
-  , coreConstants = require( rootPrefix + '/config/core_constants' )
   , web3UtilityWsProvider = require(rootPrefix+'/lib/web3/providers/utility_ws')
   , eventsFormatter = require(rootPrefix+'/lib/web3/events/formatter.js')
   , logger = require(rootPrefix+'/helpers/custom_console_logger')
@@ -252,8 +251,7 @@ function listenToUtilityToken(stakingIntentHash){
  */
 module.exports = function (stakerAddress, stakerPassphrase, beneficiary, toStakeAmount, utilityTokenInterfaceContract, conversionRate) {
   toStakeAmount = toWeiST( toStakeAmount );
-  var selectedMember = null
-    , eventDataValues = null
+  var eventDataValues = null
     , conversionRate = conversionRate || 1
   ;
 

@@ -11,6 +11,8 @@ const rootPrefix = "."
   , address = require(rootPrefix + '/services/address')
   , proposeBt = require(rootPrefix + '/services/on_boarding/proposeBt')
   , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/getRegistrationStatus')
+  , approveForStake = require(rootPrefix + '/services/stake_and_mint/approveOpenStValueContract')
+  , getApprovalStatus = require(rootPrefix + '/services/stake_and_mint/getApprovalStatus')
   ;
 
 const OpenSTPlatform = function () {
@@ -26,6 +28,10 @@ const OpenSTPlatform = function () {
     onBoarding: {
       proposeBt: proposeBt,
       getRegistrationStatus: getRegistrationStatus
+    },
+    stake: {
+      approveForStake: approveForStake,
+      getApprovalStatus: getApprovalStatus
     }
   };
 
