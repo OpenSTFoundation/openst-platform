@@ -33,10 +33,13 @@ const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , brandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
+  , stPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
 ;
 
 const openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility')
   , openSTUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility')
+  , stPrimeContractAddress = coreAddresses.getAddressForContract("stPrime")
+  , stPrime = new stPrimeKlass(stPrimeContractAddress)
   , eventQueueManager = new eventQueueManagerKlass()
   , openSTValueContractInteract = new openSTValueContractInteractKlass()
   , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass()
@@ -49,9 +52,9 @@ const openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility'
  *
  * @return {Bool} true when equal
  */
-String.prototype.equalsIgnoreCase = function(compareWith){
+String.prototype.equalsIgnoreCase = function (compareWith) {
   var _self = this.toLowerCase()
-    , _compareWith = String( compareWith ).toLowerCase();
+    , _compareWith = String(compareWith).toLowerCase();
 
   return _self == _compareWith;
 };
@@ -179,24 +182,24 @@ StakeAndMintProcessorInterComm.prototype = {
 
     logger.step(stakingIntentHash, ' :: performing claim');
 
-    if (uuid.equalsIgnoreCase(coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID)) {
+    var utilityTokenInterfaceContract = null;
 
+    if (uuid.equalsIgnoreCase(coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID)) {
+      utilityTokenInterfaceContract = stPrime;
     } else {
 
       var registeredOnUCResult = await openSTUtilityContractInteract.registeredTokenProperty(uuid);
 
-      const selectedMember = {
+      utilityTokenInterfaceContract = new brandedTokenKlass({
         ERC20: registeredOnUCResult.data.erc20Address
-      };
-
-      const brandedToken = new brandedTokenKlass(selectedMember);
-
-      await brandedToken.claim(
-        stakerAddress,
-        stakerPassphrase,
-        beneficiary
-      );
+      });
     }
+
+    await utilityTokenInterfaceContract.claim(
+      stakerAddress,
+      stakerPassphrase,
+      beneficiary
+    );
 
     logger.win(stakingIntentHash, ' :: performed claim');
 
