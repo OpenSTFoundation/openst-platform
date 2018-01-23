@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Simple Token Foundation Module: lib/contract_interact/openst_value</title>
+	<title>Simple Token Foundation Class: RegisterBrandedTokenInterComm</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -86,10 +86,17 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: lib/contract_interact/openst_value</h1>
+	<h1 class="page-title">Class: RegisterBrandedTokenInterComm</h1>
 <section>
 
 <header>
+    
+        <h2>
+            <span class="ancestors"><a href="module-executables_inter_comm_register_branded_token.html">executables/inter_comm/register_branded_token</a>~</span>
+        
+        RegisterBrandedTokenInterComm
+        </h2>
+        
     
 </header>
 
@@ -98,15 +105,28 @@
     <div class="container-overview">
     
         
-            <div class="description">This is a utility file which would be used for executing all methods on OpenSTValue Contract.<br><br>
+<hr>
+<dt>
+    <h4 class="name" id="RegisterBrandedTokenInterComm"><span class="type-signature"></span>new RegisterBrandedTokenInterComm()</h4>
+    
+    
+</dt>
+<dd>
 
-  Prerequisite:
-   <ol>
-      <li>OpenSTValue Contract Has been Deployed on Value Chain Succesfully</li>
-    </ol></div>
-        
+    
+    <div class="description">
+        Inter comm process for register branded token.
+    </div>
+    
 
-        
+    
+
+    
+
+    
+    
+
+    
 <dl class="details">
     
 
@@ -146,7 +166,21 @@
 </dl>
 
 
-        
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
     
     </div>
 
@@ -155,20 +189,733 @@
     
 
     
-        <h3 class="subsection-title">Classes</h3>
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
 
         <dl>
-            <dt><a href="module-lib_contract_interact_openst_value-OpenSTValue.html">OpenSTValue</a></dt>
-            <dd></dd>
+            
+<hr>
+<dt>
+    <h4 class="name" id="bindEvents"><span class="type-signature"></span>bindEvents()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Bind to start listening the desired event
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="init"><span class="type-signature"></span>init()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Starts the process of the script with initializing processor
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="listenToDesiredEvent"><span class="type-signature"></span>listenToDesiredEvent(onError, onData, onChange)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Listening ProposedBrandedToken event emitted by stake method of openSTUtility contract.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>onError</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The method to run on error.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onData</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The method to run on success.</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>onChange</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">The method to run on changed.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="onEvent"><span class="type-signature"></span>onEvent(eventObj)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        to be executed in <a href="module-lib_web3_events_queue_manager.html"><code>module:lib/web3/events/queue_manager</code></a> when ProposedBrandedToken success.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>eventObj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Object of event.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="onEventSubscriptionError"><span class="type-signature"></span>onEventSubscriptionError(error)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Generic Method to log event subscription error
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>error</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Object of event.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="processor"><span class="type-signature"></span>processor(eventObj)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Processor to be executed in <a href="module-lib_web3_events_queue_manager.html"><code>module:lib/web3/events/queue_manager</code></a> when ProposedBrandedToken success.
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>eventObj</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">Object of event.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
         </dl>
-    
-
-    
-
-    
-
-    
-
     
 
     

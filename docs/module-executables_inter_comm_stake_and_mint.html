@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Simple Token Foundation Module: lib/contract_interact/openst_value</title>
+	<title>Simple Token Foundation Module: executables/inter_comm/stake_and_mint</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -86,7 +86,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: lib/contract_interact/openst_value</h1>
+	<h1 class="page-title">Module: executables/inter_comm/stake_and_mint</h1>
 <section>
 
 <header>
@@ -98,12 +98,19 @@
     <div class="container-overview">
     
         
-            <div class="description">This is a utility file which would be used for executing all methods on OpenSTValue Contract.<br><br>
+            <div class="description">This executable / script is intermediate communicator between value chain and utility chain used for the stake and mint.
 
-  Prerequisite:
-   <ol>
-      <li>OpenSTValue Contract Has been Deployed on Value Chain Succesfully</li>
-    </ol></div>
+<br>It listens to the StakingIntentDeclared event emitted by stake method of openSTValue contract.
+On getting this event, it calls confirmStakingIntent method of utilityRegistrar contract.
+
+<br><br>Following are the steps which are performed in here:
+<ol>
+  <li> Set the processor on <a href="module-lib_web3_events_queue_manager.html"><code>module:lib/web3/events/queue_manager</code></a> </li>
+  <li> It waits for the event StakingIntentDeclared from openSTValue contract. </li>
+  <li> On the event arrival it initiate a task in the internal queue to run it with 6 blocks delay. </li>
+  <li> When the task executes it run the processor passed on step1,
+  in which confirmStakingIntent method of utilityRegistrar contract is called. </li>
+</ol></div>
         
 
         
@@ -158,7 +165,7 @@
         <h3 class="subsection-title">Classes</h3>
 
         <dl>
-            <dt><a href="module-lib_contract_interact_openst_value-OpenSTValue.html">OpenSTValue</a></dt>
+            <dt><a href="module-executables_inter_comm_stake_and_mint-StakeAndMintInterComm.html">StakeAndMintInterComm</a></dt>
             <dd></dd>
         </dl>
     

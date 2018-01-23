@@ -1,18 +1,20 @@
 "use strict";
 
 /**
- * This script is intermediate communicator between value chain and utility chain. Used for the register branded token process.
- * This assumes that every propose should be followed by register.
+ * This executable / script is intermediate communicator between value chain and utility chain used for the registering branded token.
  *
- * <br>It listens to the ProposedBrandedToken event of openSTUtility contract on value chain.
- * <br>
+ * <br>It listens to the ProposedBrandedToken event emitted by stake method of openSTUtility contract.
+ * On getting this event, it calls registerBrandedToken method of utilityRegistrar contract followed
+ * by calling registerUtilityToken method of valueRegistrar contract.
  *
  * <br><br>Following are the steps which are performed in here:
  * <ol>
  *   <li> Set the processor on {@link module:lib/web3/events/queue_manager} </li>
- *   <li> It waits for the event ProposedBrandedToken Raised by proposeBrandedToken method called on openSTUtility contract. </li>
+ *   <li> It waits for the event ProposedBrandedToken from openSTUtility contract. </li>
  *   <li> On the event arrival it initiate a task in the internal queue to run it with 6 blocks delay. </li>
- *   <li> When the task executes it run the processor passed on step1. </li>
+ *   <li> When the task executes it run the processor passed on step1,
+ *   in which it calls registerBrandedToken method of utilityRegistrar contract followed
+ *   by calling registerUtilityToken method of valueRegistrar contract. </li>
  * </ol>
  *
  * @module executables/inter_comm/register_branded_token
@@ -28,41 +30,37 @@ const rootPrefix = '../..'
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
   , valueRegistrarContractInteractKlass = require(rootPrefix + '/lib/contract_interact/value_registrar')
   , utilityRegistrarContractInteractKlass = require(rootPrefix + '/lib/contract_interact/utility_registrar')
-
-  , openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
-
-  , openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility')
-  , openSTUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility')
-
-  , valueRegistrarContractAddress = coreAddresses.getAddressForContract("valueRegistrar")
-  , valueRegistrarContractInteract = new valueRegistrarContractInteractKlass(valueRegistrarContractAddress)
-
-  , utilityRegistrarContractAddress = coreAddresses.getAddressForContract("utilityRegistrar")
-  , utilityRegistrarContractInteract = new utilityRegistrarContractInteractKlass(utilityRegistrarContractAddress)
-
-  , utilityRegistrarAddress = coreAddresses.getAddressForUser('utilityRegistrar')
-  , utilityRegistrarPassphrase = coreAddresses.getPassphraseForUser('utilityRegistrar')
-
-  , valueRegistrarAddress = coreAddresses.getAddressForUser('valueRegistrar')
-  , valueRegistrarPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar')
-
-  , eventQueueManager = new eventQueueManagerKlass()
-  , utilityChainId = coreConstants.OST_UTILITY_CHAIN_ID
 ;
 
-const registerBrandedTokenInterComm = function () {
-};
-
+const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
+  , openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility')
+  , openSTUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility')
+  , valueRegistrarContractAddr = coreAddresses.getAddressForContract("valueRegistrar")
+  , utilityRegistrarContractAddr = coreAddresses.getAddressForContract("utilityRegistrar")
+  , utilityRegistrarAddr = coreAddresses.getAddressForUser('utilityRegistrar')
+  , utilityRegistrarPassphrase = coreAddresses.getPassphraseForUser('utilityRegistrar')
+  , valueRegistrarAddr = coreAddresses.getAddressForUser('valueRegistrar')
+  , valueRegistrarPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar')
+  , utilityChainId = coreConstants.OST_UTILITY_CHAIN_ID
+  , valueRegistrarContractInteract = new valueRegistrarContractInteractKlass(valueRegistrarContractAddr)
+  , utilityRegistrarContractInteract = new utilityRegistrarContractInteractKlass(utilityRegistrarContractAddr)
+  , eventQueueManager = new eventQueueManagerKlass()
+;
 
 /**
- * Inter comm process for the stake and mint.
- * @namespace registerBrandedTokenInterComm
+ * Inter comm process for register branded token.
+ *
+ * @constructor
+ *
  */
-registerBrandedTokenInterComm.prototype = {
+const RegisterBrandedTokenInterComm = function () {
+};
+
+RegisterBrandedTokenInterComm.prototype = {
 
   /**
    * Starts the process of the script with initializing processor
-   * @memberOf registerBrandedTokenInterComm
+   *
    */
   init: function () {
     var oThis = this;
@@ -73,14 +71,14 @@ registerBrandedTokenInterComm.prototype = {
 
   /**
    *
-   * Bind to start listening the event ProposedBrandedToken
+   * Bind to start listening the desired event
    *
    */
   bindEvents: function () {
     var oThis = this;
     logger.log("bindEvents binding ProposedBrandedToken");
 
-    oThis.listenToProposedBrandedToken(
+    oThis.listenToDesiredEvent(
       oThis.onEventSubscriptionError,
       oThis.onEvent,
       oThis.onEvent
@@ -90,14 +88,14 @@ registerBrandedTokenInterComm.prototype = {
   },
 
   /**
-   * Listening the event ProposedBrandedToken
+   * Listening ProposedBrandedToken event emitted by stake method of openSTUtility contract.
    *
    * @param {function} onError - The method to run on error.
    * @param {function} onData - The method to run on success.
    * @param {function} onChange - The method to run on changed.
    *
    */
-  listenToProposedBrandedToken: function (onError, onData, onChange) {
+  listenToDesiredEvent: function (onError, onData, onChange) {
     var completeContract = new web3WsProvider.eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
     completeContract.setProvider(web3WsProvider.currentProvider);
 
@@ -108,7 +106,7 @@ registerBrandedTokenInterComm.prototype = {
   },
 
   /**
-   * to be executed in {@link module:lib/web3/events/queue_manager} when ProposedBrandedToken succeed.
+   * to be executed in {@link module:lib/web3/events/queue_manager} when ProposedBrandedToken success.
    *
    * @param {Object} eventObj - Object of event.
    *
@@ -129,7 +127,7 @@ registerBrandedTokenInterComm.prototype = {
   },
 
   /**
-   * Processor to be executed in {@link module:lib/web3/events/queue_manager} when ProposedBrandedToken succeed.
+   * Processor to be executed in {@link module:lib/web3/events/queue_manager} when ProposedBrandedToken success.
    *
    * @param {Object} eventObj - Object of event.
    *
@@ -147,7 +145,7 @@ registerBrandedTokenInterComm.prototype = {
     logger.step('Calling registerBrandedToken of utilityRegistrar contract.');
 
     const ucRegistrarResponse = await utilityRegistrarContractInteract.registerBrandedToken(
-      utilityRegistrarAddress,
+      utilityRegistrarAddr,
       utilityRegistrarPassphrase,
       openSTUtilityContractAddr,
       symbol,
@@ -178,7 +176,7 @@ registerBrandedTokenInterComm.prototype = {
     logger.step('Calling registerUtilityToken of valueRegistrar contract.');
 
     const vcRegistrarResponse = await valueRegistrarContractInteract.registerUtilityToken(
-      valueRegistrarAddress,
+      valueRegistrarAddr,
       valueRegistrarPassphrase,
       openSTValueContractAddr,
       symbol,
@@ -211,6 +209,6 @@ registerBrandedTokenInterComm.prototype = {
 
 };
 
-new registerBrandedTokenInterComm().init();
+new RegisterBrandedTokenInterComm().init();
 
-logger.win("InterComm Script for Register Branded Token initiated");
+logger.win("InterComm Script for Register Branded Token initiated.");

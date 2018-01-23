@@ -1,16 +1,18 @@
 "use strict";
 
 /**
- * This script is intermediate communicator between value chain and utility chain. Used for the stake and mint process.
+ * This executable / script is intermediate communicator between value chain and utility chain used for the stake and mint.
  *
- * <br>It listens to the openSTValue chain and respond to the openSTUtility chain.
+ * <br>It listens to the StakingIntentDeclared event emitted by stake method of openSTValue contract.
+ * On getting this event, it calls confirmStakingIntent method of utilityRegistrar contract.
  *
  * <br><br>Following are the steps which are performed in here:
  * <ol>
  *   <li> Set the processor on {@link module:lib/web3/events/queue_manager} </li>
- *   <li> It waits for the event StakingIntentDeclared Raised by stake method called on openSTValue. </li>
+ *   <li> It waits for the event StakingIntentDeclared from openSTValue contract. </li>
  *   <li> On the event arrival it initiate a task in the internal queue to run it with 6 blocks delay. </li>
- *   <li> When the task executes it run the processor passed on step1. </li>
+ *   <li> When the task executes it run the processor passed on step1,
+ *   in which confirmStakingIntent method of utilityRegistrar contract is called. </li>
  * </ol>
  *
  * @module executables/inter_comm/stake_and_mint
@@ -18,37 +20,37 @@
  */
 
 const rootPrefix = '../..'
-  , logger = require(rootPrefix+'/helpers/custom_console_logger')
-  , eventQueueManagerKlass = require(rootPrefix+'/lib/web3/events/queue_manager')
-  , coreAddresses = require(rootPrefix+'/config/core_addresses')
-  , web3WsProvider = require(rootPrefix+'/lib/web3/providers/value_ws')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , eventQueueManagerKlass = require(rootPrefix + '/lib/web3/events/queue_manager')
+  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , web3WsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
+  , utilityRegistrarContractInteractKlass = require(rootPrefix + '/lib/contract_interact/utility_registrar')
+;
 
-  , openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
+const openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
   , openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
-
   , openSTUtilityCurrContractAddr = coreAddresses.getAddressForContract('openSTUtility')
-
-  , eventQueueManager = new eventQueueManagerKlass()
   , utilityRegistrarAddr = coreAddresses.getAddressForUser('utilityRegistrar')
   , utilityRegistrarPassphrase = coreAddresses.getPassphraseForUser('utilityRegistrar')
-
   , utilityRegistrarContractAddress = coreAddresses.getAddressForContract("utilityRegistrar")
-  , utilityRegistrarContractInteractKlass = require( rootPrefix + '/lib/contract_interact/utility_registrar' )
   , utilityRegistrarContractInteract = new utilityRegistrarContractInteractKlass(utilityRegistrarContractAddress)
-  ;
-
-const stakeAndMintInterComm = function() {};
-
+  , eventQueueManager = new eventQueueManagerKlass()
+;
 
 /**
  * Inter comm process for the stake and mint.
- * @namespace stakeAndMintInterComm
+ *
+ * @constructor
+ *
  */
-stakeAndMintInterComm.prototype = {
+const StakeAndMintInterComm = function () {
+};
+
+StakeAndMintInterComm.prototype = {
 
   /**
    * Starts the process of the script with initializing processor
-   * @memberOf stakeAndMintInterComm
+   *
    */
   init: function () {
     var oThis = this;
@@ -59,14 +61,14 @@ stakeAndMintInterComm.prototype = {
 
   /**
    *
-   * Bind to start listening the event stakingIntentDeclared
+   * Bind to start listening the desired event
    *
    */
-  bindEvents: function(){
+  bindEvents: function () {
     var oThis = this;
     logger.log("bindEvents binding StakingIntentDeclared");
 
-    oThis.listenToStakingIntentDeclared(
+    oThis.listenToDesiredEvent(
       oThis.onEventSubscriptionError,
       oThis.onEvent,
       oThis.onEvent
@@ -76,15 +78,15 @@ stakeAndMintInterComm.prototype = {
   },
 
   /**
-   * Listening the event stakingIntentDeclared
+   * Listening StakingIntentDeclared event emitted by stake method of openSTValue contract.
    *
    * @param {function} onError - The method to run on error.
    * @param {function} onData - The method to run on success.
    * @param {function} onChange - The method to run on changed.
    *
    */
-  listenToStakingIntentDeclared: function (onError, onData, onChange) {
-    var completeContract = new web3WsProvider.eth.Contract( openSTValueContractAbi, openSTValueContractAddr );
+  listenToDesiredEvent: function (onError, onData, onChange) {
+    var completeContract = new web3WsProvider.eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
     completeContract.setProvider(web3WsProvider.currentProvider);
 
     completeContract.events.StakingIntentDeclared({})
@@ -94,12 +96,12 @@ stakeAndMintInterComm.prototype = {
   },
 
   /**
-   * to be executed in {@link module:lib/web3/events/queue_manager} when StakingIntentDeclared succeed.
+   * to be executed in {@link module:lib/web3/events/queue_manager} when StakingIntentDeclared success.
    *
    * @param {Object} eventObj - Object of event.
    *
    */
-  onEvent: function ( eventObj ) {
+  onEvent: function (eventObj) {
     eventQueueManager.addEditEventInQueue(eventObj);
   },
 
@@ -109,13 +111,13 @@ stakeAndMintInterComm.prototype = {
    * @param {Object} error - Object of event.
    *
    */
-  onEventSubscriptionError: function ( error ) {
+  onEventSubscriptionError: function (error) {
     logger.log("onEventSubscriptionError triggered");
     logger.error(error);
   },
 
   /**
-   * Processor to be executed in {@link module:lib/web3/events/queue_manager} when StakingIntentDeclared succeed.
+   * Processor to be executed in {@link module:lib/web3/events/queue_manager} when StakingIntentDeclared success.
    *
    * @param {Object} eventObj - Object of event.
    *
@@ -150,6 +152,6 @@ stakeAndMintInterComm.prototype = {
 
 };
 
-new stakeAndMintInterComm().init();
+new StakeAndMintInterComm().init();
 
-logger.win("InterComm Script for Stake and Mint initiated");
+logger.win("InterComm Script for Stake and Mint initiated.");
