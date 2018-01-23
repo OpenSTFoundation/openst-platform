@@ -66,7 +66,10 @@ const approve = function (stakerAddress, passphrase, toApproveAmount) {
   );
 };
 
-const approveOpenStValueContract = function (stakerAddress, stakerPassphrase) {
+const approveOpenStValueContract = function () {
+
+  const stakerAddress = coreAddresses.getAddressForUser('staker')
+    , stakerPassphrase = coreAddresses.getPassphraseForUser('staker');
 
   return getSTBalance(stakerAddress)
     .then(function (bigSTBalance) {
@@ -78,6 +81,5 @@ const approveOpenStValueContract = function (stakerAddress, stakerPassphrase) {
     })
 
 };
-
 
 module.exports = approveOpenStValueContract;

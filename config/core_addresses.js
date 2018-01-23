@@ -48,6 +48,11 @@ const allAddresses = {
       passphrase: process.env.OST_UTILITY_CHAIN_OWNER_PASSPHRASE
     },
 
+    staker: {
+      address: process.env.OST_STAKER_ADDR,
+      passphrase: process.env.OST_STAKER_PASSPHRASE
+    },
+
     valueRegistrar: {
       address: process.env.OST_VALUE_REGISTRAR_ADDR,
       passphrase: process.env.OST_VALUE_REGISTRAR_PASSPHRASE
