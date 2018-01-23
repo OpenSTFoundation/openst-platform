@@ -41,5 +41,5 @@ const OpenSTPlatform = function () {
   oThis.helpers.transactionLogger = transactionLogger;
 };
 
-module.exports = OpenSTPlatform;
+module.exports = new OpenSTPlatform();
 
