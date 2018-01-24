@@ -9,6 +9,7 @@ const rootPrefix = "."
   , btContract = require(rootPrefix + "/lib/contract_interact/branded_token")
   , transactionLogger = require(rootPrefix + "/helpers/transactionLogger")
   , address = require(rootPrefix + '/services/address')
+  , getTransactionReceipt = require(rootPrefix + '/services/transactions/getTransactionReceipt')
   , proposeBt = require(rootPrefix + '/services/on_boarding/proposeBt')
   , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/getRegistrationStatus')
   , approveForStake = require(rootPrefix + '/services/stake_and_mint/approveOpenStValueContract')
@@ -26,6 +27,9 @@ const OpenSTPlatform = function () {
 
   oThis.services = {
     address: address,
+    transactions: {
+      getTransactionRecipt: getTransactionReceipt
+    },
     onBoarding: {
       proposeBt: proposeBt,
       getRegistrationStatus: getRegistrationStatus
