@@ -38,7 +38,7 @@ RegistrationStatus.prototype = {
 
     return {
       uuid: oThis.uuid,
-      erc20Address: oThis.erc20Address,
+      erc20_address: oThis.erc20Address,
       is_proposal_done: oThis.isProposalDone,
       is_registered_on_uc: oThis.isRegisteredOnUc,
       is_registered_on_vc: oThis.isRegisteredOnVc
