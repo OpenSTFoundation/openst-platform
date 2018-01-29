@@ -27,7 +27,8 @@ const startStake = function (beneficiary, toStakeAmount, uuid) {
     stakerPassphrase,
     uuid,
     toStakeAmount.toString(10),
-    beneficiary
+    beneficiary,
+    true
   )
 
 };
