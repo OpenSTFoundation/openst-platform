@@ -7,5 +7,24 @@
         "Deployer": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01",
         "UtilityChainOwnerAddress": "0xABCDEF0123456789ABCDEF0123456789ABCDEF01"
     },
-    "Members": []
+    "Members": [
+        {
+            "Reserve": "0x285d3091a4028c626d893c43bca8ad027f746d70",
+            "Symbol": "ACME",
+            "Route": "/acme",
+            "ApiAuth": {
+                "users": {
+                    "acme": "acmesecret"
+                }
+            },
+            "Callback": "http://localhost:9000",
+            "Name": "Acme Coin",
+            "ChainId": "2000",
+            "ConversionRate": "10",
+            "Decimals": "18",
+            "UUID": "0xbb8df5973c2032577f2ff8114ffc87afebf4c9924a89cd45ee4cf31be1cd9aba",
+            "SimpleStake": "0xccf1fe7076d3ed773f1aa3c81ce7711464a2526e",
+            "ERC20": "0x047a864c69e7d47044fe326651a2cc97241e5cba"
+        }
+    ]
 }
