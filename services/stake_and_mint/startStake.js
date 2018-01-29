@@ -5,15 +5,15 @@
  */
 
 const BigNumber = require('bignumber.js')
-  ;
+;
 
 const rootPrefix = '../..'
-  , coreAddresses = require(rootPrefix+'/config/core_addresses')
-  , openSTValueContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_value')
-  ;
+  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
+;
 
 const openSTValueContractInteract = new openSTValueContractInteractKlass()
-  ;
+;
 
 const startStake = function (beneficiary, toStakeAmount, uuid) {
 
@@ -26,7 +26,7 @@ const startStake = function (beneficiary, toStakeAmount, uuid) {
     stakerAddress,
     stakerPassphrase,
     uuid,
-    toStakeAmount.toString( 10 ),
+    toStakeAmount.toString(10),
     beneficiary
   )
 
