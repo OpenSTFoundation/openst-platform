@@ -5,28 +5,17 @@
  */
 
 const BigNumber = require('bignumber.js')
-  ;
+;
 
 const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , simpleTokenContractInteract = require(rootPrefix + '/lib/contract_interact/simpleToken')
-  ;
+;
 
 const openSTValueContractName = 'openSTValue'
   , openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName)
-  ;
-
-/**
- * convert amount to wei
- *
- * @param {Bignumber} amount - The amount in ST
- *
- * @return {Bignumber} converted amount in wei.
- */
-const toWeiST = function (amount) {
-  return new BigNumber(10).pow(18).mul(amount);
-};
+;
 
 /**
  * Get ST balance
