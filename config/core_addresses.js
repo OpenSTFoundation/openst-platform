@@ -59,6 +59,15 @@ const allAddresses = {
     },
 
     /**
+     * redeemer account details
+     * @constant {object}
+     */
+    redeemer: {
+      address: process.env.OST_REDEEMER_ADDR,
+      passphrase: process.env.OST_REDEEMER_PASSPHRASE
+    },
+
+    /**
      * value registrar account details
      * @constant {object}
      */
