@@ -3,13 +3,13 @@
 /**
  * This executable / script is intermediate communicator between value chain and utility chain used for the registering branded token.
  *
- * <br>It listens to the ProposedBrandedToken event emitted by stake method of openSTUtility contract.
+ * <br>It listens to the ProposedBrandedToken event emitted by proposeBrandedToken method of openSTUtility contract.
  * On getting this event, it calls registerBrandedToken method of utilityRegistrar contract followed
  * by calling registerUtilityToken method of valueRegistrar contract.
  *
  * <br><br>Following are the steps which are performed in here:
  * <ol>
- *   <li> Set the processor on {@link module:lib/web3/events/queue_manager} </li>
+ *   <li> Set the processor on {@link module:lib/web3/events/queue_manager|queue manager} </li>
  *   <li> It waits for the event ProposedBrandedToken from openSTUtility contract. </li>
  *   <li> On the event arrival it initiate a task in the internal queue to run it with 6 blocks delay. </li>
  *   <li> When the task executes it run the processor passed on step1,
@@ -48,7 +48,7 @@ const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue
 ;
 
 /**
- * Inter comm process for register branded token.
+ * Inter comm process to register branded token.
  *
  * @constructor
  *
@@ -70,7 +70,6 @@ RegisterBrandedTokenInterComm.prototype = {
   },
 
   /**
-   *
    * Bind to start listening the desired event
    *
    */
@@ -88,7 +87,7 @@ RegisterBrandedTokenInterComm.prototype = {
   },
 
   /**
-   * Listening ProposedBrandedToken event emitted by stake method of openSTUtility contract.
+   * Listening ProposedBrandedToken event emitted by proposeBrandedToken method of openSTUtility contract.
    *
    * @param {function} onError - The method to run on error.
    * @param {function} onData - The method to run on success.
@@ -106,12 +105,14 @@ RegisterBrandedTokenInterComm.prototype = {
   },
 
   /**
-   * to be executed in {@link module:lib/web3/events/queue_manager} when ProposedBrandedToken success.
+   * Processing of ProposedBrandedToken event is delayed for n block confirmation by enqueueing to
+   * {@link module:lib/web3/events/queue_manager|queue manager}.
    *
    * @param {Object} eventObj - Object of event.
    *
    */
   onEvent: function (eventObj) {
+    // TODO: Publish (event received) to notify others
     eventQueueManager.addEditEventInQueue(eventObj);
   },
 
@@ -122,17 +123,20 @@ RegisterBrandedTokenInterComm.prototype = {
    *
    */
   onEventSubscriptionError: function (error) {
+    // TODO: Publish (error) to notify others
     logger.log("onEventSubscriptionError triggered");
     logger.error(error);
   },
 
   /**
-   * Processor to be executed in {@link module:lib/web3/events/queue_manager} when ProposedBrandedToken success.
+   * Processor gets executed from {@link module:lib/web3/events/queue_manager|queue manager} for
+   * every ProposedBrandedToken event after waiting for n block confirmation.
    *
    * @param {Object} eventObj - Object of event.
    *
    */
   processor: async function (eventObj) {
+    // TODO: Publish (event processing started and end result) to notify others
     const oThis = this
       , returnValues = eventObj.returnValues
       , symbol = returnValues._symbol
@@ -170,6 +174,7 @@ RegisterBrandedTokenInterComm.prototype = {
       }
     } else {
       logger.error('registerBrandedToken of utilityRegistrar contract ERROR. Something went wrong!');
+      return Promise.reject('registerBrandedToken of utilityRegistrar contract ERROR. Something went wrong!');
     }
 
 
@@ -201,6 +206,7 @@ RegisterBrandedTokenInterComm.prototype = {
       }
     } else {
       logger.error('registerUtilityToken of valueRegistrar contract ERROR. Something went wrong!');
+      return Promise.reject('registerUtilityToken of valueRegistrar contract ERROR. Something went wrong!');
     }
 
     return Promise.resolve(vcRegistrarResponse)

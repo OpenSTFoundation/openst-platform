@@ -22,7 +22,8 @@ function readFile(filePath, options) {
  *
  * @constructor
  */
-const coreBins = function() {};
+const coreBins = function () {
+};
 
 coreBins.prototype = {
   /**

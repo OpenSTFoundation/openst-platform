@@ -8,7 +8,7 @@
  *
  * <br><br>Following are the steps which are performed in here:
  * <ol>
- *   <li> Set the processor on {@link module:lib/web3/events/queue_manager} </li>
+ *   <li> Set the processor on {@link module:lib/web3/events/queue_manager|queue manager} </li>
  *   <li> It waits for the event RedemptionIntentDeclared from openSTUtility contract. </li>
  *   <li> On the event arrival it initiate a task in the internal queue to run it with 6 blocks delay. </li>
  *   <li> When the task executes it run the processor passed on step1,
@@ -60,7 +60,6 @@ RedeemAndUnstakeInterComm.prototype = {
   },
 
   /**
-   *
    * Bind to start listening the desired event
    *
    */
@@ -96,12 +95,14 @@ RedeemAndUnstakeInterComm.prototype = {
   },
 
   /**
-   * to be executed in {@link module:lib/web3/events/queue_manager} when RedemptionIntentDeclared success.
+   * Processing of RedemptionIntentDeclared event is delayed for n block confirmation by enqueueing to
+   * {@link module:lib/web3/events/queue_manager|queue manager}.
    *
    * @param {Object} eventObj - Object of event.
    *
    */
   onEvent: function (eventObj) {
+    // TODO: Publish (event received) to notify others
     eventQueueManager.addEditEventInQueue(eventObj);
   },
 
@@ -112,17 +113,20 @@ RedeemAndUnstakeInterComm.prototype = {
    *
    */
   onEventSubscriptionError: function (error) {
+    // TODO: Publish (error) to notify others
     logger.log("onEventSubscriptionError triggered");
     logger.error(error);
   },
 
   /**
-   * Processor to be executed in {@link module:lib/web3/events/queue_manager} when RedemptionIntentDeclared success.
+   * Processor gets executed from {@link module:lib/web3/events/queue_manager|queue manager} for
+   * every RedemptionIntentDeclared event after waiting for n block confirmation.
    *
    * @param {Object} eventObj - Object of event.
    *
    */
   processor: function (eventObj) {
+    // TODO: Publish (event processing started and end result) to notify others
     const returnValues = eventObj.returnValues
       , uuid = returnValues._uuid
       , redemptionIntentHash = returnValues._redemptionIntentHash
