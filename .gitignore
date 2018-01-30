@@ -19,6 +19,8 @@ test/st-poa
 # Runtime data
 pids
 
+dump.rdb
+
 /.idea
 package-lock.json
 
