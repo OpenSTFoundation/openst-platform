@@ -14,8 +14,11 @@ const rootPrefix = "."
   , proposeBt = require(rootPrefix + '/services/on_boarding/proposeBt')
   , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/getRegistrationStatus')
   , approveForStake = require(rootPrefix + '/services/stake_and_mint/approveOpenStValueContract')
-  , getApprovalStatus = require(rootPrefix + '/services/stake_and_mint/getApprovalStatus')
+  , getApprovalStatusForStake = require(rootPrefix + '/services/stake_and_mint/getApprovalStatus')
   , startStake = require(rootPrefix + '/services/stake_and_mint/startStake')
+  , approveForRedeem = require(rootPrefix + '/services/redeem_and_unstake/approveOpenStUtilityContract')
+  , getApprovalStatusForRedeem = require(rootPrefix + '/services/redeem_and_unstake/getApprovalStatus')
+  , startRedeem = require(rootPrefix + '/services/redeem_and_unstake/startRedeem')
   ;
 
 const OpenSTPlatform = function () {
@@ -38,8 +41,13 @@ const OpenSTPlatform = function () {
     },
     stake: {
       approveForStake: approveForStake,
-      getApprovalStatus: getApprovalStatus,
+      getApprovalStatus: getApprovalStatusForStake,
       start: startStake
+    },
+    redeem: {
+      approveForRedeem: approveForRedeem,
+      getApprovalStatus: getApprovalStatusForRedeem,
+      start: startRedeem
     }
   };
 
