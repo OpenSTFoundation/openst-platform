@@ -12,7 +12,7 @@
     "ethereum",
     "erc20"
   ],
-  "homepage": "https://simpletoken.org",
+  "homepage": "https://openst.org",
   "author": "OpenST Ltd.",
   "license": "GNU LESSER GENERAL PUBLIC LICENSE",
   "repository": {
@@ -28,10 +28,11 @@
   "scripts": {
     "start": "index.js",
     "test": "run_complete_test_deploy.sh",
-    "lint": "node node_modules/eslint/bin/eslint.js ."
+    "lint": "node node_modules/eslint/bin/eslint.js .",
+    "make-docs": "node_modules/.bin/jsdoc -c .jsdoc.json"
   },
   "dependencies": {
-    "@openstfoundation/openst-cache": "^0.9.2-beta.5",
+    "@openstfoundation/openst-cache": "^0.9.3",
     "abi-decoder": "1.0.9",
     "bignumber.js": "4.1.0",
     "continuation-local-storage": "^3.2.1",

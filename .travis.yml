@@ -5,14 +5,17 @@ branches:
   only:
   - master
   - develop
+  - release-0.9
 notifications:
   email:
     recipients:
-      - ci.report@simpletoken.org
+      - ci.report@ost.com
     on_success: always
     on_failure: always
 node_js:
+  - "9"
   - "8"
+  - "7"
 before_install:
   - sudo apt-get update
   - sudo apt-get install nodejs
