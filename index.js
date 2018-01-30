@@ -16,7 +16,6 @@ const rootPrefix = "."
   , approveForStake = require(rootPrefix + '/services/stake_and_mint/approveOpenStValueContract')
   , getApprovalStatus = require(rootPrefix + '/services/stake_and_mint/getApprovalStatus')
   , startStake = require(rootPrefix + '/services/stake_and_mint/startStake')
-  , getStakerCredentials = require(rootPrefix + '/services/stake_and_mint/getStakerCredentials')
   ;
 
 const OpenSTPlatform = function () {
@@ -40,8 +39,7 @@ const OpenSTPlatform = function () {
     stake: {
       approveForStake: approveForStake,
       getApprovalStatus: getApprovalStatus,
-      start: startStake,
-      getStakerCredentials: getStakerCredentials
+      start: startStake
     }
   };
 
