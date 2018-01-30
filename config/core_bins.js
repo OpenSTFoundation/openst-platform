@@ -26,72 +26,82 @@ const coreBins = function() {};
 
 coreBins.prototype = {
   /**
-   * Simple token contract Binary
+   * Simple token contract binary
    *
-   * @return {binary}
+   * @constant {binary}
+   *
    */
   simpleToken: readFile(rootPrefix + '/contracts/bin/SimpleToken.bin', 'utf8'),
 
   /**
-   * Mock Simple token contract Binary
+   * Mock Simple token contract binary
    *
-   * @return {binary}
+   * @constant {binary}
+   *
    */
   mockSimpleToken: readFile(rootPrefix + '/contracts/bin/MockToken.bin', 'utf8'),
 
   /**
-   * Open ST Utility contract Binary
+   * Open ST Utility contract binary
    *
-   * @return {binary}
+   * @constant {binary}
+   *
    */
   openSTUtility: readFile(rootPrefix + '/contracts/bin/OpenSTUtility.bin', 'utf8'),
 
   /**
-   * Open ST Value contract Binary
+   * Open ST Value contract binary
    *
-   * @return {binary}
+   * @constant {binary}
+   *
    */
   openSTValue: readFile(rootPrefix + '/contracts/bin/OpenSTValue.bin', 'utf8'),
 
   /**
-   * ST Prime contract Binary
+   * ST Prime contract binary
    *
-   * @return {binary}
+   * @constant {binary}
+   *
    */
   stPrime: readFile(rootPrefix + '/contracts/bin/STPrime.bin', 'utf8'),
 
   /**
-   * Value Core contract Binary
+   * Value Core contract binary
    *
-   * @return {binary}
+   * @constant {binary}
+   *
    */
   valueCore: readFile(rootPrefix + '/contracts/bin/Core.bin', 'utf8'),
 
   /**
-   * Value Registrar contract Binary
+   * Value Registrar contract binary
    *
-   * @return {binary}
+   * @constant {binary}
+   *
    */
   valueRegistrar: readFile(rootPrefix + '/contracts/bin/Registrar.bin', 'utf8'),
 
   /**
-   * Utility Registrar contract Binary
+   * Utility Registrar contract binary
    *
-   * @return {binary}
+   * @constant {binary}
+   *
    */
   utilityRegistrar: readFile(rootPrefix + '/contracts/bin/Registrar.bin', 'utf8'),
 
   /**
-   * Branded Token contract Binary
+   * Branded Token contract binary
    *
-   * @return {binary}
+   * @constant {binary}
+   *
    */
   brandedToken: readFile(rootPrefix + '/contracts/bin/BrandedToken.bin', 'utf8'),
 
   /**
-   * Simple Stake contract Binary
+   * Simple Stake contract binary
    *
-   * @return {binary}
+   * @constant {binary}
+   *
    */
   simpleStake: readFile(rootPrefix + '/contracts/bin/SimpleStake.bin', 'utf8')
 };
