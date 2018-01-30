@@ -10,7 +10,7 @@ const BigNumber = require('bignumber.js')
 const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , simpleTokenContractInteract = require(rootPrefix + '/lib/contract_interact/simpleToken')
+  , simpleTokenContractInteract = require(rootPrefix + '/lib/contract_interact/simple_token')
 ;
 
 const openSTValueContractName = 'openSTValue'

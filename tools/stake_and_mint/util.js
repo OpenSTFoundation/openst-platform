@@ -34,7 +34,7 @@ const rootPrefix = '../..'
   , web3UtilityWsProvider = require(rootPrefix+'/lib/web3/providers/utility_ws')
   , eventsFormatter = require(rootPrefix+'/lib/web3/events/formatter.js')
   , logger = require(rootPrefix+'/helpers/custom_console_logger')
-  , simpleTokenContractInteract = require(rootPrefix+'/lib/contract_interact/simpleToken')
+  , simpleTokenContractInteract = require(rootPrefix+'/lib/contract_interact/simple_token')
   , openSTValueContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_value')
   , openSTUtilityContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_utility')
 ;
