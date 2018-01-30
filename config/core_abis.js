@@ -71,10 +71,45 @@ coreAbis.prototype = {
    * @return {ABI}
    */
   stPrime: parseFile(rootPrefix + '/contracts/abi/STPrime.abi', "utf8"),
+
+  /**
+   * Value Chain Contract: Value core contract ABI.<br><br>
+   * <b>For each utility chain, one value core contract is deployed and
+   * it holds the information regarding the utility chain.</b>
+   *
+   * @return {ABI}
+   */
   valueCore: parseFile(rootPrefix + '/contracts/abi/Core.abi', "utf8"),
+
+  /**
+   * Value Chain Contract: Value registrar contract ABI.<br><br>
+   * <b>This contract maintains the registry information of the utility token. It acts as a mediator for staking and redeeming.</b>
+   *
+   * @return {ABI}
+   */
   valueRegistrar: parseFile(rootPrefix + '/contracts/abi/Registrar.abi', "utf8"),
+
+  /**
+   * Utility Chain Contract: Utility registrar contract ABI.<br><br>
+   * <b>This contract maintains the registry information of the utility token. It acts as a mediator for staking and redeeming.</b>
+   *
+   * @return {ABI}
+   */
   utilityRegistrar: parseFile(rootPrefix + '/contracts/abi/Registrar.abi', "utf8"),
+
+  /**
+   * Utility Chain Contract: Branded token EIP20 contract ABI.<br><br>
+   *
+   * @return {ABI}
+   */
   brandedToken: parseFile(rootPrefix + '/contracts/abi/BrandedToken.abi', "utf8"),
+
+  /**
+   * Value Chain Contract: Simple stake contract ABI.<br><br>
+   * <b>It holds the staked simple tokens for minted branded tokens.</b>
+   *
+   * @return {ABI}
+   */
   simpleStake: parseFile(rootPrefix + '/contracts/abi/SimpleStake.abi', "utf8")
 };
 
