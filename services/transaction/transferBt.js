@@ -7,7 +7,7 @@
 const rootPrefix = '../..'
   , brandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , batchSize = 20
+  , batchSize = 2
   ;
 
 var promiseArray = []
@@ -20,19 +20,25 @@ const getTransactionReceipt = async function (reqParams) {
   try {
 
     var erc20Addr = reqParams['erc20']
+      , reserveAddr = reqParams['reserve']
       , transferData = reqParams['transfers']
+      , transferDataLength = Object.keys(transferData).length
       , i = 0
     ;
 
     for(var key in transferData) {
       var t_d = transferData[key]
-        , brandedTokenObj = new brandedTokenKlass({"ERC20": erc20Addr});
+        , brandedTokenObj = new brandedTokenKlass(
+          {
+            "ERC20": erc20Addr,
+            "Reserve": reserveAddr
+          });
 
-      console.log("transfer data ---------> ", t_d);
+      console.log("Transfer Initiated for ---------> ", t_d);
       promiseArray.push(brandedTokenObj.transfer(t_d['fromAddr'], t_d['toAddr'], t_d['amountWei']));
       keysArray.push(key);
 
-      if((((i + 1) % batchSize) == 0) || ((i+1) == transferData.length)) {
+      if((((i + 1) % batchSize) == 0) || ((i+1) == transferDataLength)) {
 
         var transferResponses = await Promise.all(promiseArray);
 
@@ -50,6 +56,8 @@ const getTransactionReceipt = async function (reqParams) {
       }
       i++;
     }
+
+    console.log("CCCCCoooooooooooooooommmmmpppleted------------------------------------------------------------------------", responseTransactions);
 
   } catch (err) {
     return Promise.reject('Something went wrong. ' + err.message)
