@@ -57,7 +57,7 @@ const getTransactionReceipt = async function (reqParams) {
       i++;
     }
 
-    console.log("CCCCCoooooooooooooooommmmmpppleted------------------------------------------------------------------------", responseTransactions);
+    console.log("CCCCCoooooooooooooooommmmmpppleted--------------------------------------------", responseTransactions);
 
   } catch (err) {
     return Promise.reject('Something went wrong. ' + err.message)
