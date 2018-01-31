@@ -10,7 +10,8 @@ const fs = require('fs')
   , path = require('path')
 ;
 
-const rootPrefix = "..";
+const rootPrefix = ".."
+;
 
 function parseFile(filePath, options) {
   filePath = path.join(__dirname, '/' + filePath);
