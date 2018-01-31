@@ -7,6 +7,7 @@
 const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , senderName = 'staker'
   ;
 
 const contractName = 'openSTUtility'
@@ -14,11 +15,11 @@ const contractName = 'openSTUtility'
   , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass(currContractAddr)
   ;
 
-const proposeBt = function (senderAddress, senderPassphrase, symbol, name, conversionRate) {
+const proposeBt = function (symbol, name, conversionRate) {
   // returns a Promise which resolves to a transaction_hash
   return openSTUtilityContractInteract.proposeBrandedToken(
-    senderAddress,
-    senderPassphrase,
+    coreAddresses.getAddressForUser(senderName),
+    coreAddresses.getPassphraseForUser(senderName),
     symbol,
     name,
     conversionRate
