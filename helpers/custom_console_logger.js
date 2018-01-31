@@ -26,7 +26,9 @@ var getNamespace = require('continuation-local-storage').getNamespace
   , requestNamespace = getNamespace('inputRequest')
 ;
 
-// Method to append Request in each log line.
+/**
+ * Method to append Request in each log line.
+ */
 var appendRequest = function(message) {
     var newMessage = "";
     if (requestNamespace) {
@@ -43,12 +45,16 @@ var appendRequest = function(message) {
     return newMessage;
 };
 
-// Method to convert Process hrTime to Milliseconds
+/**
+ * Method to convert Process hrTime to Milliseconds
+ */
 var timeInMilli = function(hrTime) {
   return (hrTime[0] * 1000 + hrTime[1] / 1000000);
 };
 
-// Find out the difference between request start time and complete time
+/**
+ * Find out the difference between request start time and complete time
+ */
 var calculateRequestTime = function() {
   var reqTime = 0;
   if (requestNamespace && requestNamespace.get('startTime')) {
@@ -59,66 +65,67 @@ var calculateRequestTime = function() {
 };
 
 module.exports = {
-  "STEP_PRE": STEP_PRE
-  , "WARN_PRE": WARN_PRE
-  , "WIN_PRE": WIN_PRE
-  , "INFO_PRE": INFO_PRE
-  , "ERR_PRE": ERR_PRE
-  , "CONSOLE_RESET": CONSOLE_RESET
+  "STEP_PRE": STEP_PRE,
+  "WARN_PRE": WARN_PRE,
+  "WIN_PRE": WIN_PRE,
+  "INFO_PRE": INFO_PRE,
+  "ERR_PRE": ERR_PRE,
+  "CONSOLE_RESET": CONSOLE_RESET,
 
-  , step: function () {
+  step: function () {
     var args = [appendRequest(this.STEP_PRE)];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
-  }
+  },
 
   //Method to Log Information
-  , info: function () {
+  info: function () {
     var args = [appendRequest(this.INFO_PRE)];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
-  }
+  },
 
   //Method to Log Error.
-  , error: function () {
+  error: function () {
     var args = [appendRequest(this.ERR_PRE)];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
-  }
+  },
 
-  , warn: function () {
+  warn: function () {
     var args = [appendRequest(this.WARN_PRE)];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
-  }
+  },
 
   //Method to Log Success/Win.
-  , win: function () {
+  win: function () {
     var args = [appendRequest(this.WIN_PRE)];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
-  }
+  },
 
-  , log: function () {
+  log: function () {
     console.log.apply(console, arguments);
-  }
+  },
 
   //Method to Log Request Started.
-  , requestStartLog: function (requestUrl) {
+  requestStartLog: function (requestUrl) {
     var d = new Date();
     var dateTime = d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()+" "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds()+"."+d.getMilliseconds();
-    var message = ("Started '" + requestUrl + "' at " + dateTime);
+    var message = "Started '" + requestUrl + "' at " + dateTime;
+    this.info(message);
+  },
+
+  //Method to Log Request Completed.
+  requestCompleteLog: function (status) {
+    var message = "Completed '" + status + "' in " + calculateRequestTime() + "ms";
     this.info(message);
   }
 
-  //Method to Log Request Completed.
-  , requestCompleteLog: function (status) {
-    var message = ("Completed '" + status + "' in " + calculateRequestTime() + "ms");
-    this.info(message);
-  }
 };
