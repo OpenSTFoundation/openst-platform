@@ -243,6 +243,7 @@ const performer = async function (argv) {
   logger.win("ENV vars Source file Updated");
   logger.win("Successfully Completed!!!");
 
+  process.exit(0);
 
 };
 

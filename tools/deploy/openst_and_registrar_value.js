@@ -211,6 +211,8 @@ const performer = async function (argv) {
 
   logger.win(" Deploy script 1 completed ");
 
+  process.exit(0);
+
 };
 
 // process.argv[2] == travis means proceed deployment without prmpt else show prompt
