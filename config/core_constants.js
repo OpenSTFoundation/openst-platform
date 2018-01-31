@@ -136,7 +136,7 @@ coreConstants.prototype = {
    * @constant {string}
    *
    */
-  OST_MEMBER_CONFIG_FILE_PATH: './config.json',
+  OST_MEMBER_CONFIG_FILE_PATH: process.env.OST_MEMBER_CONFIG_FILE_PATH,
 
   /**
    * Folder path of the transfer logs
