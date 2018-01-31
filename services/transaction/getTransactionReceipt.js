@@ -6,7 +6,7 @@
 
 const rootPrefix = '../..'
   , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
-  , helper = require(rootPrefix + '/lib/contract_interact/helper')
+  , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   ;
 
@@ -20,7 +20,7 @@ const getTransactionReceipt = async function (transactionHash, chain) {
       return Promise.reject('Invalid chain.');
     }
 
-    const trxReceipt = await helper.getTxReceipt(web3Provider, transactionHash);
+    const trxReceipt = await contractInteractHelper.getTxReceipt(web3Provider, transactionHash);
 
     if(!trxReceipt || !trxReceipt.isSuccess()) {
       // this is a error scenario.

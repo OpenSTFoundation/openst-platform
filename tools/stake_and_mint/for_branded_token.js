@@ -18,15 +18,15 @@
 const BigNumber = require('bignumber.js')
   , readline = require('readline');
 
-const rootPrefix                = '../..'
-  , web3ValueRpcProvider        = require( rootPrefix+'/lib/web3/providers/value_rpc' )
-  , web3UtilityWsProvider       = require( rootPrefix+'/lib/web3/providers/utility_ws' )
-  , simpleTokenContractInteract = require( rootPrefix+'/lib/contract_interact/simple_token' )
-  , coreConstants               = require( rootPrefix + '/config/core_constants' )
-  , brandedTokenKlass           = require( rootPrefix+'/lib/contract_interact/branded_token' )
-  , stakeAndMintUtil            = require( rootPrefix + "/tools/stake_and_mint/util" )
-  , logger                      = require( rootPrefix+'/helpers/custom_console_logger' )
-  , Config                      = require( process.argv[2] || coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
+const rootPrefix = '../..'
+  , web3ValueRpcProvider = require(rootPrefix + '/lib/web3/providers/value_rpc')
+  , web3UtilityWsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
+  , simpleTokenContractInteract = require(rootPrefix + '/lib/contract_interact/simple_token')
+  , coreConstants = require(rootPrefix + '/config/core_constants')
+  , BrandedTokenContractInteractKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
+  , stakeAndMintUtil = require(rootPrefix + "/tools/stake_and_mint/util")
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , Config = require(process.argv[2] || coreConstants.OST_MEMBER_CONFIG_FILE_PATH)
 ;
 
 const UC = "UtilityChain"
@@ -41,11 +41,11 @@ var brandedToken = null;
  *
  * @return {String} display value in ST
  */
-const toDisplayST = function(num){
-  var bigNum = new BigNumber( num )
-    , fact = new BigNumber( 10 ).pow( 18 );
+const toDisplayST = function (num) {
+  var bigNum = new BigNumber(num)
+    , fact = new BigNumber(10).pow(18);
 
-  return bigNum.dividedBy( fact ).toString( 10 ) + " ST";
+  return bigNum.dividedBy(fact).toString(10) + " ST";
 };
 
 /**
@@ -55,9 +55,9 @@ const toDisplayST = function(num){
  *
  * @return {Bool} true when equal
  */
-String.prototype.equalsIgnoreCase = function(compareWith){
+String.prototype.equalsIgnoreCase = function (compareWith) {
   var _self = this.toLowerCase()
-    , _compareWith = String( compareWith ).toLowerCase();
+    , _compareWith = String(compareWith).toLowerCase();
 
   return _self == _compareWith;
 };
@@ -70,11 +70,11 @@ String.prototype.equalsIgnoreCase = function(compareWith){
  *
  * @return {Promise<Number>}
  */
-const describeChain = function(chainType, web3Provider) {
+const describeChain = function (chainType, web3Provider) {
   return web3Provider.eth.net.getId()
-    .then(function(networkId){
-        logger.info( chainType, "NetworkId: ", networkId );
-        logger.info( VC, "HttpProvider.host: ", web3Provider.currentProvider.host );
+    .then(function (networkId) {
+        logger.info(chainType, "NetworkId: ", networkId);
+        logger.info(VC, "HttpProvider.host: ", web3Provider.currentProvider.host);
       }
     )
 };
@@ -85,26 +85,26 @@ const describeChain = function(chainType, web3Provider) {
  * @param {Object} member - member object
  *
  */
-const describeMember = function(member) {
+const describeMember = function (member) {
   logger.step("Please Confirm these details.");
   logger.log("Name ::", member.Name);
   logger.log("Symbol ::", member.Symbol);
   logger.log("Reserve ::\x1b[31m", member.Reserve, logger.CONSOLE_RESET);
 
   var ignoreKeys = ["Name", "Symbol", "Reserve"]
-    , allKeys = Object.keys( member )
+    , allKeys = Object.keys(member)
   ;
-  allKeys.forEach(function ( prop ) {
-    if ( ignoreKeys.includes( prop ) ) {
+  allKeys.forEach(function (prop) {
+    if (ignoreKeys.includes(prop)) {
       return;
     }
 
-    var val = member[ prop ];
-    if ( val instanceof Object ) {
+    var val = member[prop];
+    if (val instanceof Object) {
       return;
     }
 
-    logger.log( prop, "::", val);
+    logger.log(prop, "::", val);
   });
 };
 
@@ -120,40 +120,40 @@ const readlineInterface = readline.createInterface({
 /**
  * List all members
  */
-const listAllMembers = function() {
+const listAllMembers = function () {
   logger.info("\x1b[34m Welcome to Staking And Minting Tool \x1b[0m");
   logger.step("Please choose member to fund.");
 
   //List all available members.
-  for( var i =0; i < Config.Members.length; i++  ) {
-    var member = Config.Members[ i ];
-    logger.info( i+1, " for ", member.Name, "(", member.Symbol ,")"  );
+  for (var i = 0; i < Config.Members.length; i++) {
+    var member = Config.Members[i];
+    logger.info(i + 1, " for ", member.Name, "(", member.Symbol, ")");
   }
 
   readlineInterface.prompt();
-  return new Promise(function(resolve, reject) {
-    const rlCallback = function(line){
+  return new Promise(function (resolve, reject) {
+    const rlCallback = function (line) {
       logger.info("listAllMembers :: line", line);
       line = line.trim().toLowerCase();
-      switch ( line ) {
+      switch (line) {
         case "exit":
         case "bye":
           logger.log("Staking Aborted. Bye");
           process.exit(0);
           break;
       }
-      var memberIndex = Number( line ) - 1;
+      var memberIndex = Number(line) - 1;
       logger.info("Choosing Member : ", memberIndex);
-      if ( isNaN( memberIndex ) || memberIndex >= Config.Members.length ) {
+      if (isNaN(memberIndex) || memberIndex >= Config.Members.length) {
         logger.info("\n");
         logger.error("Invalid Option. Please try again.");
         logger.info("\n");
         return;
       }
-      logger.info( rlCallback );
+      logger.info(rlCallback);
       readlineInterface.removeListener("line", rlCallback);
-      const member = Config.Members[ memberIndex ];
-      resolve( member );
+      const member = Config.Members[memberIndex];
+      resolve(member);
     };
     readlineInterface.on("line", rlCallback);
   });
@@ -166,21 +166,21 @@ const listAllMembers = function() {
  *
  * @return {Promise<Object>}
  */
-const confirmMember = function(member) {
-  describeMember( member );
+const confirmMember = function (member) {
+  describeMember(member);
   logger.info("\x1b[34m Are you sure you would like to continue with Staking And Minting ? Options:\x1b[0m");
-  logger.info("\x1b[32m yes \x1b[0m\t" , "To continue with Staking And Minting");
-  logger.info("\x1b[31m no \x1b[0m\t" , "To quit the program");
-  return new Promise( function(resolve, reject) {
+  logger.info("\x1b[32m yes \x1b[0m\t", "To continue with Staking And Minting");
+  logger.info("\x1b[31m no \x1b[0m\t", "To quit the program");
+  return new Promise(function (resolve, reject) {
     readlineInterface.prompt();
-    const rlCallback = function(line) {
+    const rlCallback = function (line) {
       logger.info("confirmMember :: readlineInterface :: line", line);
       line = line.trim().toLowerCase();
-      switch ( line ) {
+      switch (line) {
         case "yes":
         case "y":
           readlineInterface.removeListener("line", rlCallback);
-          resolve( member );
+          resolve(member);
           break;
         case "no":
         case "n":
@@ -204,11 +204,11 @@ const confirmMember = function(member) {
  *
  * @return {Promise<Number>}
  */
-const getMemberSTBalance = function(member){
-  return simpleTokenContractInteract.balanceOf( member.Reserve )
-    .then( function(result){
+const getMemberSTBalance = function (member) {
+  return simpleTokenContractInteract.balanceOf(member.Reserve)
+    .then(function (result) {
       const memberBalance = result.data['balance'];
-      logger.info(member.Name, "has", toDisplayST(memberBalance) );
+      logger.info(member.Name, "has", toDisplayST(memberBalance));
       return new BigNumber(memberBalance);
     })
 };
@@ -220,15 +220,15 @@ const getMemberSTBalance = function(member){
  *
  * @return {Promise}
  */
-const askStakingAmount = function(bigNumBalance) {
-  return new Promise( function(resolve, reject) {
+const askStakingAmount = function (bigNumBalance) {
+  return new Promise(function (resolve, reject) {
     logger.info("Please mention the Simple Tokens to Assign.");
     readlineInterface.prompt();
-    const rlCallback = function(line) {
+    const rlCallback = function (line) {
       logger.info("askStakingAmount :: readlineInterface :: line", line);
       line = line.trim().toLowerCase();
 
-      switch(line) {
+      switch (line) {
         case "exit":
         case "bye":
           logger.log("Staking Aborted. Bye");
@@ -242,13 +242,13 @@ const askStakingAmount = function(bigNumBalance) {
         return;
       }
       const bigNumStakeAmount = new BigNumber(line);
-      logger.log("bigNumStakeAmount" , bigNumStakeAmount);
-      if ( bigNumStakeAmount.cmp( bigNumBalance ) > 0 ) {
-        logger.error("Member does not have sufficient SimpleTokens to stake " + toDisplayST(bigNumStakeAmount) );
+      logger.log("bigNumStakeAmount", bigNumStakeAmount);
+      if (bigNumStakeAmount.cmp(bigNumBalance) > 0) {
+        logger.error("Member does not have sufficient SimpleTokens to stake " + toDisplayST(bigNumStakeAmount));
         return;
       }
       readlineInterface.removeListener("line", rlCallback);
-      resolve( bigNumStakeAmount );
+      resolve(bigNumStakeAmount);
     };
     readlineInterface.on("line", rlCallback);
   });
@@ -261,25 +261,25 @@ const askStakingAmount = function(bigNumBalance) {
  *
  * @return {Promise<String>}
  */
-const getPassphrase = function(selectedMember){
+const getPassphrase = function (selectedMember) {
   const hideConsoleString = "\x1b[8m";
   const resetConsoleString = "\x1b[0m";
   logger.step("Please provide member reserve passphrase.");
-  return new Promise( function(resolve, reject) {
+  return new Promise(function (resolve, reject) {
     readlineInterface.setPrompt("Passphrase:" + hideConsoleString);
     readlineInterface.prompt();
-    const rlCallback = function(passphrase) {
+    const rlCallback = function (passphrase) {
       logger.step(resetConsoleString, "Unlocking Member Reserve on", VC);
       web3ValueRpcProvider.eth.personal.unlockAccount(selectedMember.Reserve, passphrase)
-        .then(function() {
+        .then(function () {
           logger.win("Member Reserve unlocked on", VC);
           readlineInterface.removeListener("line", rlCallback);
-          resolve( passphrase );
+          resolve(passphrase);
         })
-        .catch( function(reason) {
+        .catch(function (reason) {
           logger.error("Failed to unlock reserve.");
           logger.error(reason.message);
-          logger.step("Please provide correct member reserve passphrase." , hideConsoleString);
+          logger.step("Please provide correct member reserve passphrase.", hideConsoleString);
         });
     };
     readlineInterface.on("line", rlCallback);
@@ -291,41 +291,41 @@ const getPassphrase = function(selectedMember){
  */
 (function () {
   var selectedMember = null
-    , toStakeAmount  = null
+    , toStakeAmount = null
     , _passphrase = null
   ;
 
   logger.step("Validate", VC);
 
   describeChain(VC, web3ValueRpcProvider)
-    .then(function(){
+    .then(function () {
       logger.win(VC, "Validated");
       logger.step("Validate", UC);
       return describeChain(UC, web3UtilityWsProvider);
     })
-    .then(function() {
+    .then(function () {
       logger.win(UC, "Validated");
       return listAllMembers();
     })
-    .then(function(member){
+    .then(function (member) {
       logger.step("Confirm Member");
-      return (confirmMember( member ) )
+      return (confirmMember(member) )
     })
-    .then( function(member){
+    .then(function (member) {
       selectedMember = member;
 
-      brandedToken = new brandedTokenKlass(selectedMember);
+      brandedToken = new BrandedTokenContractInteractKlass(selectedMember);
 
       logger.step("Get Member ST Balance");
-      return getMemberSTBalance( selectedMember );
+      return getMemberSTBalance(selectedMember);
     })
     .then(askStakingAmount)
-    .then(function(bigNumStakeAmount){
+    .then(function (bigNumStakeAmount) {
       logger.step("Validate Stake Contract");
       toStakeAmount = bigNumStakeAmount;
-      return getPassphrase( selectedMember );
+      return getPassphrase(selectedMember);
     })
-    .then( function(passphrase) {
+    .then(function (passphrase) {
       logger.win("Member Reserve unlocked on", VC);
       _passphrase = passphrase;
 
@@ -342,12 +342,12 @@ const getPassphrase = function(selectedMember){
       logger.win("Yoo.. Have Fun!!");
       process.exit(0);
     })
-    .catch(function(reason){
+    .catch(function (reason) {
       _passphrase = null;
-      if ( reason && reason.message ){
-        logger.error( reason.message );
+      if (reason && reason.message) {
+        logger.error(reason.message);
       }
-      reason && logger.info( reason );
+      reason && logger.info(reason);
       process.exit(1);
     })
   ;

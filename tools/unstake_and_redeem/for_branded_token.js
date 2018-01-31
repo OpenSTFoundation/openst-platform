@@ -10,7 +10,7 @@ const rootPrefix = '../..'
   , web3UtilityWsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , coreConstants   = require( rootPrefix + '/config/core_constants' )
-  , brandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
+  , BrandedTokenContractInteractKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , Config = require( process.argv[2] || coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
   , eventsFormatter = require(rootPrefix + '/lib/web3/events/formatter.js')
@@ -202,7 +202,7 @@ const confirmToken = function (member) {
         case "y":
           readlineInterface.removeListener("line", rlCallback);
           selectedMember = member;
-          brandedToken = new brandedTokenKlass(selectedMember);
+          brandedToken = new BrandedTokenContractInteractKlass(selectedMember);
           resolve(selectedMember);
           break;
         case "no":

@@ -6,8 +6,7 @@
 
 const rootPrefix = '../..'
   , web3UcRpcProvider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
-  , web3VcRpcProvider = require(rootPrefix + '/lib/web3/providers/value_rpc')
-  , helper = require(rootPrefix + '/lib/contract_interact/helper')
+  , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
@@ -84,7 +83,7 @@ const getRegistrationStatus = async function (proposalTransactionHash) {
     // returns the registration status of the proposal
     const registrationStatus = new RegistrationStatus();
 
-    const proposalTxReceipt = await helper.getTxReceipt(web3UcRpcProvider, proposalTransactionHash);
+    const proposalTxReceipt = await contractInteractHelper.getTxReceipt(web3UcRpcProvider, proposalTransactionHash);
 
     if(!proposalTxReceipt || !proposalTxReceipt.isSuccess()) {
       return registrationStatus.returnStatusPromise();

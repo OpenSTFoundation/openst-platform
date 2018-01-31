@@ -32,7 +32,7 @@ const rootPrefix = '../..'
   , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
-  , brandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
+  , BrandedTokenContractInteractKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
   , stPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
 ;
 
@@ -195,7 +195,7 @@ StakeAndMintProcessorInterComm.prototype = {
 
       var registeredOnUCResult = await openSTUtilityContractInteract.registeredTokenProperty(uuid);
 
-      utilityTokenInterfaceContract = new brandedTokenKlass({
+      utilityTokenInterfaceContract = new BrandedTokenContractInteractKlass({
         ERC20: registeredOnUCResult.data.erc20Address
       });
     }

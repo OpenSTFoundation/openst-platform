@@ -5,7 +5,7 @@
  */
 
 const rootPrefix = '../..'
-  , brandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
+  , BrandedTokenContractInteractKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , batchSize = 2
   ;
@@ -28,7 +28,7 @@ const getTransactionReceipt = async function (reqParams) {
 
     for(var key in transferData) {
       var t_d = transferData[key]
-        , brandedTokenObj = new brandedTokenKlass(
+        , brandedTokenObj = new BrandedTokenContractInteractKlass(
           {
             "ERC20": erc20Addr,
             "Reserve": reserveAddr

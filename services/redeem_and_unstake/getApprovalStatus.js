@@ -7,13 +7,13 @@
 const rootPrefix = '../..'
   , web3UcRpcProvider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , helper = require(rootPrefix + '/lib/contract_interact/helper')
+  , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
 ;
 
 const getApprovalStatus = async function (approvalTransactionHash) {
   try {
-    const approvalTxReceipt = await helper.getTxReceipt(web3UcRpcProvider, approvalTransactionHash);
+    const approvalTxReceipt = await contractInteractHelper.getTxReceipt(web3UcRpcProvider, approvalTransactionHash);
 
     if (!approvalTxReceipt || !approvalTxReceipt.isSuccess()) {
       return Promise.resolve(responseHelper.error('s_rau_gas_1', 'approval not yet mined.'));
