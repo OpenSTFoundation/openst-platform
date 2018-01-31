@@ -31,7 +31,7 @@ const rootPrefix = '../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , eventsFormatter = require(rootPrefix + '/lib/web3/events/formatter.js')
   , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
-  , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , OpenSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , StPrimeKlass = require( rootPrefix + '/lib/contract_interact/st_prime' )
 ;
 
@@ -43,7 +43,7 @@ const openSTValueContractName = 'openSTValue'
   , openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName)
   , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
   , openSTValueContractInteract = new openSTValueContractInteractKlass(openSTValueContractAddress)
-  , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass(openSTUtilityContractAddress)
+  , openSTUtilityContractInteract = new OpenSTUtilityContractInteractKlass(openSTUtilityContractAddress)
   // , stPrimeAddress        = coreAddresses.getAddressesForContract( "stPrime" )
   , stPrimeAddress                    = null
   , stPrime                           = new StPrimeKlass( stPrimeAddress )

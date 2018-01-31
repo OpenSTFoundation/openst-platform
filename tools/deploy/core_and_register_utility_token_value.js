@@ -31,7 +31,7 @@ const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , prompts = readline.createInterface(process.stdin, process.stdout)
   , OpenStValueContractInteract = require(rootPrefix + '/lib/contract_interact/openst_value')
-  , OpenStUtilityContractInteract = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , OpenSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , ValueRegistrarContractInteract = require(rootPrefix + '/lib/contract_interact/value_registrar')
   , populateEnvVars = require(rootPrefix + "/lib/populate_env_vars.js")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
@@ -161,7 +161,7 @@ const performer = async function (argv) {
 
   // Register Utility token on Value chain
   logger.step("Register Utility token for STPrime on Value Chain.");
-  const openStUtilityContractInteract = new OpenStUtilityContractInteract(openSTUtilityContractAddress);
+  const openStUtilityContractInteract = new OpenSTUtilityContractInteractKlass(openSTUtilityContractAddress);
 
   var symbolResult = await openStUtilityContractInteract.getSymbol();
   var nameResult = await openStUtilityContractInteract.getName();

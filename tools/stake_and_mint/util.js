@@ -36,7 +36,7 @@ const rootPrefix = '../..'
   , logger = require(rootPrefix+'/helpers/custom_console_logger')
   , simpleTokenContractInteract = require(rootPrefix+'/lib/contract_interact/simple_token')
   , openSTValueContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_value')
-  , openSTUtilityContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_utility')
+  , OpenSTUtilityContractInteractKlass = require(rootPrefix+'/lib/contract_interact/openst_utility')
 ;
 
 const VC = "ValueChain"
@@ -46,7 +46,7 @@ const VC = "ValueChain"
   , openSTValueContractAddress =  coreAddresses.getAddressForContract(openSTValueContractName)
   , openSTUtilityContractAddress =  coreAddresses.getAddressForContract(openSTUtilityContractName)
   , openSTValueContractInteract = new openSTValueContractInteractKlass()
-  , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass()
+  , openSTUtilityContractInteract = new OpenSTUtilityContractInteractKlass()
 ;
 
 /**

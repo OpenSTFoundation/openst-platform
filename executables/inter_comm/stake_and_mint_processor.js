@@ -31,7 +31,7 @@ const rootPrefix = '../..'
   , web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
   , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , OpenSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , BrandedTokenContractInteractKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
   , stPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
 ;
@@ -42,7 +42,7 @@ const openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility'
   , stPrime = new stPrimeKlass(stPrimeContractAddress)
   , eventQueueManager = new eventQueueManagerKlass()
   , openSTValueContractInteract = new openSTValueContractInteractKlass()
-  , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass()
+  , openSTUtilityContractInteract = new OpenSTUtilityContractInteractKlass()
 ;
 
 /**

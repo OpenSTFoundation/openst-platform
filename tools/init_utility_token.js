@@ -15,7 +15,7 @@ const fs = require('fs')
 const rootPrefix  = '..'
   , coreAddresses                       = require( rootPrefix + '/config/core_addresses')
   , coreConstants                       = require( rootPrefix + '/config/core_constants')
-  , openSTUtilityContractInteractKlass  = require( rootPrefix + '/lib/contract_interact/openst_utility')
+  , OpenSTUtilityContractInteractKlass  = require( rootPrefix + '/lib/contract_interact/openst_utility')
   , UtilityRegistrarContractInteract    = require( rootPrefix + '/lib/contract_interact/utility_registrar' )
   , ValueRegistrarContractInteract      = require( rootPrefix + '/lib/contract_interact/value_registrar' )
   , web3EventsFormatter                 = require( rootPrefix + '/lib/web3/events/formatter')
@@ -27,7 +27,7 @@ const rootPrefix  = '..'
 //All other const
 const contractName                    = 'openSTUtility'
   , currContractAddr                  = coreAddresses.getAddressForContract(contractName)
-  , openSTUtilityContractInteract     = new openSTUtilityContractInteractKlass( currContractAddr )
+  , openSTUtilityContractInteract     = new OpenSTUtilityContractInteractKlass( currContractAddr )
   , utilityRegistrarContractAddress   = coreAddresses.getAddressForContract("utilityRegistrar")
   , utilityRegistrarContractInteract  = new UtilityRegistrarContractInteract(utilityRegistrarContractAddress)
   , valueRegistrarContractAddress     = coreAddresses.getAddressForContract("valueRegistrar")

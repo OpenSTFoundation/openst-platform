@@ -9,14 +9,14 @@ const rootPrefix = '../..'
   , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , OpenSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   ;
 
 
 const openStUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility')
   , openStValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
-  , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass(openStUtilityContractAddr)
+  , openSTUtilityContractInteract = new OpenSTUtilityContractInteractKlass(openStUtilityContractAddr)
   , openSTValueContractInteract = new openSTValueContractInteractKlass(openStValueContractAddr)
 ;
 

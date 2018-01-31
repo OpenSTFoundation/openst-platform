@@ -10,7 +10,7 @@ const BigNumber = require('bignumber.js')
 const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
-  , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , OpenSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , coreConstants = require(rootPrefix + '/config/core_constants')
 ;
 
@@ -19,7 +19,7 @@ const openSTValueContractName = 'openSTValue'
   , openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName)
   , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
   , openSTValueContractInteract = new openSTValueContractInteractKlass(openSTValueContractAddress)
-  , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass(openSTUtilityContractAddress)
+  , openSTUtilityContractInteract = new OpenSTUtilityContractInteractKlass(openSTUtilityContractAddress)
 ;
 
 /**

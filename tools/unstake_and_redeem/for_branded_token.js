@@ -15,7 +15,7 @@ const rootPrefix = '../..'
   , Config = require( process.argv[2] || coreConstants.OST_MEMBER_CONFIG_FILE_PATH )
   , eventsFormatter = require(rootPrefix + '/lib/web3/events/formatter.js')
   , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
-  , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , OpenSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
 ;
 
 const openSTValueContractName = 'openSTValue'
@@ -26,7 +26,7 @@ const openSTValueContractName = 'openSTValue'
   , openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName)
   , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
   , openSTValueContractInteract = new openSTValueContractInteractKlass(openSTValueContractAddress)
-  , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass(openSTUtilityContractAddress)
+  , openSTUtilityContractInteract = new OpenSTUtilityContractInteractKlass(openSTUtilityContractAddress)
 ;
 
 var brandedToken          = null

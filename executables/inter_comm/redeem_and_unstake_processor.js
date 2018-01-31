@@ -29,14 +29,14 @@ const rootPrefix = '../..'
   , web3WsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
   , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , openSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , OpenSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
 ;
 
 const openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
   , openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
   , eventQueueManager = new eventQueueManagerKlass()
   , openSTValueContractInteract = new openSTValueContractInteractKlass()
-  , openSTUtilityContractInteract = new openSTUtilityContractInteractKlass()
+  , openSTUtilityContractInteract = new OpenSTUtilityContractInteractKlass()
 ;
 
 /**
