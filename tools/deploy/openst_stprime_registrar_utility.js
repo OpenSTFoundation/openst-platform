@@ -40,7 +40,7 @@ const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , prompts = readline.createInterface(process.stdin, process.stdout)
   , deployerAddress = coreAddresses.getAddressForUser(deployerName)
-  , UtilityRegistrarContractInteract = require(rootPrefix + '/lib/contract_interact/utility_registrar')
+  , UtilityRegistrarKlass = require(rootPrefix + '/lib/contract_interact/utility_registrar')
   , utilityRegistrarAddress = coreAddresses.getAddressForUser('utilityRegistrar')
   , foundationAddress = coreAddresses.getAddressForUser("foundation")
   , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
@@ -100,7 +100,7 @@ const performer = async function (argv) {
 
   // set ops address to UC registrar addr
   var registrarContractAddress = registrarContractDeployResult.contractAddress
-    , utilityRegistrarContractInteract = new UtilityRegistrarContractInteract(registrarContractAddress);
+    , utilityRegistrarContractInteract = new UtilityRegistrarKlass(registrarContractAddress);
 
   logger.win(contractName + " Contract deployed at " + registrarContractAddress);
 

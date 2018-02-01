@@ -33,7 +33,7 @@ const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , prompts = readline.createInterface(process.stdin, process.stdout)
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , ValueRegistrar = require(rootPrefix + "/lib/contract_interact/value_registrar")
+  , ValueRegistrarKlass = require(rootPrefix + "/lib/contract_interact/value_registrar")
   , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   , populateEnvVars = require(rootPrefix + "/lib/populate_env_vars.js");
 
@@ -145,7 +145,7 @@ const performer = async function (argv) {
 
   logger.step("Set ops address to value ops user address: " + valueOpsAddress);
 
-  const valueRegistrar = new ValueRegistrar(registrarContractAddr);
+  const valueRegistrar = new ValueRegistrarKlass(registrarContractAddr);
 
   var resultHelper = await valueRegistrar.setOpsAddress(deployerName, valueOpsAddress);
 

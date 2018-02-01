@@ -24,7 +24,7 @@ const rootPrefix = '../..'
   , eventQueueManagerKlass = require(rootPrefix + '/lib/web3/events/queue_manager')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
-  , valueRegistrarContractInteractKlass = require(rootPrefix + '/lib/contract_interact/value_registrar')
+  , ValueRegistrarKlass = require(rootPrefix + '/lib/contract_interact/value_registrar')
 ;
 
 const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
@@ -33,7 +33,7 @@ const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue
   , openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility')
   , valueRegistrarAddr = coreAddresses.getAddressForUser('valueRegistrar')
   , valueRegistrarPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar')
-  , valueRegistrarContractInteract = new valueRegistrarContractInteractKlass(valueRegistrarContractAddr)
+  , valueRegistrarContractInteract = new ValueRegistrarKlass(valueRegistrarContractAddr)
   , eventQueueManager = new eventQueueManagerKlass()
 ;
 

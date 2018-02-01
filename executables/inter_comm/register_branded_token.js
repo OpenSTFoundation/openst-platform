@@ -28,8 +28,8 @@ const rootPrefix = '../..'
   , eventQueueManagerKlass = require(rootPrefix + '/lib/web3/events/queue_manager')
   , web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
-  , valueRegistrarContractInteractKlass = require(rootPrefix + '/lib/contract_interact/value_registrar')
-  , utilityRegistrarContractInteractKlass = require(rootPrefix + '/lib/contract_interact/utility_registrar')
+  , ValueRegistrarKlass = require(rootPrefix + '/lib/contract_interact/value_registrar')
+  , UtilityRegistrarKlass = require(rootPrefix + '/lib/contract_interact/utility_registrar')
 ;
 
 const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
@@ -42,8 +42,8 @@ const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue
   , valueRegistrarAddr = coreAddresses.getAddressForUser('valueRegistrar')
   , valueRegistrarPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar')
   , utilityChainId = coreConstants.OST_UTILITY_CHAIN_ID
-  , valueRegistrarContractInteract = new valueRegistrarContractInteractKlass(valueRegistrarContractAddr)
-  , utilityRegistrarContractInteract = new utilityRegistrarContractInteractKlass(utilityRegistrarContractAddr)
+  , valueRegistrarContractInteract = new ValueRegistrarKlass(valueRegistrarContractAddr)
+  , utilityRegistrarContractInteract = new UtilityRegistrarKlass(utilityRegistrarContractAddr)
   , eventQueueManager = new eventQueueManagerKlass()
 ;
 

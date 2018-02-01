@@ -32,7 +32,7 @@ const rootPrefix = '../..'
   , prompts = readline.createInterface(process.stdin, process.stdout)
   , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
-  , ValueRegistrarContractInteract = require(rootPrefix + '/lib/contract_interact/value_registrar')
+  , ValueRegistrarKlass = require(rootPrefix + '/lib/contract_interact/value_registrar')
   , populateEnvVars = require(rootPrefix + "/lib/populate_env_vars.js")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , valueRegistrarContractAddress = coreAddresses.getAddressForContract("valueRegistrar")
@@ -151,7 +151,7 @@ const performer = async function (argv) {
   logger.step("Add Value Core contract on Value Chain.");
   const openStValueContractInteract = new OpenSTValueKlass(openSTValueContractAddress);
 
-  const valueRegistrarContractInteract = new ValueRegistrarContractInteract(valueRegistrarContractAddress);
+  const valueRegistrarContractInteract = new ValueRegistrarKlass(valueRegistrarContractAddress);
 
   var addCoreResponse = await valueRegistrarContractInteract.addCore(valueOpsName,
     openSTValueContractAddress, coreContractAddress);
