@@ -44,7 +44,7 @@ const rootPrefix = '../..'
   , utilityRegistrarAddress = coreAddresses.getAddressForUser('utilityRegistrar')
   , foundationAddress = coreAddresses.getAddressForUser("foundation")
   , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
-  , StPrimeContractInteract = require(rootPrefix + '/lib/contract_interact/st_prime')
+  , StPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , populateEnvVars = require(rootPrefix + "/lib/populate_env_vars.js");
 
@@ -213,8 +213,8 @@ const performer = async function (argv) {
   }
 
   logger.info("Transfering all ST Prime Base Tokens to STPrime Contract Address: " + simpleTokenPrimeContractAddress);
-  var stPrimeUtilityContractInteract = new StPrimeContractInteract(simpleTokenPrimeContractAddress);
-  var stPrimeTransferResponse = await stPrimeUtilityContractInteract.initialize_transfer(deployerName, deploymentOptions);
+  var stPrimeUtilityContractInteract = new StPrimeKlass(simpleTokenPrimeContractAddress);
+  var stPrimeTransferResponse = await stPrimeUtilityContractInteract.initializeTransfer(deployerName, deploymentOptions);
   logger.win("Transferred all ST Prime Base Tokens to STPrime Contract Address: " + simpleTokenPrimeContractAddress);
 
   logger.info("Checking balance of simpleTokenPrimeContractAddress: " + simpleTokenPrimeContractAddress);

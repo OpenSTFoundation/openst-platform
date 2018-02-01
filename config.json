@@ -9,7 +9,7 @@
     },
     "Members": [
         {
-            "Reserve": "0x285d3091a4028c626d893c43bca8ad027f746d70",
+            "Reserve": "0x09cc8fa9e9e37c44b7c004679aaec95356649cdf",
             "Symbol": "ACME",
             "Route": "/acme",
             "ApiAuth": {

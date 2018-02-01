@@ -33,13 +33,13 @@ const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
-  , stPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
+  , StPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
 ;
 
 const openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility')
   , openSTUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility')
   , stPrimeContractAddress = coreAddresses.getAddressForContract("stPrime")
-  , stPrime = new stPrimeKlass(stPrimeContractAddress)
+  , stPrime = new StPrimeKlass(stPrimeContractAddress)
   , eventQueueManager = new eventQueueManagerKlass()
   , openSTValueContractInteract = new OpenSTValueKlass()
   , openSTUtilityContractInteract = new OpenStUtilityKlass()

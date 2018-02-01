@@ -10,7 +10,7 @@ const BigNumber = require('bignumber.js')
 const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , simpleTokenContractInteract = require(rootPrefix + '/lib/contract_interact/simple_token')
+  , SimpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
 ;
 
 const openSTValueContractName = 'openSTValue'
@@ -26,7 +26,7 @@ const openSTValueContractName = 'openSTValue'
  */
 const getSTBalance = function (address) {
   logger.step("Getting ST Balance of Staker account: ", address);
-  return simpleTokenContractInteract.balanceOf(address)
+  return SimpleToken.balanceOf(address)
     .then(function (result) {
       const stBalance = result.data['balance'];
 
@@ -46,7 +46,7 @@ const getSTBalance = function (address) {
  * @return {Promise}
  */
 const approve = function (stakerAddress, passphrase, toApproveAmount) {
-  return simpleTokenContractInteract.approve(
+  return SimpleToken.approve(
     stakerAddress,
     passphrase,
     openSTValueContractAddress,
@@ -56,7 +56,6 @@ const approve = function (stakerAddress, passphrase, toApproveAmount) {
 };
 
 const approveOpenStValueContract = function () {
-
   const stakerAddress = coreAddresses.getAddressForUser('staker')
     , stakerPassphrase = coreAddresses.getPassphraseForUser('staker');
 
@@ -68,7 +67,6 @@ const approveOpenStValueContract = function () {
         bigSTBalance
       );
     })
-
 };
 
 module.exports = approveOpenStValueContract;
