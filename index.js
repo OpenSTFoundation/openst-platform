@@ -6,7 +6,7 @@
 
 const rootPrefix = "."
   , version = require(rootPrefix + '/package.json').version
-  , BrandedTokenContractInteractKlass = require(rootPrefix + "/lib/contract_interact/branded_token")
+  , BrandedTokenKlass = require(rootPrefix + "/lib/contract_interact/branded_token")
   , transactionLogger = require(rootPrefix + "/helpers/transactionLogger")
   , address = require(rootPrefix + '/services/address')
   , getTransactionReceipt = require(rootPrefix + '/services/transaction/getTransactionReceipt')
@@ -27,7 +27,7 @@ const OpenSTPlatform = function () {
   oThis.version = version;
 
   oThis.contracts = {};
-  oThis.contracts.brandedToken = BrandedTokenContractInteractKlass;
+  oThis.contracts.brandedToken = BrandedTokenKlass;
 
   oThis.services = {
     address: address,

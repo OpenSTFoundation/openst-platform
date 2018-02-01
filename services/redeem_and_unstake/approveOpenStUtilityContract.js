@@ -10,7 +10,7 @@ const BigNumber = require('bignumber.js')
 const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , BrandedTokenContractInteractKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
+  , BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
 ;
 
 const openSTUtilityContractName = 'openSTUtility'
@@ -82,7 +82,7 @@ const approve = function (brandedToken, redeemerAddress, redeemerPassphrase, toA
  */
 const approveOpenStUtilityContract = function (erc20Address) {
 
-  const brandedToken = new BrandedTokenContractInteractKlass({ERC20: erc20Address})
+  const brandedToken = new BrandedTokenKlass({ERC20: erc20Address})
     , redeemerAddress = coreAddresses.getAddressForUser('redeemer')
     , redeemerPassphrase = coreAddresses.getPassphraseForUser('redeemer');
 

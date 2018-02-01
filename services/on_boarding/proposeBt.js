@@ -6,13 +6,13 @@
 
 const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , OpenSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , senderName = 'staker'
 ;
 
 const contractName = 'openSTUtility'
   , currContractAddr = coreAddresses.getAddressForContract(contractName)
-  , openSTUtilityContractInteract = new OpenSTUtilityContractInteractKlass(currContractAddr)
+  , openSTUtilityContractInteract = new OpenStUtilityKlass(currContractAddr)
 ;
 
 const proposeBt = function (symbol, name, conversionRate) {

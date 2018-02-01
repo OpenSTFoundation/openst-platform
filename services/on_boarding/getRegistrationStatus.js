@@ -9,15 +9,15 @@ const rootPrefix = '../..'
   , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , OpenSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
-  , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
+  , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   ;
 
 
 const openStUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility')
   , openStValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
-  , openSTUtilityContractInteract = new OpenSTUtilityContractInteractKlass(openStUtilityContractAddr)
-  , openSTValueContractInteract = new openSTValueContractInteractKlass(openStValueContractAddr)
+  , openSTUtilityContractInteract = new OpenStUtilityKlass(openStUtilityContractAddr)
+  , openSTValueContractInteract = new OpenSTValueKlass(openStValueContractAddr)
 ;
 
 const RegistrationStatus = function() {

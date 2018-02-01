@@ -9,10 +9,10 @@ const BigNumber = require('bignumber.js')
 
 const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
+  , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
 ;
 
-const openSTValueContractInteract = new openSTValueContractInteractKlass()
+const openSTValueContractInteract = new OpenSTValueKlass()
 ;
 
 const startStake = function (beneficiary, toStakeAmount, uuid) {

@@ -27,16 +27,16 @@ const rootPrefix = '../..'
   , eventQueueManagerKlass = require(rootPrefix + '/lib/web3/events/queue_manager')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , web3WsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
-  , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
+  , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , OpenSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
 ;
 
 const openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
   , openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
   , eventQueueManager = new eventQueueManagerKlass()
-  , openSTValueContractInteract = new openSTValueContractInteractKlass()
-  , openSTUtilityContractInteract = new OpenSTUtilityContractInteractKlass()
+  , openSTValueContractInteract = new OpenSTValueKlass()
+  , openSTUtilityContractInteract = new OpenStUtilityKlass()
 ;
 
 /**

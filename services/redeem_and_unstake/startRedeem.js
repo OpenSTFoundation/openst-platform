@@ -9,8 +9,8 @@ const BigNumber = require('bignumber.js')
 
 const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
-  , OpenSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
+  , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , coreConstants = require(rootPrefix + '/config/core_constants')
 ;
 
@@ -18,8 +18,8 @@ const openSTValueContractName = 'openSTValue'
   , openSTUtilityContractName = 'openSTUtility'
   , openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName)
   , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
-  , openSTValueContractInteract = new openSTValueContractInteractKlass(openSTValueContractAddress)
-  , openSTUtilityContractInteract = new OpenSTUtilityContractInteractKlass(openSTUtilityContractAddress)
+  , openSTValueContractInteract = new OpenSTValueKlass(openSTValueContractAddress)
+  , openSTUtilityContractInteract = new OpenStUtilityKlass(openSTUtilityContractAddress)
 ;
 
 /**
@@ -27,11 +27,11 @@ const openSTValueContractName = 'openSTValue'
  *
  * @param {string} redeemerAddress - redeemer address
  *
- * @return {promise<number>}
+ * @return {promise<result>}
  *
  */
 const getNonceForRedeeming = function (redeemerAddress) {
-  return openSTValueContractInteract.getNextNonce(redeemerAddress)
+  return openSTValueContractInteract.getNextNonce(redeemerAddress);
 };
 
 /**
@@ -55,7 +55,7 @@ String.prototype.equalsIgnoreCase = function (compareWith) {
  * @param {number} toRedeemAmount - to redeem amount
  * @param {string} uuid - uuid of the branded token / st prime
  *
- * @return {promise<number>}
+ * @return {promise}
  *
  */
 const startRedeem = async function (beneficiary, toRedeemAmount, uuid) {
@@ -65,9 +65,11 @@ const startRedeem = async function (beneficiary, toRedeemAmount, uuid) {
   const redeemerAddress = coreAddresses.getAddressForUser('redeemer')
     , redeemerPassphrase = coreAddresses.getPassphraseForUser('redeemer');
 
-  const redeemerNonce = await getNonceForRedeeming(redeemerAddress);
-
-
+  const redeemerNonceResponse = await getNonceForRedeeming(redeemerAddress);
+  if (redeemerNonceResponse.isFailure()) {
+    throw "Get next nounce failed";
+  }
+  const redeemerNonce = redeemerNonceResponse.data.nextNounce;
 
   if (uuid.equalsIgnoreCase(coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID)) {
     return openSTUtilityContractInteract.redeemSTPrime(

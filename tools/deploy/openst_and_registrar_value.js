@@ -34,7 +34,7 @@ const rootPrefix = '../..'
   , prompts = readline.createInterface(process.stdin, process.stdout)
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , ValueRegistrar = require(rootPrefix + "/lib/contract_interact/value_registrar")
-  , OpenstValueContract = require(rootPrefix + '/lib/contract_interact/openst_value')
+  , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   , populateEnvVars = require(rootPrefix + "/lib/populate_env_vars.js");
 
 // Different addresses used for deployment
@@ -189,7 +189,7 @@ const performer = async function (argv) {
 
   logger.step("Transfering Ownership to STF");
 
-  var openstValueContract = new OpenstValueContract(openstValueContractAddress);
+  var openstValueContract = new OpenSTValueKlass(openstValueContractAddress);
 
   var contractDeployResponse = await openstValueContract.initiateOwnerShipTransfer(
     deployerName,

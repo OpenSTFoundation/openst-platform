@@ -43,7 +43,7 @@ const rootPrefix = '../..'
   , UtilityRegistrarContractInteract = require(rootPrefix + '/lib/contract_interact/utility_registrar')
   , utilityRegistrarAddress = coreAddresses.getAddressForUser('utilityRegistrar')
   , foundationAddress = coreAddresses.getAddressForUser("foundation")
-  , OpenSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , StPrimeContractInteract = require(rootPrefix + '/lib/contract_interact/st_prime')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , populateEnvVars = require(rootPrefix + "/lib/populate_env_vars.js");
@@ -159,7 +159,7 @@ const performer = async function (argv) {
   logger.log(utiltiyContractDeployResponse);
 
   var openSTUtilityContractAddress = utiltiyContractDeployResponse.contractAddress
-    , openStUtilityContractInteract = new OpenSTUtilityContractInteractKlass(openSTUtilityContractAddress);
+    , openStUtilityContractInteract = new OpenStUtilityKlass(openSTUtilityContractAddress);
 
   logger.win(contractName + " Contract deployed at " + openSTUtilityContractAddress);
 

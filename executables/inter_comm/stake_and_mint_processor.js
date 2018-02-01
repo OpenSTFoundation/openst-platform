@@ -29,10 +29,10 @@ const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
-  , openSTValueContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
+  , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , OpenSTUtilityContractInteractKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
-  , BrandedTokenContractInteractKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
+  , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
   , stPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
 ;
 
@@ -41,8 +41,8 @@ const openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility'
   , stPrimeContractAddress = coreAddresses.getAddressForContract("stPrime")
   , stPrime = new stPrimeKlass(stPrimeContractAddress)
   , eventQueueManager = new eventQueueManagerKlass()
-  , openSTValueContractInteract = new openSTValueContractInteractKlass()
-  , openSTUtilityContractInteract = new OpenSTUtilityContractInteractKlass()
+  , openSTValueContractInteract = new OpenSTValueKlass()
+  , openSTUtilityContractInteract = new OpenStUtilityKlass()
 ;
 
 /**
@@ -195,7 +195,7 @@ StakeAndMintProcessorInterComm.prototype = {
 
       var registeredOnUCResult = await openSTUtilityContractInteract.registeredTokenProperty(uuid);
 
-      utilityTokenInterfaceContract = new BrandedTokenContractInteractKlass({
+      utilityTokenInterfaceContract = new BrandedTokenKlass({
         ERC20: registeredOnUCResult.data.erc20Address
       });
     }
