@@ -27,7 +27,8 @@ FileManagerKlass.prototype = {
    * @param {string} relativePath - relative file/folder path
    */
   rm: function(relativePath) {
-    return setupHelper.handleShellResponse(shell.exec('rm -rf ' + setupHelper.testFolderAbsolutePath() + relativePath));
+    const folder = setupHelper.testFolderAbsolutePath() + '/' + relativePath;
+    return setupHelper.handleShellResponse(shell.exec('rm -rf ' + folder));
   },
 
   /**
@@ -36,7 +37,8 @@ FileManagerKlass.prototype = {
    * @param {string} relativePath - relative folder path
    */
   mkdir: function(relativePath) {
-    return setupHelper.handleShellResponse(shell.exec('mkdir ' + setupHelper.testFolderAbsolutePath() + relativePath));
+    const folder = setupHelper.testFolderAbsolutePath() + '/' + relativePath;
+    return setupHelper.handleShellResponse(shell.exec('mkdir ' + folder));
   },
 
   /**
@@ -46,8 +48,9 @@ FileManagerKlass.prototype = {
    * @param {string} fileContent - optional file content
    */
   touch: function(relativePath, fileContent) {
+    const file = setupHelper.testFolderAbsolutePath() + '/' + relativePath;
     fileContent = fileContent || '';
-    return setupHelper.handleShellResponse(shell.exec('echo "' + fileContent + '" > ' + setupHelper.testFolderAbsolutePath() + relativePath));
+    return setupHelper.handleShellResponse(shell.exec('echo "' + fileContent + '" > ' + file));
   },
 
   /**
@@ -58,9 +61,8 @@ FileManagerKlass.prototype = {
    * @param {string} fileName - file name
    */
   cp: function(fromFolder, toFolder, fileName) {
-    const src = setupHelper.testFolderAbsolutePath() + fromFolder + '/' + fileName
-      , dest = setupHelper.testFolderAbsolutePath() + toFolder + '/';
-    console.log('cp -r ' + src + ' ' + dest);
+    const src = setupHelper.testFolderAbsolutePath() + '/' + fromFolder + '/' + fileName
+      , dest = setupHelper.testFolderAbsolutePath() + '/' + toFolder + '/';
     return setupHelper.handleShellResponse(shell.exec('cp -r ' + src + ' ' + dest));
   },
 
@@ -71,19 +73,8 @@ FileManagerKlass.prototype = {
    */
   exec: function(command) {
     return setupHelper.handleShellResponse(shell.exec(command));
-  },
+  }
 
-  /**
-   * Modify utility genesis file before geth init
-   *
-   * @param {string} command - raw command
-   */
-  modifyUtilityGenesis: function(command) {
-    return setupHelper.handleShellResponse(shell.exec(command));
-  },
 };
 
 module.exports = new FileManagerKlass();
-
-
-

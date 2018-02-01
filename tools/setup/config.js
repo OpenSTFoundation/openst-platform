@@ -10,9 +10,10 @@ const setupConfig = {
     // Value Chain
     value: {
       folder_name: "openst-geth-value",
+      alloc_balance_to_addr: 'foundation',
       chain_id: {
         evn_var: 'OST_VALUE_CHAIN_ID',
-        value: '2001'
+        value: 2001
       },
       gas_price: {
         evn_var: 'OST_VALUE_GAS_PRICE',
@@ -25,15 +26,16 @@ const setupConfig = {
       rpc_provider: {
         evn_var: 'OST_GETH_VALUE_RPC_PROVIDER',
         value: 'http://localhost:8545'
-      },
+      }
     },
 
     // Utility Chain
     utility: {
       folder_name: "openst-geth-utility",
+      alloc_balance_to_addr: 'utilityDeployer',
       chain_id: {
         evn_var: 'OST_UTILITY_CHAIN_ID',
-        value: '2000'
+        value: 2000
       },
       gas_price: {
         evn_var: 'OST_UTILITY_GAS_PRICE',
@@ -46,7 +48,7 @@ const setupConfig = {
       rpc_provider: {
         evn_var: 'OST_GETH_UTILITY_RPC_PROVIDER',
         value: 'http://localhost:9546'
-      },
+      }
     }
   },
 
@@ -63,13 +65,10 @@ const setupConfig = {
         passphrase: "OST_FOUNDATION_PASSPHRASE"
       },
       chains: {
-        utility: {
-          fund: ''
-        },
         value: {
           fund: ''
         }
-      },
+      }
     },
 
     // utility chain owner
@@ -86,7 +85,7 @@ const setupConfig = {
         value: {
           fund: ''
         }
-      },
+      }
     },
 
     // Staker address
@@ -103,7 +102,7 @@ const setupConfig = {
         value: {
           fund: ''
         }
-      },
+      }
     },
 
     // Redeemer address
@@ -120,7 +119,7 @@ const setupConfig = {
         value: {
           fund: ''
         }
-      },
+      }
     },
 
     // Value registrar address
@@ -134,7 +133,7 @@ const setupConfig = {
         value: {
           fund: ''
         }
-      },
+      }
     },
 
     // Utility registrar address
@@ -148,7 +147,7 @@ const setupConfig = {
         utility: {
           fund: ''
         }
-      },
+      }
     },
 
     // Value Deployer Address
@@ -162,7 +161,7 @@ const setupConfig = {
         value: {
           fund: ''
         }
-      },
+      }
     },
 
     // Utility Deployer Address
@@ -176,7 +175,7 @@ const setupConfig = {
         utility: {
           fund: ''
         }
-      },
+      }
     },
 
     // Value Ops Address
@@ -190,7 +189,7 @@ const setupConfig = {
         value: {
           fund: ''
         }
-      },
+      }
     },
 
   }

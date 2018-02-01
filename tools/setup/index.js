@@ -7,27 +7,43 @@ const rootPrefix = "../.."
   , setupConfig = require(rootPrefix + '/tools/setup/config')
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
   , gethManager = require(rootPrefix + '/tools/setup/geth_manager')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
+;
+
+const args = process.argv
+  , environment = args[2]
+  , environments = ['development', 'test']
 ;
 
 const performer = async function () {
 
-  // Remove test folder
-  fileManager.rm('');
-
-  // Create test folder
-  fileManager.mkdir('');
+  // Cleanup old step
+  logger.step("** Starting fresh setup by cleaning up old step");
+  gethManager.freshSetup();
 
   // generate all required addresses
-  const nameToAddrMap = gethManager.generateConfigAddresses();
+  logger.step("** Generate all required account keystore files at temp location");
+  gethManager.generateConfigAddresses();
 
-  // create genesis files
+  // Modify genesis files and init chains
+  for (var chain in setupConfig.chains) {
+    logger.step("** Initiating " + chain +" chain and generating/modifying genesis files");
+    gethManager.initChain(chain);
+  }
 
-  // init geth
+  // Copy addresses to required chains
+  logger.step("** Copying keystore files from temp location to required chains");
+  gethManager.copyKeystoreToChains();
 
-  // copy keystore file
-
-  // delete temp geth
+  // Cleanup build files
+  logger.step("** Cleaning temporary build files");
+  gethManager.buildCleanup();
 
 };
 
-performer();
+if (!environments.includes(environment)) {
+  logger.error("** Usages: node tools/setup/index.js <environment>");
+  logger.info("** Note: For scalibity reasons, step tools should only be used in " + environments.join(' and ') +' environments.');
+} else {
+  performer();
+}

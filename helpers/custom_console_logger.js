@@ -4,21 +4,21 @@
  * Custom Console log methods. Apply different colors for different log levels/severity.
  *
  */
-//
-// const CONSOLE_RESET = "\x1b[0m";
-// const ERR_PRE = "\x1b[31m"; //Error. (RED)
-// const INFO_PRE = "\x1b[33m  "; //Info (YELLOW)
-// const WIN_PRE = "\x1b[32m"; //Success (GREEN)
-// const WARN_PRE = "\x1b[43m";
-// const STEP_PRE = "\n\x1b[34m"; //Step Description (BLUE)
+
+const CONSOLE_RESET = "\x1b[0m";
+const ERR_PRE = "\x1b[31m"; //Error. (RED)
+const INFO_PRE = "\x1b[33m  "; //Info (YELLOW)
+const WIN_PRE = "\x1b[32m"; //Success (GREEN)
+const WARN_PRE = "\x1b[43m";
+const STEP_PRE = "\n\x1b[34m"; //Step Description (BLUE)
 
 
-const CONSOLE_RESET = "";
-const ERR_PRE = "";
-const INFO_PRE = "";
-const WIN_PRE = "";
-const WARN_PRE = "";
-const STEP_PRE = "";
+// const CONSOLE_RESET = "";
+// const ERR_PRE = "";
+// const INFO_PRE = "";
+// const WIN_PRE = "";
+// const WARN_PRE = "";
+// const STEP_PRE = "";
 
 // Get common local storage namespace to read
 // request identifiers for debugging and logging
