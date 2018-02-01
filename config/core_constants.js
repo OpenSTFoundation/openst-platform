@@ -56,7 +56,7 @@ coreConstants.prototype = {
    * @constant {number}
    *
    */
-  OST_UTILITY_STPRIME_TOTAL_SUPPLY: process.env.OST_UTILITY_STPRIME_TOTAL_SUPPLY,
+  OST_UTILITY_STPRIME_TOTAL_SUPPLY: 800000000,
 
   /**
    * ST' UUID on utility chain.<br><br>
@@ -137,14 +137,6 @@ coreConstants.prototype = {
    *
    */
   OST_MEMBER_CONFIG_FILE_PATH: process.env.OST_MEMBER_CONFIG_FILE_PATH,
-
-  /**
-   * Folder path of the transfer logs
-   *
-   * @constant {string}
-   *
-   */
-  OST_TRANSACTION_LOGS_FOLDER: absolutePath(process.env.OST_TRANSACTION_LOGS_FOLDER),
 
   /**
    * ALLOWED VALUES => NONE/REDIS/MEMCACHED

@@ -53,5 +53,5 @@ package-lock.json
 
 test/poa-genesis-utility.json
 test/poa-genesis-value.json
-test/open_st_env_vars.sh
+test/set_env_vars.sh
 config.json

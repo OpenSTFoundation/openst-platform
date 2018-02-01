@@ -364,7 +364,7 @@ function updateEnvVars() {
       process.exit(1);
     })
     .catch( reason =>  {
-      logError("Failed to populate open_st_env_vars.sh file!");
+      logError("Failed to populate set_env_vars.sh file!");
       catchAndExit( reason );
     });
 

@@ -11,7 +11,7 @@ echo "...Done Init"
 
 echo "Generate new addresses..."
 
-source ./open_st_env_vars.sh
+source ./set_env_vars.sh
 
 echo $OST_FOUNDATION_PASSPHRASE > ./pw
 #Foundation Address

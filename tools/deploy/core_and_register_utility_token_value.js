@@ -74,7 +74,7 @@ function updateConfig(valueCoreContractAddr) {
       logger.win("open_st_env_vars updated.");
     })
     .catch(function (reason) {
-      logger.error("Failed to populate open_st_env_vars.sh file!");
+      logger.error("Failed to populate set_env_vars.sh file!");
       logger.error(reason);
       process.exit(1);
     });

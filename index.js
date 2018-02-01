@@ -1,13 +1,12 @@
+"use strict";
+
 /**
  * Index File of openst-platform node module
  */
 
-"use strict";
-
 const rootPrefix = "."
   , version = require(rootPrefix + '/package.json').version
   , BrandedTokenKlass = require(rootPrefix + "/lib/contract_interact/branded_token")
-  , transactionLogger = require(rootPrefix + "/helpers/transactionLogger")
   , address = require(rootPrefix + '/services/address')
   , getTransactionReceipt = require(rootPrefix + '/services/transaction/getTransactionReceipt')
   , transferBt = require(rootPrefix + '/services/transaction/transferBt')
@@ -50,9 +49,6 @@ const OpenSTPlatform = function () {
       start: startRedeem
     }
   };
-
-  oThis.helpers = {};
-  oThis.helpers.transactionLogger = transactionLogger;
 };
 
 module.exports = new OpenSTPlatform();
