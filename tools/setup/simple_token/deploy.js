@@ -77,4 +77,5 @@ DeploySimpleTokenContractKlass.prototype = {
 
 };
 
-module.exports = new DeploySimpleTokenContractKlass();
+const deploySimpleTokenContract = new DeploySimpleTokenContractKlass();
+deploySimpleTokenContract.perform();

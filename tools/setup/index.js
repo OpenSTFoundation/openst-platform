@@ -49,7 +49,7 @@ const performer = async function () {
   gethManager.buildCleanup();
 
   // Exit
-  process.exit(1);
+  // process.exit(1);
 
 };
 
