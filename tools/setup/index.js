@@ -18,6 +18,10 @@ const args = process.argv
 
 const performer = async function () {
 
+  // Stop running services
+  logger.step("** Stop openST services");
+  serviceManager.stopServices();
+
   // Cleanup old step
   logger.step("** Starting fresh setup by cleaning up old step");
   fileManager.freshSetup();
@@ -43,6 +47,9 @@ const performer = async function () {
   // Cleanup build files
   logger.step("** Cleaning temporary build files");
   gethManager.buildCleanup();
+
+  // Exit
+  process.exit(1);
 
 };
 

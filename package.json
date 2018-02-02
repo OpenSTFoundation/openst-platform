@@ -35,6 +35,7 @@
     "@openstfoundation/openst-cache": "^0.9.3",
     "abi-decoder": "1.0.9",
     "bignumber.js": "4.1.0",
+    "child_process": "^1.0.2",
     "continuation-local-storage": "^3.2.1",
     "debug": "2.2.0",
     "memcached": "^2.2.2",
@@ -51,6 +52,7 @@
     "ink-docstrap": "^1.3.2",
     "jsdoc": "~3.5.5",
     "mustache": "2.3.0",
+    "node-cmd": "^3.0.0",
     "shelljs": "^0.8.1"
   }
 }

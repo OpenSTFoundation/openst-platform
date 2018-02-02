@@ -6,6 +6,7 @@
  */
 
 const shell = require('shelljs')
+  , shellAsyncCmd = require('node-cmd')
 ;
 
 const rootPrefix = "../.."
@@ -14,6 +15,7 @@ const rootPrefix = "../.."
   , gethManager = require(rootPrefix + '/tools/setup/geth_manager')
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
   , coreConstants = require(rootPrefix + '/config/core_constants')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
 /**
@@ -47,9 +49,7 @@ ServiceManagerKlass.prototype = {
     const oThis = this;
 
     // Stop geth nodes
-    for (var chain in setupConfig.chains) {
-      oThis.startGeth(chain);
-    }
+    oThis.stopGeth();
 
     // Stop intercom processes
   },
@@ -66,7 +66,7 @@ ServiceManagerKlass.prototype = {
       , chainPort = chainDetails['port'].value
       , zeroGas = coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT
       , gasLimit = {utility: coreConstants.OST_UTILITY_GAS_LIMIT, value: coreConstants.OST_VALUE_GAS_LIMIT}
-      , gasPrice = {utility: (purpose === 'deployment') ? zeroGas : coreConstants.OST_UTILITY_GAS_PRICE, value: coreConstants.OST_VALUE_GAS_PRICE}
+      , gasPrice = (purpose === 'deployment' && chain == 'utility') ? zeroGas : chainDetails.gas_price.value
       , chainFolder = gethManager.getChainDataFolder(chain)
       , chainDataDir = gethManager.getChainAbsoluteDataDir(chain)
       , sealerAddr = setupConfig.addresses['sealer'].address.value
@@ -81,30 +81,27 @@ ServiceManagerKlass.prototype = {
 
     // creating password file in a temp location
     fileManager.touch(chainFolder + '/sealer-passphrase', sealerPassword);
+    fileManager.touch(chainFolder + "/" + chain + "chain-output.log");
 
-    const cmd = "nohup geth --networkid " + networkId + " --datadir " + chainDataDir + " --port " + chainPort +
+    const cmd = "geth --networkid " + networkId + " --datadir " + chainDataDir + " --port " + chainPort +
       " --rpc --rpcapi eth,net,web3,personal --rpcport " + rpcPort + " --rpcaddr " + rpcHost + " --ws" +
       " --wsport " + wsPort + " --wsorigins \"*\" --wsaddr " + wsHost +
-      " --mine --targetgaslimit " + gasLimit[chain] + "  --gasprice \"" + gasPrice[chain] + "\" --unlock " +
-      sealerAddr + " --password "+ chainDataDir +"/sealer-passphrase  >> " + chainDataDir + "/" + chain + "chain-output.log &";
+      " --mine --targetgaslimit " + gasLimit[chain] + "  --gasprice \"" + gasPrice + "\" --unlock " +
+      sealerAddr + " --password "+ chainDataDir +"/sealer-passphrase  >> " + chainDataDir + "/" + chain + "chain-output.log";
 
-    oThis._exec(cmd);
+    logger.step("** Starting " + chain + " chain geth node");
+    logger.info(cmd);
+    shellAsyncCmd.run(cmd);
   },
 
   /**
    * Start Geth node
    */
-  stopGeth: function(chain) {
+  stopGeth: function() {
+    logger.step("** Stopping all geth nodes");
+    const cmd = "killall geth";
+    shellAsyncCmd.run(cmd);
   },
-
-  /**
-   * Execute any shell command command
-   *
-   * @param {string} command - raw command
-   */
-  _exec: function(command) {
-    return shell.exec(command, {async: true});
-  }
 
 };
 
