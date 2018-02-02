@@ -17,8 +17,7 @@ const rootPrefix = "../.."
   , coreConstants = require(rootPrefix + '/config/core_constants')
 ;
 
-const nameToAddrMap = {}
-  , tempGethFolder = 'tmp-geth'
+const tempGethFolder = 'tmp-geth'
   , keystoreFolder = 'keystore'
   , tempPasswordFile = 'tmp_password_file'
   , allocBalancesOn = {utility: coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY, value: '1000000'}
@@ -36,18 +35,6 @@ const GethManagerKlass = function () {};
 
 GethManagerKlass.prototype = {
 
-  /**
-   * Do the old setup clean up
-   */
-  freshSetup: function() {
-    const oThis = this;
-
-    // Remove old test folder
-    fileManager.rm('');
-
-    // Create new test folder
-    fileManager.mkdir('');
-  },
 
   /**
    * Do the build clean up
@@ -60,9 +47,26 @@ GethManagerKlass.prototype = {
   },
 
   /**
-   * Generate all required addresses in temp geth data dir
+   * Get chain data dir absolute path
    *
-   * @return {object} - name to address map
+   * @return {string}
+   */
+  getChainAbsoluteDataDir: function(chain) {
+    const oThis = this;
+    return setupHelper.testFolderAbsolutePath() + '/' + oThis.getChainDataFolder(chain);
+  },
+
+  /**
+   * Get chain data folder name
+   *
+   * @return {string}
+   */
+  getChainDataFolder: function(chain) {
+    return setupConfig.chains[chain].folder_name;
+  },
+
+  /**
+   * Generate all required addresses in temp geth data dir
    */
   generateConfigAddresses: function() {
     const oThis = this;
@@ -73,10 +77,9 @@ GethManagerKlass.prototype = {
     // create all required addresses in tmp geth data dir
     for (var name in setupConfig.addresses) {
       var nameDetails = setupConfig.addresses[name];
-      nameToAddrMap[name] = oThis._generateAddress(tempGethFolder, nameDetails.passphrase);
+      nameDetails.address.value = oThis._generateAddress(tempGethFolder, nameDetails.passphrase.value);
     }
 
-    return nameToAddrMap;
   },
 
   /**
@@ -86,8 +89,8 @@ GethManagerKlass.prototype = {
    */
   initChain: function(chain) {
     const oThis = this
-      , chainFolder = setupConfig.chains[chain].folder_name
-      , chainDataDir = setupHelper.testFolderAbsolutePath() + '/' + chainFolder
+      , chainFolder = oThis.getChainDataFolder(chain)
+      , chainDataDir = oThis.getChainAbsoluteDataDir(chain)
       , chainGenesisTemplateLocation = genesisTemplateLocation + '/genesis-'+chain+'.json'
       , chainGenesisLocation = chainDataDir + '/genesis-'+chain+'.json'
     ;
@@ -114,20 +117,18 @@ GethManagerKlass.prototype = {
     const oThis = this;
 
     // copy all keystore files from temp location to required location
-    for (var name in nameToAddrMap) {
+    for (var name in setupConfig.addresses) {
       var nameDetails = setupConfig.addresses[name]
-        , keystoreFileNameLike = nameToAddrMap[name].replace(hexStartsWith, '*')
+        , keystoreFileNameLike = nameDetails.address.value.replace(hexStartsWith, '*')
       ;
       for (var chain in nameDetails.chains) {
-        var chainFolder = setupConfig.chains[chain].folder_name
+        var chainFolder = oThis.getChainDataFolder(chain)
           , fromFolder = tempGethFolder + '/' + keystoreFolder
           , toFolder = chainFolder + '/' + keystoreFolder
         ;
         fileManager.cp(fromFolder, toFolder, keystoreFileNameLike);
       }
     }
-
-    return nameToAddrMap;
   },
 
   /**
@@ -141,9 +142,12 @@ GethManagerKlass.prototype = {
    */
   _modifyGenesisFile: function(chain, chainGenesisLocation) {
     const chainId = setupConfig.chains[chain].chain_id.value
-      , allocAmountToAddress = nameToAddrMap[setupConfig.chains[chain].alloc_balance_to_addr]
+      , allocBalanceToAddrName = setupConfig.chains[chain].alloc_balance_to_addr
+      , allocAmountToAddress = setupConfig.addresses[allocBalanceToAddrName].address.value
       , allocAmount = hexStartsWith + allocBalancesOn[chain].toString(16)
       , gasLimit = hexStartsWith + gasLimitOn[chain].toString(16)
+      , sealerAddress = setupConfig.addresses['sealer'].address.value
+      , extraData = "0x0000000000000000000000000000000000000000000000000000000000000000" + sealerAddress.replace(hexStartsWith, '') + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
     ;
 
     // If the file doesn't exist, the content will be an empty object by default.
@@ -157,6 +161,11 @@ GethManagerKlass.prototype = {
 
     // set gas limit
     file.set("gasLimit", gasLimit);
+
+    // add extra data
+    if (chain == 'utility') {
+      file.set("extraData", extraData);
+    }
 
     file.save();
 

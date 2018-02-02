@@ -22,6 +22,19 @@ const FileManagerKlass = function () {};
 
 FileManagerKlass.prototype = {
   /**
+   * Do the old setup clean up
+   */
+  freshSetup: function() {
+    const oThis = this;
+
+    // Remove old test folder
+    oThis.rm('');
+
+    // Create new test folder
+    oThis.mkdir('');
+  },
+
+  /**
    * Delete file/folder inside openST test environment
    *
    * @param {string} relativePath - relative file/folder path

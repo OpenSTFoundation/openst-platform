@@ -15,6 +15,14 @@ const setupConfig = {
         evn_var: 'OST_VALUE_CHAIN_ID',
         value: 2001
       },
+      network_id: {
+        evn_var: '',
+        value: 1411
+      },
+      port: {
+        evn_var: '',
+        value: 30301
+      },
       gas_price: {
         evn_var: 'OST_VALUE_GAS_PRICE',
         value: '0xBA43B7400'
@@ -36,6 +44,14 @@ const setupConfig = {
       chain_id: {
         evn_var: 'OST_UTILITY_CHAIN_ID',
         value: 2000
+      },
+      network_id: {
+        evn_var: '',
+        value: 1410
+      },
+      port: {
+        evn_var: '',
+        value: 30300
       },
       gas_price: {
         evn_var: 'OST_UTILITY_GAS_PRICE',
@@ -59,10 +75,13 @@ const setupConfig = {
 
     // foundation
     foundation: {
-      passphrase: 'testtest',
-      evn_vars: {
-        address: "OST_FOUNDATION_ADDR",
-        passphrase: "OST_FOUNDATION_PASSPHRASE"
+      address: {
+        evn_var: 'OST_FOUNDATION_ADDR',
+        value: ''
+      },
+      passphrase: {
+        evn_var: 'OST_FOUNDATION_PASSPHRASE',
+        value: 'testtest'
       },
       chains: {
         value: {
@@ -73,10 +92,33 @@ const setupConfig = {
 
     // utility chain owner
     utilityChainOwner: {
-      passphrase: 'testtest',
-      evn_vars: {
-        address: "OST_UTILITY_CHAIN_OWNER_ADDR",
-        passphrase: "OST_UTILITY_CHAIN_OWNER_PASSPHRASE"
+      address: {
+        evn_var: 'OST_UTILITY_CHAIN_OWNER_ADDR',
+        value: ''
+      },
+      passphrase: {
+        evn_var: 'OST_UTILITY_CHAIN_OWNER_PASSPHRASE',
+        value: 'testtest'
+      },
+      chains: {
+        utility: {
+          fund: ''
+        },
+        value: {
+          fund: ''
+        }
+      }
+    },
+
+    // Sealer address
+    sealer: {
+      address: {
+        evn_var: '',
+        value: ''
+      },
+      passphrase: {
+        evn_var: '',
+        value: 'testtest'
       },
       chains: {
         utility: {
@@ -90,10 +132,13 @@ const setupConfig = {
 
     // Staker address
     staker: {
-      passphrase: 'testtest',
-      evn_vars: {
-        address: "OST_STAKER_ADDR",
-        passphrase: "OST_STAKER_PASSPHRASE"
+      address: {
+        evn_var: 'OST_STAKER_ADDR',
+        value: ''
+      },
+      passphrase: {
+        evn_var: 'OST_STAKER_PASSPHRASE',
+        value: 'testtest'
       },
       chains: {
         utility: {
@@ -107,10 +152,13 @@ const setupConfig = {
 
     // Redeemer address
     redeemer: {
-      passphrase: 'testtest',
-      evn_vars: {
-        address: "OST_REDEEMER_ADDR",
-        passphrase: "OST_REDEEMER_PASSPHRASE"
+      address: {
+        evn_var: 'OST_REDEEMER_ADDR',
+        value: ''
+      },
+      passphrase: {
+        evn_var: 'OST_REDEEMER_PASSPHRASE',
+        value: 'testtest'
       },
       chains: {
         utility: {
@@ -124,10 +172,13 @@ const setupConfig = {
 
     // Value registrar address
     valueRegistrar: {
-      passphrase: 'testtest',
-      evn_vars: {
-        address: "OST_VALUE_REGISTRAR_ADDR",
-        passphrase: "OST_VALUE_REGISTRAR_PASSPHRASE"
+      address: {
+        evn_var: 'OST_VALUE_REGISTRAR_ADDR',
+        value: ''
+      },
+      passphrase: {
+        evn_var: 'OST_VALUE_REGISTRAR_PASSPHRASE',
+        value: 'testtest'
       },
       chains: {
         value: {
@@ -138,10 +189,13 @@ const setupConfig = {
 
     // Utility registrar address
     utilityRegistrar: {
-      passphrase: 'testtest',
-      evn_vars: {
-        address: "OST_UTILITY_REGISTRAR_ADDR",
-        passphrase: "OST_UTILITY_REGISTRAR_PASSPHRASE"
+      address: {
+        evn_var: 'OST_UTILITY_REGISTRAR_ADDR',
+        value: ''
+      },
+      passphrase: {
+        evn_var: 'OST_UTILITY_REGISTRAR_PASSPHRASE',
+        value: 'testtest'
       },
       chains: {
         utility: {
@@ -152,10 +206,13 @@ const setupConfig = {
 
     // Value Deployer Address
     valueDeployer: {
-      passphrase: 'testtest',
-      evn_vars: {
-        address: "OST_VALUE_DEPLOYER_ADDR",
-        passphrase: "OST_VALUE_DEPLOYER_PASSPHRASE"
+      address: {
+        evn_var: 'OST_VALUE_DEPLOYER_ADDR',
+        value: ''
+      },
+      passphrase: {
+        evn_var: 'OST_VALUE_DEPLOYER_PASSPHRASE',
+        value: 'testtest'
       },
       chains: {
         value: {
@@ -166,10 +223,13 @@ const setupConfig = {
 
     // Utility Deployer Address
     utilityDeployer: {
-      passphrase: 'testtest',
-      evn_vars: {
-        address: "OST_UTILITY_DEPLOYER_ADDR",
-        passphrase: "OST_UTILITY_DEPLOYER_PASSPHRASE"
+      address: {
+        evn_var: 'OST_UTILITY_DEPLOYER_ADDR',
+        value: ''
+      },
+      passphrase: {
+        evn_var: 'OST_UTILITY_DEPLOYER_PASSPHRASE',
+        value: 'testtest'
       },
       chains: {
         utility: {
@@ -180,10 +240,13 @@ const setupConfig = {
 
     // Value Ops Address
     valueOps: {
-      passphrase: 'testtest',
-      evn_vars: {
-        address: "OST_VALUE_OPS_ADDR",
-        passphrase: "OST_VALUE_OPS_PASSPHRASE"
+      address: {
+        evn_var: 'OST_VALUE_OPS_ADDR',
+        value: ''
+      },
+      passphrase: {
+        evn_var: 'OST_VALUE_OPS_PASSPHRASE',
+        value: 'testtest'
       },
       chains: {
         value: {

@@ -7,6 +7,7 @@ const rootPrefix = "../.."
   , setupConfig = require(rootPrefix + '/tools/setup/config')
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
   , gethManager = require(rootPrefix + '/tools/setup/geth_manager')
+  , serviceManager = require(rootPrefix + '/tools/setup/service_manager')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
@@ -19,7 +20,7 @@ const performer = async function () {
 
   // Cleanup old step
   logger.step("** Starting fresh setup by cleaning up old step");
-  gethManager.freshSetup();
+  fileManager.freshSetup();
 
   // generate all required addresses
   logger.step("** Generate all required account keystore files at temp location");
@@ -34,6 +35,10 @@ const performer = async function () {
   // Copy addresses to required chains
   logger.step("** Copying keystore files from temp location to required chains");
   gethManager.copyKeystoreToChains();
+
+  // Start services for deployment
+  logger.step("** Starting openST services for deployment");
+  serviceManager.startServices('deployment');
 
   // Cleanup build files
   logger.step("** Cleaning temporary build files");
