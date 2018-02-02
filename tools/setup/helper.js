@@ -36,7 +36,7 @@ SetupHelperKlass.prototype = {
   },
 
   testFolderAbsolutePath: function() {
-    return Path.join(__dirname, rootPrefix + '/' +setupConfig.test_folder);
+    return Path.join(__dirname, rootPrefix + '/' +setupConfig.setup_folder);
   }
 };
 

@@ -44,7 +44,7 @@ geth --datadir "$DATADIRVALUE" account new --password ./pw >> $ADDRESS_FILE ##
 echo "...New addresses generated" ##
 
 echo "Sync keystores"
-#Copy all 
+#Copy all
 for i in `ls $DATADIRVALUE/keystore`
 do
 cp $DATADIRVALUE/keystore/$i $DATADIRUTILITY/keystore/$i

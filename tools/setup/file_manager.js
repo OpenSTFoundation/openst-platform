@@ -67,6 +67,17 @@ FileManagerKlass.prototype = {
   },
 
   /**
+   * Append line at the end of the file
+   *
+   * @param {string} relativePath - relative file path
+   * @param {string} line - line to be appended to file
+   */
+  append: function(relativePath, line) {
+    const file = setupHelper.testFolderAbsolutePath() + '/' + relativePath;
+    return setupHelper.handleShellResponse(shell.exec('echo "' + line + '" >> ' + file));
+  },
+
+  /**
    * Copy file from one folder to another inside openST test environment
    *
    * @param {string} fromFolder - relative from folder

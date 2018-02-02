@@ -8,6 +8,7 @@ const rootPrefix = "../.."
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
   , gethManager = require(rootPrefix + '/tools/setup/geth_manager')
   , serviceManager = require(rootPrefix + '/tools/setup/service_manager')
+  , envManager = require(rootPrefix + '/tools/setup/env_manager')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
@@ -43,6 +44,10 @@ const performer = async function () {
   // Start services for deployment
   logger.step("** Starting openST services for deployment");
   serviceManager.startServices('deployment');
+
+  // Write environment file
+  logger.step("** Writing env variables file");
+  await envManager.generateEnvFile();
 
   // Cleanup build files
   logger.step("** Cleaning temporary build files");

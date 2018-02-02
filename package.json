@@ -53,6 +53,7 @@
     "jsdoc": "~3.5.5",
     "mustache": "2.3.0",
     "node-cmd": "^3.0.0",
+    "shell-source": "^1.1.0",
     "shelljs": "^0.8.1"
   }
 }
