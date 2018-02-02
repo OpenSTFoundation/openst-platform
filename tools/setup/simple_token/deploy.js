@@ -1,5 +1,11 @@
 "use strict";
 
+/**
+ * Deploy Simple Token Contract
+ *
+ * @module tools/setup/simple_token/deploy
+ */
+
 const BigNumber = require('bignumber.js')
 ;
 
@@ -18,13 +24,20 @@ const foundationAddr = coreAddresses.getAddressForUser('foundation')
   , valueDeployerAddr = coreAddresses.getAddressForUser('valueDeployer')
   , MIN_FUND = (new BigNumber(10)).toPower(18);
 
-
 /**
- * Deploy Simple Token Contract
+ * is equal ignoring case
  *
- * @module tools/setup/simple_token/deploy
+ * @param {String} compareWith - string to compare with
+ *
+ * @return {Bool} true when equal
  */
+String.prototype.equalsIgnoreCase = function ( compareWith ) {
+  const oThis = this
+    , _self = this.toLowerCase()
+    , _compareWith = String( compareWith ).toLowerCase();
 
+  return _self === _compareWith;
+};
 
 /**
  * Constructor for Deploy simple token contract

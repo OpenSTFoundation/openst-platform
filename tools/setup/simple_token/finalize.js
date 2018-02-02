@@ -48,11 +48,13 @@ FinalizeSimpleTokenContractKlass.prototype = {
    */
   perform: async function () {
     logger.step("** Setting Admin Address of Simple Token Contract to value Registrar");
+
     await SimpleToken.setAdminAddress('foundation', valueRegistrarAddr, {});
-    const simpleTokenAdminAddress = await SimpleToken.getAdminAddress();
+    const simpleTokenAdminAddressResponse = await SimpleToken.getAdminAddress()
+      , simpleTokenAdminAddress = simpleTokenAdminAddressResponse.data.address;
 
     // check if the admin address is correctly set.
-    if(!simpleTokenAdminAddress.equalsIgnoreCase(valueRegistrarAddr)){
+    if(!simpleTokenAdminAddress || !simpleTokenAdminAddress.equalsIgnoreCase(valueRegistrarAddr)){
       return Promise.reject('Admin Address not correctly set');
     }
 

@@ -4,11 +4,8 @@
  *
  * @module tools/setup/env_manager
  */
-const shellSource = require('shell-source');
-
 const rootPrefix = "../.."
   , setupConfig = require(rootPrefix + '/tools/setup/config')
-  , setupHelper = require(rootPrefix + '/tools/setup/helper')
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
 ;
 
@@ -45,28 +42,6 @@ EnvManagerKlass.prototype = {
 
     // Create address ENV variables
     oThis._addressVars();
-
-    // Reload core constants
-    return oThis._reloadCoreConstants();
-  },
-
-  /**
-   * Source the new ENV file and reload core addresses
-   */
-  _reloadCoreConstants: function() {
-    const envFilePath = setupHelper.testFolderAbsolutePath() + '/' + setupConfig.env_vars_file;
-
-    return new Promise(function (onResolve, onReject) {
-      // source env
-      shellSource(envFilePath, function(err){
-        if (err) { throw err;}
-        // reload core constants
-        delete require.cache[require.resolve(rootPrefix + '/config/core_constants')];
-        const coreConstants = require(rootPrefix + '/config/core_constants');
-        return onResolve();
-      });
-    });
-
   },
 
   /**

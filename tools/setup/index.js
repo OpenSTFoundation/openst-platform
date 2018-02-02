@@ -2,9 +2,13 @@
 /**
  * Start the OpenST Setup
  */
+const shellSource = require('shell-source')
+  , Path = require('path')
+;
 
 const rootPrefix = "../.."
   , setupConfig = require(rootPrefix + '/tools/setup/config')
+  , setupHelper = require(rootPrefix + '/tools/setup/helper')
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
   , gethManager = require(rootPrefix + '/tools/setup/geth_manager')
   , serviceManager = require(rootPrefix + '/tools/setup/service_manager')
@@ -47,7 +51,9 @@ const performer = async function () {
 
   // Write environment file
   logger.step("** Writing env variables file");
-  await envManager.generateEnvFile();
+  envManager.generateEnvFile();
+
+  await deployContract();
 
   // Cleanup build files
   logger.step("** Cleaning temporary build files");
@@ -55,6 +61,26 @@ const performer = async function () {
 
   // Exit
   // process.exit(1);
+};
+
+/**
+ * Source the new ENV file and reload core addresses
+ */
+const deployContract = function() {
+  const envFilePath = setupHelper.testFolderAbsolutePath() + '/' + setupConfig.env_vars_file;
+
+  return new Promise(function (onResolve, onReject) {
+    // source env
+    shellSource(envFilePath, function(err){
+      if (err) { throw err;}
+      // // reload core constants
+      // delete require.cache[require.resolve(rootPrefix + '/config/core_constants')];
+      // const coreConstants = require(rootPrefix + '/config/core_constants');
+      var stpath = Path.join(__dirname, rootPrefix + '/tools/setup/simple_token/deploy.js');
+      fileManager.exec("node "+stpath);
+      return onResolve();
+    });
+  });
 
 };
 
