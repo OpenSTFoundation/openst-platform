@@ -51,6 +51,8 @@ npm-debug.log
 
 package-lock.json
 
+# Test folders
+openst-setup
 test/poa-genesis-utility.json
 test/poa-genesis-value.json
 test/set_env_vars.sh

@@ -67,7 +67,7 @@ ServiceManagerKlass.prototype = {
     ;
 
     // start geth
-    logger.step("** Starting " + chain + " chain geth node");
+    logger.info("* Starting " + chain + " chain");
     const cmd = oThis._startGethCommand(chain, purpose);
     shellAsyncCmd.run(cmd);
   },
@@ -76,7 +76,7 @@ ServiceManagerKlass.prototype = {
    * Start Geth node
    */
   stopGeth: function() {
-    logger.step("** Stopping all geth nodes");
+    logger.info("* Stopping all running geths");
     const cmd = "killall geth";
     shellAsyncCmd.run(cmd);
   },
@@ -88,7 +88,7 @@ ServiceManagerKlass.prototype = {
     const oThis = this
     ;
 
-    logger.info("* Source Platform environment values: source " + setupHelper.testFolderAbsolutePath() + "/" + setupConfig.env_vars_file);
+    logger.info("* Source environment values: source " + setupHelper.testFolderAbsolutePath() + "/" + setupConfig.env_vars_file);
 
     // create geth run script
     for (var chain in setupConfig.chains) {

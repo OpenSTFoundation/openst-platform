@@ -80,6 +80,7 @@ GethManagerKlass.prototype = {
     // create all required addresses in tmp geth data dir
     for (var name in setupConfig.addresses) {
       var nameDetails = setupConfig.addresses[name];
+      logger.info("* " + name + " address: ");
       nameDetails.address.value = oThis._generateAddress(tempGethFolder, nameDetails.passphrase.value);
     }
 
@@ -99,15 +100,19 @@ GethManagerKlass.prototype = {
     ;
 
     // create chain folder
+    logger.info("* Creating " + chain + " folder");
     fileManager.mkdir(chainFolder);
 
     // copy genesis template file in chain folder
+    logger.info("* Coping " + chain + " genesis template file");
     fileManager.exec('cp ' + chainGenesisTemplateLocation +' ' + chainGenesisLocation);
 
     // Alloc balance in genesis files
+    logger.info("* Modifying " + chain + " genesis file");
     oThis._modifyGenesisFile(chain, chainGenesisLocation);
 
     // Alloc balance in genesis files
+    logger.info("* Init " + chain + " chain");
     oThis._initChain(chain, chainDataDir, chainGenesisLocation);
   },
 
@@ -129,6 +134,7 @@ GethManagerKlass.prototype = {
           , fromFolder = tempGethFolder + '/' + keystoreFolder
           , toFolder = chainFolder + '/' + keystoreFolder
         ;
+        logger.info("* Coping " + name + " keystore file to " + chain + " chain");
         fileManager.cp(fromFolder, toFolder, keystoreFileNameLike);
       }
     }
@@ -154,7 +160,7 @@ GethManagerKlass.prototype = {
             if (err) {
             } else {
               if (chainTimer['blockNumber']!=0 && chainTimer['blockNumber']!=blocknumber) {
-                logger.info("Geth Checker - " + chain + " chain has new blocks.");
+                logger.info("* Geth Checker - " + chain + " chain has new blocks.");
                 clearInterval(chainTimer['timer']);
                 onResolve();
               }

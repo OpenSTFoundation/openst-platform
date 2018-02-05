@@ -7,6 +7,7 @@
 const rootPrefix = "../.."
   , setupConfig = require(rootPrefix + '/tools/setup/config')
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
 /**
@@ -29,18 +30,23 @@ EnvManagerKlass.prototype = {
     fileManager.append(setupConfig.env_vars_file, "#################");
 
     // Create geth ENV variables
+    logger.info("* writing geth env vars");
     oThis._gethVars();
 
     // Create cache ENV variables
+    logger.info("* writing cache env vars");
     oThis._cacheVars();
 
     // Create miscellaneous ENV variables
+    logger.info("* writing miscellaneous env vars");
     oThis._miscellaneousVars();
 
     // Create contract address ENV variables
+    logger.info("* writing contract addresses env vars");
     oThis._contractAddressVars();
 
     // Create address ENV variables
+    logger.info("* writing account addresses env vars");
     oThis._addressVars();
   },
 

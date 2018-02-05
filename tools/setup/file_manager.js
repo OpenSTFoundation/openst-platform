@@ -11,6 +11,7 @@ const shell = require('shelljs')
 const rootPrefix = "../.."
   , setupConfig = require(rootPrefix + '/tools/setup/config')
   , setupHelper = require(rootPrefix + '/tools/setup/helper')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
 /**
@@ -28,9 +29,11 @@ FileManagerKlass.prototype = {
     const oThis = this;
 
     // Remove old test folder
+    logger.info("* Deleting old openST setup folder");
     oThis.rm('');
 
     // Create new test folder
+    logger.info("* Creating new openST setup folder");
     oThis.mkdir('');
   },
 
