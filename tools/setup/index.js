@@ -136,6 +136,12 @@ const runHelperService = function(deployPath) {
       // reload core addresses
       delete require.cache[require.resolve(rootPrefix + '/config/core_addresses')];
 
+      // reload geth providers
+      delete require.cache[require.resolve(rootPrefix + '/lib/web3/providers/utility_rpc')];
+      delete require.cache[require.resolve(rootPrefix + '/lib/web3/providers/utility_ws')];
+      delete require.cache[require.resolve(rootPrefix + '/lib/web3/providers/value_rpc')];
+      delete require.cache[require.resolve(rootPrefix + '/lib/web3/providers/value_ws')];
+
       // deploy contract
       const deployer = require(deployPath);
       return onResolve(await deployer.perform());
