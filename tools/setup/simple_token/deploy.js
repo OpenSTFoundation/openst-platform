@@ -15,6 +15,7 @@ const rootPrefix = "../../.."
   , web3RpcValueProvider = require(rootPrefix + '/lib/web3/providers/value_rpc')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , responseHelper = require(rootPrefix + '/lib/formatter/response')
 ;
 
 
@@ -52,7 +53,7 @@ DeploySimpleTokenContractKlass.prototype = {
   /**
    * Perform
    *
-   * @return {promise}
+   * @return {promise<result>}
    */
   perform: async function () {
     const oThis = this
@@ -65,7 +66,7 @@ DeploySimpleTokenContractKlass.prototype = {
     logger.step("** Deploying Simple Token Contract");
     const deploymentResult = await oThis.deploySimpleTokenContract();
 
-    return Promise.resolve({simple_token_address: deploymentResult.contractAddress});
+    return Promise.resolve(responseHelper.successWithData({contract: 'simpleToken', address: deploymentResult.contractAddress}));
   },
 
   /**
@@ -90,5 +91,4 @@ DeploySimpleTokenContractKlass.prototype = {
 
 };
 
-const deploySimpleTokenContract = new DeploySimpleTokenContractKlass();
-deploySimpleTokenContract.perform();
+module.exports = new DeploySimpleTokenContractKlass();

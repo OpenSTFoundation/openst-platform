@@ -24,7 +24,7 @@ const args = process.argv
 const performer = async function () {
 
   // Stop running services
-  logger.step("** Stop openST services");
+  logger.step("** Stopping openST services");
   serviceManager.stopServices();
 
   // Cleanup old step
@@ -53,32 +53,43 @@ const performer = async function () {
   logger.step("** Writing env variables file");
   envManager.generateEnvFile();
 
-  await deployContract();
+  // Deploy Simple Token Contract and update ENV
+  const stDeployResponse = await deployContract(rootPrefix + '/tools/setup/simple_token/deploy');
+  setupConfig.contracts['simpleToken'].address.value = stDeployResponse.data.address;
+  envManager.generateEnvFile();
+
+  // Finalize Simple Token Contract
+  await deployContract(rootPrefix + '/tools/setup/simple_token/finalize');
 
   // Cleanup build files
   logger.step("** Cleaning temporary build files");
   gethManager.buildCleanup();
 
   // Exit
-  // process.exit(1);
+  process.exit(1);
 };
 
 /**
  * Source the new ENV file and reload core addresses
+ *
+ * @param {string} deployPath - contract deployment script path
  */
-const deployContract = function() {
+const deployContract = function(deployPath) {
   const envFilePath = setupHelper.testFolderAbsolutePath() + '/' + setupConfig.env_vars_file;
 
   return new Promise(function (onResolve, onReject) {
     // source env
-    shellSource(envFilePath, function(err){
+    shellSource(envFilePath, async function(err){
       if (err) { throw err;}
-      // // reload core constants
-      // delete require.cache[require.resolve(rootPrefix + '/config/core_constants')];
-      // const coreConstants = require(rootPrefix + '/config/core_constants');
-      var stpath = Path.join(__dirname, rootPrefix + '/tools/setup/simple_token/deploy.js');
-      fileManager.exec("node "+stpath);
-      return onResolve();
+      // reload core constants
+      delete require.cache[require.resolve(rootPrefix + '/config/core_constants')];
+      //const coreConstants = require(rootPrefix + '/config/core_constants');
+      // reload core addresses
+      delete require.cache[require.resolve(rootPrefix + '/config/core_addresses')];
+      //const coreConstants = require(rootPrefix + '/config/core_constants');
+      // deploy contract
+      const deployer = require(deployPath);
+      return onResolve(await deployer.perform());
     });
   });
 

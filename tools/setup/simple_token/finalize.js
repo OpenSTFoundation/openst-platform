@@ -66,5 +66,4 @@ FinalizeSimpleTokenContractKlass.prototype = {
   }
 };
 
-const finalizeSimpleTokenContract = new FinalizeSimpleTokenContractKlass();
-finalizeSimpleTokenContract.perform();
+module.exports = new FinalizeSimpleTokenContractKlass();
