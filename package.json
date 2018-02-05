@@ -27,8 +27,8 @@
   },
   "scripts": {
     "start": "index.js",
-    "setup": "tools/setup/index.js development",
-    "test": "tools/setup/index.js test",
+    "setup": "node tools/setup/index.js development",
+    "test": "node tools/setup/index.js test",
     "lint": "node node_modules/eslint/bin/eslint.js .",
     "make-docs": "node_modules/.bin/jsdoc -c .jsdoc.json"
   },
