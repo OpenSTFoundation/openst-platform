@@ -69,6 +69,7 @@ ServiceManagerKlass.prototype = {
     // start geth
     logger.info("* Starting " + chain + " chain");
     const cmd = oThis._startGethCommand(chain, purpose);
+    logger.info(cmd);
     shellAsyncCmd.run(cmd);
   },
 
@@ -88,7 +89,7 @@ ServiceManagerKlass.prototype = {
     const oThis = this
     ;
 
-    logger.info("* Source environment values: source " + setupHelper.testFolderAbsolutePath() + "/" + setupConfig.env_vars_file);
+    logger.info("* Source environment values: source " + setupHelper.setupFolderAbsolutePath() + "/" + setupConfig.env_vars_file);
 
     // create geth run script
     for (var chain in setupConfig.chains) {
@@ -97,7 +98,7 @@ ServiceManagerKlass.prototype = {
       ;
       fileManager.touch(chainFolder + "/" + gethRunScript, '#!/bin/sh');
       fileManager.append(chainFolder + "/" + gethRunScript, cmd);
-      logger.info("* Start " + chain + " chain: sh " + setupHelper.testFolderAbsolutePath() + "/" + chainFolder + "/" + gethRunScript);
+      logger.info("* Start " + chain + " chain: sh " + setupHelper.setupFolderAbsolutePath() + "/" + chainFolder + "/" + gethRunScript);
     }
   },
 

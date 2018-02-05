@@ -62,7 +62,7 @@ GethManagerKlass.prototype = {
    */
   getChainAbsoluteDataDir: function(chain) {
     const oThis = this;
-    return setupHelper.testFolderAbsolutePath() + '/' + oThis.getChainDataFolder(chain);
+    return setupHelper.setupFolderAbsolutePath() + '/' + oThis.getChainDataFolder(chain);
   },
 
   /**
@@ -249,14 +249,14 @@ GethManagerKlass.prototype = {
    */
   _generateAddress: function(relativeDataDir, passphrase) {
     const tmpPasswordFilePath = relativeDataDir + '/' + tempPasswordFile
-      , absoluteDirPath = setupHelper.testFolderAbsolutePath() + '/' + relativeDataDir;
+      , absoluteDirPath = setupHelper.setupFolderAbsolutePath() + '/' + relativeDataDir;
 
     // creating password file in a temp location
     fileManager.touch(tmpPasswordFilePath, passphrase);
 
     // generate keystore file and address
     const cmd = 'geth --datadir "' + absoluteDirPath + '" account new --password ' +
-      setupHelper.testFolderAbsolutePath() + '/' + tmpPasswordFilePath;
+      setupHelper.setupFolderAbsolutePath() + '/' + tmpPasswordFilePath;
     var addressGerationResponse = fileManager.exec(cmd);
 
     // remove password

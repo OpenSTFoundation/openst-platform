@@ -124,7 +124,7 @@ const performer = async function () {
  * @return {promise}
  */
 const runHelperService = function(deployPath) {
-  const envFilePath = setupHelper.testFolderAbsolutePath() + '/' + setupConfig.env_vars_file;
+  const envFilePath = setupHelper.setupFolderAbsolutePath() + '/' + setupConfig.env_vars_file;
 
   return new Promise(function (onResolve, onReject) {
     // source env

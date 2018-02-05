@@ -2,15 +2,10 @@
 
 ## Prerequisite installations 
 
-* Install node version >= 8.7.0
+* Install node version >= 7
 * Install geth version >= 1.7.2
 
 ## Setup Chains and deploy required contracts
-
-* Go to platform directory
-```bash
-  > cd openst-platform 
-```
 
 * Install node modules
 ```bash
@@ -19,5 +14,5 @@
 
 * Start the setup script
 ```bash
-  > node run setup
+  > node tools/setup/index.js development
 ```

@@ -35,8 +35,14 @@ SetupHelperKlass.prototype = {
     return res;
   },
 
-  testFolderAbsolutePath: function() {
-    return Path.join(__dirname, rootPrefix + '/' +setupConfig.setup_folder);
+  /**
+   * get the setup folder absolute location
+   *
+   * @return {string}
+   *
+   */
+  setupFolderAbsolutePath: function() {
+    return Path.resolve("./") + "/" + setupConfig.setup_folder;
   }
 };
 

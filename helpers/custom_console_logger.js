@@ -19,7 +19,7 @@ const CONSOLE_RESET = "\x1b[0m"
 
 // Get common local storage namespace to read
 // request identifiers for debugging and logging
-const requestNamespace = getNamespace('inputRequest')
+const requestNamespace = getNamespace('openST-Platform-NameSpace')
 ;
 
 /**

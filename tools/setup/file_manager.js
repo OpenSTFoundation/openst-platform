@@ -43,7 +43,7 @@ FileManagerKlass.prototype = {
    * @param {string} relativePath - relative file/folder path
    */
   rm: function(relativePath) {
-    const folder = setupHelper.testFolderAbsolutePath() + '/' + relativePath;
+    const folder = setupHelper.setupFolderAbsolutePath() + '/' + relativePath;
     return setupHelper.handleShellResponse(shell.exec('rm -rf ' + folder));
   },
 
@@ -53,7 +53,7 @@ FileManagerKlass.prototype = {
    * @param {string} relativePath - relative folder path
    */
   mkdir: function(relativePath) {
-    const folder = setupHelper.testFolderAbsolutePath() + '/' + relativePath;
+    const folder = setupHelper.setupFolderAbsolutePath() + '/' + relativePath;
     return setupHelper.handleShellResponse(shell.exec('mkdir ' + folder));
   },
 
@@ -64,7 +64,7 @@ FileManagerKlass.prototype = {
    * @param {string} fileContent - optional file content
    */
   touch: function(relativePath, fileContent) {
-    const file = setupHelper.testFolderAbsolutePath() + '/' + relativePath;
+    const file = setupHelper.setupFolderAbsolutePath() + '/' + relativePath;
     fileContent = fileContent || '';
     return setupHelper.handleShellResponse(shell.exec('echo "' + fileContent + '" > ' + file));
   },
@@ -76,7 +76,7 @@ FileManagerKlass.prototype = {
    * @param {string} line - line to be appended to file
    */
   append: function(relativePath, line) {
-    const file = setupHelper.testFolderAbsolutePath() + '/' + relativePath;
+    const file = setupHelper.setupFolderAbsolutePath() + '/' + relativePath;
     return setupHelper.handleShellResponse(shell.exec('echo "' + line + '" >> ' + file));
   },
 
@@ -88,8 +88,8 @@ FileManagerKlass.prototype = {
    * @param {string} fileName - file name
    */
   cp: function(fromFolder, toFolder, fileName) {
-    const src = setupHelper.testFolderAbsolutePath() + '/' + fromFolder + '/' + fileName
-      , dest = setupHelper.testFolderAbsolutePath() + '/' + toFolder + '/';
+    const src = setupHelper.setupFolderAbsolutePath() + '/' + fromFolder + '/' + fileName
+      , dest = setupHelper.setupFolderAbsolutePath() + '/' + toFolder + '/';
     return setupHelper.handleShellResponse(shell.exec('cp -r ' + src + ' ' + dest));
   },
 
