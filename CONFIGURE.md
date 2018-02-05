@@ -7,7 +7,7 @@
 
 ## Setup Chains and deploy required contracts
 
-* Go to OpenST Platform directory
+* Go to platform directory
 ```bash
   > cd openst-platform 
 ```

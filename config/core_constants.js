@@ -131,14 +131,6 @@ coreConstants.prototype = {
   OST_UTILITY_GAS_LIMIT: 9000000,
 
   /**
-   * File path of the member config file.
-   *
-   * @constant {string}
-   *
-   */
-  OST_MEMBER_CONFIG_FILE_PATH: process.env.OST_MEMBER_CONFIG_FILE_PATH,
-
-  /**
    * ALLOWED VALUES => NONE/REDIS/MEMCACHED
    *
    * @constant {string}

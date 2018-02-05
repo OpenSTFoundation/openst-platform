@@ -6,7 +6,7 @@ branches:
   - master
   - develop
   - release-0.9
-  -- module
+  - module
 notifications:
   email:
     recipients:
