@@ -61,6 +61,16 @@ const performer = async function () {
   // Finalize Simple Token Contract
   await deployContract(rootPrefix + '/tools/setup/simple_token/finalize');
 
+  // Deploy Value Registrar Contract and update ENV
+  const valueRegistrarDeployResponse = await deployContract(rootPrefix + '/tools/deploy/valueRegistrar');
+  setupConfig.contracts['valueRegistrar'].address.value = valueRegistrarDeployResponse.data.address;
+  envManager.generateEnvFile();
+
+  // Deploy OpenST Value Contract and update ENV
+  const openSTValueDeployResponse = await deployContract(rootPrefix + '/tools/deploy/openSTValue');
+  setupConfig.contracts['openSTValue'].address.value = openSTValueDeployResponse.data.address;
+  envManager.generateEnvFile();
+
   // Cleanup build files
   logger.step("** Cleaning temporary build files");
   gethManager.buildCleanup();
