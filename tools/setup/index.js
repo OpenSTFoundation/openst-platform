@@ -62,14 +62,25 @@ const performer = async function () {
   await deployContract(rootPrefix + '/tools/setup/simple_token/finalize');
 
   // Deploy Value Registrar Contract and update ENV
-  const valueRegistrarDeployResponse = await deployContract(rootPrefix + '/tools/deploy/valueRegistrar');
+  const valueRegistrarDeployResponse = await deployContract(rootPrefix + '/tools/deploy/value_registrar');
   setupConfig.contracts['valueRegistrar'].address.value = valueRegistrarDeployResponse.data.address;
   envManager.generateEnvFile();
 
   // Deploy OpenST Value Contract and update ENV
-  const openSTValueDeployResponse = await deployContract(rootPrefix + '/tools/deploy/openSTValue');
+  const openSTValueDeployResponse = await deployContract(rootPrefix + '/tools/deploy/openst_value');
   setupConfig.contracts['openSTValue'].address.value = openSTValueDeployResponse.data.address;
   envManager.generateEnvFile();
+
+  // Deploy Utility Registrar Contract and update ENV
+  const utilityRegistrarDeployResponse = await deployContract(rootPrefix + '/tools/deploy/utility_registrar');
+  setupConfig.contracts['utilityRegistrar'].address.value = utilityRegistrarDeployResponse.data.address;
+  envManager.generateEnvFile();
+
+  // Deploy OpenST Utility Contract and update ENV
+  const openSTUtilityDeployResponse = await deployContract(rootPrefix + '/tools/deploy/openst_utility');
+  setupConfig.contracts['openSTUtility'].address.value = openSTUtilityDeployResponse.data.address;
+  envManager.generateEnvFile();
+
 
   // Cleanup build files
   logger.step("** Cleaning temporary build files");

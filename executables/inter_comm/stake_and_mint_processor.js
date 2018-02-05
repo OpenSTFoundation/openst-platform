@@ -48,15 +48,16 @@ const openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility'
 /**
  * is equal ignoring case
  *
- * @param {String} compareWith - string to compare with
+ * @param {string} compareWith - string to compare with
  *
- * @return {Bool} true when equal
+ * @return {booelan} true when equal
  */
-String.prototype.equalsIgnoreCase = function (compareWith) {
-  var _self = this.toLowerCase()
-    , _compareWith = String(compareWith).toLowerCase();
+String.prototype.equalsIgnoreCase = function ( compareWith ) {
+  const oThis = this
+    , _self = this.toLowerCase()
+    , _compareWith = String( compareWith ).toLowerCase();
 
-  return _self == _compareWith;
+  return _self === _compareWith;
 };
 
 /**

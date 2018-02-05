@@ -3,7 +3,7 @@
 /**
  * Deploy openST Value Contract
  *
- * @module tools/deploy/openSTValue
+ * @module tools/deploy/openst_value
  */
 
 const readline = require('readline');
@@ -19,12 +19,12 @@ const rootPrefix = '../..'
 ;
 
 // Different addresses used for deployment
-const deployerName = "valueDeployer"
+const valueDeployerName = "valueDeployer"
   , openSTValueContractName = 'openSTValue'
   , VALUE_CHAIN_ID = coreConstants.OST_VALUE_CHAIN_ID
   , VC_GAS_PRICE = coreConstants.OST_VALUE_GAS_PRICE
   , VC_GAS_LIMIT = coreConstants.OST_VALUE_GAS_LIMIT
-  , deployerAddress = coreAddresses.getAddressForUser(deployerName)
+  , deployerAddress = coreAddresses.getAddressForUser(valueDeployerName)
   , foundationAddress = coreAddresses.getAddressForUser("foundation")
   , valueOpsAddress = coreAddresses.getAddressForUser("valueOps")
   , simpleTokenContractAddress = coreAddresses.getAddressForContract("simpleToken")
@@ -37,9 +37,9 @@ const deployerName = "valueDeployer"
 /**
  * is equal ignoring case
  *
- * @param {String} compareWith - string to compare with
+ * @param {string} compareWith - string to compare with
  *
- * @return {Bool} true when equal
+ * @return {booelan} true when equal
  */
 String.prototype.equalsIgnoreCase = function ( compareWith ) {
   const oThis = this
@@ -48,7 +48,6 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
 
   return _self === _compareWith;
 };
-
 
 /**
  * Constructor for Deploy OpenST Value contract
@@ -78,7 +77,7 @@ DeployOpenSTValueContractKlass.prototype = {
       await new Promise(
         function (onResolve, onReject) {
           prompts.question("Please verify all above details. Do you want to proceed? [Y/N]", function (intent) {
-            if ((intent != 'n') && (intent != 'N')) {
+            if ((intent === 'Y') || (intent === 'y')) {
               logger.info('Great! Proceeding deployment.');
               prompts.close();
               onResolve();
@@ -94,7 +93,7 @@ DeployOpenSTValueContractKlass.prototype = {
     }
 
     const contractDeployTxReceipt = await deployHelper.perform(openSTValueContractName, web3Provider, openSTValueContractAbi,
-      openSTValueContractBin, deployerName, {gasPrice: VC_GAS_PRICE, gas: VC_GAS_LIMIT},
+      openSTValueContractBin, valueDeployerName, {gasPrice: VC_GAS_PRICE, gas: VC_GAS_LIMIT},
       [VALUE_CHAIN_ID, simpleTokenContractAddress, valueRegistrarContractAddress]);
 
     const openSTValueContractAddress = contractDeployTxReceipt.contractAddress;
@@ -102,13 +101,13 @@ DeployOpenSTValueContractKlass.prototype = {
     const openstValueContract = new OpenSTValueKlass(openSTValueContractAddress);
 
     logger.step('** initiateOwnerShipTransfer of openSTValue Contract');
-    await openstValueContract.initiateOwnerShipTransfer(deployerName, foundationAddress, {});
+    await openstValueContract.initiateOwnerShipTransfer(valueDeployerName, foundationAddress, {});
 
     const getOwnerResponse = await openstValueContract.getOwner();
 
-    if (!foundationAddress.equalsIgnoreCase(getOwnerResponse.data.owner)) {
+    if (!foundationAddress.equalsIgnoreCase(getOwnerResponse.data.address)) {
       logger.error('Exiting the deployment as owner of openSTValue Contract does not match');
-      process.exit(0);
+      process.exit(1);
     }
 
     return Promise.resolve(responseHelper.successWithData(

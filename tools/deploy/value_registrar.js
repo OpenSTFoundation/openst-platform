@@ -3,7 +3,7 @@
 /**
  * Deploy Value Registrar Contract
  *
- * @module tools/deploy/valueRegistrar
+ * @module tools/deploy/value_registrar
  */
 
 const readline = require('readline');
@@ -32,9 +32,9 @@ const valueDeployerName = "valueDeployer"
 /**
  * is equal ignoring case
  *
- * @param {String} compareWith - string to compare with
+ * @param {string} compareWith - string to compare with
  *
- * @return {Bool} true when equal
+ * @return {booelan} true when equal
  */
 String.prototype.equalsIgnoreCase = function ( compareWith ) {
   const oThis = this
@@ -43,7 +43,6 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
 
   return _self === _compareWith;
 };
-
 
 /**
  * Constructor for Deploy Value Registrar contract
@@ -70,7 +69,7 @@ DeployValueRegistrarContractKlass.prototype = {
       await new Promise(
         function (onResolve, onReject) {
           prompts.question("Please verify all above details. Do you want to proceed? [Y/N]", function (intent) {
-            if ((intent != 'n') && (intent != 'N')) {
+            if ((intent === 'Y') || (intent === 'y')) {
               logger.info('Great! Proceeding deployment.');
               prompts.close();
               onResolve();
@@ -98,7 +97,7 @@ DeployValueRegistrarContractKlass.prototype = {
 
     if (!valueOpsAddress.equalsIgnoreCase(getOpsAddressResponse.data.address)) {
       logger.error('Exiting the deployment as opsAddress which was set just before does not match.');
-      process.exit(0);
+      process.exit(1);
     }
 
     return Promise.resolve(responseHelper.successWithData(

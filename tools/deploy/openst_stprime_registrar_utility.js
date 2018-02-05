@@ -133,7 +133,7 @@ const performer = async function (argv) {
 
   var proposedOwnerResult = await utilityRegistrarContractInteract.getOwner();
 
-  if (web3Provider.utils.toChecksumAddress(proposedOwnerResult.data.owner) != web3Provider.utils.toChecksumAddress(foundationAddress)) {
+  if (web3Provider.utils.toChecksumAddress(proposedOwnerResult.data.address) != web3Provider.utils.toChecksumAddress(foundationAddress)) {
     logger.error("Exiting the deployment as initialite ownership address doesn't match with contract owner address");
     process.exit(0);
   }
@@ -173,7 +173,7 @@ const performer = async function (argv) {
 
   var proposedOwnerResult = await openStUtilityContractInteract.getOwner();
 
-  if (web3Provider.utils.toChecksumAddress(proposedOwnerResult.data.owner) != web3Provider.utils.toChecksumAddress(foundationAddress)) {
+  if (web3Provider.utils.toChecksumAddress(proposedOwnerResult.data.address) != web3Provider.utils.toChecksumAddress(foundationAddress)) {
     logger.error("Exiting the deployment as initialite ownership for contract: " + contractName + " address doesn't match");
     process.exit(0);
   }

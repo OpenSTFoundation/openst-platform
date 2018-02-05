@@ -216,7 +216,7 @@ const performer = async function (argv) {
 
   var proposedOwnerResult = await valueRegistrarContractInteract.getOwner();
 
-  if (web3Provider.utils.toChecksumAddress(proposedOwnerResult.data.owner) != web3Provider.utils.toChecksumAddress(foundationAddress)) {
+  if (web3Provider.utils.toChecksumAddress(proposedOwnerResult.data.address) != web3Provider.utils.toChecksumAddress(foundationAddress)) {
     logger.error("Exiting the deployment as initialite ownership address doesn't match");
     process.exit(0);
   }
