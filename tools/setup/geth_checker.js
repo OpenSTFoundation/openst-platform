@@ -45,7 +45,7 @@ GethCheckerKlass.prototype = {
    * @return {promise}
    */
   _isRunning: function(chain) {
-    const retryAttempts = 20
+    const retryAttempts = 100
       , timerInterval = 5000
       , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
       , provider = (chain == 'utility' ? web3RpcUtilityProvider : web3RpcValueProvider);
