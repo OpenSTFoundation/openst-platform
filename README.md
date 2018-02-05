@@ -1,5 +1,10 @@
 # [OpenST platform](https://simpletoken.org) - bridging cryptocurrencies and mainstream consumer apps
 
+[![Latest version](https://img.shields.io/npm/v/@openstfoundation/openst-platform.svg?maxAge=3600)][npm]
+[![Travis](https://img.shields.io/travis/OpenSTFoundation/openst-platform.svg?maxAge=600)][travis]
+[![Downloads per month](https://img.shields.io/npm/dm/@openstfoundation/openst-platform.svg?maxAge=3600)][npm]
+[![Gitter](https://img.shields.io/gitter/room/OpenSTFoundation/github.js.svg?maxAge=3600)][gitter]
+
 While OpenST 0.9 is available as-is for anyone to use, we caution that this is early stage software and under heavy ongoing development and improvement. Please report bugs and suggested improvements.
 
 Watch demo video of milestone 1 (will take you to [https://www.youtube.com/watch?v=-SxJ8c1Xh_A](https://www.youtube.com/watch?v=-SxJ8c1Xh_A))
@@ -20,7 +25,7 @@ OpenST Platform is a network of open utility chains, where Simple Token is stake
 
 `openst-platform` provides the middleware and application programming interface for a mainstream consumer application to integrate the OpenST protocol and platform into its backend.
 
-<img src="https://openstfoundation.github.io/openst-platform/illustrations/platform-illustration.png" style="max-width: 100%;" />
+<img src="https://openstfoundation.github.io/openst-platform/illustrations/platform-illustration.png" style="max-width: 100%;" /> 
 
 ## Roadmap
 
@@ -33,3 +38,8 @@ Milestone 3 : Public Launch of Initial Member Companies (Q2 2018)
 Milestone 4 : 10 Founding Member Companies (Q3-Q4 2018)
 
 Milestone 5 : Consolidation of OpenST as open platform (2019)
+
+[gitter]: https://gitter.im/OpenSTFoundation/SimpleToken
+[npm]: https://www.npmjs.com/package/@openstfoundation/openst-platform
+[travis]: https://travis-ci.org/OpenSTFoundation/openst-platform
+[api-docs]: http://docs.openst.org/
