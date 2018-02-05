@@ -53,6 +53,12 @@ const performer = async function () {
   logger.step("** Writing env variables file");
   envManager.generateEnvFile();
 
+  // Chains have started mining
+  for (var chain in setupConfig.chains) {
+    logger.step("** Check if " + chain + " chain has started generating blocks");
+    await gethManager.isChainReady(chain);
+  }
+
   // Deploy Simple Token Contract and update ENV
   const stDeployResponse = await deployContract(rootPrefix + '/tools/setup/simple_token/deploy');
   setupConfig.contracts['simpleToken'].address.value = stDeployResponse.data.address;

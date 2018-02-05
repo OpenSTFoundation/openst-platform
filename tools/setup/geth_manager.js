@@ -15,6 +15,9 @@ const rootPrefix = "../.."
   , setupHelper = require(rootPrefix + '/tools/setup/helper')
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
   , coreConstants = require(rootPrefix + '/config/core_constants')
+  , web3RpcUtilityProvider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
+  , web3RpcValueProvider = require(rootPrefix + '/lib/web3/providers/value_rpc')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
 const tempGethFolder = 'tmp-geth'
@@ -129,6 +132,43 @@ GethManagerKlass.prototype = {
         fileManager.cp(fromFolder, toFolder, keystoreFileNameLike);
       }
     }
+  },
+
+  /**
+   * Check if chains started mining and are ready
+   *
+   * @param {string} chain - name of the chain
+   *
+   * @return {promise}
+   */
+  isChainReady: function (chain) {
+    const retryAttempts = 10
+      , timerInterval = 5000
+      , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
+      , provider = (chain == 'utility' ? web3RpcUtilityProvider : web3RpcValueProvider);
+    ;
+    return new Promise(function (onResolve, onReject) {
+      chainTimer['timer'] = setInterval(function () {
+        if (chainTimer['retryCounter'] <= retryAttempts) {
+          provider.eth.getBlockNumber(function (err, blocknumber) {
+            if (err) {
+            } else {
+              if (chainTimer['blockNumber']!=0 && chainTimer['blockNumber']!=blocknumber) {
+                logger.info("Geth Checker - " + chain + " chain has new blocks.");
+                clearInterval(chainTimer['timer']);
+                onResolve();
+              }
+              chainTimer['blockNumber'] = blocknumber;
+            }
+          });
+        } else {
+          logger.error("Geth Checker - " + chain + " chain has no new blocks.");
+          onReject();
+          process.exit(1);
+        }
+        chainTimer['retryCounter']++;
+      }, timerInterval);
+    });
   },
 
   /**
