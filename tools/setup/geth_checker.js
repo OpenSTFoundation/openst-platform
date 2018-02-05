@@ -44,7 +44,7 @@ GethCheckerKlass.prototype = {
    * @return {promise}
    */
   _isRunning: function(chain) {
-    const retryAttempts = 10
+    const retryAttempts = 20
       , timerInterval = 5000
       , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
       , provider = (chain == 'utility' ? web3RpcUtilityProvider : web3RpcValueProvider);
@@ -53,6 +53,7 @@ GethCheckerKlass.prototype = {
       chainTimer['timer'] = setInterval(function () {
         if (chainTimer['retryCounter'] <= retryAttempts) {
           provider.eth.getBlockNumber(function (err, blocknumber) {
+            logger.info("Geth Checker - ", blocknumber, "error", err);
             if (err) {
             } else {
               if (chainTimer['blockNumber']!=0 && chainTimer['blockNumber']!=blocknumber) {
