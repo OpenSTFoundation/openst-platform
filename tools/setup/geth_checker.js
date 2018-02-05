@@ -9,6 +9,7 @@ const rootPrefix = "../.."
   , web3RpcValueProvider = require(rootPrefix + '/lib/web3/providers/value_rpc')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , setupConfig = require(rootPrefix + '/tools/setup/config')
+  , fileManager = require(rootPrefix + '/tools/setup/file_manager')
 ;
 
 /**
@@ -53,7 +54,7 @@ GethCheckerKlass.prototype = {
       chainTimer['timer'] = setInterval(function () {
         if (chainTimer['retryCounter'] <= retryAttempts) {
           provider.eth.getBlockNumber(function (err, blocknumber) {
-            logger.info("Geth Checker - ", blocknumber, "error", err);
+            logger.info("Geth Checker - ", blocknumber, "error", err, "ps aux | grep geth", fileManager.exec('ps aux | grep geth'));
             if (err) {
             } else {
               if (chainTimer['blockNumber']!=0 && chainTimer['blockNumber']!=blocknumber) {
