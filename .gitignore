@@ -1,28 +1,19 @@
-pw
-
 # OSX
 .DS_Store
 
 # Logs
 logs
 *.log
-
 log
 
 # contracts are git submodules
 contracts/openst-protocol
 
-# exclude geth poa data
-test/st-poa
-
 # Runtime data
 pids
-
 dump.rdb
-
 /.idea
 package-lock.json
-
 *.pid
 *.seed
 
@@ -49,11 +40,6 @@ node_modules
 npm-debug.log
 .vscode
 
-package-lock.json
-
-# Test folders
+# Setup folder
 openst-setup
-test/poa-genesis-utility.json
-test/poa-genesis-value.json
-test/set_env_vars.sh
 config.json

@@ -5,7 +5,7 @@
   "description": "OpenST Platform provides a web3 interface to tokenise mainstream consumer applications with crypto-assets on Ethereum",
   "keywords": [
     "web3",
-    "openst",
+    "openST",
     "OST",
     "simpletoken",
     "utility-token",
@@ -27,7 +27,8 @@
   },
   "scripts": {
     "start": "index.js",
-    "test": "run_complete_test_deploy.sh",
+    "setup": "tools/setup/index.js development",
+    "test": "tools/setup/index.js test",
     "lint": "node node_modules/eslint/bin/eslint.js .",
     "make-docs": "node_modules/.bin/jsdoc -c .jsdoc.json"
   },

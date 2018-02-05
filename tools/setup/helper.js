@@ -22,7 +22,7 @@ const SetupHelperKlass = function () {};
 
 SetupHelperKlass.prototype = {
   /**
-   * Create the test folder
+   * Create the setup folder
    *
    * @param {object} res - shell response
    *

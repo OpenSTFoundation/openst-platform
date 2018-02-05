@@ -1,9 +1,9 @@
 "use strict";
 
 /**
- * Deploy Simple Token Contract
+ * Fund the required users to for deployment
  *
- * @module tools/setup/simple_token/deploy
+ * @module tools/setup/fund_users
  */
 
 const BigNumber = require('bignumber.js')
@@ -14,7 +14,6 @@ const rootPrefix = "../.."
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
-
 
 const foundationAddr = coreAddresses.getAddressForUser('foundation')
   , foundationPassphrase = coreAddresses.getPassphraseForUser('foundation')
@@ -38,13 +37,13 @@ FundUsersKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function () {
-    logger.step('** Foundation funding ETH on value chain to valueRegistrar');
+    logger.info('* Foundation funding ETH on value chain to valueRegistrar');
     await setupFundManager.transferEth(foundationAddr, foundationPassphrase, valueRegistrarAddr, MIN_FUND.toString(10));
 
-    logger.step('** Foundation funding ETH on value chain to valueDeployer');
+    logger.info('* Foundation funding ETH on value chain to valueDeployer');
     await setupFundManager.transferEth(foundationAddr, foundationPassphrase, valueDeployerAddr, MIN_FUND.toString(10));
 
-    logger.step('** Foundation funding ETH on value chain to valueOps');
+    logger.info('* Foundation funding ETH on value chain to valueOps');
     await setupFundManager.transferEth(foundationAddr, foundationPassphrase, valueOpsAddr, MIN_FUND.toString(10));
 
     return Promise.resolve();

@@ -6,6 +6,7 @@ branches:
   - master
   - develop
   - release-0.9
+  -- module
 notifications:
   email:
     recipients:
@@ -28,20 +29,7 @@ before_install:
 install:
   - npm install
 before_script:
-  - rm -rf test/st-poa-*
 script:
-  - cd test
-  - source set_env_vars.sh
-  - sh init_keys.sh
-  - cat set_env_vars.sh
-  - nohup sh run_value_chain.sh </dev/null >/dev/null 2>&1 &
-  - node geth_checker.js value
-  - nohup sh run_utility_chain.sh </dev/null >/dev/null 2>&1 &
-  - node geth_checker.js utility
-  - source set_env_vars.sh
-  - sh setup_platform.sh travis
-  - source set_env_vars.sh
-  - cd ..
-  - nohup node executables/inter_comm/stake_and_mint.js  </dev/null >/dev/null 2>&1 &
+  - node tools/setup/index.js test
 after_script:
   - kill $(ps aux | grep 'geth' | awk '{print $2}')

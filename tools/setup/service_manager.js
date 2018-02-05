@@ -95,7 +95,8 @@ ServiceManagerKlass.prototype = {
       var chainFolder = gethManager.getChainDataFolder(chain)
         ,cmd = oThis._startGethCommand(chain, '');
       ;
-      fileManager.touch(chainFolder + "/" + gethRunScript, cmd);
+      fileManager.touch(chainFolder + "/" + gethRunScript, '#!/bin/sh');
+      fileManager.append(chainFolder + "/" + gethRunScript, cmd);
       logger.info("* Start " + chain + " chain: sh " + setupHelper.testFolderAbsolutePath() + "/" + chainFolder + "/" + gethRunScript);
     }
   },

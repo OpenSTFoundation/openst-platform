@@ -140,7 +140,7 @@ GethManagerKlass.prototype = {
           , fromFolder = tempGethFolder + '/' + keystoreFolder
           , toFolder = chainFolder + '/' + keystoreFolder
         ;
-        logger.info("* Coping " + name + " keystore file to " + chain + " chain");
+        logger.info("* Copying " + name + " keystore file to " + chain + " chain");
         fileManager.cp(fromFolder, toFolder, keystoreFileNameLike);
       }
     }

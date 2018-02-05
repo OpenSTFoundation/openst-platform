@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Index File of openst-platform node module
+ * Load openST Platform module
  */
 
 const rootPrefix = "."

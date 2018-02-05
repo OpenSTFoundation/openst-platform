@@ -32,7 +32,7 @@ const performer = async function () {
   fileManager.freshSetup();
 
   // generate all required addresses
-  logger.step("** Generate all required account keystore files at temp location");
+  logger.step("** Generating all required account keystore files at temp location");
   gethManager.generateConfigAddresses();
 
   // Modify genesis files and init chains
@@ -54,11 +54,11 @@ const performer = async function () {
   envManager.generateEnvFile();
 
   // Chains have started mining
-  for (var chain in setupConfig.chains) {
-    logger.step("** Check if " + chain + " chain has started generating blocks");
-    await gethManager.isChainReady(chain);
-  }
+  logger.step("** Checking if chains have started generating blocks");
+  await runHelperService(rootPrefix + '/tools/setup/geth_checker');
 
+  // Fund required addresses
+  logger.step('** Funding required addresses');
   await runHelperService(rootPrefix + '/tools/setup/fund_users');
 
   // Deploy Simple Token Contract and update ENV

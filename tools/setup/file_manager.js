@@ -28,17 +28,17 @@ FileManagerKlass.prototype = {
   freshSetup: function() {
     const oThis = this;
 
-    // Remove old test folder
+    // Remove old setup folder
     logger.info("* Deleting old openST setup folder");
     oThis.rm('');
 
-    // Create new test folder
+    // Create new setup folder
     logger.info("* Creating new openST setup folder");
     oThis.mkdir('');
   },
 
   /**
-   * Delete file/folder inside openST test environment
+   * Delete file/folder inside openST setup environment
    *
    * @param {string} relativePath - relative file/folder path
    */
@@ -48,7 +48,7 @@ FileManagerKlass.prototype = {
   },
 
   /**
-   * Create folder inside openST test environment
+   * Create folder inside openST setup environment
    *
    * @param {string} relativePath - relative folder path
    */
@@ -58,7 +58,7 @@ FileManagerKlass.prototype = {
   },
 
   /**
-   * Create file inside openST test environment
+   * Create file inside openST setup environment
    *
    * @param {string} relativePath - relative file path
    * @param {string} fileContent - optional file content
@@ -81,7 +81,7 @@ FileManagerKlass.prototype = {
   },
 
   /**
-   * Copy file from one folder to another inside openST test environment
+   * Copy file from one folder to another inside openST setup environment
    *
    * @param {string} fromFolder - relative from folder
    * @param {string} toFolder - relative to folder
