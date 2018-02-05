@@ -113,11 +113,11 @@ RegisterStPrimeKlass.prototype = {
       valueOpsAddress, valueOpsPassphrase, openSTValueContractAddress, stPrimeSymbol, stPrimeName, stPrimeConversationRate,
       UTILITY_CHAIN_ID, 0, stPrimeUUID, valueDeployerName);
 
-    console.log('---------');
-    console.log(JSON.stringify(registerUtilityTokenResponse));
-    console.log('---------');
 
-    await deployHelper.assertEvent(registerUtilityTokenResponse.data.formattedTransactionReceipt, 'UtilityTokenRegistered');
+    if (registerUtilityTokenResponse.data.rawTransactionReceipt.logs.length == 0) {
+      logger.error('UtilityTokenRegistered event not found in receipt.');
+      process.exit(1);
+    }
 
     logger.step('** Setting Ops Address of valueRegistrar Contract to valueRegistrar User');
     await valueRegistrar.setOpsAddress(valueDeployerName, valueRegistrarUser);

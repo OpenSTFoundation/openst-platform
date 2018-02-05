@@ -110,7 +110,7 @@ GethManagerKlass.prototype = {
     fileManager.mkdir(chainFolder);
 
     // copy genesis template file in chain folder
-    logger.info("* Coping " + chain + " genesis template file");
+    logger.info("* Copying " + chain + " genesis template file");
     fileManager.exec('cp ' + chainGenesisTemplateLocation +' ' + chainGenesisLocation);
 
     // Alloc balance in genesis files
