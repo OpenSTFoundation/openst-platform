@@ -17,6 +17,10 @@ const rootPrefix = "../.."
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
+const gethRunScript = "run.sh"
+  , sealerPassphraseFile = "sealer-passphrase"
+;
+
 /**
  * Constructor for service manager
  *
@@ -60,6 +64,53 @@ ServiceManagerKlass.prototype = {
    */
   startGeth: function(chain, purpose) {
     const oThis = this
+    ;
+
+    // start geth
+    logger.step("** Starting " + chain + " chain geth node");
+    const cmd = oThis._startGethCommand(chain, purpose);
+    shellAsyncCmd.run(cmd);
+  },
+
+  /**
+   * Start Geth node
+   */
+  stopGeth: function() {
+    logger.step("** Stopping all geth nodes");
+    const cmd = "killall geth";
+    shellAsyncCmd.run(cmd);
+  },
+
+  /**
+   * Post platform setup
+   */
+  postSetupSteps: function() {
+    const oThis = this
+    ;
+
+    logger.info("* Source Platform environment values: source " + setupHelper.testFolderAbsolutePath() + "/" + setupConfig.env_vars_file);
+
+    // create geth run script
+    for (var chain in setupConfig.chains) {
+      var chainFolder = gethManager.getChainDataFolder(chain)
+        ,cmd = oThis._startGethCommand(chain, '');
+      ;
+      fileManager.touch(chainFolder + "/" + gethRunScript, cmd);
+      logger.info("* Start " + chain + " chain: sh " + setupHelper.testFolderAbsolutePath() + "/" + chainFolder + "/" + gethRunScript);
+    }
+  },
+
+  /**
+   * Start geth command
+   *
+   * @params {string} chain - name of the chain
+   * @params {string} purpose - if mentioned as deployment, geths will start with zero gas. Else in normal mode
+   *
+   * @return {string}
+   * @private
+   */
+  _startGethCommand: function(chain, purpose) {
+    const oThis = this
       , chainDetails = setupConfig.chains[chain]
       , networkId = chainDetails['network_id'].value
       , chainPort = chainDetails['port'].value
@@ -79,32 +130,14 @@ ServiceManagerKlass.prototype = {
     ;
 
     // creating password file in a temp location
-    fileManager.touch(chainFolder + '/sealer-passphrase', sealerPassword);
-    fileManager.touch(chainFolder + "/" + chain + "chain-output.log");
+    fileManager.touch(chainFolder + '/' + sealerPassphraseFile, sealerPassword);
 
-    // start geth
-    logger.step("** Starting " + chain + " chain geth node");
-    const cmd = "geth --networkid " + networkId + " --datadir " + chainDataDir + " --port " + chainPort +
+    return "geth --networkid " + networkId + " --datadir " + chainDataDir + " --port " + chainPort +
       " --rpc --rpcapi eth,net,web3,personal --rpcport " + rpcPort + " --rpcaddr " + rpcHost + " --ws" +
       " --wsport " + wsPort + " --wsorigins \"*\" --wsaddr " + wsHost +
       " --mine --targetgaslimit " + gasLimit[chain] + "  --gasprice \"" + gasPrice + "\" --unlock " +
-      sealerAddr + " --password "+ chainDataDir +"/sealer-passphrase";
-    logger.info(cmd);
-    shellAsyncCmd.run(cmd);
-
-    // create geth run script
-    logger.step("** Creating run.sh for " + chain + " chain geth node");
-    fileManager.touch(chainFolder + "/run.sh", cmd);
-  },
-
-  /**
-   * Start Geth node
-   */
-  stopGeth: function() {
-    logger.step("** Stopping all geth nodes");
-    const cmd = "killall geth";
-    shellAsyncCmd.run(cmd);
-  },
+      sealerAddr + " --password "+ chainDataDir + "/" + sealerPassphraseFile;
+  }
 
 };
 

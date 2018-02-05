@@ -92,6 +92,11 @@ const performer = async function () {
   logger.step("** Cleaning temporary build files");
   gethManager.buildCleanup();
 
+  // Print all the helpful scripts post setup
+  logger.step("** OpenST Platform created following executables for further usages:");
+  logger.info(Array(30).join("="));
+  serviceManager.postSetupSteps();
+
   // Exit
   process.exit(1);
 };
