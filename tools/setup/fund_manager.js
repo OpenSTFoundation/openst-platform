@@ -16,6 +16,21 @@ const rootPrefix = "../.."
 ;
 
 /**
+ * is equal ignoring case
+ *
+ * @param {string} compareWith - string to compare with
+ *
+ * @return {booelan} true when equal
+ */
+String.prototype.equalsIgnoreCase = function ( compareWith ) {
+  const oThis = this
+    , _self = this.toLowerCase()
+    , _compareWith = String( compareWith ).toLowerCase();
+
+  return _self === _compareWith;
+};
+
+/**
  * Constructor for fund manager
  *
  * @constructor

@@ -59,34 +59,49 @@ const performer = async function () {
     await gethManager.isChainReady(chain);
   }
 
+  await runHelperService(rootPrefix + '/tools/setup/fund_users');
+
   // Deploy Simple Token Contract and update ENV
-  const stDeployResponse = await deployContract(rootPrefix + '/tools/setup/simple_token/deploy');
+  const stDeployResponse = await runHelperService(rootPrefix + '/tools/setup/simple_token/deploy');
   setupConfig.contracts['simpleToken'].address.value = stDeployResponse.data.address;
   envManager.generateEnvFile();
 
   // Finalize Simple Token Contract
-  await deployContract(rootPrefix + '/tools/setup/simple_token/finalize');
+  await runHelperService(rootPrefix + '/tools/setup/simple_token/finalize');
 
   // Deploy Value Registrar Contract and update ENV
-  const valueRegistrarDeployResponse = await deployContract(rootPrefix + '/tools/deploy/value_registrar');
+  const valueRegistrarDeployResponse = await runHelperService(rootPrefix + '/tools/deploy/value_registrar');
   setupConfig.contracts['valueRegistrar'].address.value = valueRegistrarDeployResponse.data.address;
   envManager.generateEnvFile();
 
   // Deploy OpenST Value Contract and update ENV
-  const openSTValueDeployResponse = await deployContract(rootPrefix + '/tools/deploy/openst_value');
+  const openSTValueDeployResponse = await runHelperService(rootPrefix + '/tools/deploy/openst_value');
   setupConfig.contracts['openSTValue'].address.value = openSTValueDeployResponse.data.address;
   envManager.generateEnvFile();
 
   // Deploy Utility Registrar Contract and update ENV
-  const utilityRegistrarDeployResponse = await deployContract(rootPrefix + '/tools/deploy/utility_registrar');
+  const utilityRegistrarDeployResponse = await runHelperService(rootPrefix + '/tools/deploy/utility_registrar');
   setupConfig.contracts['utilityRegistrar'].address.value = utilityRegistrarDeployResponse.data.address;
   envManager.generateEnvFile();
 
   // Deploy OpenST Utility Contract and update ENV
-  const openSTUtilityDeployResponse = await deployContract(rootPrefix + '/tools/deploy/openst_utility');
+  const openSTUtilityDeployResponse = await runHelperService(rootPrefix + '/tools/deploy/openst_utility');
   setupConfig.contracts['openSTUtility'].address.value = openSTUtilityDeployResponse.data.address;
   envManager.generateEnvFile();
 
+  // Deploy OpenST Utility Contract and update ENV
+  const stPrimeDeploymentStepsResponse = await runHelperService(rootPrefix + '/tools/deploy/st_prime');
+  setupConfig.contracts['stPrime'].address.value = stPrimeDeploymentStepsResponse.data.address;
+  setupConfig.misc_deployment.st_prime_uuid.value = stPrimeDeploymentStepsResponse.data.uuid;
+  envManager.generateEnvFile();
+
+  // Deploy Value Core Contract and update ENV
+  const valueCoreDeployResponse = await runHelperService(rootPrefix + '/tools/deploy/value_core');
+  setupConfig.contracts['valueCore'].address.value = valueCoreDeployResponse.data.address;
+  envManager.generateEnvFile();
+
+  // Deploy Value Core Contract and update ENV
+  await runHelperService(rootPrefix + '/tools/deploy/register_st_prime');
 
   // Cleanup build files
   logger.step("** Cleaning temporary build files");
@@ -102,11 +117,13 @@ const performer = async function () {
 };
 
 /**
- * Source the new ENV file and reload core addresses
+ * Run the deployer helper service
  *
  * @param {string} deployPath - contract deployment script path
+ *
+ * @return {promise}
  */
-const deployContract = function(deployPath) {
+const runHelperService = function(deployPath) {
   const envFilePath = setupHelper.testFolderAbsolutePath() + '/' + setupConfig.env_vars_file;
 
   return new Promise(function (onResolve, onReject) {
@@ -115,10 +132,10 @@ const deployContract = function(deployPath) {
       if (err) { throw err;}
       // reload core constants
       delete require.cache[require.resolve(rootPrefix + '/config/core_constants')];
-      //const coreConstants = require(rootPrefix + '/config/core_constants');
+
       // reload core addresses
       delete require.cache[require.resolve(rootPrefix + '/config/core_addresses')];
-      //const coreConstants = require(rootPrefix + '/config/core_constants');
+
       // deploy contract
       const deployer = require(deployPath);
       return onResolve(await deployer.perform());

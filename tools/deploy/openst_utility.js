@@ -101,7 +101,7 @@ DeployOpenSTUtilityContractKlass.prototype = {
 
     logger.step('** Initiating OwnerShipTransfer of openSTUtility Contract to foundation');
 
-    const initiateOwnershipTransferResponse = await openStUtility.initiateOwnerShipTransfer(utilityDeployerName,
+    await openStUtility.initiateOwnerShipTransfer(utilityDeployerName,
       foundationAddress, {gasPrice: UC_GAS_PRICE, gas: UC_GAS_LIMIT});
 
     const getOwnerResponse = await openStUtility.getOwner();

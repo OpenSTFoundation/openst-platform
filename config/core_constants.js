@@ -56,7 +56,7 @@ coreConstants.prototype = {
    * @constant {number}
    *
    */
-  OST_UTILITY_STPRIME_TOTAL_SUPPLY: 800000000,
+  OST_UTILITY_STPRIME_TOTAL_SUPPLY: '800000000',
 
   /**
    * ST' UUID on utility chain.<br><br>

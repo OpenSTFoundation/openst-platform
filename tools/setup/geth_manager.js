@@ -8,6 +8,7 @@
 const shell = require('shelljs')
   , editJsonFile = require("edit-json-file")
   , Path = require('path')
+  , BigNumber = require('bignumber.js')
 ;
 
 const rootPrefix = "../.."
@@ -23,11 +24,16 @@ const rootPrefix = "../.."
 const tempGethFolder = 'tmp-geth'
   , keystoreFolder = 'keystore'
   , tempPasswordFile = 'tmp_password_file'
-  , allocBalancesOn = {utility: coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY, value: '1000000'}
   , gasLimitOn = {utility: coreConstants.OST_UTILITY_GAS_LIMIT, value: coreConstants.OST_VALUE_GAS_LIMIT}
   , hexStartsWith = '0x'
   , genesisTemplateLocation = Path.join(__dirname)
+  , etherToWeiCinversion = new BigNumber(1000000000000000000)
 ;
+
+const allocBalancesOn = {
+  utility: (new BigNumber(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY)).mul(etherToWeiCinversion),
+  value: (new BigNumber('1000000')).mul(etherToWeiCinversion)
+};
 
 /**
  * Constructor for geth manager
