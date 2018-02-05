@@ -30,6 +30,6 @@ install:
   - npm install
 before_script:
 script:
-  - node run test
+  - node tools/setup/index.js test
 after_script:
   - kill $(ps aux | grep 'geth' | awk '{print $2}')
