@@ -26,7 +26,7 @@ const foundationAddr = coreAddresses.getAddressForUser('foundation')
 ;
 
 /**
- * Constructor for Deploy simple token contract
+ * Fund the required users for deployment - Constructor
  *
  * @constructor
  */

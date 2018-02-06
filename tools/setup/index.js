@@ -118,6 +118,10 @@ const performer = async function () {
   // Stake and mint simple token prime
   await runHelperService(rootPrefix + '/tools/setup/stake_and_mint_simple_token_prime');
 
+  // Fund required addresses
+  logger.step('** Funding required addresses with ST Prime');
+  await runHelperService(rootPrefix + '/tools/setup/fund_users_with_st_prime');
+
   // Cleanup build files
   logger.step("** Cleaning temporary build files");
   gethManager.buildCleanup();

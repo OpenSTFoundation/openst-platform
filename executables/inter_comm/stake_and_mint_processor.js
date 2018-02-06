@@ -38,7 +38,7 @@ const rootPrefix = '../..'
 
 const openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility')
   , openSTUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility')
-  , stPrimeContractAddress = coreAddresses.getAddressForContract("stPrime")
+  , stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
   , stPrime = new StPrimeKlass(stPrimeContractAddress)
   , eventQueueManager = new eventQueueManagerKlass()
   , openSTValueContractInteract = new OpenSTValueKlass()
@@ -194,7 +194,7 @@ StakeAndMintProcessorInterComm.prototype = {
       utilityTokenInterfaceContract = stPrime;
     } else {
 
-      var registeredOnUCResult = await openSTUtilityContractInteract.registeredTokenProperty(uuid);
+      const registeredOnUCResult = await openSTUtilityContractInteract.registeredTokenProperty(uuid);
 
       utilityTokenInterfaceContract = new BrandedTokenKlass({
         ERC20: registeredOnUCResult.data.erc20Address

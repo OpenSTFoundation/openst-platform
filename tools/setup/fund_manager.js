@@ -128,6 +128,26 @@ FundManagerKlass.prototype = {
   },
 
   /**
+   * Transfer STPrime
+   *
+   * @param {string} senderAddr - address of user who is sending amount
+   * @param {string} senderPassphrase - sender address passphrase
+   * @param {string} recipient - address of user who is receiving amount
+   * @param {BigNumber} amountInWei - amount which is being transferred
+   *
+   * @return {promise<result>}
+   *
+   */
+  transferSTP: async function(senderAddr, senderPassphrase, recipient, amountInWei) {
+    const stPrimeContractAddress = coreConstants.getAddressForContract('stPrime')
+      , StPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
+      , stPrime = new StPrimeKlass(stPrimeContractAddress)
+    ;
+
+    return stPrime.transfer(senderAddr, senderPassphrase, recipient, amountInWei)
+  },
+
+  /**
    * Check if owner has required ETH balance (i.e. bigMinAmount)
    *
    * @param {string} owner - Account address
