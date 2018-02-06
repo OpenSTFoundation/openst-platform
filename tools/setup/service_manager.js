@@ -6,6 +6,7 @@
  */
 
 const shellAsyncCmd = require('node-cmd')
+  , shellSource = require('shell-source')
 ;
 
 const rootPrefix = "../.."
@@ -80,6 +81,31 @@ ServiceManagerKlass.prototype = {
     logger.info("* Stopping all running geths");
     const cmd = "killall geth";
     shellAsyncCmd.run(cmd);
+  },
+
+  /**
+   * Start executable
+   *
+   * @param {string} executablePath - path relative to the repo root of the executable
+   *
+   * @return {promise}
+   */
+  startExecutable: function(executablePath) {
+    const envFilePath = setupHelper.setupFolderAbsolutePath() + '/' + setupConfig.env_vars_file;
+
+    return new Promise(function (onResolve, onReject) {
+      // source env
+      shellSource(envFilePath, function(err) {
+        if (err) { throw err;}
+
+        logger.info('* Starting executable:', executablePath);
+        const cmd = 'node ' + executablePath;
+        shellAsyncCmd.run(cmd);
+
+        logger.info('* Waiting for 10 seconds for executable to start.');
+        setTimeout(function(){ onResolve(Promise.resolve()) }, 10000);
+      });
+    });
   },
 
   /**

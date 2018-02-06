@@ -103,6 +103,18 @@ const performer = async function () {
   // Deploy Value Core Contract and update ENV
   await runHelperService(rootPrefix + '/tools/deploy/register_st_prime');
 
+  // Starting stake and mint intercomm
+  logger.step("** Starting stake and mint intercomm");
+  await serviceManager.startExecutable('executables/inter_comm/stake_and_mint.js');
+
+  // Starting stake and mint processor intercomm
+  logger.step("** Starting stake and mint processor intercomm");
+  await serviceManager.startExecutable('executables/inter_comm/stake_and_mint_processor.js');
+
+  const approverServiceObj = new require(rootPrefix + 'services/stake_and_mint/approve_openst_value_contract');
+  const approvalTransactionResponse = await approverServiceObj.perform();
+  console.log(JSON.stringify(approvalTransactionResponse));
+
   // Cleanup build files
   logger.step("** Cleaning temporary build files");
   gethManager.buildCleanup();
@@ -113,7 +125,7 @@ const performer = async function () {
   serviceManager.postSetupSteps();
 
   // Exit
-  process.exit(0);
+  // process.exit(0);
 };
 
 /**

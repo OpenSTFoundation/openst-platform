@@ -21,8 +21,8 @@ const foundationAddr = coreAddresses.getAddressForUser('foundation')
   , valueDeployerAddr = coreAddresses.getAddressForUser('valueDeployer')
   , valueOpsAddr = coreAddresses.getAddressForUser('valueOps')
   , stakerAddr = coreAddresses.getAddressForUser('staker')
+  , utilityChainOwnerAddr = coreAddresses.getAddressForUser('utilityChainOwner')
   , MIN_FUND = (new BigNumber(10)).toPower(18)
-  , MAX_FUND = MIN_FUND.mul(10000)
 ;
 
 /**
@@ -49,8 +49,11 @@ FundUsersKlass.prototype = {
     logger.info('* Foundation funding ETH on value chain to valueOps');
     await setupFundManager.transferEth(foundationAddr, foundationPassphrase, valueOpsAddr, MIN_FUND.toString(10));
 
+    logger.info('* Foundation funding ETH on value chain to utility chain owner');
+    await setupFundManager.transferEth(foundationAddr, foundationPassphrase, utilityChainOwnerAddr, MIN_FUND.mul(100000).toString(10));
+
     logger.info('* Foundation funding ETH on value chain to staker');
-    await setupFundManager.transferEth(foundationAddr, foundationPassphrase, stakerAddr, MAX_FUND.toString(10));
+    await setupFundManager.transferEth(foundationAddr, foundationPassphrase, stakerAddr, MIN_FUND.mul(100000).toString(10));
 
     return Promise.resolve();
   }
