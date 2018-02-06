@@ -37,6 +37,7 @@ FundUsersWithSTPrimeKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function () {
+    logger.info('* Funding required users with ST\'');
     logger.info('* Utility Chain Owner funding ST\' on utility chain to staker');
     await setupFundManager.transferSTP(utilityChainOwnerAddr, utilityChainOwnerPassphrase, stakerAddr,
       MIN_FUND.mul(100).toString(10));

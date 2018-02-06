@@ -132,7 +132,7 @@ const performer = async function () {
   serviceManager.postSetupSteps();
 
   // Exit
-  // process.exit(0);
+  process.exit(0);
 };
 
 /**

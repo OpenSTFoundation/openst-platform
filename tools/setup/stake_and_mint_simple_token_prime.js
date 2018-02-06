@@ -67,10 +67,8 @@ StakeAndMintSimpleTokenPrime.prototype = {
       uuid: coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID
     })).perform();
 
-    logger.info('* Wait for credit of ST\' to utility chain owner');
+    logger.info('* Waiting for credit of ST\' to utility chain owner');
     await oThis._waitForSTPrimeMint();
-
-    logger.info('* Fund staker and redeemer with ST\'');
 
     return Promise.resolve(responseHelper.successWithData({}));
   },
