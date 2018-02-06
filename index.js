@@ -8,6 +8,7 @@ const rootPrefix = "."
   , version = require(rootPrefix + '/package.json').version
   , BrandedTokenKlass = require(rootPrefix + "/lib/contract_interact/branded_token")
   , address = require(rootPrefix + '/services/address')
+  , status = require(rootPrefix + '/services/status')
   , getTransactionReceipt = require(rootPrefix + '/services/transaction/getTransactionReceipt')
   , transferBt = require(rootPrefix + '/services/transaction/transferBt')
   , proposeBrandedToken = require(rootPrefix + '/services/on_boarding/propose_branded_token')
@@ -30,6 +31,7 @@ const OpenSTPlatform = function () {
 
   oThis.services = {
     address: address,
+    status: status,
     transactions: {
       getTransactionRecipt: getTransactionReceipt,
       transferBt: transferBt

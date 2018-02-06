@@ -48,7 +48,7 @@ GethCheckerKlass.prototype = {
     const retryAttempts = 100
       , timerInterval = 5000
       , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
-      , provider = (chain == 'utility' ? web3RpcUtilityProvider : web3RpcValueProvider);
+      , provider = (chain == 'utility' ? web3RpcUtilityProvider : web3RpcValueProvider)
     ;
     return new Promise(function (onResolve, onReject) {
       chainTimer['timer'] = setInterval(function () {

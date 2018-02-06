@@ -162,7 +162,7 @@ ServiceManagerKlass.prototype = {
 
     return "geth --networkid " + networkId + " --datadir " + chainDataDir + " --port " + chainPort +
       " --rpc --rpcapi eth,net,web3,personal --rpcport " + rpcPort + " --rpcaddr " + rpcHost + " --ws" +
-      " --wsport " + wsPort + " --wsorigins \"*\" --wsaddr " + wsHost + " --etherbase " + sealerAddr +
+      " --wsport " + wsPort + " --wsorigins '*' --wsaddr " + wsHost + " --etherbase " + sealerAddr +
       " --mine --targetgaslimit " + gasLimit[chain] + "  --gasprice \"" + gasPrice + "\" --unlock " +
       sealerAddr + " --password "+ chainDataDir + "/" + sealerPassphraseFile;
   }
