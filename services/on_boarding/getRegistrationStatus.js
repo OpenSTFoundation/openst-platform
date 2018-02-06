@@ -2,6 +2,8 @@
 
 /**
  * Get Registration Status
+ *
+ * @module services/on_boarding/getRegistrationStatus
  */
 
 const rootPrefix = '../..'
@@ -11,8 +13,9 @@ const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
-  ;
-
+  , responseHelper = require(rootPrefix + '/lib/formatter/response')
+  , RegistrationStatusKlass = require('helpers/registration_status')
+;
 
 const openStUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility')
   , openStValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
@@ -20,123 +23,80 @@ const openStUtilityContractAddr = coreAddresses.getAddressForContract('openSTUti
   , openSTValueContractInteract = new OpenSTValueKlass(openStValueContractAddr)
 ;
 
-const RegistrationStatus = function() {
-  this.uuid = '';
-  this.erc20Address = '';
-  this.isProposalDone = 0;
-  this.isRegisteredOnUc = 0;
-  this.isRegisteredOnVc = 0;
+/**
+ * Registration status service
+ *
+ * @constructor
+ */
+const GetRegistrationStatusKlass = function(params) {
+  const oThis = this
+  ;
+
+  oThis.transactionHash = params.transaction_hash;
 };
 
-RegistrationStatus.prototype = {
+GetRegistrationStatusKlass.prototype = {
 
-  constructor: RegistrationStatus,
+  /**
+   * Perform<br><br>
+   *
+   * @return {promise<result>} - returns a promise which resolves to an object of kind Result
+   */
+  perform: async function() {
+    try {
+      // returns the registration status of the proposal
+      const oThis = this
+        , registrationStatus = new RegistrationStatusKlass()
+      ;
 
-  toHash: function() {
-    var oThis = this;
+      // check if the proposal transaction is mined
+      const proposalTxReceiptResponse = await contractInteractHelper.getTxReceipt(web3UcRpcProvider, oThis.transactionHash);
+      if(!proposalTxReceiptResponse || !proposalTxReceiptResponse.isSuccess()) {
+        return registrationStatus.returnResultPromise();
+      }
 
-    return {
-      uuid: oThis.uuid,
-      erc20_address: oThis.erc20Address,
-      is_proposal_done: oThis.isProposalDone,
-      is_registered_on_uc: oThis.isRegisteredOnUc,
-      is_registered_on_vc: oThis.isRegisteredOnVc
+      const proposalFormattedTxReceipt = proposalTxReceiptResponse.data.formattedTransactionReceipt;
+      const proposalFormattedEvents = await web3EventsFormatter.perform(proposalFormattedTxReceipt);
+
+      // check whether ProposedBrandedToken is present in the events in the transaction receipt
+      if(!proposalFormattedEvents || !proposalFormattedEvents['ProposedBrandedToken']) {
+        // this is a error scenario.
+        return Promise.resolve(responseHelper.error('s_ob_grs_1',
+          'Proposal was not done correctly. Transaction does not have ProposedBrandedToken event'));
+      }
+
+      registrationStatus.setIsProposalDone(1);
+
+      const uuid = proposalFormattedEvents['ProposedBrandedToken']['_uuid'];
+      registrationStatus.setUuid(uuid);
+
+      // now checking to confirm if registration on UC took place
+      const registeredOnUCResponse = await openSTUtilityContractInteract.registeredTokenProperty(uuid);
+
+      if(!registeredOnUCResponse ||
+        !registeredOnUCResponse.isSuccess() ||
+        (registeredOnUCResponse.data.erc20Address == '0x0000000000000000000000000000000000000000')) {
+        return registrationStatus.returnResultPromise();
+      }
+
+      registrationStatus.setIsRegisteredOnUc(1);
+      registrationStatus.setErc20Address(registeredOnUCResponse.data.erc20Address);
+
+      // now checking to confirm if registration on VC took place
+      const registeredOnVCResponse = await openSTValueContractInteract.utilityTokenProperties(uuid);
+
+      if(!registeredOnVCResponse ||
+        !registeredOnVCResponse.isSuccess() ||
+        (registeredOnVCResponse.data.symbol.length == 0)) {
+        return registrationStatus.returnResultPromise();
+      }
+      registrationStatus.setIsRegisteredOnVc(1);
+
+      return registrationStatus.returnResultPromise();
+    } catch (err) {
+      return Promise.resolve(responseHelper.error('s_ob_grs_2', 'Something went wrong. ' + err.message));
     }
-  },
-
-  returnStatusPromise: function() {
-    var oThis = this;
-
-    return Promise.resolve(oThis.toHash())
-  },
-
-  setUuid: function(uuid) {
-    var oThis = this;
-    oThis.uuid = uuid;
-  },
-
-  setErc20Address: function(erc20Address) {
-    var oThis = this;
-    oThis.erc20Address = erc20Address;
-  },
-
-  setIsRegisteredOnUc: function(isRegisteredOnUc) {
-    var oThis = this;
-    oThis.isRegisteredOnUc = isRegisteredOnUc;
-  },
-
-  setIsRegisteredOnVc: function(isRegisteredOnVc) {
-    var oThis = this;
-    oThis.isRegisteredOnVc = isRegisteredOnVc;
-  },
-
-  setIsProposalDone: function(isProposalDone) {
-    var oThis = this;
-    oThis.isProposalDone = isProposalDone;
-  }
-
-
-};
-
-const getRegistrationStatus = async function (proposalTransactionHash) {
-  try {
-    // returns the registration status of the proposal
-    const registrationStatus = new RegistrationStatus();
-
-    const proposalTxReceipt = await contractInteractHelper.getTxReceipt(web3UcRpcProvider, proposalTransactionHash);
-
-    if(!proposalTxReceipt || !proposalTxReceipt.isSuccess()) {
-      return registrationStatus.returnStatusPromise();
-    }
-
-    const proposalFormattedTxReceipt = proposalTxReceipt.data.formattedTransactionReceipt;
-    const proposalFormattedEvents = await web3EventsFormatter.perform(proposalFormattedTxReceipt);
-
-    // check whether ProposedBrandedToken is present in the events.
-
-    if(!proposalFormattedEvents || !proposalFormattedEvents['ProposedBrandedToken']) {
-      // this is a error scenario.
-      return Promise.reject('Proposal was not done correctly. Transaction does not have ProposedBrandedToken event');
-    }
-
-    registrationStatus.setIsProposalDone(1);
-
-    const uuid = proposalFormattedEvents['ProposedBrandedToken']['_uuid'];
-
-    registrationStatus.setUuid(uuid);
-
-    // now checking to confirm if registration on UC took place
-
-    var registeredOnUCResult = await openSTUtilityContractInteract.registeredTokenProperty(uuid);
-
-    if(!registeredOnUCResult ||
-      !registeredOnUCResult.isSuccess() ||
-      (registeredOnUCResult.data.erc20Address == '0x0000000000000000000000000000000000000000')) {
-      return registrationStatus.returnStatusPromise();
-    }
-
-    registrationStatus.setIsRegisteredOnUc(1);
-    registrationStatus.setErc20Address(registeredOnUCResult.data.erc20Address);
-
-    // now checking to confirm if registration on VC took place
-
-
-    var registeredOnVCResult = await openSTValueContractInteract.utilityTokenProperties(uuid);
-
-    if(!registeredOnVCResult ||
-      !registeredOnVCResult.isSuccess() ||
-      (registeredOnVCResult.data.symbol.length == 0)) {
-      return registrationStatus.returnStatusPromise();
-    }
-
-    registrationStatus.setIsRegisteredOnVc(1);
-
-    return registrationStatus.returnStatusPromise();
-
-
-  } catch (err) {
-    return Promise.reject('Something went wrong. ' + err.message)
   }
 };
 
-module.exports = getRegistrationStatus;
+module.exports = GetRegistrationStatusKlass;

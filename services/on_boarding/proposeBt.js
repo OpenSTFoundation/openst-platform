@@ -1,29 +1,62 @@
 "use strict";
 
 /**
- * Propose
+ * Propose Branded Token
+ *
+ * @module services/on_boarding/proposeBt
  */
 
 const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
-  , senderName = 'staker'
+  , responseHelper = require(rootPrefix + '/lib/formatter/response')
 ;
 
-const contractName = 'openSTUtility'
-  , currContractAddr = coreAddresses.getAddressForContract(contractName)
-  , openSTUtilityContractInteract = new OpenStUtilityKlass(currContractAddr)
+const senderName = 'staker'
+  , openSTUtilityContractName = 'openSTUtility'
+  , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
+  , openSTUtility = new OpenStUtilityKlass(openSTUtilityContractAddress)
 ;
 
-const proposeBt = function (symbol, name, conversionRate) {
-  // returns a Promise which resolves to a transaction_hash
-  return openSTUtilityContractInteract.proposeBrandedToken(
-    coreAddresses.getAddressForUser(senderName),
-    coreAddresses.getPassphraseForUser(senderName),
-    symbol,
-    name,
-    conversionRate
-  )
+/**
+ * Propose Branded Token Service
+ *
+ * @constructor
+ */
+const ProposeBTKlass = function(params) {
+  const oThis = this
+  ;
+
+  oThis.symbol = params.symbol;
+  oThis.name = params.name;
+  oThis.conversionRate = params.conversion_rate;
 };
 
-module.exports = proposeBt;
+ProposeBTKlass.prototype = {
+  /**
+   * Perform<br><br>
+   *
+   * @return {promise<result>} - returns a promise which resolves to an object of kind Result
+   */
+  perform: async function() {
+    try {
+      const oThis = this
+      ;
+
+      const proposalTransactionHash = await openSTUtility.proposeBrandedToken(
+        coreAddresses.getAddressForUser(senderName),
+        coreAddresses.getPassphraseForUser(senderName),
+        oThis.symbol,
+        oThis.name,
+        oThis.conversionRate
+      );
+
+      return responseHelper.successWithData({transaction_hash: proposalTransactionHash});
+
+    } catch (err) {
+      return Promise.resolve(responseHelper.error('s_ob_pbt_2', 'Something went wrong. ' + err.message));
+    }
+  }
+};
+
+module.exports = ProposeBTKlass;

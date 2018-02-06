@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Simple Token Foundation Class: RegistrationStatusKlass</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.lumen.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top ">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">Simple Token Foundation</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-config_core_abis.html">config/core_abis</a></li><li><a href="module-config_core_addresses.html">config/core_addresses</a></li><li><a href="module-config_core_bins.html">config/core_bins</a></li><li><a href="module-config_core_constants.html">config/core_constants</a></li><li><a href="module-executables_inter_comm_redeem_and_unstake.html">executables/inter_comm/redeem_and_unstake</a></li><li><a href="module-executables_inter_comm_redeem_and_unstake_processor.html">executables/inter_comm/redeem_and_unstake_processor</a></li><li><a href="module-executables_inter_comm_register_branded_token.html">executables/inter_comm/register_branded_token</a></li><li><a href="module-executables_inter_comm_stake_and_mint.html">executables/inter_comm/stake_and_mint</a></li><li><a href="module-executables_inter_comm_stake_and_mint_processor.html">executables/inter_comm/stake_and_mint_processor</a></li><li><a href="module-helpers_custom_console_logger.html">helpers/custom_console_logger</a></li><li><a href="module-helpers_registration_status.html">helpers/registration_status</a></li><li><a href="module-lib_contract_interact_branded_token.html">lib/contract_interact/branded_token</a></li><li><a href="module-lib_contract_interact_helper.html">lib/contract_interact/helper</a></li><li><a href="module-lib_contract_interact_openst_utility.html">lib/contract_interact/openst_utility</a></li><li><a href="module-lib_contract_interact_openst_value.html">lib/contract_interact/openst_value</a></li><li><a href="module-lib_contract_interact_ops_managed.html">lib/contract_interact/ops_managed</a></li><li><a href="module-lib_contract_interact_owned.html">lib/contract_interact/owned</a></li><li><a href="module-lib_contract_interact_simple_token.html">lib/contract_interact/simple_token</a></li><li><a href="module-lib_contract_interact_st_prime.html">lib/contract_interact/st_prime</a></li><li><a href="module-lib_contract_interact_utility_registrar.html">lib/contract_interact/utility_registrar</a></li><li><a href="module-lib_contract_interact_value_registrar.html">lib/contract_interact/value_registrar</a></li><li><a href="module-lib_formatter_response.html">lib/formatter/response</a></li><li><a href="module-lib_web3_events_decoder.html">lib/web3/events/decoder</a></li><li><a href="module-lib_web3_events_formatter.html">lib/web3/events/formatter</a></li><li><a href="module-lib_web3_events_processor.html">lib/web3/events/processor</a></li><li><a href="module-lib_web3_events_queue_manager.html">lib/web3/events/queue_manager</a></li><li><a href="module-lib_web3_providers_factory.html">lib/web3/providers/factory</a></li><li><a href="module-lib_web3_providers_utility_rpc.html">lib/web3/providers/utility_rpc</a></li><li><a href="module-lib_web3_providers_utility_ws.html">lib/web3/providers/utility_ws</a></li><li><a href="module-lib_web3_providers_value_rpc.html">lib/web3/providers/value_rpc</a></li><li><a href="module-lib_web3_providers_value_ws.html">lib/web3/providers/value_ws</a></li><li><a href="module-services_on_boarding_getRegistrationStatus.html">services/on_boarding/getRegistrationStatus</a></li><li><a href="module-services_on_boarding_proposeBt.html">services/on_boarding/proposeBt</a></li><li><a href="module-tools_deploy_DeployHelper.html">tools/deploy/DeployHelper</a></li><li><a href="module-tools_deploy_helper.html">tools/deploy/helper</a></li><li><a href="module-tools_deploy_openst_utility.html">tools/deploy/openst_utility</a></li><li><a href="module-tools_deploy_openst_value.html">tools/deploy/openst_value</a></li><li><a href="module-tools_deploy_st_prime.html">tools/deploy/st_prime</a></li><li><a href="module-tools_deploy_utility_registrar.html">tools/deploy/utility_registrar</a></li><li><a href="module-tools_deploy_value_registrar.html">tools/deploy/value_registrar</a></li><li><a href="module-tools_setup_env_manager.html">tools/setup/env_manager</a></li><li><a href="module-tools_setup_file_manager.html">tools/setup/file_manager</a></li><li><a href="module-tools_setup_fund_manager.html">tools/setup/fund_manager</a></li><li><a href="module-tools_setup_fund_users.html">tools/setup/fund_users</a></li><li><a href="module-tools_setup_geth_checker.html">tools/setup/geth_checker</a></li><li><a href="module-tools_setup_geth_manager.html">tools/setup/geth_manager</a></li><li><a href="module-tools_setup_helper.html">tools/setup/helper</a></li><li><a href="module-tools_setup_service_manager.html">tools/setup/service_manager</a></li><li><a href="module-tools_setup_simple_token_deploy.html">tools/setup/simple_token/deploy</a></li><li><a href="module-tools_setup_simple_token_finalize.html">tools/setup/simple_token/finalize</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="DeployValueCoreContractKlass.html">DeployValueCoreContractKlass</a></li><li><a href="module-config_core_abis-coreAbis.html">config/core_abis~coreAbis</a></li><li><a href="module-config_core_addresses-coreAddresses.html">config/core_addresses~coreAddresses</a></li><li><a href="module-config_core_bins-coreBins.html">config/core_bins~coreBins</a></li><li><a href="module-config_core_constants-coreConstants.html">config/core_constants~coreConstants</a></li><li><a href="module-executables_inter_comm_redeem_and_unstake_processor-RedeemAndUnstakeProcessorInterComm.html">executables/inter_comm/redeem_and_unstake_processor~RedeemAndUnstakeProcessorInterComm</a></li><li><a href="module-executables_inter_comm_redeem_and_unstake-RedeemAndUnstakeInterComm.html">executables/inter_comm/redeem_and_unstake~RedeemAndUnstakeInterComm</a></li><li><a href="module-executables_inter_comm_register_branded_token-RegisterBrandedTokenInterComm.html">executables/inter_comm/register_branded_token~RegisterBrandedTokenInterComm</a></li><li><a href="module-executables_inter_comm_stake_and_mint_processor-StakeAndMintProcessorInterComm.html">executables/inter_comm/stake_and_mint_processor~StakeAndMintProcessorInterComm</a></li><li><a href="module-executables_inter_comm_stake_and_mint-StakeAndMintInterComm.html">executables/inter_comm/stake_and_mint~StakeAndMintInterComm</a></li><li><a href="module-helpers_custom_console_logger-CustomConsoleLoggerKlass.html">helpers/custom_console_logger~CustomConsoleLoggerKlass</a></li><li><a href="module-helpers_registration_status-RegistrationStatusKlass.html">helpers/registration_status~RegistrationStatusKlass</a></li><li><a href="module-lib_contract_interact_branded_token-BrandedTokenKlass.html">lib/contract_interact/branded_token~BrandedTokenKlass</a></li><li><a href="module-lib_contract_interact_helper-ContractInteractHelperKlass.html">lib/contract_interact/helper~ContractInteractHelperKlass</a></li><li><a href="module-lib_contract_interact_openst_utility-OpenStUtilityKlass.html">lib/contract_interact/openst_utility~OpenStUtilityKlass</a></li><li><a href="module-lib_contract_interact_openst_value-OpenSTValueKlass.html">lib/contract_interact/openst_value~OpenSTValueKlass</a></li><li><a href="module-lib_contract_interact_ops_managed-OpsManagedKlass.html">lib/contract_interact/ops_managed~OpsManagedKlass</a></li><li><a href="module-lib_contract_interact_owned-OwnedKlass.html">lib/contract_interact/owned~OwnedKlass</a></li><li><a href="module-lib_contract_interact_simple_token-SimpleTokenKlass.html">lib/contract_interact/simple_token~SimpleTokenKlass</a></li><li><a href="module-lib_contract_interact_st_prime-StPrimeKlass.html">lib/contract_interact/st_prime~StPrimeKlass</a></li><li><a href="module-lib_contract_interact_utility_registrar-UtilityRegistrarKlass.html">lib/contract_interact/utility_registrar~UtilityRegistrarKlass</a></li><li><a href="module-lib_contract_interact_value_registrar-ValueRegistrarKlass.html">lib/contract_interact/value_registrar~ValueRegistrarKlass</a></li><li><a href="module-lib_formatter_response-ResponseHelperKlass.html">lib/formatter/response~ResponseHelperKlass</a></li><li><a href="module-lib_web3_events_decoder-web3EventsDecoder.html">lib/web3/events/decoder~web3EventsDecoder</a></li><li><a href="module-lib_web3_events_formatter-web3EventsFormatter.html">lib/web3/events/formatter~web3EventsFormatter</a></li><li><a href="module-lib_web3_events_processor-EventProcessor.html">lib/web3/events/processor~EventProcessor</a></li><li><a href="module-lib_web3_events_queue_manager-EventQueueManager.html">lib/web3/events/queue_manager~EventQueueManager</a></li><li><a href="module-lib_web3_providers_factory-Web3ProviderFactoryKlass.html">lib/web3/providers/factory~Web3ProviderFactoryKlass</a></li><li><a href="module-services_on_boarding_getRegistrationStatus-GetRegistrationStatusKlass.html">services/on_boarding/getRegistrationStatus~GetRegistrationStatusKlass</a></li><li><a href="module-services_on_boarding_proposeBt-ProposeBTKlass.html">services/on_boarding/proposeBt~ProposeBTKlass</a></li><li><a href="module-tools_deploy_openst_utility-DeployOpenSTUtilityContractKlass.html">tools/deploy/openst_utility~DeployOpenSTUtilityContractKlass</a></li><li><a href="module-tools_deploy_openst_value-DeployOpenSTValueContractKlass.html">tools/deploy/openst_value~DeployOpenSTValueContractKlass</a></li><li><a href="module-tools_deploy_st_prime-STPrimeContractKlass.html">tools/deploy/st_prime~STPrimeContractKlass</a></li><li><a href="module-tools_deploy_utility_registrar-DeployUtilityRegistrarContractKlass.html">tools/deploy/utility_registrar~DeployUtilityRegistrarContractKlass</a></li><li><a href="module-tools_deploy_value_registrar-DeployValueRegistrarContractKlass.html">tools/deploy/value_registrar~DeployValueRegistrarContractKlass</a></li><li><a href="module-tools_setup_env_manager-EnvManagerKlass.html">tools/setup/env_manager~EnvManagerKlass</a></li><li><a href="module-tools_setup_file_manager-FileManagerKlass.html">tools/setup/file_manager~FileManagerKlass</a></li><li><a href="module-tools_setup_fund_manager-FundManagerKlass.html">tools/setup/fund_manager~FundManagerKlass</a></li><li><a href="module-tools_setup_fund_users-FundUsersKlass.html">tools/setup/fund_users~FundUsersKlass</a></li><li><a href="module-tools_setup_geth_checker-GethCheckerKlass.html">tools/setup/geth_checker~GethCheckerKlass</a></li><li><a href="module-tools_setup_geth_manager-GethManagerKlass.html">tools/setup/geth_manager~GethManagerKlass</a></li><li><a href="module-tools_setup_helper-SetupHelperKlass.html">tools/setup/helper~SetupHelperKlass</a></li><li><a href="module-tools_setup_service_manager-ServiceManagerKlass.html">tools/setup/service_manager~ServiceManagerKlass</a></li><li><a href="module-tools_setup_simple_token_deploy-DeploySimpleTokenContractKlass.html">tools/setup/simple_token/deploy~DeploySimpleTokenContractKlass</a></li><li><a href="module-tools_setup_simple_token_finalize-FinalizeSimpleTokenContractKlass.html">tools/setup/simple_token/finalize~FinalizeSimpleTokenContractKlass</a></li><li><a href="RegisterStPrimeKlass.html">RegisterStPrimeKlass</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="global.html#approve">approve</a></li><li><a href="global.html#approveOpenStUtilityContract">approveOpenStUtilityContract</a></li><li><a href="global.html#BigNumber">BigNumber</a></li><li><a href="global.html#getBTBalance">getBTBalance</a></li><li><a href="global.html#getNonceForRedeeming">getNonceForRedeeming</a></li><li><a href="global.html#getSTBalance">getSTBalance</a></li><li><a href="global.html#rootPrefix">rootPrefix</a></li><li><a href="global.html#runHelperService">runHelperService</a></li><li><a href="global.html#shellSource">shellSource</a></li><li><a href="global.html#startRedeem">startRedeem</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	<h1 class="page-title">Class: RegistrationStatusKlass</h1>
+<section>
+
+<header>
+    
+        <h2>
+            <span class="ancestors"><a href="module-helpers_registration_status.html">helpers/registration_status</a>~</span>
+        
+        RegistrationStatusKlass
+        </h2>
+        
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+<hr>
+<dt>
+    <h4 class="name" id="RegistrationStatusKlass"><span class="type-signature"></span>new RegistrationStatusKlass()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Registration status
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        <dl>
+            
+<hr>
+<dt>
+    <h4 class="name" id="returnResultPromise"><span class="type-signature"></span>returnResultPromise()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Return promise which resolves to result object
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    returns a Promise which resolves to result object
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">promise.&lt;result></span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setErc20Address"><span class="type-signature"></span>setErc20Address(erc20Address)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Set ERC 20 address
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>erc20Address</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">ERC20 address to set into the object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setIsProposalDone"><span class="type-signature"></span>setIsProposalDone(isProposalDone)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Set is proposal done
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>isProposalDone</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">is proposal done</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setIsRegisteredOnUc"><span class="type-signature"></span>setIsRegisteredOnUc(isRegisteredOnUc)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Set is registered on UC flag
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>isRegisteredOnUc</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">is registered on UC flag</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setIsRegisteredOnVc"><span class="type-signature"></span>setIsRegisteredOnVc(isRegisteredOnVc)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Set is registered on VC flag
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>isRegisteredOnVc</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">is registered on VC flag</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="setUuid"><span class="type-signature"></span>setUuid(uuid)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        Set UUID
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>uuid</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">uuid to set into the object</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id="toHash"><span class="type-signature"></span>toHash()</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        convert the RegistrationStatus object to an object
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    returns a formatted object of registration status
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">object</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+	<style>.copyright, .jsdoc-message, footer { color: #555555;} footer { border-color:#eeeeee;} }</style>
+
+
+	<span class="copyright">
+	Copyright 2017 OpenST Ltd.
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a>
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>

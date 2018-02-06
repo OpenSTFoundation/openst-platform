@@ -20,6 +20,7 @@ const foundationAddr = coreAddresses.getAddressForUser('foundation')
   , valueRegistrarAddr = coreAddresses.getAddressForUser('valueRegistrar')
   , valueDeployerAddr = coreAddresses.getAddressForUser('valueDeployer')
   , valueOpsAddr = coreAddresses.getAddressForUser('valueOps')
+  , stakerAddr = coreAddresses.getAddressForUser('staker')
   , MIN_FUND = (new BigNumber(10)).toPower(18);
 
 /**
@@ -45,6 +46,9 @@ FundUsersKlass.prototype = {
 
     logger.info('* Foundation funding ETH on value chain to valueOps');
     await setupFundManager.transferEth(foundationAddr, foundationPassphrase, valueOpsAddr, MIN_FUND.toString(10));
+
+    logger.info('* Foundation funding ETH on value chain to staker');
+    await setupFundManager.transferEth(foundationAddr, foundationPassphrase, stakerAddr, MIN_FUND.toString(10));
 
     return Promise.resolve();
   }

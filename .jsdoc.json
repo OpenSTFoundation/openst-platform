@@ -3,7 +3,7 @@
     "allowUnknownTags": true
   },
   "source": {
-    "include": ["config/", "executables/", "lib/", "services/", "tools/"],
+    "include": ["config/", "executables/", "helpers/", "lib/", "services/", "tools/"],
     "exclude": [],
     "includePattern": ".+\\.js(doc|x)?$",
     "excludePattern": "(^|\\/|\\\\)_"
