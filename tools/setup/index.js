@@ -111,6 +111,7 @@ const performer = async function () {
   logger.step("** Starting stake and mint processor intercomm");
   await serviceManager.startExecutable('executables/inter_comm/stake_and_mint_processor.js');
 
+  
   const approverServiceKlass = require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract');
   var approverServiceObj = new approverServiceKlass;
   const approvalTransactionResponse = await approverServiceObj.perform();
@@ -137,23 +138,29 @@ const performer = async function () {
  * @return {promise}
  */
 const runHelperService = function(deployPath) {
-  const envFilePath = setupHelper.setupFolderAbsolutePath() + '/' + setupConfig.env_vars_file;
+  const envFilePath = setupHelper.setupFolderAbsolutePath() + '/' + setupConfig.env_vars_file
+    , clearCacheOfExpr = /(openst-platform\/config\/)|(openst-platform\/lib\/)/;
 
   return new Promise(function (onResolve, onReject) {
     // source env
     shellSource(envFilePath, async function(err){
       if (err) { throw err;}
+      Object.keys(require.cache).forEach(function(key) {
+        if (key.search(clearCacheOfExpr) !== -1) {
+          delete require.cache[key];
+        }
+      });
       // reload core constants
-      delete require.cache[require.resolve(rootPrefix + '/config/core_constants')];
+      //delete require.cache[require.resolve(rootPrefix + '/config/core_constants')];
 
       // reload core addresses
-      delete require.cache[require.resolve(rootPrefix + '/config/core_addresses')];
+      //delete require.cache[require.resolve(rootPrefix + '/config/core_addresses')];
 
       // reload geth providers
-      delete require.cache[require.resolve(rootPrefix + '/lib/web3/providers/utility_rpc')];
-      delete require.cache[require.resolve(rootPrefix + '/lib/web3/providers/utility_ws')];
-      delete require.cache[require.resolve(rootPrefix + '/lib/web3/providers/value_rpc')];
-      delete require.cache[require.resolve(rootPrefix + '/lib/web3/providers/value_ws')];
+      //delete require.cache[require.resolve(rootPrefix + '/lib/web3/providers/utility_rpc')];
+      //delete require.cache[require.resolve(rootPrefix + '/lib/web3/providers/utility_ws')];
+      //delete require.cache[require.resolve(rootPrefix + '/lib/web3/providers/value_rpc')];
+      //delete require.cache[require.resolve(rootPrefix + '/lib/web3/providers/value_ws')];
 
       // deploy contract
       const deployer = require(deployPath);
