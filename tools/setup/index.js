@@ -115,6 +115,9 @@ const performer = async function () {
   logger.step("** Starting stake and mint processor intercomm");
   await serviceManager.startExecutable('executables/inter_comm/stake_and_mint_processor.js');
 
+  // Stake and mint simple token prime
+  await runHelperService(rootPrefix + '/tools/setup/stake_and_mint_simple_token_prime');
+
   // Cleanup build files
   logger.step("** Cleaning temporary build files");
   gethManager.buildCleanup();
@@ -148,21 +151,9 @@ const runHelperService = function(deployPath) {
           delete require.cache[key];
         }
       });
-      // reload core constants
-      //delete require.cache[require.resolve(rootPrefix + '/config/core_constants')];
 
-      // reload core addresses
-      //delete require.cache[require.resolve(rootPrefix + '/config/core_addresses')];
-
-      // reload geth providers
-      //delete require.cache[require.resolve(rootPrefix + '/lib/web3/providers/utility_rpc')];
-      //delete require.cache[require.resolve(rootPrefix + '/lib/web3/providers/utility_ws')];
-      //delete require.cache[require.resolve(rootPrefix + '/lib/web3/providers/value_rpc')];
-      //delete require.cache[require.resolve(rootPrefix + '/lib/web3/providers/value_ws')];
-
-      // deploy contract
-      const deployer = require(deployPath);
-      return onResolve(await deployer.perform());
+      const setupHelper = require(deployPath);
+      return onResolve(await setupHelper.perform());
     });
   });
 

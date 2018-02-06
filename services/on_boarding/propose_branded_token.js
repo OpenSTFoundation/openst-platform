@@ -43,9 +43,10 @@ ProposeBrandedTokenKlass.prototype = {
    * @return {promise<result>} - returns a promise which resolves to an object of kind Result
    */
   perform: async function() {
+    const oThis = this
+    ;
+
     try {
-      const oThis = this
-      ;
 
       const proposalTransactionHash = await openSTUtility.proposeBrandedToken(
         stakerAddr,

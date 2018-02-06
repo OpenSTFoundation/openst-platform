@@ -43,10 +43,12 @@ GetRegistrationStatusKlass.prototype = {
    * @return {promise<result>} - returns a promise which resolves to an object of kind Result
    */
   perform: async function() {
+    const oThis = this
+    ;
+
     try {
       // returns the registration status of the proposal
-      const oThis = this
-        , registrationStatus = new RegistrationStatusKlass()
+      const registrationStatus = new RegistrationStatusKlass()
       ;
 
       // check if the proposal transaction is mined

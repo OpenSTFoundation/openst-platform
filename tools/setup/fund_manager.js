@@ -122,6 +122,7 @@ FundManagerKlass.prototype = {
    */
   transferST: async function(senderAddr, senderPassphrase, recipient, amountInWei) {
     const simpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
+    ;
 
     return simpleToken.transfer(senderAddr, senderPassphrase, recipient, amountInWei)
   },
@@ -184,6 +185,34 @@ FundManagerKlass.prototype = {
         //Format the error
         logger.error(err);
         return responseHelper.error('t_s_fm_9', 'Something went wrong');
+      });
+  },
+
+  /**
+   * Get ST Prime Balance of an address
+   *
+   * @param {string} owner - address
+   *
+   * @return {promise<result>}
+   *
+   */
+  getSTPrimeBalanceOf: function (owner) {
+    const web3RpcProvider = web3ProviderFactory.getProvider('utility', 'rpc')
+    ;
+
+    // Validate addresses
+    if (!contractInteractHelper.isAddressValid(owner)) {
+      return Promise.resolve(responseHelper.error('t_s_fm_10', `Invalid blockchain address: ${owner}`));
+    }
+
+    return web3RpcProvider.eth.getBalance(owner)
+      .then(function(balance) {
+        return responseHelper.successWithData({balance: balance});
+      })
+      .catch(function (err) {
+        //Format the error
+        logger.error(err);
+        return responseHelper.error('t_s_fm_11', 'Something went wrong');
       });
   },
 };

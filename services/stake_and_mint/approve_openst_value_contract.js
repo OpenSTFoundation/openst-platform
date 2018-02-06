@@ -12,7 +12,7 @@ const BigNumber = require('bignumber.js')
 const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , SimpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
+  , simpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
 ;
 
 const openSTValueContractName = 'openSTValue'
@@ -36,13 +36,13 @@ ApproveOpenstValueContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function () {
+    const oThis = this
+    ;
+
     try {
-      const oThis = this
-      ;
+      const bigBalance = await oThis._getStakerSTBalance();
 
-      const bigBalance = oThis._getStakerSTBalance();
-
-      const transactionHash = oThis._approve(bigBalance);
+      const transactionHash = await oThis._approve(bigBalance);
 
       return Promise.resolve(responseHelper.successWithData({transaction_hash: transactionHash}));
 
@@ -59,7 +59,7 @@ ApproveOpenstValueContractKlass.prototype = {
    * @return {promise<result>}
    */
   _approve: async function (toApproveAmount) {
-    const transactionHash = await SimpleToken.approve(
+    const transactionHash = await simpleToken.approve(
       stakerAddress,
       stakerPassphrase,
       openSTValueContractAddress,
@@ -76,7 +76,7 @@ ApproveOpenstValueContractKlass.prototype = {
    * @return {promise<BigNumber>}
    */
   _getStakerSTBalance: function() {
-    return SimpleToken.balanceOf(stakerAddress)
+    return simpleToken.balanceOf(stakerAddress)
       .then(function (result) {
         const stBalance = result.data['balance'];
 
