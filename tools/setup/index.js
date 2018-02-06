@@ -111,7 +111,8 @@ const performer = async function () {
   logger.step("** Starting stake and mint processor intercomm");
   await serviceManager.startExecutable('executables/inter_comm/stake_and_mint_processor.js');
 
-  const approverServiceObj = new require(rootPrefix + 'services/stake_and_mint/approve_openst_value_contract');
+  const approverServiceKlass = require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract');
+  var approverServiceObj = new approverServiceKlass;
   const approvalTransactionResponse = await approverServiceObj.perform();
   console.log(JSON.stringify(approvalTransactionResponse));
 
