@@ -10,8 +10,8 @@ const rootPrefix = "."
   , address = require(rootPrefix + '/services/address')
   , getTransactionReceipt = require(rootPrefix + '/services/transaction/getTransactionReceipt')
   , transferBt = require(rootPrefix + '/services/transaction/transferBt')
-  , proposeBt = require(rootPrefix + '/services/on_boarding/proposeBt')
-  , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/getRegistrationStatus')
+  , proposeBrandedToken = require(rootPrefix + '/services/on_boarding/propose_branded_token')
+  , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/get_registration_status')
   , approveForStake = require(rootPrefix + '/services/stake_and_mint/approveOpenStValueContract')
   , getApprovalStatusForStake = require(rootPrefix + '/services/stake_and_mint/getApprovalStatus')
   , startStake = require(rootPrefix + '/services/stake_and_mint/startStake')
@@ -35,7 +35,7 @@ const OpenSTPlatform = function () {
       transferBt: transferBt
     },
     onBoarding: {
-      proposeBt: proposeBt,
+      proposeBrandedToken: proposeBrandedToken,
       getRegistrationStatus: getRegistrationStatus
     },
     stake: {
@@ -52,4 +52,3 @@ const OpenSTPlatform = function () {
 };
 
 module.exports = new OpenSTPlatform();
-

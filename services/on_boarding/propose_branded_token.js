@@ -3,7 +3,7 @@
 /**
  * Propose Branded Token
  *
- * @module services/on_boarding/proposeBt
+ * @module services/on_boarding/propose_branded_token
  */
 
 const rootPrefix = '../..'
@@ -14,6 +14,8 @@ const rootPrefix = '../..'
 
 const senderName = 'staker'
   , openSTUtilityContractName = 'openSTUtility'
+  , stakerAddr = coreAddresses.getAddressForUser(senderName)
+  , stakerPassphrase = coreAddresses.getPassphraseForUser(senderName)
   , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
   , openSTUtility = new OpenStUtilityKlass(openSTUtilityContractAddress)
 ;
@@ -21,9 +23,11 @@ const senderName = 'staker'
 /**
  * Propose Branded Token Service
  *
+ * @param {object} params - this is object with keys - symbol, name, conversionRate
+ *
  * @constructor
  */
-const ProposeBTKlass = function(params) {
+const ProposeBrandedTokenKlass = function(params) {
   const oThis = this
   ;
 
@@ -32,7 +36,7 @@ const ProposeBTKlass = function(params) {
   oThis.conversionRate = params.conversion_rate;
 };
 
-ProposeBTKlass.prototype = {
+ProposeBrandedTokenKlass.prototype = {
   /**
    * Perform<br><br>
    *
@@ -44,8 +48,8 @@ ProposeBTKlass.prototype = {
       ;
 
       const proposalTransactionHash = await openSTUtility.proposeBrandedToken(
-        coreAddresses.getAddressForUser(senderName),
-        coreAddresses.getPassphraseForUser(senderName),
+        stakerAddr,
+        stakerPassphrase,
         oThis.symbol,
         oThis.name,
         oThis.conversionRate
@@ -59,4 +63,4 @@ ProposeBTKlass.prototype = {
   }
 };
 
-module.exports = ProposeBTKlass;
+module.exports = ProposeBrandedTokenKlass;

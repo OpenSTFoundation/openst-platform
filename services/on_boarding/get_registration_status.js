@@ -3,7 +3,7 @@
 /**
  * Get Registration Status
  *
- * @module services/on_boarding/getRegistrationStatus
+ * @module services/on_boarding/get_registration_status
  */
 
 const rootPrefix = '../..'
@@ -14,7 +14,7 @@ const rootPrefix = '../..'
   , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , RegistrationStatusKlass = require('helpers/registration_status')
+  , RegistrationStatusKlass = require(rootPrefix + '/helpers/registration_status')
 ;
 
 const openStUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility')

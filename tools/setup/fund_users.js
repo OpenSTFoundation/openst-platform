@@ -21,7 +21,9 @@ const foundationAddr = coreAddresses.getAddressForUser('foundation')
   , valueDeployerAddr = coreAddresses.getAddressForUser('valueDeployer')
   , valueOpsAddr = coreAddresses.getAddressForUser('valueOps')
   , stakerAddr = coreAddresses.getAddressForUser('staker')
-  , MIN_FUND = (new BigNumber(10)).toPower(18);
+  , MIN_FUND = (new BigNumber(10)).toPower(18)
+  , MAX_FUND = MIN_FUND.mul(10000)
+;
 
 /**
  * Constructor for Deploy simple token contract
@@ -48,7 +50,7 @@ FundUsersKlass.prototype = {
     await setupFundManager.transferEth(foundationAddr, foundationPassphrase, valueOpsAddr, MIN_FUND.toString(10));
 
     logger.info('* Foundation funding ETH on value chain to staker');
-    await setupFundManager.transferEth(foundationAddr, foundationPassphrase, stakerAddr, MIN_FUND.toString(10));
+    await setupFundManager.transferEth(foundationAddr, foundationPassphrase, stakerAddr, MAX_FUND.toString(10));
 
     return Promise.resolve();
   }
