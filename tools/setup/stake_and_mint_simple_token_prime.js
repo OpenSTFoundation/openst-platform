@@ -72,7 +72,6 @@ StakeAndMintSimpleTokenPrime.prototype = {
 
     logger.info('* Fund staker and redeemer with ST\'');
 
-
     return Promise.resolve(responseHelper.successWithData({}));
   },
 

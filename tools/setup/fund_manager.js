@@ -9,6 +9,7 @@ const BigNumber = require('bignumber.js')
 
 const rootPrefix = "../.."
   , coreConstants = require(rootPrefix + '/config/core_constants')
+  , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
@@ -139,7 +140,7 @@ FundManagerKlass.prototype = {
    *
    */
   transferSTP: async function(senderAddr, senderPassphrase, recipient, amountInWei) {
-    const stPrimeContractAddress = coreConstants.getAddressForContract('stPrime')
+    const stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
       , StPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
       , stPrime = new StPrimeKlass(stPrimeContractAddress)
     ;
