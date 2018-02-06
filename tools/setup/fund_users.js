@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Fund the required users to for deployment
+ * Fund the required users for deployment
  *
  * @module tools/setup/fund_users
  */

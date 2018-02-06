@@ -110,6 +110,23 @@ FundManagerKlass.prototype = {
   },
 
   /**
+   * Transfer ST
+   *
+   * @param {string} senderAddr - address of user who is sending amount
+   * @param {string} senderPassphrase - sender address passphrase
+   * @param {string} recipient - address of user who is receiving amount
+   * @param {BigNumber} amountInWei - amount which is being transferred
+   *
+   * @return {promise<result>}
+   *
+   */
+  transferST: async function(senderAddr, senderPassphrase, recipient, amountInWei) {
+    const simpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
+
+    return simpleToken.transfer(senderAddr, senderPassphrase, recipient, amountInWei)
+  },
+
+  /**
    * Check if owner has required ETH balance (i.e. bigMinAmount)
    *
    * @param {string} owner - Account address

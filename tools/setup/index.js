@@ -69,6 +69,10 @@ const performer = async function () {
   // Finalize Simple Token Contract
   await runHelperService(rootPrefix + '/tools/setup/simple_token/finalize');
 
+  // Fund required addresses
+  logger.step('** Funding required addresses with ST');
+  await runHelperService(rootPrefix + '/tools/setup/fund_users_with_st');
+
   // Deploy Value Registrar Contract and update ENV
   const valueRegistrarDeployResponse = await runHelperService(rootPrefix + '/tools/deploy/value_registrar');
   setupConfig.contracts['valueRegistrar'].address.value = valueRegistrarDeployResponse.data.address;
@@ -110,12 +114,6 @@ const performer = async function () {
   // Starting stake and mint processor intercomm
   logger.step("** Starting stake and mint processor intercomm");
   await serviceManager.startExecutable('executables/inter_comm/stake_and_mint_processor.js');
-
-
-  const approverServiceKlass = require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract');
-  var approverServiceObj = new approverServiceKlass;
-  const approvalTransactionResponse = await approverServiceObj.perform();
-  console.log(JSON.stringify(approvalTransactionResponse));
 
   // Cleanup build files
   logger.step("** Cleaning temporary build files");
