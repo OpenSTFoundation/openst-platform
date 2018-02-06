@@ -14,7 +14,7 @@ const rootPrefix = "."
   , startStake = require(rootPrefix + '/services/stake_and_mint/start_stake')
   , generateAddress = require(rootPrefix + '/services/utils/generate_address')
   , platformStatus = require(rootPrefix + '/services/utils/platform_status')
-  , giveTestOst = require(rootPrefix + '/services/funds_transfer/give_test_ost')
+  , giveTestOst = require(rootPrefix + '/services/simulator/give_test_ost')
 
   , getTransactionReceipt = require(rootPrefix + '/services/transaction/getTransactionReceipt')
   , transferBt = require(rootPrefix + '/services/transaction/transferBt')
@@ -55,7 +55,7 @@ const OpenSTPlatform = function () {
       generateAddress: generateAddress,
       platformStatus: platformStatus
     },
-    fundsTransfer: {
+    simulator: {
       giveTestOst: giveTestOst
     }
   };

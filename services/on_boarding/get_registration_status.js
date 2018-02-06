@@ -26,6 +26,8 @@ const openStUtilityContractAddr = coreAddresses.getAddressForContract('openSTUti
 /**
  * Registration status service
  *
+ * @param {object} params - this is object with keys - transaction_hash (BT proposal)
+ *
  * @constructor
  */
 const GetRegistrationStatusKlass = function(params) {
