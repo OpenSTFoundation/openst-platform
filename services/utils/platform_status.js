@@ -2,23 +2,25 @@
 
 /**
  * Check the status of different services of platform
+ *
+ * @module services/utils/platform_status
  */
 
-const rootPrefix = '..'
+const rootPrefix = '../..'
   , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   ;
 
 /**
- * Constructor for statusKlass
+ * Constructor for platform service status
  *
  * @constructor
  */
-const StatusKlass = function () {
+const PlatformStatusKlass = function () {
 };
 
-StatusKlass.prototype = {
+PlatformStatusKlass.prototype = {
   /**
    * Check status of all services
    *
@@ -86,4 +88,4 @@ StatusKlass.prototype = {
   }
 };
 
-module.exports = StatusKlass;
+module.exports = PlatformStatusKlass;

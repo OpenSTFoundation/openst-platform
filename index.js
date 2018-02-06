@@ -12,9 +12,9 @@ const rootPrefix = "."
   , approveForStake = require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract')
   , getApprovalStatusForStake = require(rootPrefix + '/services/stake_and_mint/get_approval_status')
   , startStake = require(rootPrefix + '/services/stake_and_mint/start_stake')
-
-  , address = require(rootPrefix + '/services/address')
-  , status = require(rootPrefix + '/services/status')
+  , generateAddress = require(rootPrefix + '/services/utils/generate_address')
+  , platformStatus = require(rootPrefix + '/services/utils/platform_status')
+  , giveTestOst = require(rootPrefix + '/services/funds_transfer/give_test_ost')
 
   , getTransactionReceipt = require(rootPrefix + '/services/transaction/getTransactionReceipt')
   , transferBt = require(rootPrefix + '/services/transaction/transferBt')
@@ -33,8 +33,6 @@ const OpenSTPlatform = function () {
   oThis.contracts.brandedToken = BrandedTokenKlass;
 
   oThis.services = {
-    address: address,
-    status: status,
     transactions: {
       getTransactionRecipt: getTransactionReceipt,
       transferBt: transferBt
@@ -52,6 +50,13 @@ const OpenSTPlatform = function () {
       approveForRedeem: approveForRedeem,
       getApprovalStatus: getApprovalStatusForRedeem,
       start: startRedeem
+    },
+    utils: {
+      generateAddress: generateAddress,
+      platformStatus: platformStatus
+    },
+    fundsTransfer: {
+      giveTestOst: giveTestOst
     }
   };
 };

@@ -23,7 +23,7 @@ const senderName = 'staker'
 /**
  * Propose Branded Token Service
  *
- * @param {object} params - this is object with keys - symbol, name, conversionRate
+ * @param {object} params - this is object with keys - symbol, name, conversion_rate
  *
  * @constructor
  */
