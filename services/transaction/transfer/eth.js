@@ -6,7 +6,7 @@
  * @module services/transaction/transfer/eth
  */
 
-const rootPrefix = '../..'
+const rootPrefix = '../../..'
   , fundManager = require(rootPrefix + '/lib/fund_manager')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
 ;
@@ -39,9 +39,9 @@ TransferEthKlass.prototype = {
     ;
 
     try {
-      return fundManager.transferEth(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei)
+      return fundManager.transferEth(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei);
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_t_te_1', 'Something went wrong. ' + err.message));
+      return Promise.resolve(responseHelper.error('s_t_t_e_1', 'Something went wrong. ' + err.message));
     }
   }
 };

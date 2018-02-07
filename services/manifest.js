@@ -13,6 +13,11 @@ const rootPrefix = ".."
   , transferSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer/simple_token_prime')
   , transferEth = require(rootPrefix + '/services/transaction/transfer/eth')
 
+  , transferFromNameBrandedToken = require(rootPrefix + '/services/transaction/transfer_from_name/branded_token')
+  , transferFromNameSimpleToken = require(rootPrefix + '/services/transaction/transfer_from_name/simple_token')
+  , transferFromNameSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer_from_name/simple_token_prime')
+  , transferFromNameEth = require(rootPrefix + '/services/transaction/transfer_from_name/eth')
+
   , getBrandedTokenBalance = require(rootPrefix + 'services/balance/branded_token')
   , getSimpleTokenBalance = require(rootPrefix + 'services/balance/simple_token')
   , getSimpleTokenPrimeBalance = require(rootPrefix + 'services/balance/simple_token_prime')
@@ -31,8 +36,6 @@ const rootPrefix = ".."
 
   , generateAddress = require(rootPrefix + '/services/utils/generate_address')
   , platformStatus = require(rootPrefix + '/services/utils/platform_status')
-
-  , giveTestOst = require(rootPrefix + '/services/simulator/give_test_ost')
 ;
 
 /**
@@ -56,6 +59,13 @@ ServiceManifestKlass.prototype = {
       simpleToken: transferSimpleToken,
       simpleTokenPrime: transferSimpleTokenPrime,
       eth: transferEth
+    },
+
+    transferFromName: {
+      brandedToken: transferFromNameBrandedToken,
+      simpleToken: transferFromNameSimpleToken,
+      simpleTokenPrime: transferFromNameSimpleTokenPrime,
+      eth: transferFromNameEth
     }
   },
 
@@ -111,15 +121,6 @@ ServiceManifestKlass.prototype = {
   utils: {
     generateAddress: generateAddress,
     platformStatus: platformStatus
-  },
-
-  /**
-   * Simulator specificservices
-   *
-   * @constant {object}
-   */
-  simulator: {
-    giveTestOst: giveTestOst
   }
 };
 

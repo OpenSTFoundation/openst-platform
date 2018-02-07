@@ -6,7 +6,7 @@
  * @module services/transaction/transfer/simple_token
  */
 
-const rootPrefix = '../..'
+const rootPrefix = '../../..'
   , fundManager = require(rootPrefix + '/lib/fund_manager')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
 ;
@@ -39,9 +39,9 @@ TransferSimpleTokenKlass.prototype = {
     ;
 
     try {
-      return fundManager.transferST(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei)
+      return fundManager.transferST(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei);
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_t_tst_1', 'Something went wrong. ' + err.message));
+      return Promise.resolve(responseHelper.error('s_t_t_st_1', 'Something went wrong. ' + err.message));
     }
   }
 };

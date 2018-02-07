@@ -6,7 +6,7 @@
  * @module services/transaction/transfer/branded_token
  */
 
-const rootPrefix = '../..'
+const rootPrefix = '../../..'
   , fundManager = require(rootPrefix + '/lib/fund_manager')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
 ;
@@ -44,9 +44,9 @@ TransferBrandedTokenKlass.prototype = {
 
     try {
       return fundManager.transferBrandedToken(oThis.erc20Address, oThis.reserveAddress, oThis.reservePassphrase,
-        oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei)
+        oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei);
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_t_tbt_1', 'Something went wrong. ' + err.message));
+      return Promise.resolve(responseHelper.error('s_t_t_bt_1', 'Something went wrong. ' + err.message));
     }
   }
 };
