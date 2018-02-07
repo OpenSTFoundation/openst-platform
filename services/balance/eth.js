@@ -25,7 +25,7 @@ const EthBalanceKlass = function(params) {
 EthBalanceKlass.prototype = {
 
   perform: function () {
-    var oThis = this;
+    const oThis = this;
 
     try {
       return fundManager.getBrandedTokenBalanceOf(oThis.address);
