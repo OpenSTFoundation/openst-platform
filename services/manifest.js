@@ -9,6 +9,7 @@
 const rootPrefix = ".."
   , getTransactionReceipt = require(rootPrefix + '/services/transaction/get_receipt')
   , transferBrandedToken = require(rootPrefix + '/services/transaction/transfer_branded_token')
+  , transferEth = require(rootPrefix + '/services/transaction/transfer_eth')
   , transferSimpleToken = require(rootPrefix + '/services/transaction/transfer_simple_token')
   , transferSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer_simple_token_prime')
   , proposeBrandedToken = require(rootPrefix + '/services/on_boarding/propose_branded_token')
@@ -42,6 +43,7 @@ ServiceManifestKlass.prototype = {
     transferBrandedToken: transferBrandedToken,
     transferSimpleToken:transferSimpleToken,
     transferSimpleTokenPrime: transferSimpleTokenPrime
+    transferEth: transferEth
   },
 
   /**
