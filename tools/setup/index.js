@@ -16,11 +16,6 @@ const rootPrefix = "../.."
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
-const args = process.argv
-  , environment = args[2]
-  , environments = ['development', 'test']
-;
-
 const performer = async function () {
 
   // Stop running services
@@ -109,11 +104,11 @@ const performer = async function () {
 
   // Starting stake and mint intercomm
   logger.step("** Starting stake and mint intercomm");
-  await serviceManager.startExecutable(Path.join(__dirname) + '/' + rootPrefix + '/executables/inter_comm/stake_and_mint.js');
+  await serviceManager.startExecutable(rootPrefix + '/executables/inter_comm/stake_and_mint.js');
 
   // Starting stake and mint processor intercomm
   logger.step("** Starting stake and mint processor intercomm");
-  await serviceManager.startExecutable(Path.join(__dirname) + '/' + rootPrefix + '/executables/inter_comm/stake_and_mint_processor.js');
+  await serviceManager.startExecutable(rootPrefix + '/executables/inter_comm/stake_and_mint_processor.js');
 
   // Stake and mint simple token prime
   await runHelperService(rootPrefix + '/tools/setup/stake_and_mint_simple_token_prime');
@@ -125,6 +120,10 @@ const performer = async function () {
   // Cleanup build files
   logger.step("** Cleaning temporary build files");
   gethManager.buildCleanup();
+
+  // Stop running services
+  logger.step("** Stopping openST services");
+  serviceManager.stopServices();
 
   // Print all the helpful scripts post setup
   logger.step("** OpenST Platform created following executables for further usages:");
@@ -163,9 +162,9 @@ const runHelperService = function(deployPath) {
 
 };
 
-if (!environments.includes(environment)) {
-  logger.error("** Usages: node " + Path.join(__dirname) + "/" + rootPrefix + "/tools/setup/index.js <environment>");
-  logger.info("** Note: For scalibity reasons, step tools should only be used in " + environments.join(' and ') +' environments.');
-} else {
-  performer();
-}
+// Start the platform setup
+logger.error(Array(30).join("="));
+logger.error("Note: For scalability and security reasons, step tools should only be used in " + setupHelper.allowedEnvironment().join(' and ') +' environments.');
+logger.error(Array(30).join("="));
+
+performer();

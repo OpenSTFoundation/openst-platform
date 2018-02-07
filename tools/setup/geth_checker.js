@@ -26,14 +26,14 @@ GethCheckerKlass.prototype = {
    * @return {promise}
    */
   perform: function () {
-    const oThis = this;
+    const oThis = this
+      , promiseArray = [];
 
     return new Promise(async function (onResolve, onReject) {
       for (var chain in setupConfig.chains) {
-        await oThis._isRunning(chain);
+        promiseArray.push(oThis._isRunning(chain));
       }
-
-      onResolve();
+      return Promise.all(promiseArray).then(onResolve);
     });
   },
 

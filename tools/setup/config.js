@@ -1,8 +1,5 @@
 const setupConfig = {
 
-  // Folder where platform will setup the chains and other files
-  setup_folder: "openst-setup", //Editable
-
   // Platform environment variables filename
   env_vars_file: "openst_env_vars.sh", //Editable
 

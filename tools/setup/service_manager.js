@@ -7,6 +7,7 @@
 
 const shellAsyncCmd = require('node-cmd')
   , shellSource = require('shell-source')
+  , Path = require('path')
 ;
 
 const rootPrefix = "../.."
@@ -18,8 +19,7 @@ const rootPrefix = "../.."
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
-const gethRunScript = "run.sh"
-  , sealerPassphraseFile = "sealer-passphrase"
+const sealerPassphraseFile = "sealer-passphrase"
 ;
 
 /**
@@ -42,8 +42,6 @@ ServiceManagerKlass.prototype = {
     for (var chain in setupConfig.chains) {
       oThis.startGeth(chain, purpose);
     }
-
-    // Start intercom processes
   },
 
   /**
@@ -55,7 +53,8 @@ ServiceManagerKlass.prototype = {
     // Stop geth nodes
     oThis.stopGeth();
 
-    // Stop intercom processes
+    // Stop all executables
+    oThis.stopExecutable();
   },
 
   /**
@@ -79,19 +78,20 @@ ServiceManagerKlass.prototype = {
    */
   stopGeth: function() {
     logger.info("* Stopping all running geths");
-    const cmd = "killall geth";
+    const cmd = "ps -ef | grep 'openst-setup\\|openst-platform' | grep 'geth ' |  grep -v grep | awk '{print $2}' | xargs kill";
     shellAsyncCmd.run(cmd);
   },
 
   /**
    * Start executable
    *
-   * @param {string} executablePath - absolute path of executable
+   * @param {string} executablePath - relative path of the executable file
    *
    * @return {promise}
    */
   startExecutable: function(executablePath) {
-    const envFilePath = setupHelper.setupFolderAbsolutePath() + '/' + setupConfig.env_vars_file;
+    const oThis = this
+      , envFilePath = setupHelper.setupFolderAbsolutePath() + '/' + setupConfig.env_vars_file;
 
     return new Promise(function (onResolve, onReject) {
       // source env
@@ -99,13 +99,23 @@ ServiceManagerKlass.prototype = {
         if (err) { throw err;}
 
         logger.info('* Starting executable:', executablePath);
-        const cmd = 'node ' + executablePath;
+        const cmd = oThis._startExecutableCommand(executablePath);
+        logger.info(cmd);
         shellAsyncCmd.run(cmd);
 
         logger.info('* Waiting for 10 seconds for executable to start.');
         setTimeout(function(){ onResolve(Promise.resolve()) }, 10000);
       });
     });
+  },
+
+  /**
+   * Stop executables
+   */
+  stopExecutable: function() {
+    logger.info("* Stopping all running executable");
+    const cmd = "ps -ef | grep 'openst-setup\\|openst-platform' | grep 'executables' |  grep -v grep | awk '{print $2}' | xargs kill";
+    shellAsyncCmd.run(cmd);
   },
 
   /**
@@ -119,13 +129,43 @@ ServiceManagerKlass.prototype = {
 
     // create geth run script
     for (var chain in setupConfig.chains) {
-      var chainFolder = gethManager.getChainDataFolder(chain)
-        ,cmd = oThis._startGethCommand(chain, '');
+      var binFolder = setupHelper.binFolder()
+        , cmd = oThis._startGethCommand(chain, '')
+        , gethRunScript = "run-" + chain + ".sh"
       ;
-      fileManager.touch(chainFolder + "/" + gethRunScript, '#!/bin/sh');
-      fileManager.append(chainFolder + "/" + gethRunScript, cmd);
-      logger.info("* Start " + chain + " chain: sh " + setupHelper.setupFolderAbsolutePath() + "/" + chainFolder + "/" + gethRunScript);
+      fileManager.touch(binFolder + "/" + gethRunScript, '#!/bin/sh');
+      fileManager.append(binFolder + "/" + gethRunScript, cmd);
+      logger.info("* Start " + chain + " chain: sh " + setupHelper.setupFolderAbsolutePath() + "/" + binFolder + "/" + gethRunScript);
     }
+
+    // Generate executables
+    const intercommExes = ["redeem_and_unstake.js", "redeem_and_unstake_processor.js", "register_branded_token.js",
+      "stake_and_mint.js", "stake_and_mint_processor.js"];
+    for (var i=0; i < intercommExes.length; i++) {
+      var binFolder = setupHelper.binFolder()
+        , executablePath = rootPrefix + '/executables/inter_comm/' + intercommExes[i]
+        , execName = executablePath.split('/').slice(-1)[0].split('.')[0]
+        , cmd = oThis._startExecutableCommand(executablePath)
+        , runScript = "run-" + execName + ".sh"
+
+      fileManager.touch(binFolder + "/" + runScript, '#!/bin/sh');
+      fileManager.append(binFolder + "/" + runScript, cmd);
+      logger.info("* Start " + intercommExes[i] + " intercomm: sh " + setupHelper.setupFolderAbsolutePath() + "/" + binFolder + "/" + runScript);
+    }
+  },
+
+  /**
+   * Start executable script command
+   *
+   * @params {string} executablePath - relative path of the executable file
+   *
+   * @return {string}
+   * @private
+   */
+  _startExecutableCommand: function(executablePath) {
+    var logFilename = executablePath.split('/').slice(-1)[0].split('.')[0];
+    return 'node ' + Path.join(__dirname) + '/' + executablePath + ' >> ' +
+      setupHelper.logsFolderAbsolutePath() + '/executables-' + logFilename + '.log'
   },
 
   /**
@@ -164,7 +204,8 @@ ServiceManagerKlass.prototype = {
       " --rpc --rpcapi eth,net,web3,personal --rpcport " + rpcPort + " --rpcaddr " + rpcHost + " --ws" +
       " --wsport " + wsPort + " --wsorigins '*' --wsaddr " + wsHost + " --etherbase " + sealerAddr +
       " --mine --minerthreads 1 --targetgaslimit " + gasLimit[chain] + "  --gasprice \"" + gasPrice + "\" --unlock " +
-      sealerAddr + " --password "+ chainDataDir + "/" + sealerPassphraseFile;
+      sealerAddr + " --password "+ chainDataDir + "/" + sealerPassphraseFile + " 2> " +
+      setupHelper.logsFolderAbsolutePath() + "/chain-" + chain + ".log";
   }
 
 };

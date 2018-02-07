@@ -35,6 +35,14 @@ FileManagerKlass.prototype = {
     // Create new setup folder
     logger.info("* Creating new openST setup folder");
     oThis.mkdir('');
+
+    // Create logs setup folder
+    logger.info("* Creating openST setup logs folder");
+    oThis.mkdir(setupHelper.logsFolder());
+
+    // Create bin setup folder
+    logger.info("* Creating openST setup bin folder");
+    oThis.mkdir(setupHelper.binFolder());
   },
 
   /**
