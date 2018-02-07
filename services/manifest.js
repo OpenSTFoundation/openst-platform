@@ -18,10 +18,10 @@ const rootPrefix = ".."
   , transferFromNameSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer_from_name/simple_token_prime')
   , transferFromNameEth = require(rootPrefix + '/services/transaction/transfer_from_name/eth')
 
-  , getBrandedTokenBalance = require(rootPrefix + 'services/balance/branded_token')
-  , getSimpleTokenBalance = require(rootPrefix + 'services/balance/simple_token')
-  , getSimpleTokenPrimeBalance = require(rootPrefix + 'services/balance/simple_token_prime')
-  , getEthBalance = require(rootPrefix + 'services/balance/eth')
+  , getBrandedTokenBalance = require(rootPrefix + '/services/balance/branded_token')
+  , getSimpleTokenBalance = require(rootPrefix + '/services/balance/simple_token')
+  , getSimpleTokenPrimeBalance = require(rootPrefix + '/services/balance/simple_token_prime')
+  , getEthBalance = require(rootPrefix + '/services/balance/eth')
 
   , proposeBrandedToken = require(rootPrefix + '/services/on_boarding/propose_branded_token')
   , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/get_registration_status')
