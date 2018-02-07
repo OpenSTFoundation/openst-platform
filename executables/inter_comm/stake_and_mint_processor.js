@@ -23,6 +23,9 @@
  *
  */
 
+const openSTNotification = require('@openstfoundation/openst-notification')
+;
+
 const rootPrefix = '../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , eventQueueManagerKlass = require(rootPrefix + '/lib/web3/events/queue_manager')
@@ -126,7 +129,22 @@ StakeAndMintProcessorInterComm.prototype = {
    *
    */
   onEvent: function (eventObj) {
-    // TODO: Publish (event received) to notify others
+    openSTNotification.publish_event.perform(
+      {
+        topic: 'event.StakingIntentConfirmed',
+        message: {
+          kind: 'event_received',
+          payload: {
+            event_name: 'StakingIntentConfirmed',
+            params: eventObj.returnValues,
+            contract_address: openSTUtilityContractAddr,
+            chain_id: web3WsProvider.chainId,
+            chain_kind: web3WsProvider.chainKind
+          }
+        }
+      }
+    );
+
     eventQueueManager.addEditEventInQueue(eventObj);
   },
 
@@ -137,8 +155,20 @@ StakeAndMintProcessorInterComm.prototype = {
    *
    */
   onEventSubscriptionError: function (error) {
-    // TODO: Publish (error) to notify others
-    logger.log("onEventSubscriptionError triggered");
+    openSTNotification.publish_event.perform(
+      {
+        topic: 'error',
+        message: {
+          kind: 'error',
+          payload: {
+            text: error || '',
+            code: 'e_ic_samp_onEventSubscriptionError_1'
+          }
+        }
+      }
+    );
+
+    logger.error('onEventSubscriptionError triggered');
     logger.error(error);
   },
 
@@ -150,7 +180,6 @@ StakeAndMintProcessorInterComm.prototype = {
    *
    */
   processor: async function (eventObj) {
-    // TODO: Publish (event processing started and end result) to notify others
     const oThis = this
       , returnValues = eventObj.returnValues
       , stakingIntentHash = returnValues._stakingIntentHash
@@ -167,6 +196,18 @@ StakeAndMintProcessorInterComm.prototype = {
       return Promise.resolve(responseHelper.error('e_ic_samp_1', 'staker is not same as the internal staker account.'));
     }
 
+    openSTNotification.publish_event.perform(
+      {
+        topic: 'staking.processStaking.start',
+        message: {
+          kind: 'info',
+          payload: {
+            staking_intent_hash: stakingIntentHash
+          }
+        }
+      }
+    );
+
     logger.step(stakingIntentHash, ' :: performing processStaking');
 
     await openSTValueContractInteract.processStaking(
@@ -175,7 +216,32 @@ StakeAndMintProcessorInterComm.prototype = {
       stakingIntentHash
     );
 
+    openSTNotification.publish_event.perform(
+      {
+        topic: 'staking.processStaking.done',
+        message: {
+          kind: 'info',
+          payload: {
+            staking_intent_hash: stakingIntentHash
+          }
+        }
+      }
+    );
+
     logger.win(stakingIntentHash, ' :: performed processStaking');
+
+    openSTNotification.publish_event.perform(
+      {
+        topic: 'staking.processMinting.start',
+        message: {
+          kind: 'info',
+          payload: {
+            staking_intent_hash: stakingIntentHash
+          }
+        }
+      }
+    );
+
     logger.step(stakingIntentHash, ' :: performing processMinting');
 
     await openSTUtilityContractInteract.processMinting(
@@ -184,9 +250,19 @@ StakeAndMintProcessorInterComm.prototype = {
       stakingIntentHash
     );
 
-    logger.win(stakingIntentHash, ' :: performed processMinting');
+    openSTNotification.publish_event.perform(
+      {
+        topic: 'staking.processMinting.done',
+        message: {
+          kind: 'info',
+          payload: {
+            staking_intent_hash: stakingIntentHash
+          }
+        }
+      }
+    );
 
-    logger.step(stakingIntentHash, ' :: performing claim');
+    logger.win(stakingIntentHash, ' :: performed processMinting');
 
     var utilityTokenInterfaceContract = null;
 
@@ -201,10 +277,36 @@ StakeAndMintProcessorInterComm.prototype = {
       });
     }
 
+    openSTNotification.publish_event.perform(
+      {
+        topic: 'staking.claim.start',
+        message: {
+          kind: 'info',
+          payload: {
+            staking_intent_hash: stakingIntentHash
+          }
+        }
+      }
+    );
+
+    logger.step(stakingIntentHash, ' :: performing claim');
+
     await utilityTokenInterfaceContract.claim(
       stakerAddress,
       stakerPassphrase,
       beneficiary
+    );
+
+    openSTNotification.publish_event.perform(
+      {
+        topic: 'staking.claim.done',
+        message: {
+          kind: 'info',
+          payload: {
+            staking_intent_hash: stakingIntentHash
+          }
+        }
+      }
     );
 
     logger.win(stakingIntentHash, ' :: performed claim');

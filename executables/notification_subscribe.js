@@ -1,10 +1,10 @@
 "use strict";
 
-const notificationSubscribe = require('/Users/Alpesh/Documents/simpletoken/openst-notification/index.js');
+const openSTNotification = require('@openstfoundation/openst-notification');
 
-notificationSubscribe.subscribe_event.rabbit(
-  ["events.transfer"],
+openSTNotification.subscribe_event.rabbit(
+  ['#'],
   function(msgContent){
-    console.log('---My---msgContent---', msgContent)
+    console.log('[RECEIVED]', msgContent, '\n')
   }
 );

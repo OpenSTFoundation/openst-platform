@@ -19,6 +19,9 @@
  *
  */
 
+const openSTNotification = require('@openstfoundation/openst-notification')
+;
+
 const rootPrefix = '../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , eventQueueManagerKlass = require(rootPrefix + '/lib/web3/events/queue_manager')
@@ -103,7 +106,22 @@ StakeAndMintInterComm.prototype = {
    *
    */
   onEvent: function (eventObj) {
-    // TODO: Publish (event received) to notify others
+    openSTNotification.publish_event.perform(
+      {
+        topic: 'event.StakingIntentDeclared',
+        message: {
+          kind: 'event_received',
+          payload: {
+            event_name: 'StakingIntentDeclared',
+            params: eventObj.returnValues,
+            contract_address: openSTValueContractAddr,
+            chain_id: web3WsProvider.chainId,
+            chain_kind: web3WsProvider.chainKind
+          }
+        }
+      }
+    );
+
     eventQueueManager.addEditEventInQueue(eventObj);
   },
 
@@ -114,8 +132,20 @@ StakeAndMintInterComm.prototype = {
    *
    */
   onEventSubscriptionError: function (error) {
-    // TODO: Publish (error) to notify others
-    logger.log("onEventSubscriptionError triggered");
+    openSTNotification.publish_event.perform(
+      {
+        topic: 'error',
+        message: {
+          kind: 'error',
+          payload: {
+            text: error || '',
+            code: 'e_ic_sam_onEventSubscriptionError_1'
+          }
+        }
+      }
+    );
+
+    logger.error('onEventSubscriptionError triggered');
     logger.error(error);
   },
 
@@ -126,8 +156,7 @@ StakeAndMintInterComm.prototype = {
    * @param {Object} eventObj - Object of event.
    *
    */
-  processor: function (eventObj) {
-    // TODO: Publish (event processing started and end result) to notify others
+  processor: async function (eventObj) {
     const oThis = this
       , returnValues = eventObj.returnValues
       , uuid = returnValues._uuid
@@ -140,7 +169,21 @@ StakeAndMintInterComm.prototype = {
       , beneficiary = returnValues._beneficiary
       , chainIdUtility = returnValues._chainIdUtility;
 
-    return utilityRegistrarContractInteract.confirmStakingIntent(
+    openSTNotification.publish_event.perform(
+      {
+        topic: 'staking.confirmStakingIntent.start',
+        message: {
+          kind: 'info',
+          payload: {
+            staking_intent_hash: stakingIntentHash
+          }
+        }
+      }
+    );
+
+    logger.step(stakingIntentHash, ' :: performing confirmStakingIntent');
+
+    await utilityRegistrarContractInteract.confirmStakingIntent(
       utilityRegistrarAddr,
       utilityRegistrarPassphrase,
       openSTUtilityCurrContractAddr,
@@ -153,6 +196,22 @@ StakeAndMintInterComm.prototype = {
       unlockHeight,
       stakingIntentHash
     );
+
+    openSTNotification.publish_event.perform(
+      {
+        topic: 'staking.confirmStakingIntent.done',
+        message: {
+          kind: 'info',
+          payload: {
+            staking_intent_hash: stakingIntentHash
+          }
+        }
+      }
+    );
+
+    logger.win(stakingIntentHash, ' :: performed confirmStakingIntent');
+
+    return Promise.resolve();
   }
 
 };

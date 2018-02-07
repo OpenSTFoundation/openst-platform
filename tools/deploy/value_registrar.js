@@ -55,7 +55,7 @@ DeployValueRegistrarContractKlass.prototype = {
   /**
    * Perform
    *
-   * @param {Boolean} showPrompts - show prompts
+   * @param {boolean} showPrompts - show prompts
    *
    * @return {promise<result>}
    */

@@ -21,6 +21,9 @@
  *
  */
 
+const openSTNotification = require('@openstfoundation/openst-notification')
+;
+
 const rootPrefix = '../..'
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
@@ -112,7 +115,21 @@ RegisterBrandedTokenInterComm.prototype = {
    *
    */
   onEvent: function (eventObj) {
-    // TODO: Publish (event received) to notify others
+    openSTNotification.publish_event.perform(
+      {
+        topic: 'event.ProposedBrandedToken',
+        message: {
+          kind: 'event_received',
+          payload: {
+            event_name: 'ProposedBrandedToken',
+            params: eventObj.returnValues,
+            contract_address: openSTUtilityContractAddr,
+            chain_id: web3WsProvider.chainId,
+            chain_kind: web3WsProvider.chainKind
+          }
+        }
+      }
+    );
     eventQueueManager.addEditEventInQueue(eventObj);
   },
 
@@ -123,8 +140,20 @@ RegisterBrandedTokenInterComm.prototype = {
    *
    */
   onEventSubscriptionError: function (error) {
-    // TODO: Publish (error) to notify others
-    logger.log("onEventSubscriptionError triggered");
+    openSTNotification.publish_event.perform(
+      {
+        topic: 'error',
+        message: {
+          kind: 'error',
+          payload: {
+            text: error || '',
+            code: 'e_ic_rbt_onEventSubscriptionError_1'
+          }
+        }
+      }
+    );
+
+    logger.error('onEventSubscriptionError triggered');
     logger.error(error);
   },
 
@@ -136,7 +165,6 @@ RegisterBrandedTokenInterComm.prototype = {
    *
    */
   processor: async function (eventObj) {
-    // TODO: Publish (event processing started and end result) to notify others
     const oThis = this
       , returnValues = eventObj.returnValues
       , symbol = returnValues._symbol
@@ -146,7 +174,18 @@ RegisterBrandedTokenInterComm.prototype = {
       , token = returnValues._token
       , uuid = returnValues._uuid;
 
-    logger.step('Calling registerBrandedToken of utilityRegistrar contract.');
+    openSTNotification.publish_event.perform(
+      {
+        topic: 'obBoarding.registerBrandedToken.start',
+        message: {
+          kind: 'info',
+          payload: {
+            uuid: uuid
+          }
+        }
+      }
+    );
+    logger.step(uuid, ':: performing registerBrandedToken of utilityRegistrar contract.');
 
     const ucRegistrarResponse = await utilityRegistrarContractInteract.registerBrandedToken(
       utilityRegistrarAddr,
@@ -160,25 +199,46 @@ RegisterBrandedTokenInterComm.prototype = {
       uuid
     );
 
-    logger.log(JSON.stringify(ucRegistrarResponse));
-
     if (ucRegistrarResponse.isSuccess()) {
-      const ucFormattedTransactionReceipt = ucRegistrarResponse.data.formattedTransactionReceipt;
-      const ucFormattedEvents = await web3EventsFormatter.perform(ucFormattedTransactionReceipt);
+      const ucFormattedTransactionReceipt = ucRegistrarResponse.data.formattedTransactionReceipt
+        , ucFormattedEvents = await web3EventsFormatter.perform(ucFormattedTransactionReceipt);
 
       if (!(ucFormattedEvents['RegisteredBrandedToken'])) {
-        logger.error('RegisteredBrandedToken event not found in receipt. Something went wrong!');
-        return Promise.reject('RegisteredBrandedToken event not found in receipt. Something went wrong!');
+        var err = 'RegisteredBrandedToken event not found in receipt. Something went wrong!';
+        logger.error(err);
+        return Promise.reject(err);
       } else {
-        logger.win('registerBrandedToken of utilityRegistrar contract DONE.');
+        openSTNotification.publish_event.perform(
+          {
+            topic: 'obBoarding.registerBrandedToken.done',
+            message: {
+              kind: 'info',
+              payload: {
+                uuid: uuid
+              }
+            }
+          }
+        );
+        logger.win(uuid, ':: performed registerBrandedToken of utilityRegistrar contract.');
       }
     } else {
-      logger.error('registerBrandedToken of utilityRegistrar contract ERROR. Something went wrong!');
-      return Promise.reject('registerBrandedToken of utilityRegistrar contract ERROR. Something went wrong!');
+      var err = 'registerBrandedToken of utilityRegistrar contract ERROR. Something went wrong!';
+      logger.error(err);
+      return Promise.reject(err);
     }
 
-
-    logger.step('Calling registerUtilityToken of valueRegistrar contract.');
+    openSTNotification.publish_event.perform(
+      {
+        topic: 'obBoarding.registerUtilityToken.start',
+        message: {
+          kind: 'info',
+          payload: {
+            uuid: uuid
+          }
+        }
+      }
+    );
+    logger.step(uuid, ':: performing registerUtilityToken of valueRegistrar contract.');
 
     const vcRegistrarResponse = await valueRegistrarContractInteract.registerUtilityToken(
       valueRegistrarAddr,
@@ -192,27 +252,36 @@ RegisterBrandedTokenInterComm.prototype = {
       uuid
     );
 
-    logger.log(JSON.stringify(vcRegistrarResponse));
-
     if (vcRegistrarResponse.isSuccess()) {
-      const vcFormattedTransactionReceipt = vcRegistrarResponse.data.formattedTransactionReceipt;
-      const vcFormattedEvents = await web3EventsFormatter.perform(vcFormattedTransactionReceipt);
+      const vcFormattedTransactionReceipt = vcRegistrarResponse.data.formattedTransactionReceipt
+        , vcFormattedEvents = await web3EventsFormatter.perform(vcFormattedTransactionReceipt);
 
       if (!(vcFormattedEvents['UtilityTokenRegistered'])) {
-        logger.error('UtilityTokenRegistered event not found in receipt. Something went wrong!');
-        return Promise.reject('UtilityTokenRegistered event not found in receipt. Something went wrong!');
+        var err = 'UtilityTokenRegistered event not found in receipt. Something went wrong!';
+        logger.error(err);
+        return Promise.reject(err);
       } else {
-        logger.win('registerUtilityToken of valueRegistrar contract DONE.');
+        openSTNotification.publish_event.perform(
+          {
+            topic: 'obBoarding.registerUtilityToken.done',
+            message: {
+              kind: 'info',
+              payload: {
+                uuid: uuid
+              }
+            }
+          }
+        );
+        logger.win(uuid, ':: performed registerUtilityToken of valueRegistrar contract.');
       }
     } else {
-      logger.error('registerUtilityToken of valueRegistrar contract ERROR. Something went wrong!');
-      return Promise.reject('registerUtilityToken of valueRegistrar contract ERROR. Something went wrong!');
+      var err = 'registerUtilityToken of valueRegistrar contract ERROR. Something went wrong!';
+      logger.error(err);
+      return Promise.reject(err);
     }
 
     return Promise.resolve(vcRegistrarResponse)
-
   }
-
 };
 
 new RegisterBrandedTokenInterComm().init();

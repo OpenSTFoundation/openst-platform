@@ -60,7 +60,7 @@ DeployOpenSTUtilityContractKlass.prototype = {
   /**
    * Perform
    *
-   * @param {Boolean} showPrompts - Show prompts
+   * @param {boolean} showPrompts - Show prompts
    *
    * @return {promise<result>}
    */

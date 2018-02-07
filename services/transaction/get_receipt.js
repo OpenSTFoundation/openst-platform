@@ -7,6 +7,7 @@
  */
 
 const rootPrefix = '../..'
+  , openSTNotification = require('@openstfoundation/openst-notification')
   , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , web3EventsDecoder = require(rootPrefix + '/lib/web3/events/decoder')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
@@ -44,12 +45,25 @@ GetReceiptKlass.prototype = {
         return Promise.resolve(responseHelper.error('s_t_gr_1', 'Invalid chain.'));
       }
 
-      const txReceipt = await web3RpcProvider.eth.getTransactionReceipt( oThis.transactionHash);
+      const txReceipt = await web3Provider.eth.getTransactionReceipt( oThis.transactionHash);
 
       if(!txReceipt){
         return Promise.resolve(responseHelper.error('s_t_gr_2', 'Transaction yet not mined.'));
       } else {
         const web3EventsDecoderResponse = web3EventsDecoder.perform(txReceipt, {});
+        openSTNotification.publish_event.perform(
+          {
+            topic: 'transaction_mined',
+            message: {
+              kind: 'transaction_mined',
+              payload: {
+                transaction_hash: oThis.transactionHash,
+                chain_id: web3Provider.chainId,
+                chain_kind: web3Provider.chainKind
+              }
+            }
+          }
+        );
         return Promise.resolve(web3EventsDecoderResponse);
       }
 
