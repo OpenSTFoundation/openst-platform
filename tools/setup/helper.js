@@ -7,6 +7,7 @@
 
 const shell = require('shelljs')
   , Path = require('path')
+  , os = require('os')
 ;
 
 const rootPrefix = "../.."
@@ -42,7 +43,7 @@ SetupHelperKlass.prototype = {
    *
    */
   setupFolderAbsolutePath: function() {
-    return Path.resolve("./") + "/" + setupConfig.setup_folder;
+    return os.homedir() + "/" + setupConfig.setup_folder;
   }
 };
 

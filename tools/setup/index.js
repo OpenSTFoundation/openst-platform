@@ -164,7 +164,7 @@ const runHelperService = function(deployPath) {
 };
 
 if (!environments.includes(environment)) {
-  logger.error("** Usages: node tools/setup/index.js <environment>");
+  logger.error("** Usages: node " + Path.join(__dirname) + "/" + rootPrefix + "/tools/setup/index.js <environment>");
   logger.info("** Note: For scalibity reasons, step tools should only be used in " + environments.join(' and ') +' environments.');
 } else {
   performer();
