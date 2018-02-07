@@ -25,7 +25,7 @@ const SimpleTokenBalanceKlass = function(params) {
 SimpleTokenBalanceKlass.prototype = {
 
   perform: function () {
-    var oThis = this;
+    const oThis = this;
 
     try {
       return fundManager.getSTBalanceOf(oThis.address);
