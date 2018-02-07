@@ -34,7 +34,7 @@ TransferSimpleTokenKlass.prototype = {
    *
    * @return {promise<result>} - returns a promise which resolves to an object of kind Result
    */
-  perform: async function () {
+  perform: function () {
     const oThis = this
     ;
 
