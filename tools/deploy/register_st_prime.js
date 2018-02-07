@@ -1,5 +1,19 @@
 "use strict";
 
+/**
+ * Register ST Prime
+ *
+ * <br><br>Following are the steps which are performed in here:
+ * <ol>
+ *   <li> Deployment of valueCore Contract.</li>
+ *   <li> Calling of addCore of Value Registrar Contract.</li>
+ *   <li> Calling of registerUtilityToken of valueRegistrar Contract for ST Prime.</li>
+ *   <li> Setting Ops Address of valueRegistrar Contract to valueRegistrar User.</li>
+ * </ol>
+ *
+ * @module tools/deploy/register_st_prime
+ */
+
 const readline = require('readline')
 ;
 
@@ -7,7 +21,6 @@ const rootPrefix = '../..'
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , deployHelper = require(rootPrefix + '/tools/deploy/helper')
   , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , ValueRegistrarKlass = require(rootPrefix + '/lib/contract_interact/value_registrar')
 ;

@@ -1,5 +1,17 @@
 "use strict";
 
+/**
+ * Deploy value core contract
+ *
+ * <br><br>Following are the steps which are performed in here:
+ * <ol>
+ *   <li> Deployment of valueCore Contract.</li>
+ *   <li> Calling addCore of Value Registrar Contract.</li>
+ * </ol>
+ *
+ * @module tools/deploy/value_core
+ */
+
 const readline = require('readline')
 ;
 

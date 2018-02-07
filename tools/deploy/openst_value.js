@@ -3,6 +3,12 @@
 /**
  * Deploy openST Value Contract
  *
+ * <br><br>Following are the steps which are performed in here:
+ * <ol>
+ *   <li> Deployment of openSTValue Contract.</li>
+ *   <li> Initiate OwnerShipTransfer of openSTValue Contract to foundation.</li>
+ * </ol>
+ *
  * @module tools/deploy/openst_value
  */
 

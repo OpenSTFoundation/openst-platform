@@ -1,7 +1,14 @@
 "use strict";
-
 /**
  * ST Prime related deployment steps
+ *
+ * <br><br>Following are the steps which are performed in here:
+ * <ol>
+ *   <li> Getting UUID of ST prime contract from openSTUtility Contract.</li>
+ *   <li> Getting address of ST prime contract from openSTUtility Contract.</li>
+ *   <li> Checking if ST prime contract was deployed correctly at the address obtained.</li>
+ *   <li> Initialize Transfer of ST Prime - all base tokens from deployer address to ST Prime contract address.</li>
+ * </ol>
  *
  * @module tools/deploy/st_prime
  */
@@ -53,7 +60,7 @@ STPrimeContractKlass.prototype = {
     const getSimpleTokenPrimeContractAddressResponse = await openStUtility.getSimpleTokenPrimeContractAddress()
       , simpleTokenPrimeContractAddress = getSimpleTokenPrimeContractAddressResponse.data.simpleTokenPrimeContractAddress;
 
-    logger.step('** Checking if ST prime contract was deployed');
+    logger.step('** Checking if ST prime contract was deployed correctly at the address obtained');
     const code = await web3Provider.eth.getCode(simpleTokenPrimeContractAddress);
     if (code.length <= 2) {
       logger.error('Contract deployment failed. Invalid code length for contract: simpleTokenPrime');

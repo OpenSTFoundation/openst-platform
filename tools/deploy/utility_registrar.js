@@ -3,6 +3,13 @@
 /**
  * Deploy Utility Registrar Contract
  *
+ * <br><br>Following are the steps which are performed in here:
+ * <ol>
+ *   <li> Deployment of utilityRegistrar Contract.</li>
+ *   <li> Setting opsAddress of utilityRegistrar Contract to utilityRegistrar.</li>
+ *   <li> Initiate OwnerShipTransfer of utilityRegistrar Contract to foundation.</li>
+ * </ol>
+ *
  * @module tools/deploy/utility_registrar
  */
 

@@ -3,6 +3,12 @@
 /**
  * Deploy Value Registrar Contract
  *
+ * <br><br>Following are the steps which are performed in here:
+ * <ol>
+ *   <li> Deployment of valueRegistrar Contract.</li>
+ *   <li> Setting Ops Address of Value Registrar contract to valueOps address and verifying it.</li>
+ * </ol>
+ *
  * @module tools/deploy/value_registrar
  */
 

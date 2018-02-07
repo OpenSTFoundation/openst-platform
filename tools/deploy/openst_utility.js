@@ -1,7 +1,13 @@
 "use strict";
 
 /**
- * Deploy openST Value Contract
+ * Deploy openST Utility Contract
+ *
+ * <br><br>Following are the steps which are performed in here:
+ * <ol>
+ *   <li> Deployment of OpenST Utility Contract.</li>
+ *   <li> Initiate OwnerShipTransfer of openSTUtility Contract to foundation.</li>
+ * </ol>
  *
  * @module tools/deploy/openst_utility
  */
