@@ -1,9 +1,9 @@
 "use strict";
 
 /**
- * Get simple token Balance of an address
+ * Get simple token prime Balance of an address
  *
- * @module services/balance/simple_token
+ * @module services/balance/simple_token_prime
  */
 
 const rootPrefix = '../..'
@@ -18,17 +18,17 @@ const rootPrefix = '../..'
  *
  * @constructor
  */
-const SimpleTokenBalanceKlass = function(params) {
+const SimpleTokenPrimeBalanceKlass = function(params) {
   this.address = params.address;
 };
 
-SimpleTokenBalanceKlass.prototype = {
+SimpleTokenPrimeBalanceKlass.prototype = {
 
   perform: function () {
     const oThis = this;
 
     try {
-      return fundManager.getSTBalanceOf(oThis.address);
+      return fundManager.getSTPrimeBalanceOf(oThis.address);
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_b_st_1', 'Something went wrong. ' + err.message));
     }
@@ -37,4 +37,4 @@ SimpleTokenBalanceKlass.prototype = {
 
 };
 
-module.exports = SimpleTokenBalanceKlass;
+module.exports = SimpleTokenPrimeBalanceKlass;
