@@ -12,16 +12,26 @@ const rootPrefix = ".."
   , transferSimpleToken = require(rootPrefix + '/services/transaction/transfer/simple_token')
   , transferSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer/simple_token_prime')
   , transferEth = require(rootPrefix + '/services/transaction/transfer/eth')
+
+  , getBrandedTokenBalance = require(rootPrefix + 'services/balance/branded_token')
+  , getSimpleTokenBalance = require(rootPrefix + 'services/balance/simple_token')
+  , getSimpleTokenPrimeBalance = require(rootPrefix + 'services/balance/simple_token_prime')
+  , getEthBalance = require(rootPrefix + 'services/balance/eth')
+
   , proposeBrandedToken = require(rootPrefix + '/services/on_boarding/propose_branded_token')
   , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/get_registration_status')
+
   , approveForStake = require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract')
   , getApprovalStatusForStake = require(rootPrefix + '/services/stake_and_mint/get_approval_status')
   , startStake = require(rootPrefix + '/services/stake_and_mint/start_stake')
+
   , approveForRedeem = require(rootPrefix + '/services/redeem_and_unstake/approveOpenStUtilityContract')
   , getApprovalStatusForRedeem = require(rootPrefix + '/services/redeem_and_unstake/getApprovalStatus')
   , startRedeem = require(rootPrefix + '/services/redeem_and_unstake/startRedeem')
+
   , generateAddress = require(rootPrefix + '/services/utils/generate_address')
   , platformStatus = require(rootPrefix + '/services/utils/platform_status')
+
   , giveTestOst = require(rootPrefix + '/services/simulator/give_test_ost')
 ;
 
@@ -40,12 +50,25 @@ ServiceManifestKlass.prototype = {
    */
   transaction: {
     getTransactionReceipt: getTransactionReceipt,
+
     transfer: {
-      BrandedToken: transferBrandedToken,
-      SimpleToken:transferSimpleToken,
-      SimpleTokenPrime: transferSimpleTokenPrime,
-      Eth: transferEth
+      brandedToken: transferBrandedToken,
+      simpleToken: transferSimpleToken,
+      simpleTokenPrime: transferSimpleTokenPrime,
+      eth: transferEth
     }
+  },
+
+  /**
+   * Balance related services
+   *
+   * @constant {object}
+   */
+  balance: {
+    brandedToken: getBrandedTokenBalance,
+    simpleToken: getSimpleTokenBalance,
+    simpleTokenPrime: getSimpleTokenPrimeBalance,
+    eth: getEthBalance
   },
 
   /**
