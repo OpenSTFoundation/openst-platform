@@ -18,17 +18,17 @@ const rootPrefix = '../..'
  *
  * @constructor
  */
-const EthBalanceOfKlass = function(params) {
+const EthBalanceKlass = function(params) {
   this.address = params.address;
 };
 
-EthBalanceOfKlass.prototype = {
+EthBalanceKlass.prototype = {
 
   perform: function () {
     var oThis = this;
 
     try {
-      return fundManager.getEthBalanceOf(oThis.address);
+      return fundManager.getBrandedTokenBalanceOf(oThis.address);
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_b_e_1', 'Something went wrong. ' + err.message));
     }
@@ -37,4 +37,4 @@ EthBalanceOfKlass.prototype = {
 
 };
 
-module.exports = EthBalanceOfKlass;
+module.exports = EthBalanceKlass;
