@@ -1,9 +1,9 @@
 "use strict";
 
 /**
- * Transfer Simple Token
+ * Transfer Eth
  *
- * @module services/transaction/transfer_simple_token
+ * @module services/transaction/transfer/eth
  */
 
 const rootPrefix = '../..'
@@ -12,13 +12,13 @@ const rootPrefix = '../..'
 ;
 
 /**
- * Transfer Simple Token Service
+ * Transfer Eth Service
  *
  * @param {object} params - this is object with keys - sender_address, sender_passphrase, recipient_address, amount_in_wei
  *
  * @constructor
  */
-const TransferSimpleTokenKlass = function(params) {
+const TransferEthKlass = function(params) {
   const oThis = this
   ;
 
@@ -28,7 +28,7 @@ const TransferSimpleTokenKlass = function(params) {
   oThis.amountInWei = params.amount_in_wei;
 };
 
-TransferSimpleTokenKlass.prototype = {
+TransferEthKlass.prototype = {
   /**
    * Perform<br><br>
    *
@@ -39,11 +39,11 @@ TransferSimpleTokenKlass.prototype = {
     ;
 
     try {
-      return fundManager.transferST(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei)
+      return fundManager.transferEth(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei)
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_t_tst_1', 'Something went wrong. ' + err.message));
+      return Promise.resolve(responseHelper.error('s_t_te_1', 'Something went wrong. ' + err.message));
     }
   }
 };
 
-module.exports = TransferSimpleTokenKlass;
+module.exports = TransferEthKlass;

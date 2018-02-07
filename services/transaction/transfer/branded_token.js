@@ -3,7 +3,7 @@
 /**
  * Transfer Branded Token
  *
- * @module services/transaction/transfer_branded_token
+ * @module services/transaction/transfer/branded_token
  */
 
 const rootPrefix = '../..'

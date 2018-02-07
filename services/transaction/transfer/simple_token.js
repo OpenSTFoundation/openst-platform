@@ -1,9 +1,9 @@
 "use strict";
 
 /**
- * Transfer Simple Token Prime
+ * Transfer Simple Token
  *
- * @module services/transaction/transfer_simple_token_prime
+ * @module services/transaction/transfer/simple_token
  */
 
 const rootPrefix = '../..'
@@ -12,13 +12,13 @@ const rootPrefix = '../..'
 ;
 
 /**
- * Transfer Simple Token Prime Service
+ * Transfer Simple Token Service
  *
  * @param {object} params - this is object with keys - sender_address, sender_passphrase, recipient_address, amount_in_wei
  *
  * @constructor
  */
-const TransferSimpleTokenPrimeKlass = function(params) {
+const TransferSimpleTokenKlass = function(params) {
   const oThis = this
   ;
 
@@ -28,7 +28,7 @@ const TransferSimpleTokenPrimeKlass = function(params) {
   oThis.amountInWei = params.amount_in_wei;
 };
 
-TransferSimpleTokenPrimeKlass.prototype = {
+TransferSimpleTokenKlass.prototype = {
   /**
    * Perform<br><br>
    *
@@ -39,11 +39,11 @@ TransferSimpleTokenPrimeKlass.prototype = {
     ;
 
     try {
-      return fundManager.transferSTP(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei)
+      return fundManager.transferST(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei)
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_t_tstp_1', 'Something went wrong. ' + err.message));
+      return Promise.resolve(responseHelper.error('s_t_tst_1', 'Something went wrong. ' + err.message));
     }
   }
 };
 
-module.exports = TransferSimpleTokenPrimeKlass;
+module.exports = TransferSimpleTokenKlass;

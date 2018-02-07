@@ -8,10 +8,10 @@
 
 const rootPrefix = ".."
   , getTransactionReceipt = require(rootPrefix + '/services/transaction/get_receipt')
-  , transferBrandedToken = require(rootPrefix + '/services/transaction/transfer_branded_token')
-  , transferEth = require(rootPrefix + '/services/transaction/transfer_eth')
-  , transferSimpleToken = require(rootPrefix + '/services/transaction/transfer_simple_token')
-  , transferSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer_simple_token_prime')
+  , transferBrandedToken = require(rootPrefix + '/services/transaction/transfer/branded_token')
+  , transferSimpleToken = require(rootPrefix + '/services/transaction/transfer/simple_token')
+  , transferSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer/simple_token_prime')
+  , transferEth = require(rootPrefix + '/services/transaction/transfer/eth')
   , proposeBrandedToken = require(rootPrefix + '/services/on_boarding/propose_branded_token')
   , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/get_registration_status')
   , approveForStake = require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract')
