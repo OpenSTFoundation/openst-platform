@@ -79,6 +79,7 @@ StakeAndMintSimpleTokenPrime.prototype = {
    * @param {string} approveTransactionHash - transaction hash of the approval
    *
    * @return {promise}
+   * * @private
    */
   _getApprovalStatus: function(approveTransactionHash) {
     return new Promise(function(onResolve, onReject) {
@@ -103,6 +104,7 @@ StakeAndMintSimpleTokenPrime.prototype = {
    * Wait for ST Prime mint
    *
    * @return {promise}
+   * @private
    */
   _waitForSTPrimeMint: function() {
     return new Promise(function(onResolve, onReject) {

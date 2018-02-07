@@ -86,7 +86,7 @@ ServiceManagerKlass.prototype = {
   /**
    * Start executable
    *
-   * @param {string} executablePath - path relative to the repo root of the executable
+   * @param {string} executablePath - absolute path of executable
    *
    * @return {promise}
    */
