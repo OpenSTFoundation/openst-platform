@@ -38,7 +38,7 @@ ServiceManifestKlass.prototype = {
    *
    * @constant {object}
    */
-  transactions: {
+  transaction: {
     getTransactionReceipt: getTransactionReceipt,
     transfer: {
       BrandedToken: transferBrandedToken,
