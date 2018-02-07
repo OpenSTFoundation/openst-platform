@@ -24,6 +24,8 @@ const openSTValueContractName = 'openSTValue'
  * @constructor
  */
 const GetBrandedTokenDetailsKlass = function (params) {
+  const oThis = this;
+
   oThis.uuid = params.uuid;
 };
 
@@ -37,7 +39,9 @@ GetBrandedTokenDetailsKlass.prototype = {
     const oThis = this
     ;
 
-    return openSTValue.utilityTokenProperties(oThis.uuid);
+    var tokenDetails = await openSTValue.utilityTokens(oThis.uuid);
+
+    return tokenDetails;
   }
 };
 

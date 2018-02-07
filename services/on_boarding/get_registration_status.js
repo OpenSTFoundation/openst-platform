@@ -75,7 +75,7 @@ GetRegistrationStatusKlass.prototype = {
       registrationStatus.setUuid(uuid);
 
       // now checking to confirm if registration on UC took place
-      const registeredOnUCResponse = await openSTUtilityContractInteract.registeredTokenProperty(uuid);
+      const registeredOnUCResponse = await openSTUtilityContractInteract.registeredToken(uuid);
 
       if(!registeredOnUCResponse ||
         !registeredOnUCResponse.isSuccess() ||
@@ -87,7 +87,7 @@ GetRegistrationStatusKlass.prototype = {
       registrationStatus.setErc20Address(registeredOnUCResponse.data.erc20Address);
 
       // now checking to confirm if registration on VC took place
-      const registeredOnVCResponse = await openSTValueContractInteract.utilityTokenProperties(uuid);
+      const registeredOnVCResponse = await openSTValueContractInteract.utilityTokens(uuid);
 
       if(!registeredOnVCResponse ||
         !registeredOnVCResponse.isSuccess() ||

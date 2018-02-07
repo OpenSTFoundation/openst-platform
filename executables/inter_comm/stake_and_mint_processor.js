@@ -194,7 +194,7 @@ StakeAndMintProcessorInterComm.prototype = {
       utilityTokenInterfaceContract = stPrime;
     } else {
 
-      const registeredOnUCResult = await openSTUtilityContractInteract.registeredTokenProperty(uuid);
+      const registeredOnUCResult = await openSTUtilityContractInteract.registeredToken(uuid);
 
       utilityTokenInterfaceContract = new BrandedTokenKlass({
         ERC20: registeredOnUCResult.data.erc20Address
