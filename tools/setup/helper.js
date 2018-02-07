@@ -118,7 +118,7 @@ SetupHelperKlass.prototype = {
    */
   allowedEnvironment: function() {
     return ['development', 'test'];
-  },
+  }
 
 };
 

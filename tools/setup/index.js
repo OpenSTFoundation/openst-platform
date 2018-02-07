@@ -9,6 +9,7 @@ const shellSource = require('shell-source')
 const rootPrefix = "../.."
   , setupConfig = require(rootPrefix + '/tools/setup/config')
   , setupHelper = require(rootPrefix + '/tools/setup/helper')
+  , spinnerHelper = require(rootPrefix + '/tools/setup/spinner')
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
   , gethManager = require(rootPrefix + '/tools/setup/geth_manager')
   , serviceManager = require(rootPrefix + '/tools/setup/service_manager')
@@ -50,7 +51,9 @@ const performer = async function () {
 
   // Chains have started mining
   logger.step("** Checking if chains have started generating blocks");
+  spinnerHelper.start();
   await runHelperService(rootPrefix + '/tools/setup/geth_checker');
+  spinnerHelper.stop();
 
   // Fund required addresses
   logger.step('** Funding required addresses');

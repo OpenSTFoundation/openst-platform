@@ -242,10 +242,27 @@ RegisterBTKlass.prototype = {
 };
 
 const args = process.argv
-  , btName = args[2]
-  , btSymbol = args[3]
-  , btConversionRate = args[4]
+  , btName = (args[2] || '').trim()
+  , btSymbol = (args[3] || '').trim()
+  , btConversionRate = parseInt((args[4] || '').trim(), 10)
 ;
+
+// perform validations
+const btNameRegEx = /[a-z0-9\s]/i
+  , btSymbolRegEx = /[a-z0-9]/i
+;
+if (!(btNameRegEx.test(btName))) {
+  logger.error("Branded token name is invalid. Allowed characters are: a-z, 0-9 and space");
+  process.exit(1);
+}
+if (!(btSymbolRegEx.test(btSymbol))) {
+  logger.error("Branded token symbol is invalid. Allowed characters are: a-z, 0-9");
+  process.exit(1);
+}
+if (isNaN(btConversionRate)) {
+  logger.error("Branded token conversation rate is not a number.");
+  process.exit(1);
+}
 
 const services = new RegisterBTKlass({bt_name: btName, bt_symbol: btSymbol, bt_conversion_rate: btConversionRate});
 services.perform();
