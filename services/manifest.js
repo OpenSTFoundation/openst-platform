@@ -36,6 +36,7 @@ const rootPrefix = ".."
 
   , generateAddress = require(rootPrefix + '/services/utils/generate_address')
   , platformStatus = require(rootPrefix + '/services/utils/platform_status')
+  , getBrandedTokenDetails = require(rootPrefix + '/services/utils/get_branded_token_details')
 ;
 
 /**
@@ -120,7 +121,8 @@ ServiceManifestKlass.prototype = {
    */
   utils: {
     generateAddress: generateAddress,
-    platformStatus: platformStatus
+    platformStatus: platformStatus,
+    getBrandedTokenDetails: getBrandedTokenDetails
   }
 };
 
