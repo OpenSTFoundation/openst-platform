@@ -40,10 +40,12 @@ ServiceManifestKlass.prototype = {
    */
   transactions: {
     getTransactionReceipt: getTransactionReceipt,
-    transferBrandedToken: transferBrandedToken,
-    transferSimpleToken:transferSimpleToken,
-    transferSimpleTokenPrime: transferSimpleTokenPrime
-    transferEth: transferEth
+    transfer: {
+      BrandedToken: transferBrandedToken,
+      SimpleToken:transferSimpleToken,
+      SimpleTokenPrime: transferSimpleTokenPrime,
+      Eth: transferEth
+    }
   },
 
   /**
