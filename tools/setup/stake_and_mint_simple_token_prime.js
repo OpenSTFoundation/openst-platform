@@ -17,7 +17,7 @@ const rootPrefix = "../.."
   , approveService = require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract')
   , getApprovalStatusService = require(rootPrefix + '/services/stake_and_mint/get_approval_status')
   , startStakeService = require(rootPrefix + '/services/stake_and_mint/start_stake')
-  , fundManager = require(rootPrefix + '/tools/setup/fund_manager')
+  , fundManager = require(rootPrefix + '/lib/fund_manager')
 ;
 
 const stakerAddr = coreAddresses.getAddressForUser('staker')

@@ -10,7 +10,7 @@ const BigNumber = require('bignumber.js')
 ;
 
 const rootPrefix = "../.."
-  , setupFundManager = require(rootPrefix + '/tools/setup/fund_manager')
+  , setupFundManager = require(rootPrefix + '/lib/fund_manager')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
