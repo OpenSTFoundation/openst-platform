@@ -133,11 +133,12 @@ MintBrandedToken.prototype = {
 
       const getBalance = async function(){
 
-        const afterBalanceResponse = await await brandedToken._callMethod('balanceOf', [oThis.reserveAddr]);
+        const afterBalanceResponse = await brandedToken._callMethod('balanceOf', [oThis.reserveAddr])
+          , afterBalance = afterBalanceResponse.data.balanceOf;
 
-        if(afterBalanceResponse.isSuccess() && (new BigNumber(afterBalanceResponse.data.balanceOf)).greaterThan(beforeBalance)){
-          logger.info('After Balance of Reserve:', afterBalanceResponse.toString(10));
-          return onResolve(afterBalanceResponse);
+        if(afterBalanceResponse.isSuccess() && (new BigNumber(afterBalance)).greaterThan(beforeBalance)){
+          logger.info('After Balance of Reserve:', afterBalance.toString(10));
+          return onResolve();
         } else {
           setTimeout(getBalance, 10000);
         }
