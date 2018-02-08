@@ -29,7 +29,7 @@ BrandedTokenBalanceKlass.prototype = {
     const oThis = this;
 
     try {
-      return fundManager.getEthBalanceOf(this.erc20Address, oThis.address);
+      return fundManager.getBrandedTokenBalanceOf(this.erc20Address, oThis.address);
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_b_bt_1', 'Something went wrong. ' + err.message));
     }
