@@ -32,7 +32,8 @@ before_script:
 script:
   - node tools/setup/index.js
   - source $HOME/openst-setup/openst_env_vars.sh
-  - node tools/setup/start_services.js
+  - nohup node tools/setup/start_services.js </dev/null >/dev/null 2>&1 &
+  - sleep 300
   - source $HOME/openst-setup/openst_env_vars.sh
   - node tools/setup/branded_token/register.js "ACME Coin" "ACME" 10
 after_script:
