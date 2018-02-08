@@ -11,7 +11,7 @@ Simple Token Prime Balance was cached to improve performance.
 Stake and mint related cache inconsistency bug was resolved.
 
 Detailed changelog:
-- Restful APIs in separate repository ([openst-platform#97](https://github.com/OpenSTFoundation/openst-platform/issues/97))
+- Platform [Sample Restful APIs](https://github.com/OpenSTFoundation/openst-platform-apis) in separate repository ([openst-platform#97](https://github.com/OpenSTFoundation/openst-platform/issues/97))
 - Publish platform as node module ([openst-platform#98](https://github.com/OpenSTFoundation/openst-platform/issues/98))
 - Simplified platform setup for development and test environments ([openst-platform#99](https://github.com/OpenSTFoundation/openst-platform/issues/99))
 - Integrate openst-cache in platform ([openst-platform#96](https://github.com/OpenSTFoundation/openst-platform/issues/96))
