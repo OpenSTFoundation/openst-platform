@@ -197,21 +197,37 @@ MintBrandedToken.prototype = {
 };
 
 const args = process.argv
-  , uuid = (args[2] || '').trim()
+  , symbol = (args[2] || '').trim()
   , amountToStakeInWeis = (args[3] || '').trim()
 ;
 
+tokenHelper.getBrandedToken()
+  .then(function(btDetails){
+    var selectedBtDetail = null;
+    for (var uuid in btDetails) {
+      const currBtDetail = btDetails[uuid];
 
-tokenHelper.getBrandedToken(uuid).then(
-  async function(btDetails){
-    const btDetail = btDetails[uuid]
-      , reserveAddr = btDetail.Reserve
-      , reservePassphrase = btDetail.ReservePassphrase
-      , erc20Addr = btDetail.ERC20
+      if (currBtDetail.Symbol.toLowerCase() == symbol.toLowerCase()) {
+        selectedBtDetail = currBtDetail;
+      }
+    }
+
+    if(!selectedBtDetail) {
+      logger.error('Invalid Branded Token Symbol:', symbol);
+      process.exit(1);
+    }
+
+    return selectedBtDetail;
+  })
+  .then(async function(selectedBtDetail){
+    const reserveAddr = selectedBtDetail.Reserve
+      , reservePassphrase = selectedBtDetail.ReservePassphrase
+      , erc20Addr = selectedBtDetail.ERC20
+      , uuid = selectedBtDetail.UUID
     ;
 
-    const serviceObj = new MintBrandedToken({amount_to_stake_in_weis: amountToStakeInWeis, uuid: uuid, reserve_address: reserveAddr,
-      reserve_passphrase: reservePassphrase, erc20_address: erc20Addr});
+    const serviceObj = new MintBrandedToken({amount_to_stake_in_weis: amountToStakeInWeis, uuid: uuid,
+      reserve_address: reserveAddr, reserve_passphrase: reservePassphrase, erc20_address: erc20Addr});
 
     await serviceObj.perform();
 
