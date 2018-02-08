@@ -122,14 +122,21 @@ MintBrandedToken.prototype = {
 
     return new Promise(async function(onResolve, onReject) {
 
-      const beforeBalanceResponse = await fundManager.getBrandedTokenBalanceOf(oThis.erc20Address, oThis.reserveAddr);
-      const beforeBalance = new BigNumber(beforeBalanceResponse.data.balance);
+      // NOTE: NOT Relying on CACHE - this is because for in process memory, this goes into infinite loop
+      const BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
+        , brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address, Reserve: oThis.reserveAddr});
+
+      const beforeBalanceResponse = await brandedToken._callMethod('balanceOf', [oThis.reserveAddr]);
+      const beforeBalance = new BigNumber(beforeBalanceResponse.data.balanceOf);
+
+      logger.info('Before Balance of Reserve:', beforeBalance.toString(10));
 
       const getBalance = async function(){
 
-        const afterBalanceResponse = await fundManager.getBrandedTokenBalanceOf(oThis.erc20Address, oThis.reserveAddr);
+        const afterBalanceResponse = await await brandedToken._callMethod('balanceOf', [oThis.reserveAddr]);
 
-        if(afterBalanceResponse.isSuccess() && (new BigNumber(afterBalanceResponse.data.balance)).greaterThan(beforeBalance)){
+        if(afterBalanceResponse.isSuccess() && (new BigNumber(afterBalanceResponse.data.balanceOf)).greaterThan(beforeBalance)){
+          logger.info('After Balance of Reserve:', afterBalanceResponse.toString(10));
           return onResolve(afterBalanceResponse);
         } else {
           setTimeout(getBalance, 10000);
@@ -160,7 +167,9 @@ tokenHelper.getBrandedToken(uuid).then(
     await serviceObj.perform();
 
     if (process.env.OST_CACHING_ENGINE == 'none') {
-      logger.info('Restful APIs need to be restarted as in-memory caching is used and branded tokens got minted.');
+      logger.error(Array(30).join("="));
+      logger.error('Restful APIs need to be restarted as in-memory caching is used and branded tokens got minted.');
+      logger.error(Array(30).join("="));
     }
 
     process.exit(0);
