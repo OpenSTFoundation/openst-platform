@@ -163,7 +163,7 @@ tokenHelper.getBrandedToken(uuid).then(
       logger.info('Restful APIs need to be restarted as in-memory caching is used and branded tokens got minted.');
     }
 
-    process.exit(1);
+    process.exit(0);
   }
 );
 
