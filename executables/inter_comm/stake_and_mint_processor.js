@@ -131,7 +131,7 @@ StakeAndMintProcessorInterComm.prototype = {
   onEvent: function (eventObj) {
     openSTNotification.publish_event.perform(
       {
-        topic: 'event.StakingIntentConfirmed',
+        topic: ['event.StakingIntentConfirmed'],
         message: {
           kind: 'event_received',
           payload: {
@@ -157,7 +157,7 @@ StakeAndMintProcessorInterComm.prototype = {
   onEventSubscriptionError: function (error) {
     openSTNotification.publish_event.perform(
       {
-        topic: 'error',
+        topic: ['error'],
         message: {
           kind: 'error',
           payload: {
@@ -198,7 +198,7 @@ StakeAndMintProcessorInterComm.prototype = {
 
     openSTNotification.publish_event.perform(
       {
-        topic: 'staking.processStaking.start',
+        topic: ['staking.processStaking.start'],
         message: {
           kind: 'info',
           payload: {
@@ -218,7 +218,7 @@ StakeAndMintProcessorInterComm.prototype = {
 
     openSTNotification.publish_event.perform(
       {
-        topic: 'staking.processStaking.done',
+        topic: ['staking.processStaking.done'],
         message: {
           kind: 'info',
           payload: {
@@ -232,7 +232,7 @@ StakeAndMintProcessorInterComm.prototype = {
 
     openSTNotification.publish_event.perform(
       {
-        topic: 'staking.processMinting.start',
+        topic: ['staking.processMinting.start'],
         message: {
           kind: 'info',
           payload: {
@@ -252,7 +252,7 @@ StakeAndMintProcessorInterComm.prototype = {
 
     openSTNotification.publish_event.perform(
       {
-        topic: 'staking.processMinting.done',
+        topic: ['staking.processMinting.done'],
         message: {
           kind: 'info',
           payload: {
@@ -279,7 +279,7 @@ StakeAndMintProcessorInterComm.prototype = {
 
     openSTNotification.publish_event.perform(
       {
-        topic: 'staking.claim.start',
+        topic: ['staking.claim.start'],
         message: {
           kind: 'info',
           payload: {
@@ -299,7 +299,7 @@ StakeAndMintProcessorInterComm.prototype = {
 
     openSTNotification.publish_event.perform(
       {
-        topic: 'staking.claim.done',
+        topic: ['staking.claim.done'],
         message: {
           kind: 'info',
           payload: {

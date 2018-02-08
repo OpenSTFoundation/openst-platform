@@ -81,7 +81,7 @@ DeployHelperKlass.prototype = {
 
             openSTNotification.publish_event.perform(
               {
-                topic: 'deploy.' + contractName,
+                topic: ['deploy.' + contractName],
                 message: {
                   kind: 'transaction_initiated',
                   payload: {
@@ -188,7 +188,7 @@ DeployHelperKlass.prototype = {
 
           openSTNotification.publish_event.perform(
             {
-              topic: 'transaction_mined',
+              topic: ['transaction_mined'],
               message: {
                 kind: 'transaction_mined',
                 payload: {

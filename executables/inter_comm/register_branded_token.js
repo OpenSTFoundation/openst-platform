@@ -117,7 +117,7 @@ RegisterBrandedTokenInterComm.prototype = {
   onEvent: function (eventObj) {
     openSTNotification.publish_event.perform(
       {
-        topic: 'event.ProposedBrandedToken',
+        topic: ['event.ProposedBrandedToken'],
         message: {
           kind: 'event_received',
           payload: {
@@ -142,7 +142,7 @@ RegisterBrandedTokenInterComm.prototype = {
   onEventSubscriptionError: function (error) {
     openSTNotification.publish_event.perform(
       {
-        topic: 'error',
+        topic: ['error'],
         message: {
           kind: 'error',
           payload: {
@@ -176,7 +176,7 @@ RegisterBrandedTokenInterComm.prototype = {
 
     openSTNotification.publish_event.perform(
       {
-        topic: 'obBoarding.registerBrandedToken.start',
+        topic: ['obBoarding.registerBrandedToken.start'],
         message: {
           kind: 'info',
           payload: {
@@ -210,7 +210,7 @@ RegisterBrandedTokenInterComm.prototype = {
       } else {
         openSTNotification.publish_event.perform(
           {
-            topic: 'obBoarding.registerBrandedToken.done',
+            topic: ['obBoarding.registerBrandedToken.done'],
             message: {
               kind: 'info',
               payload: {
@@ -229,7 +229,7 @@ RegisterBrandedTokenInterComm.prototype = {
 
     openSTNotification.publish_event.perform(
       {
-        topic: 'obBoarding.registerUtilityToken.start',
+        topic: ['obBoarding.registerUtilityToken.start'],
         message: {
           kind: 'info',
           payload: {
@@ -263,7 +263,7 @@ RegisterBrandedTokenInterComm.prototype = {
       } else {
         openSTNotification.publish_event.perform(
           {
-            topic: 'obBoarding.registerUtilityToken.done',
+            topic: ['obBoarding.registerUtilityToken.done'],
             message: {
               kind: 'info',
               payload: {
