@@ -37,6 +37,9 @@ EnvManagerKlass.prototype = {
     // Create cache ENV variables
     oThis._cacheVars();
 
+    // Create notification ENV variables
+    oThis._notificationVars();
+
     // Create miscellaneous ENV variables
     oThis._miscellaneousVars();
 
@@ -71,6 +74,18 @@ EnvManagerKlass.prototype = {
     fileManager.append(setupConfig.env_vars_file, "\n# Cache");
 
     oThis._scanAndPopulateEnvVars(setupConfig.cache);
+  },
+
+  /**
+   * Populate all notification env variables
+   */
+  _notificationVars: function () {
+    const oThis = this;
+
+    // Add comment to ENV
+    fileManager.append(setupConfig.env_vars_file, "\n# Notification");
+
+    oThis._scanAndPopulateEnvVars(setupConfig.notification);
   },
 
   /**

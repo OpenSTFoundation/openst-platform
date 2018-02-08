@@ -1,3 +1,7 @@
+## OpenST Platform development installation steps
+
+Document has steps to configure platform in development environment. For further implementation details, please refer [API documentation][api-docs].
+
 ## Prerequisite installations 
 
 * Install node version >= 7
@@ -44,7 +48,7 @@
   > source $HOME/openst-setup/openst_env_vars.sh
 ```
 
-* Start the Branded Token registration and write the registration details in config file for later use. For each new branded token please provide the following command line arguments:
+* Start the Branded Token registration and write the registration details in config file (branded_tokens.json in platform setup folder) for later use. For each new branded token please provide the following command line arguments:
 1. Name - branded token name
 2. Symbol - branded token symbol
 3. Conversion Rate - branded token to OST conversion rate, 1 OST = x branded tokens
@@ -53,6 +57,16 @@
   > node tools/setup/branded_token/register.js "ACME Coin" "ACME" 10
 ```
 
+* Stake OST and mint branded tokens on utility chain. Get the branded token UUID from $HOME/openst-setup/branded_tokens.json 
+
+```bash
+  > source $HOME/openst-setup/openst_env_vars.sh
+  > node tools/setup/branded_token/mint.js [[uuid]]
+```
+
 ####Terminal 1
 
 * Stop the start_services.js script
+
+
+[api-docs]: http://docs.openst.org/
