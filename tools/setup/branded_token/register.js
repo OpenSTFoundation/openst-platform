@@ -83,7 +83,7 @@ RegisterBTKlass.prototype = {
     logger.step("** Updating branded token config file");
     await oThis._updateBrandedTokenConfig();
 
-    process.exit(1);
+    process.exit(0);
 
   },
 
