@@ -1,7 +1,3 @@
-# openST Platform Restful APIs
-
-This project show the sample restful api implementation of openST Platform.
-
 ## Prerequisite installations 
 
 * Install node version >= 7
@@ -56,3 +52,7 @@ This project show the sample restful api implementation of openST Platform.
 ```bash
   > node tools/setup/branded_token/register.js "ACME Coin" "ACME" 10
 ```
+
+####Terminal 1
+
+* Stop the start_services.js script
