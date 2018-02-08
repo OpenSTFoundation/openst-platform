@@ -9,8 +9,7 @@ const fs = require('fs')
   , shell = require('shelljs')
 ;
 
-const rootPrefix = "../.."
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
+const rootPrefix = '../../..'
   , setupHelper = require(rootPrefix + '/tools/setup/helper')
 ;
 

@@ -9,7 +9,7 @@
 const BigNumber = require('bignumber.js')
 ;
 
-const rootPrefix = "../.."
+const rootPrefix = '../../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , coreConstants = require(rootPrefix + '/config/core_constants')
@@ -26,7 +26,7 @@ const stakerAddr = coreAddresses.getAddressForUser('staker')
 ;
 
 /**
- * Constructor for Deploy simple token contract
+ * Constructor for Stake and mInt Simple Token Prime
  *
  * @constructor
  */

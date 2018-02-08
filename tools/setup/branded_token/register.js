@@ -9,7 +9,7 @@ const Path = require('path')
   , os = require('os')
 ;
 
-const rootPrefix = "../.."
+const rootPrefix = '../../..'
   , generateAddress = require(rootPrefix + '/services/utils/generate_address')
   , proposeBrandedToken = require(rootPrefix + '/services/on_boarding/propose_branded_token')
   , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/get_registration_status')
