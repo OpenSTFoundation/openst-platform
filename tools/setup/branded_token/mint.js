@@ -148,7 +148,7 @@ const args = process.argv
 
 
 tokenHelper.getBrandedToken(uuid).then(
-  function(btDetails){
+  async function(btDetails){
     const btDetail = btDetails[uuid]
       , reserveAddr = btDetail.Reserve
       , reservePassphrase = btDetail.ReservePassphrase
@@ -157,7 +157,13 @@ tokenHelper.getBrandedToken(uuid).then(
 
     const serviceObj = new MintBrandedToken({amount_to_stake_in_weis: amountToStakeInWeis, uuid: uuid, reserve_address: reserveAddr,
       reserve_passphrase: reservePassphrase, erc20_address: erc20Addr});
-    serviceObj.perform();
+    await serviceObj.perform();
+
+    if (process.env.OST_CACHING_ENGINE == 'none') {
+      logger.info('Restful APIs need to be restarted as in-memory caching is used and branded tokens got minted.');
+    }
+
+    process.exit(1);
   }
 );
 
