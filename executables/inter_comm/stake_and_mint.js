@@ -108,7 +108,7 @@ StakeAndMintInterComm.prototype = {
   onEvent: function (eventObj) {
     openSTNotification.publish_event.perform(
       {
-        topic: ['event.StakingIntentDeclared'],
+        topics: ['event.StakingIntentDeclared'],
         message: {
           kind: 'event_received',
           payload: {
@@ -134,7 +134,7 @@ StakeAndMintInterComm.prototype = {
   onEventSubscriptionError: function (error) {
     openSTNotification.publish_event.perform(
       {
-        topic: ['error'],
+        topics: ['error'],
         message: {
           kind: 'error',
           payload: {
@@ -171,7 +171,7 @@ StakeAndMintInterComm.prototype = {
 
     openSTNotification.publish_event.perform(
       {
-        topic: ['staking.confirmStakingIntent.start'],
+        topics: ['staking.confirmStakingIntent.start'],
         message: {
           kind: 'info',
           payload: {
@@ -199,7 +199,7 @@ StakeAndMintInterComm.prototype = {
 
     openSTNotification.publish_event.perform(
       {
-        topic: ['staking.confirmStakingIntent.done'],
+        topics: ['staking.confirmStakingIntent.done'],
         message: {
           kind: 'info',
           payload: {

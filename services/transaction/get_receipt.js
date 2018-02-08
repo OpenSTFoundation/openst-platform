@@ -53,7 +53,7 @@ GetReceiptKlass.prototype = {
         const web3EventsDecoderResponse = web3EventsDecoder.perform(txReceipt, {});
         openSTNotification.publish_event.perform(
           {
-            topic: ['transaction_mined'],
+            topics: ['transaction_mined'],
             message: {
               kind: 'transaction_mined',
               payload: {
