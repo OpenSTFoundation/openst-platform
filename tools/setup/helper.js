@@ -77,7 +77,7 @@ SetupHelperKlass.prototype = {
    */
   btConfigAbsolutePath: function() {
     const oThis = this;
-    return Path.resolve("./") + '/branded_tokens.json';
+    return oThis.setupFolderAbsolutePath() + '/branded_tokens.json';
   },
 
   /**
