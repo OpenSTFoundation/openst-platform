@@ -37,7 +37,7 @@ This project show the sample restful api implementation of openST Platform.
 
 * Start all platform services in background (i.e. geth nodes and intercoms processes). We keep checking if all required services are up and running and publish alert messages if any service goes down. You can also run these services individually as well.   
 ```bash
-  > node tools/platform/start_services.js
+  > node tools/setup/start_services.js
 ```
 
 ####Terminal 2
@@ -54,5 +54,5 @@ This project show the sample restful api implementation of openST Platform.
 3. Conversion Rate - branded token to OST conversion rate, 1 OST = x branded tokens
 
 ```bash
-  > node tools/token/register.js "ACME Coin" "ACME" 10
+  > node tools/setup/branded_token/register.js "ACME Coin" "ACME" 10
 ```

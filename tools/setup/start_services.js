@@ -2,7 +2,7 @@
 /**
  * Start All openST Platform Services
  *
- * @module tools/platform/start_services
+ * @module tools/setup/start_services.js
  */
 
 const shellAsyncCmd = require('node-cmd')

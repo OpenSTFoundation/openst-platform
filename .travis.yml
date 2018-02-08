@@ -32,8 +32,8 @@ before_script:
 script:
   - node tools/setup/index.js
   - source $HOME/openst-setup/openst_env_vars.sh
-  - node tools/platform/start_services.js
+  - node tools/setup/start_services.js
   - source $HOME/openst-setup/openst_env_vars.sh
-  - node tools/token/register.js "ACME Coin" "ACME" 10
+  - node tools/setup/branded_token/register.js "ACME Coin" "ACME" 10
 after_script:
-  - kill $(ps aux | grep 'tools/platform/start_services.js' | awk '{print $2}')
+  - kill $(ps aux | grep 'tools/setup/start_services.js' | awk '{print $2}')

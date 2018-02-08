@@ -2,7 +2,7 @@
 /**
  * Branded Token related tools helper file
  *
- * @module tools/token/helper
+ * @module tools/setup/branded_token/helper
  */
 
 const fs = require('fs')

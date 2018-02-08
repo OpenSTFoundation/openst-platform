@@ -2,7 +2,7 @@
 /**
  * Register Branded Token
  *
- * @module tools/token/register
+ * @module tools/setup/branded_token/register
  */
 
 const Path = require('path')
@@ -14,7 +14,7 @@ const rootPrefix = "../.."
   , proposeBrandedToken = require(rootPrefix + '/services/on_boarding/propose_branded_token')
   , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/get_registration_status')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , tokenHelper = require(rootPrefix + '/tools/token/helper')
+  , tokenHelper = require(rootPrefix + '/tools/setup/branded_token/helper')
 ;
 
 /**
