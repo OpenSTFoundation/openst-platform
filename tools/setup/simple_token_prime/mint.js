@@ -3,7 +3,7 @@
 /**
  * Stake and mint ST Prime
  *
- * @module tools/setup/stake_and_mint_stp
+ * @module tools/setup/simple_token_prime/mint
  */
 
 const BigNumber = require('bignumber.js')

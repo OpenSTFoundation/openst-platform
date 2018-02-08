@@ -114,7 +114,7 @@ const performer = async function () {
   await serviceManager.startExecutable(rootPrefix + '/executables/inter_comm/stake_and_mint_processor.js');
 
   // Stake and mint simple token prime
-  await runHelperService(rootPrefix + '/tools/setup/stake_and_mint_simple_token_prime');
+  await runHelperService(rootPrefix + '/tools/setup/simple_token_prime/mint');
 
   // Fund required addresses
   logger.step('** Funding required addresses with ST Prime');
