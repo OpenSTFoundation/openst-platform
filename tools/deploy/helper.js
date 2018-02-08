@@ -79,7 +79,7 @@ DeployHelperKlass.prototype = {
         contract.deploy(options).send()
           .on('transactionHash', function(transactionHash){
 
-            openSTNotification.publish_event.perform(
+            openSTNotification.publishEvent.perform(
               {
                 topics: ['deploy.' + contractName],
                 message: {
@@ -186,7 +186,7 @@ DeployHelperKlass.prototype = {
         if (response) {
           clearInterval(txSetInterval);
 
-          openSTNotification.publish_event.perform(
+          openSTNotification.publishEvent.perform(
             {
               topics: ['transaction_mined'],
               message: {

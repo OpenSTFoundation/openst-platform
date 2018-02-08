@@ -4,7 +4,7 @@ const openSTNotification = require('@openstfoundation/openst-notification');
 
 
 function subscribe(){
-  openSTNotification.subscribe_event.rabbit(
+  openSTNotification.subscribeEvent.rabbit(
     ['#'],
     function(msgContent){
       console.log('[RECEIVED]', msgContent, '\n')
@@ -13,7 +13,7 @@ function subscribe(){
 }
 subscribe();
 
-openSTNotification.subscribe_event.local(['rmq_fail'], function(err){
+openSTNotification.subscribeEvent.local(['rmq_fail'], function(err){
   console.log('RMQ Failed event received.');
   setTimeout(subscribe, 2000);
 });

@@ -115,7 +115,7 @@ RegisterBrandedTokenInterComm.prototype = {
    *
    */
   onEvent: function (eventObj) {
-    openSTNotification.publish_event.perform(
+    openSTNotification.publishEvent.perform(
       {
         topics: ['event.ProposedBrandedToken'],
         message: {
@@ -140,7 +140,7 @@ RegisterBrandedTokenInterComm.prototype = {
    *
    */
   onEventSubscriptionError: function (error) {
-    openSTNotification.publish_event.perform(
+    openSTNotification.publishEvent.perform(
       {
         topics: ['error'],
         message: {
@@ -174,7 +174,7 @@ RegisterBrandedTokenInterComm.prototype = {
       , token = returnValues._token
       , uuid = returnValues._uuid;
 
-    openSTNotification.publish_event.perform(
+    openSTNotification.publishEvent.perform(
       {
         topics: ['obBoarding.registerBrandedToken.start'],
         message: {
@@ -208,7 +208,7 @@ RegisterBrandedTokenInterComm.prototype = {
         logger.error(err);
         return Promise.reject(err);
       } else {
-        openSTNotification.publish_event.perform(
+        openSTNotification.publishEvent.perform(
           {
             topics: ['obBoarding.registerBrandedToken.done'],
             message: {
@@ -227,7 +227,7 @@ RegisterBrandedTokenInterComm.prototype = {
       return Promise.reject(err);
     }
 
-    openSTNotification.publish_event.perform(
+    openSTNotification.publishEvent.perform(
       {
         topics: ['obBoarding.registerUtilityToken.start'],
         message: {
@@ -261,7 +261,7 @@ RegisterBrandedTokenInterComm.prototype = {
         logger.error(err);
         return Promise.reject(err);
       } else {
-        openSTNotification.publish_event.perform(
+        openSTNotification.publishEvent.perform(
           {
             topics: ['obBoarding.registerUtilityToken.done'],
             message: {

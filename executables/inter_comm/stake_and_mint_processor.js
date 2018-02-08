@@ -129,7 +129,7 @@ StakeAndMintProcessorInterComm.prototype = {
    *
    */
   onEvent: function (eventObj) {
-    openSTNotification.publish_event.perform(
+    openSTNotification.publishEvent.perform(
       {
         topics: ['event.StakingIntentConfirmed'],
         message: {
@@ -155,7 +155,7 @@ StakeAndMintProcessorInterComm.prototype = {
    *
    */
   onEventSubscriptionError: function (error) {
-    openSTNotification.publish_event.perform(
+    openSTNotification.publishEvent.perform(
       {
         topics: ['error'],
         message: {
@@ -196,7 +196,7 @@ StakeAndMintProcessorInterComm.prototype = {
       return Promise.resolve(responseHelper.error('e_ic_samp_1', 'staker is not same as the internal staker account.'));
     }
 
-    openSTNotification.publish_event.perform(
+    openSTNotification.publishEvent.perform(
       {
         topics: ['staking.processStaking.start'],
         message: {
@@ -216,7 +216,7 @@ StakeAndMintProcessorInterComm.prototype = {
       stakingIntentHash
     );
 
-    openSTNotification.publish_event.perform(
+    openSTNotification.publishEvent.perform(
       {
         topics: ['staking.processStaking.done'],
         message: {
@@ -230,7 +230,7 @@ StakeAndMintProcessorInterComm.prototype = {
 
     logger.win(stakingIntentHash, ' :: performed processStaking');
 
-    openSTNotification.publish_event.perform(
+    openSTNotification.publishEvent.perform(
       {
         topics: ['staking.processMinting.start'],
         message: {
@@ -250,7 +250,7 @@ StakeAndMintProcessorInterComm.prototype = {
       stakingIntentHash
     );
 
-    openSTNotification.publish_event.perform(
+    openSTNotification.publishEvent.perform(
       {
         topics: ['staking.processMinting.done'],
         message: {
@@ -277,7 +277,7 @@ StakeAndMintProcessorInterComm.prototype = {
       });
     }
 
-    openSTNotification.publish_event.perform(
+    openSTNotification.publishEvent.perform(
       {
         topics: ['staking.claim.start'],
         message: {
@@ -297,7 +297,7 @@ StakeAndMintProcessorInterComm.prototype = {
       beneficiary
     );
 
-    openSTNotification.publish_event.perform(
+    openSTNotification.publishEvent.perform(
       {
         topics: ['staking.claim.done'],
         message: {

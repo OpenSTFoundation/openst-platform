@@ -51,7 +51,7 @@ GetReceiptKlass.prototype = {
         return Promise.resolve(responseHelper.error('s_t_gr_2', 'Transaction yet not mined.'));
       } else {
         const web3EventsDecoderResponse = web3EventsDecoder.perform(txReceipt, {});
-        openSTNotification.publish_event.perform(
+        openSTNotification.publishEvent.perform(
           {
             topics: ['transaction_mined'],
             message: {

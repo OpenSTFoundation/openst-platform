@@ -106,7 +106,7 @@ StakeAndMintInterComm.prototype = {
    *
    */
   onEvent: function (eventObj) {
-    openSTNotification.publish_event.perform(
+    openSTNotification.publishEvent.perform(
       {
         topics: ['event.StakingIntentDeclared'],
         message: {
@@ -132,7 +132,7 @@ StakeAndMintInterComm.prototype = {
    *
    */
   onEventSubscriptionError: function (error) {
-    openSTNotification.publish_event.perform(
+    openSTNotification.publishEvent.perform(
       {
         topics: ['error'],
         message: {
@@ -169,7 +169,7 @@ StakeAndMintInterComm.prototype = {
       , beneficiary = returnValues._beneficiary
       , chainIdUtility = returnValues._chainIdUtility;
 
-    openSTNotification.publish_event.perform(
+    openSTNotification.publishEvent.perform(
       {
         topics: ['staking.confirmStakingIntent.start'],
         message: {
@@ -197,7 +197,7 @@ StakeAndMintInterComm.prototype = {
       stakingIntentHash
     );
 
-    openSTNotification.publish_event.perform(
+    openSTNotification.publishEvent.perform(
       {
         topics: ['staking.confirmStakingIntent.done'],
         message: {
