@@ -1,6 +1,6 @@
-# openST Platform Restful APIs
+## OpenST Platform development installation steps
 
-This project show the sample restful api implementation of openST Platform.
+Document has steps to configure platform in development environment. For further implementation details, please refer [API documentation][api-docs].
 
 ## Prerequisite installations 
 
@@ -48,7 +48,7 @@ This project show the sample restful api implementation of openST Platform.
   > source $HOME/openst-setup/openst_env_vars.sh
 ```
 
-* Start the Branded Token registration and write the registration details in config file for later use. For each new branded token please provide the following command line arguments:
+* Start the Branded Token registration and write the registration details in config file (branded_tokens.json in platform setup folder) for later use. For each new branded token please provide the following command line arguments:
 1. Name - branded token name
 2. Symbol - branded token symbol
 3. Conversion Rate - branded token to OST conversion rate, 1 OST = x branded tokens
@@ -56,3 +56,18 @@ This project show the sample restful api implementation of openST Platform.
 ```bash
   > node tools/setup/branded_token/register.js "ACME Coin" "ACME" 10
 ```
+
+* Stake OST and mint branded tokens on utility chain. Please provide the following command line arguments:
+1. uuid - Get the branded token UUID from $HOME/openst-setup/branded_tokens.json
+2. amountInWeis - The OST amount in Weis to stake
+```bash
+  > source $HOME/openst-setup/openst_env_vars.sh
+  > node tools/setup/branded_token/mint.js [[uuid]] [[amountInWeis]]
+```
+
+####Terminal 1
+
+* Stop the start_services.js script
+
+
+[api-docs]: http://docs.openst.org/

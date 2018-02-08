@@ -1,21 +1,26 @@
 ## OpenST-platform v0.9.2
 
-This release enabled horizontal scaling of the restful APIs implementing the ability to launch a cluster of Node.js 
-processes to handle the load. Number of worker processes is based on number of CPUs and multiplication factor.
+In this release OpenST platform is published as a [node module](https://www.npmjs.com/package/@openstfoundation/openst-platform), now independent development can be supported using platform as the base layer. 
 
-Central caching was brought in to the API layer. Prior to this, "in process" caching was being used, 
-which became inconsistent in presence of multiple workers. Redis and Memcached were explored for in memory caching.
-Decision of which caching to use is governed by an ENV variable 'CACHING_ENGINE'.
+[OpenST Cache](https://www.npmjs.com/package/@openstfoundation/openst-cache) is also developed to replace "in process" caching implemented in previous version, 
+which became inconsistent in presence of multiple workers/processes. Caching layer now provide Redis, Memcached and none (in process) options to suite the platform 
+run environment. Decision of which caching layer to use is governed by an ENV variable 'OST_CACHING_ENGINE'.
 
 Simple Token Prime Balance was cached to improve performance.
 
 Stake and mint related cache inconsistency bug was resolved.
 
 Detailed changelog:
-- Horizontal scaling of Restful API ([openst-platform#61](https://github.com/OpenSTFoundation/openst-platform/issues/61))
-- Replace "in process caching" with "in memory caching" ([openst-platform#62](https://github.com/OpenSTFoundation/openst-platform/issues/62))
+- Platform [Sample Restful APIs](https://github.com/OpenSTFoundation/openst-platform-apis) in separate repository ([openst-platform#97](https://github.com/OpenSTFoundation/openst-platform/issues/97))
+- Publish platform as node module ([openst-platform#98](https://github.com/OpenSTFoundation/openst-platform/issues/98))
+- Simplified platform setup for development and test environments ([openst-platform#99](https://github.com/OpenSTFoundation/openst-platform/issues/99))
+- Integrate openst-cache in platform ([openst-platform#96](https://github.com/OpenSTFoundation/openst-platform/issues/96))
+- Publish events from platform ([openst-platform#100](https://github.com/OpenSTFoundation/openst-platform/issues/100))
 - Cache flush not happening in stake and mint for branded token ([openst-platform#76](https://github.com/OpenSTFoundation/openst-platform/issues/76))
 - Enable caching for simple token prime ([openst-platform#77](https://github.com/OpenSTFoundation/openst-platform/issues/77))
+- Fixed - Scripts: variables/members are appended and not overwritten ([openst-platform#94](https://github.com/OpenSTFoundation/openst-platform/issues/94))
+- Fixed - Scripts: make confirmations case-insensitive and clarify fails ([openst-platform#84](https://github.com/OpenSTFoundation/openst-platform/issues/84))
+- Fixed - Failed to unlock Reserve ([openst-platform#95](https://github.com/OpenSTFoundation/openst-platform/issues/95))
 
 [openst-platform v0.9.1](https://github.com/OpenSTFoundation/openst-platform/releases/tag/v0.9.1) December 19 2017
 ---

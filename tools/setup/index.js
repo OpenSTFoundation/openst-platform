@@ -167,7 +167,7 @@ const runHelperService = function(deployPath) {
 
 // Start the platform setup
 logger.error(Array(30).join("="));
-logger.error("Note: For scalability and security reasons, step tools should only be used in " + setupHelper.allowedEnvironment().join(' and ') +' environments.');
+logger.error("Note: For scalability and security reasons, setup tools should only be used in " + setupHelper.allowedEnvironment().join(' and ') +' environments.');
 logger.error(Array(30).join("="));
 
 performer();

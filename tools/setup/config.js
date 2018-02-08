@@ -107,6 +107,44 @@ const setupConfig = {
   },
 
   /**
+   * Notification configurations
+   */
+  notification: {
+    rmq_support: {
+      env_var: 'OST_RMQ_SUPPORT',
+      value: '0' //Editable (0/1)
+    },
+    rmq_host: {
+      env_var: 'OST_RMQ_HOST',
+      value: '' //Editable
+    },
+    rmq_port: {
+      env_var: 'OST_RMQ_PORT',
+      value: '' //Editable
+    },
+    rmq_monitor_port: {
+      env_var: 'OST_RMQ_MONITOR_PORT',
+      value: '' //Editable
+    },
+    rmq_username: {
+      env_var: 'OST_RMQ_USERNAME',
+      value: '' //Editable
+    },
+    rmq_password: {
+      env_var: 'OST_RMQ_PASSWORD',
+      value: '' //Editable
+    },
+    rmq_heartbeats: {
+      env_var: 'OST_RMQ_HEARTBEATS',
+      value: '' //Editable
+    },
+    rmq_primary_exchange: {
+      env_var: 'OST_RMQ_PRIMARY_EXCHANGE',
+      value: '' //Editable
+    }
+  },
+
+  /**
    * Miscellaneous configurations
    */
   misc_deployment: {

@@ -11,9 +11,9 @@
   "plugins": [],
   "recurseDepth": 5,
   "templates": {
-    "systemName"            : "Simple Token Foundation",
+    "systemName"            : "OpenST Platform",
     "footer"                : "<style>.copyright, .jsdoc-message, footer { color: #555555;} footer { border-color:#eeeeee;} }</style>",
-    "copyright"             : "Copyright 2017 OpenST Ltd.",
+    "copyright"             : "Copyright 2018 OpenST Ltd.",
     "includeDate"           : false,
     "theme"                 : "lumen",
     "navType"               : "vertical",

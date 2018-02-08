@@ -309,7 +309,7 @@ coreAddresses.prototype = {
    *
    */
   getAbiForContract: function (contractName) {
-    return allAddresses.contracts[contractName].abi;
+    return (allAddresses.contracts[contractName] || {}).abi || '';
   },
 
   /**
@@ -321,7 +321,7 @@ coreAddresses.prototype = {
    *
    */
   getBinForContract: function (contractName) {
-    return allAddresses.contracts[contractName].bin;
+    return (allAddresses.contracts[contractName] || {}).bin || '';
   }
 };
 
