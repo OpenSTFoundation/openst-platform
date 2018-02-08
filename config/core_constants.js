@@ -23,9 +23,9 @@ function absolutePath(filePath) {
  *
  * @constructor
  */
-const coreConstants = function() {};
+const CoreConstants = function() {};
 
-coreConstants.prototype = {
+CoreConstants.prototype = {
   /**
    * Gas price for value chain transactions.<br><br>
    *
@@ -139,4 +139,4 @@ coreConstants.prototype = {
   CACHING_ENGINE: process.env.CACHING_ENGINE
 };
 
-module.exports = new coreConstants();
+module.exports = new CoreConstants();
