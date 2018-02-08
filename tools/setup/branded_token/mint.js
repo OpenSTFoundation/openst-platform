@@ -183,7 +183,7 @@ MintBrandedToken.prototype = {
 
         const afterBalance = new BigNumber(await web3RpcProvider.eth.getBalance(oThis.reserveAddr));
 
-        if(afterBalanceResponse.isSuccess() && (new BigNumber(afterBalance)).greaterThan(beforeBalance)){
+        if((new BigNumber(afterBalance)).greaterThan(beforeBalance)){
           logger.info('Balance of Reserve for Simple Token Prime after mint:', afterBalance.toString(10));
           return onResolve();
         } else {
