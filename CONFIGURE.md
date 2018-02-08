@@ -57,11 +57,12 @@ Document has steps to configure platform in development environment. For further
   > node tools/setup/branded_token/register.js "ACME Coin" "ACME" 10
 ```
 
-* Stake OST and mint branded tokens on utility chain. Get the branded token UUID from $HOME/openst-setup/branded_tokens.json 
-
+* Stake OST and mint branded tokens on utility chain. Please provide the following command line arguments:
+1. uuid - Get the branded token UUID from $HOME/openst-setup/branded_tokens.json
+2. amountInWeis - The OST amount in Weis to stake
 ```bash
   > source $HOME/openst-setup/openst_env_vars.sh
-  > node tools/setup/branded_token/mint.js [[uuid]]
+  > node tools/setup/branded_token/mint.js [[uuid]] [[amountInWeis]]
 ```
 
 ####Terminal 1
