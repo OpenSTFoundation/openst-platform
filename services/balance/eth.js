@@ -28,7 +28,7 @@ EthBalanceKlass.prototype = {
     const oThis = this;
 
     try {
-      return fundManager.getBrandedTokenBalanceOf(oThis.address);
+      return fundManager.getEthBalanceOf(oThis.address);
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_b_e_1', 'Something went wrong. ' + err.message));
     }
