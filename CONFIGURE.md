@@ -79,8 +79,14 @@ Let this script be running while branded tokens are registered and minted.
 Note: Script also monitor these services and alert if any required service terminates.
 
 * <b>Optional steps on separate Terminals</b>
+  - Set the corrent OPENST_PLATFORM_PATH on new terminal
+  ```bash
+    # for standalone system
+    > export OPENST_PLATFORM_PATH=$(pwd)
+    # for RESTful APIs
+    > export OPENST_PLATFORM_PATH=$(pwd)/node_modules/@openstfoundation/openst-platform
+  ```
   - Listen notification published from platform
-  
   ```bash
     > node $OPENST_PLATFORM_PATH/executables/notification_subscribe.js
   ```
@@ -92,6 +98,13 @@ Note: Script also monitor these services and alert if any required service termi
   ```
 
 #### On Terminal 2 - Once all required services are up and running, let's onboard our first branded token
+* <b>Set the corrent OPENST_PLATFORM_PATH on new terminal</b>
+  ```bash
+    # for standalone system
+    > export OPENST_PLATFORM_PATH=$(pwd)
+    # for RESTful APIs
+    > export OPENST_PLATFORM_PATH=$(pwd)/node_modules/@openstfoundation/openst-platform
+  ```
 
 * <b>Load platform environment variables</b>  
 
@@ -147,7 +160,7 @@ Example: For 500 OST, reserve address will get:
 
 ## Start using branded tokens on utility chain
 
-#### For Sample RESTful APIs
+### For Sample RESTful APIs
 
 * <b>Load platform environment variables</b>  
 
@@ -167,10 +180,10 @@ Example: For 500 OST, reserve address will get:
 ```bash
   > node app.js
 ```
-* <b>TODO: Use PostMan files</b>
+* <b>TODO: How to use PostMan files</b>
 
-#### For Standalone System
+### For Standalone System
 
-* <b>TODO: Use Services</b>
+* <b>TODO: How to use Services</b>
 
 For complete implementation details of OpenST Platform, please refer [API documentation](http://docs.openst.org/).
