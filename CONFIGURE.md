@@ -69,7 +69,7 @@ The default Platform setup is done with "in-process" caching and EventEmitter no
 
 ## Register and Mint branded tokens on Platform
 
-#### On Terminal 1 - Start all the required services
+### On Terminal 1 - Start all the required services
 * <b>Load platform environment variables</b>
 
 ```bash
@@ -104,7 +104,7 @@ Note: Script also monitor these services and alert if any required service termi
     > ls -alt $HOME/openst-setup/logs/
   ```
 
-#### On Terminal 2 - Once all required services are up and running, let's onboard our first branded token
+### On Terminal 2 - Once all required services are up and running, let's onboard our first branded token
 * <b>Set the corrent OPENST_PLATFORM_PATH on new terminal</b>
   ```bash
     # for standalone system
@@ -163,7 +163,7 @@ Example: For 500 OST, reserve address will get:
 - 50 ST' ((10% of 500 staked OST) * (1 as conversion factor))
      
 
-#### Back on Terminal 1 - Stop start_services.js script, if you don't want to register and mint more branded tokens on utility chain.
+### Back on Terminal 1 - Stop start_services.js script, if you don't want to register and mint more branded tokens on utility chain.
 
 ## Start using branded tokens on utility chain
 
