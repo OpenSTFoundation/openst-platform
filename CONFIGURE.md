@@ -191,6 +191,17 @@ Example: For 500 OST, reserve address will get:
 
 ### For Standalone System
 
-* <b>TODO: How to use Services</b>
+* Generate new address on utility chain
+```bash
+node> const platformServices = require('./services/manifest');
+node> generateAddressObj = new platformServices.utils.generateAddress({'passphrase': 'my-secret-pass', 'chain': 'utility'});
+node> generateAddressObj.perform().then(function(response) { 
+  if (response.isSuccess()){
+    console.log(response.data.address);
+  } else {
+    console.log(response.err)
+  } 
+});
+```
 
 For complete implementation details of OpenST Platform, please refer [API documentation](http://docs.openst.org/).
