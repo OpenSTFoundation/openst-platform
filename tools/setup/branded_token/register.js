@@ -259,10 +259,16 @@ if (!(btSymbolRegEx.test(btSymbol))) {
   logger.error("Branded token symbol is invalid. Allowed characters are: a-z, 0-9");
   process.exit(1);
 }
-if (isNaN(btConversionRate)) {
-  logger.error("Branded token conversation rate is not a number.");
+if (isNaN(btConversionRate) || btConversionRate < 1 || btConversionRate != args[4]) {
+  logger.error("Branded token conversation rate should be >= 1. And should be an Integer.");
   process.exit(1);
 }
 
+logger.step("* Branded Token Details:");
+logger.info("* Name:", btName);
+logger.info("* Symbol:", btSymbol);
+logger.info("* Conversion Rate:", btConversionRate);
+
+// Start Registration
 const services = new RegisterBTKlass({bt_name: btName, bt_symbol: btSymbol, bt_conversion_rate: btConversionRate});
 services.perform();
