@@ -78,7 +78,7 @@ Let this script be running while branded tokens are registered and minted.
 
 Note: Script also monitor these services and alert if any required service terminates.
 
-* <b>Optional steps for debugging</b>
+* <b>Optional steps on separate Terminals</b>
   - Listen notification published from platform
   
   ```bash
