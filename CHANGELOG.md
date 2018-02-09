@@ -1,19 +1,36 @@
 ## OpenST-platform v0.9.2
 
-In this release OpenST platform is published as a [node module](https://www.npmjs.com/package/@openstfoundation/openst-platform), now independent development can be supported using platform as the base layer. 
+In this release OpenST platform is published as a [node module](https://www.npmjs.com/package/@openstfoundation/openst-platform), now independent development can be supported using platform as the base layer.
+Sample restful APIs have been released in a separate repository [Sample Restful APIs](https://github.com/OpenSTFoundation/openst-platform-apis). Various services are exposed for handling tasks in on boarding, get balance, transfer, stake & mint.
+
+Auto registration is introduced after propose branded token to support requests coming from sandbox environments.
+
+Deployment of platform was simplified to help developers to quickly get platform up and running.
+
+There was a limitation in the earlier stake and mint process because the keystore files needed to be there on both utility chain geth node and value chain geth node for staker and redeemer addresses.
+This was solved by change in process in which all the transactions are now done by a single address and the beneficiary address is credited with the desired value in terms of Branded tokens in stake & mint and in terms of Simple tokens in redeem and unstake.
+Process staking, process minting and claim is now to be done using inter chain communicator.
 
 [OpenST Cache](https://www.npmjs.com/package/@openstfoundation/openst-cache) is also developed to replace "in process" caching implemented in previous version, 
 which became inconsistent in presence of multiple workers/processes. Caching layer now provide Redis, Memcached and none (in process) options to suite the platform 
 run environment. Decision of which caching layer to use is governed by an ENV variable 'OST_CACHING_ENGINE'.
 
-Simple Token Prime Balance was cached to improve performance.
-
-Stake and mint related cache inconsistency bug was resolved.
+Simple Token Prime Balance was cached to improve performance. Stake and mint related cache inconsistency bug was resolved.
 
 Detailed changelog:
 - Platform [Sample Restful APIs](https://github.com/OpenSTFoundation/openst-platform-apis) in separate repository ([openst-platform#97](https://github.com/OpenSTFoundation/openst-platform/issues/97))
 - Publish platform as node module ([openst-platform#98](https://github.com/OpenSTFoundation/openst-platform/issues/98))
 - Simplified platform setup for development and test environments ([openst-platform#99](https://github.com/OpenSTFoundation/openst-platform/issues/99))
+- Service for following tasks were exposed out of the platform module:
+    - Get transaction receipt([openst-platform#109](https://github.com/OpenSTFoundation/openst-platform/issues/109))
+    - Services for transfer of branded tokens, simple tokens, eth and simple token prime([openst-platform#108](https://github.com/OpenSTFoundation/openst-platform/issues/108))
+    - Stake and mint(([openst-platform#107](https://github.com/OpenSTFoundation/openst-platform/issues/107)))
+    - On Boarding service - propose branded token (([openst-platform#105](https://github.com/OpenSTFoundation/openst-platform/issues/105)))
+    - On Boarding service - get registration information (([openst-platform#102](https://github.com/OpenSTFoundation/openst-platform/issues/102)))
+    - Get balance services for Simple Token, Simple Token Prime, Eth and Branded Token (([openst-platform#104](https://github.com/OpenSTFoundation/openst-platform/issues/104)))
+
+- Enable auto-register on both chains after proposal using an Inter chain communicator ([openst-platform#101](https://github.com/OpenSTFoundation/openst-platform/issues/101))
+- Stake and mint process changes ([openst-platform#106](https://github.com/OpenSTFoundation/openst-platform/issues/106))
 - Integrate openst-cache in platform ([openst-platform#96](https://github.com/OpenSTFoundation/openst-platform/issues/96))
 - Publish events from platform ([openst-platform#100](https://github.com/OpenSTFoundation/openst-platform/issues/100))
 - Cache flush not happening in stake and mint for branded token ([openst-platform#76](https://github.com/OpenSTFoundation/openst-platform/issues/76))
