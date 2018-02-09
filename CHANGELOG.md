@@ -1,21 +1,43 @@
 ## OpenST-platform v0.9.2
 
-This release enabled horizontal scaling of the restful APIs implementing the ability to launch a cluster of Node.js 
-processes to handle the load. Number of worker processes is based on number of CPUs and multiplication factor.
+In this release OpenST platform is published as a [node module](https://www.npmjs.com/package/@openstfoundation/openst-platform), now independent development can be supported using platform as the base layer.
+Sample restful APIs have been released in a separate repository [Sample Restful APIs](https://github.com/OpenSTFoundation/openst-platform-apis). Various services are exposed for handling tasks in on boarding, get balance, transfer, stake & mint.
 
-Central caching was brought in to the API layer. Prior to this, "in process" caching was being used, 
-which became inconsistent in presence of multiple workers. Redis and Memcached were explored for in memory caching.
-Decision of which caching to use is governed by an ENV variable 'CACHING_ENGINE'.
+Auto registration is introduced after propose branded token to support requests coming from sandbox environments.
 
-Simple Token Prime Balance was cached to improve performance.
+Deployment of platform was simplified to help developers to quickly get platform up and running.
 
-Stake and mint related cache inconsistency bug was resolved.
+There was a limitation in the earlier stake and mint process because the keystore files needed to be there on both utility chain geth node and value chain geth node for staker and redeemer addresses.
+This was solved by change in process in which all the transactions are now done by a single address and the beneficiary address is credited with the desired value in terms of Branded tokens in stake & mint and in terms of Simple tokens in redeem and unstake.
+Process staking, process minting and claim is now to be done using inter chain communicator.
+
+[OpenST Cache](https://www.npmjs.com/package/@openstfoundation/openst-cache) is also developed to replace "in process" caching implemented in previous version, 
+which became inconsistent in presence of multiple workers/processes. Caching layer now provide Redis, Memcached and none (in process) options to suite the platform 
+run environment. Decision of which caching layer to use is governed by an ENV variable 'OST_CACHING_ENGINE'.
+
+Simple Token Prime Balance was cached to improve performance. Stake and mint related cache inconsistency bug was resolved.
 
 Detailed changelog:
-- Horizontal scaling of Restful API ([openst-platform#61](https://github.com/OpenSTFoundation/openst-platform/issues/61))
-- Replace "in process caching" with "in memory caching" ([openst-platform#62](https://github.com/OpenSTFoundation/openst-platform/issues/62))
+- Platform [Sample Restful APIs](https://github.com/OpenSTFoundation/openst-platform-apis) in separate repository ([openst-platform#97](https://github.com/OpenSTFoundation/openst-platform/issues/97))
+- Publish platform as node module ([openst-platform#98](https://github.com/OpenSTFoundation/openst-platform/issues/98))
+- Simplified platform setup for development and test environments ([openst-platform#99](https://github.com/OpenSTFoundation/openst-platform/issues/99))
+- Service for following tasks were exposed out of the platform module:
+    - Get transaction receipt([openst-platform#109](https://github.com/OpenSTFoundation/openst-platform/issues/109))
+    - Services for transfer of branded tokens, simple tokens, eth and simple token prime([openst-platform#108](https://github.com/OpenSTFoundation/openst-platform/issues/108))
+    - Stake and mint(([openst-platform#107](https://github.com/OpenSTFoundation/openst-platform/issues/107)))
+    - On Boarding service - propose branded token (([openst-platform#105](https://github.com/OpenSTFoundation/openst-platform/issues/105)))
+    - On Boarding service - get registration information (([openst-platform#102](https://github.com/OpenSTFoundation/openst-platform/issues/102)))
+    - Get balance services for Simple Token, Simple Token Prime, Eth and Branded Token (([openst-platform#104](https://github.com/OpenSTFoundation/openst-platform/issues/104)))
+
+- Enable auto-register on both chains after proposal using an Inter chain communicator ([openst-platform#101](https://github.com/OpenSTFoundation/openst-platform/issues/101))
+- Stake and mint process changes ([openst-platform#106](https://github.com/OpenSTFoundation/openst-platform/issues/106))
+- Integrate openst-cache in platform ([openst-platform#96](https://github.com/OpenSTFoundation/openst-platform/issues/96))
+- Publish events from platform ([openst-platform#100](https://github.com/OpenSTFoundation/openst-platform/issues/100))
 - Cache flush not happening in stake and mint for branded token ([openst-platform#76](https://github.com/OpenSTFoundation/openst-platform/issues/76))
 - Enable caching for simple token prime ([openst-platform#77](https://github.com/OpenSTFoundation/openst-platform/issues/77))
+- Fixed - Scripts: variables/members are appended and not overwritten ([openst-platform#94](https://github.com/OpenSTFoundation/openst-platform/issues/94))
+- Fixed - Scripts: make confirmations case-insensitive and clarify fails ([openst-platform#84](https://github.com/OpenSTFoundation/openst-platform/issues/84))
+- Fixed - Failed to unlock Reserve ([openst-platform#95](https://github.com/OpenSTFoundation/openst-platform/issues/95))
 
 [openst-platform v0.9.1](https://github.com/OpenSTFoundation/openst-platform/releases/tag/v0.9.1) December 19 2017
 ---
@@ -55,10 +77,10 @@ Services
   - Intercom Services:
     Intercom services are responsible for transferring information between value chain & utility chain by listening to events.
     The intercom transfers information using registrar contracts. Services:  
-    - services/inter_comm/stake_and_mint.js
+    - executables/inter_comm/stake_and_mint.js
       - Listens: StakingIntentDeclared event on value chain.
       - Action: confirms staking intent on utility chain.
-    - services/inter_comm/redeem_and_unstake.js
+    - executables/inter_comm/redeem_and_unstake.js
       - Listens: RedemptionIntentDeclared event on utility chain.
       - Action: Confirms redemption intent on value chain.
     

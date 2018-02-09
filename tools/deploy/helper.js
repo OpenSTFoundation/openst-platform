@@ -1,105 +1,71 @@
 "use strict";
 
 /**
- * This is utility class for deploying contract<br><br>
- *
- * Ref: {@link module:tools/deploy/DeployHelper}
+ * This is helper class for deploying contract<br><br>
  *
  * @module tools/deploy/helper
  */
 
+const openSTNotification = require('@openstfoundation/openst-notification')
+;
+
 const rootPrefix = '../..'
   , coreConstants = require(rootPrefix + '/config/core_constants')
-  , gasPrice = coreConstants.OST_VALUE_GAS_PRICE
-  , gasLimit = coreConstants.OST_VALUE_GAS_LIMIT // this is taken by default if no value is passed from outside
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter');
+  , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
+;
 
-const _private = {
-
-  /**
-   * Wait for Transaction to be included in block
-   *
-   * @param {Web3} web3Provider - It could be value chain or utility chain provider
-   * @param {String} transactionHash - Hash for which receipt is required.
-   *
-   * @return {Promise<TransactionHash>}
-   */
-  getReceipt: function (web3Provider, transactionHash) {
-    return new Promise(function (onResolve, onReject) {
-
-      var txSetInterval = null;
-
-      var handleResponse = function (response) {
-        if (response) {
-          clearInterval(txSetInterval);
-          onResolve(response);
-        } else {
-          console.log('Waiting for ' + transactionHash + ' to be included in block.');
-        }
-      };
-
-      txSetInterval = setInterval(
-        function () {
-          web3Provider.eth.getTransactionReceipt(transactionHash).then(handleResponse);
-        },
-        5000
-      );
-
-    });
-  }
-
-};
+const gasPrice = coreConstants.OST_VALUE_GAS_PRICE
+  , gasLimit = coreConstants.OST_VALUE_GAS_LIMIT // this is taken by default if no value is passed from outside
+;
 
 /**
- * Deploy Helper class to perform deploy
+ * Constructor for Deploy helper class
  *
- * @exports tools/deploy/DeployHelper
+ * @constructor
  */
-const deployHelper = {
+const DeployHelperKlass = function () {};
 
+DeployHelperKlass.prototype = {
   /**
-   * Method deploys contract
+   * Deploy
    *
-   * @param {String} contractName - Contract Name to be deployed
-   * @param {Web3} web3Provider - Web3 Provider object
-   * @param {String} contractAbi - Contract Abi to be deployed
-   * @param {String} contractBin - Contract Bin file to be deployed
-   * @param {String} deployerName - Deployer name
-   * @param {Object} [customOptions] - Custom options for value/utility chain
-   * @param {Object} [constructorArgs] - Arguments to be passed while deploying contract
+   * @param {string} contractName - Contract Name to be deployed
+   * @param {web3} web3Provider - Web3 Provider object
+   * @param {string} contractAbi - Contract Abi to be deployed
+   * @param {binary} contractBin - Contract Bin file to be deployed
+   * @param {string} deployerName - Deployer name
+   * @param {object} customOptions - Custom options for value/utility chain
+   * @param {array} constructorArgs - Arguments to be passed while deploying contract
    *
-   * @async
-   * @method perform
-   * @return {Promise<Object>}
+   * @return {promise}
    *
    */
-  perform: async function (contractName,
-                           web3Provider,
-                           contractAbi,
-                           contractBin,
-                           deployerName,
-                           customOptions,
-                           constructorArgs) {
-
-    const deployerAddr = coreAddresses.getAddressForUser(deployerName)
+  perform: async function (contractName, web3Provider, contractAbi, contractBin, deployerName, customOptions, constructorArgs) {
+    const oThis = this
+      , deployerAddr = coreAddresses.getAddressForUser(deployerName)
       , deployerAddrPassphrase = coreAddresses.getPassphraseForUser(deployerName);
 
-    var options = {
+    const txParams = {
       from: deployerAddr,
       gas: gasLimit,
-      data: (web3Provider.utils.isHexStrict(contractBin) ? "" : "0x") + contractBin,
       gasPrice: gasPrice
     };
 
-    Object.assign(options, customOptions);
+    Object.assign(txParams, customOptions);
+
+    const options = {
+      data: (web3Provider.utils.isHexStrict(contractBin) ? "" : "0x") + contractBin
+    };
+
+    Object.assign(options, txParams);
 
     if (constructorArgs) {
       options.arguments = constructorArgs;
     }
 
-    var contract = new web3Provider.eth.Contract(
+    const contract = new web3Provider.eth.Contract(
       contractAbi,
       null, // since addr is not known yet
       options
@@ -111,25 +77,47 @@ const deployHelper = {
     const deploy = function () {
       return new Promise(function (onResolve, onReject) {
         contract.deploy(options).send()
-          .on('transactionHash', onResolve)
+          .on('transactionHash', function(transactionHash){
+
+            openSTNotification.publishEvent.perform(
+              {
+                topics: ['deploy.' + contractName],
+                message: {
+                  kind: 'transaction_initiated',
+                  payload: {
+                    contract_name: contractName,
+                    contract_address: '',
+                    method: 'deploy',
+                    params: {args: constructorArgs, txParams: txParams},
+                    transaction_hash: transactionHash,
+                    chain_id: web3Provider.chainId,
+                    chain_kind: web3Provider.chainKind,
+                    uuid: '',
+                    tag: ''
+                  }
+                }
+              }
+            );
+
+            onResolve(transactionHash)
+          })
           .on('error', onReject);
       });
     };
 
-    console.log("Unlocking address: " + deployerAddr);
-    console.log("Unlocking!!!");
+    logger.info('* Unlocking address:', deployerAddr);
     await web3Provider.eth.personal.unlockAccount(deployerAddr, deployerAddrPassphrase);
 
-    console.log("Deploying contract " + contractName);
-
+    logger.info('* Deploying contract:', contractName);
     var deployFailedReason = null;
+
     const transactionReceipt = await deploy().then(
       function (transactionHash) {
-        return _private.getReceipt(web3Provider, transactionHash);
+        return oThis._getReceipt(web3Provider, transactionHash);
       }
     ).catch(reason => {
       deployFailedReason = reason;
-      console.log( deployFailedReason );
+      logger.error(deployFailedReason);
       return null;
     });
 
@@ -137,19 +125,20 @@ const deployHelper = {
       return Promise.reject( deployFailedReason );
     }
 
-    console.log("deploy transactionReceipt ::", transactionReceipt);
+    logger.info('* Deploy transactionReceipt ::', transactionReceipt);
 
-    const contractAddress = transactionReceipt.contractAddress;
-
-    const code = await web3Provider.eth.getCode(contractAddress);
+    const contractAddress = transactionReceipt.contractAddress
+      , code = await web3Provider.eth.getCode(contractAddress);
 
     if (code.length <= 2) {
-      return Promise.reject("Contract deployment failed. Invalid code length for contract: " + contractName);
+      const err = 'Contract deployment failed. Invalid code length for contract: ' + contractName;
+      logger.error(err);
+      return Promise.reject(err);
     }
 
     // Print summary
-    console.log("Contract Address: " + contractAddress);
-    console.log("Gas used: " + transactionReceipt.gasUsed);
+    logger.info('Contract Address:', contractAddress);
+    logger.info('Gas used:', transactionReceipt.gasUsed);
 
     return Promise.resolve({
       receipt: transactionReceipt,
@@ -157,21 +146,74 @@ const deployHelper = {
     });
   },
 
+  /**
+   * Assert event
+   *
+   * @param {object} formattedTransactionReceipt - formatted transaction receipt object
+   * @param {string} eventName - event name
+   *
+   * @return {promise<result>}
+   */
   assertEvent: async function (formattedTransactionReceipt, eventName) {
-    var formattedEvents = await web3EventsFormatter.perform(formattedTransactionReceipt);
-    var eventData = formattedEvents[eventName];
-    if (eventData === undefined || eventData == '') {
+    const formattedEvents = await web3EventsFormatter.perform(formattedTransactionReceipt);
+
+    const eventData = formattedEvents[eventName];
+    if (eventData === undefined || eventData === '') {
       logger.error("Event: " + eventName + " is not found");
       logger.info(" eventData ");
       logger.info(eventData);
-      process.exit(0);
+      process.exit(1);
     } else {
       logger.win(" event: " + eventName + " is present in Reciept.");
     }
-    ;
+  },
+
+  /**
+   * Wait for Transaction to be included in block
+   *
+   * @param {web3} web3Provider - It could be value chain or utility chain provider
+   * @param {string} transactionHash - Hash for which receipt is required.
+   *
+   * @ignore
+   * @return {promise<string>}
+   */
+  _getReceipt: function (web3Provider, transactionHash) {
+    return new Promise(function (onResolve, onReject) {
+
+      var txSetInterval = null;
+
+      const handleResponse = function (response) {
+        if (response) {
+          clearInterval(txSetInterval);
+
+          openSTNotification.publishEvent.perform(
+            {
+              topics: ['transaction_mined'],
+              message: {
+                kind: 'transaction_mined',
+                payload: {
+                  transaction_hash: transactionHash,
+                  chain_id: web3Provider.chainId,
+                  chain_kind: web3Provider.chainKind
+                }
+              }
+            }
+          );
+
+          onResolve(response);
+        } else {
+          logger.info('Waiting for mining:', transactionHash);
+        }
+      };
+
+      txSetInterval = setInterval(
+        function () {
+          web3Provider.eth.getTransactionReceipt(transactionHash).then(handleResponse);
+        },
+        5000
+      );
+    });
   }
-
-
 };
 
-module.exports = deployHelper;
+module.exports = new DeployHelperKlass();
