@@ -194,7 +194,7 @@ Example: For 500 OST, reserve address will get:
 * Generate new address on utility chain
 ```bash
 node> const platformServices = require('./services/manifest');
-node> generateAddressObj = new platformServices.utils.generateAddress({'passphrase': 'my-secret-pass', 'chain': 'utility'});
+node> const generateAddressObj = new platformServices.utils.generateAddress({'passphrase': 'my-secret-pass', 'chain': 'utility'});
 node> generateAddressObj.perform().then(function(response) { 
   if (response.isSuccess()){
     console.log(response.data.address);
