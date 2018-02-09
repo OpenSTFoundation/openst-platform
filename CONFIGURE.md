@@ -60,6 +60,13 @@ Setup will create "openst-setup" folder in your HOME folder with following folde
   > ls -alt $HOME/openst-setup/
 ```
 
+## (Optional) Configure [Cache](https://github.com/OpenSTFoundation/openst-cache) and [Notification](https://github.com/OpenSTFoundation/openst-notification) layers in setup
+The default Platform setup is done with "in-process" caching and EventEmitter notifications. To use different caching and notifications implementation, edit $HOME/openst-setup/openst_env_vars.sh file
+
+```bash
+  > cat $HOME/openst-setup/openst_env_vars.sh
+```
+
 ## Register and Mint branded tokens on Platform
 
 #### On Terminal 1 - Start all the required services
