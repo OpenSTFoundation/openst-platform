@@ -114,7 +114,7 @@ StartServicesKlass.prototype = {
   _uptime: function (cmds) {
     setInterval(function () {
       for (var i=0; i < cmds.length; i++) {
-        var processID = shell.exec("ps -ef | grep '" + cmds[i] + "' | grep -v grep | awk '{print $2}'").stdout;
+        var processID = (shell.exec("ps -ef | grep '" + cmds[i] + "' | grep -v grep | awk '{print $2}'") || {}).stdout;
         if (processID == "") {
           logger.error("* Process stopped:", cmds[i], " Please restart the services.");
         }
