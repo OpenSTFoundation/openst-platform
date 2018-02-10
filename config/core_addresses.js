@@ -17,12 +17,10 @@ const rootPrefix = ".."
 // and services
 var simpleTokenAbi, simpleTokenBin, simpleTokenAddr;
 if (process.env.USE_MOCK_SIMPLE_TOKEN != 1) {
-  //console.log("Using Original Simple Token Contract");
   simpleTokenAddr = process.env.OST_SIMPLE_TOKEN_CONTRACT_ADDR;
   simpleTokenAbi = coreAbis.simpleToken;
   simpleTokenBin = coreBins.simpleToken;
 } else {
-  //console.log("Using Mock Simple Token Contract");
   simpleTokenAddr = process.env.OST_SIMPLE_TOKEN_CONTRACT_ADDR;
   simpleTokenAbi = coreAbis.mockSimpleToken;
   simpleTokenBin = coreBins.mockSimpleToken;

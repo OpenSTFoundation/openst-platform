@@ -51,9 +51,7 @@ const performer = async function () {
 
   // Chains have started mining
   logger.step("** Checking if chains have started generating blocks");
-  spinnerHelper.start();
   await runHelperService(rootPrefix + '/tools/setup/geth_checker');
-  spinnerHelper.stop();
 
   // Fund required addresses
   logger.step('** Funding required addresses');

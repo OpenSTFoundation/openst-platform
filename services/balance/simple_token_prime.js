@@ -9,17 +9,22 @@
 const rootPrefix = '../..'
   , fundManager = require(rootPrefix + '/lib/fund_manager')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
+  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
 /**
  * simple token prime balance
  *
- * @param {object} params - this is object with keys - address
+ * @param {object} params -
+ * @param {string} params.address - Account address
  *
  * @constructor
  */
 const SimpleTokenPrimeBalanceKlass = function(params) {
-  this.address = params.address;
+  const oThis = this;
+
+  params = params || {};
+  oThis.address = params.address;
 };
 
 SimpleTokenPrimeBalanceKlass.prototype = {
@@ -28,9 +33,14 @@ SimpleTokenPrimeBalanceKlass.prototype = {
     const oThis = this;
 
     try {
+      //Validations
+      if (!basicHelper.isAddressValid(oThis.address)) {
+        return Promise.resolve(responseHelper.error('s_b_st_1', 'Invalid address'));
+      }
+
       return fundManager.getSTPrimeBalanceOf(oThis.address);
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_b_st_1', 'Something went wrong. ' + err.message));
+      return Promise.resolve(responseHelper.error('s_b_st_2', 'Something went wrong. ' + err.message));
     }
 
   }

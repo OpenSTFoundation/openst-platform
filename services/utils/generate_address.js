@@ -10,12 +10,15 @@ const rootPrefix = '../..'
   , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
 /**
- * Constructor for generate address
+ * Constructor to generate a new address
  *
- * @param {object} params - this is object with keys - passphrase, chain
+ * @param {object} params
+ * @param {string} params.chain - Chain on which this new address should be generated and stored
+ * @param {string} [params.passphrase] - Passphrase for the new address. Default: blank
  *
  * @constructor
  */
@@ -23,7 +26,8 @@ const GenerateAddressKlass = function (params) {
   const oThis = this
   ;
 
-  oThis.passphrase = params.passphrase;
+  params = params || {};
+  oThis.passphrase = params.passphrase || '';
   oThis.chain = params.chain;
 };
 
@@ -31,7 +35,7 @@ GenerateAddressKlass.prototype = {
   /**
    * Perform<br><br>
    *
-   * @return {promise<result>} - returns a promise which resolves to an object of kind Result
+   * @return {promise<result>}
    */
   perform: async function() {
     const oThis = this
@@ -39,7 +43,6 @@ GenerateAddressKlass.prototype = {
 
     const web3Provider = web3ProviderFactory.getProvider(oThis.chain, web3ProviderFactory.typeRPC);
     if(!web3Provider) {
-      // this is a error scenario.
       return Promise.resolve(responseHelper.error('s_u_ga_1', 'Invalid chain'));
     }
 

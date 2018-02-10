@@ -28,6 +28,7 @@ before_install:
   - geth version
 install:
   - npm install
+  - npm install -g mocha
 before_script:
 script:
   - node tools/setup/index.js
@@ -36,5 +37,6 @@ script:
   - sleep 300
   - source $HOME/openst-setup/openst_env_vars.sh
   - node tools/setup/branded_token/register.js "ACME Coin" "ACME" 10
+  - mocha --timeout 10000 test/* --exit
 after_script:
   - kill $(ps aux | grep 'tools/setup/start_services.js' | awk '{print $2}')

@@ -9,6 +9,9 @@
 const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
+  , responseHelper = require(rootPrefix + '/lib/formatter/response')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
 const openSTValueContractName = 'openSTValue'
@@ -19,13 +22,15 @@ const openSTValueContractName = 'openSTValue'
 /**
  * Constructor for get branded token details class
  *
- * @param {object} params - this is object with keys - uuid
+ * @param {object} params
+ * @param {string} params.uuid - Branded Token UUID
  *
  * @constructor
  */
 const GetBrandedTokenDetailsKlass = function (params) {
   const oThis = this;
 
+  params = params || {};
   oThis.uuid = params.uuid;
 };
 
@@ -38,6 +43,11 @@ GetBrandedTokenDetailsKlass.prototype = {
   perform: async function () {
     const oThis = this
     ;
+
+    // validations
+    if (!basicHelper.isUuidValid(oThis.uuid)) {
+      return Promise.resolve(responseHelper.error('s_u_gbtd_1', 'Invalid branded token uuid'));
+    }
 
     var tokenDetails = await openSTValue.utilityTokens(oThis.uuid);
 

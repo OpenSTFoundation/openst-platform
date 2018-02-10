@@ -20,6 +20,7 @@ const rootPrefix = '../../..'
   , startStakeService = require(rootPrefix + '/services/stake_and_mint/start_stake')
   , fundManager = require(rootPrefix + '/lib/fund_manager')
   , tokenHelper = require(rootPrefix + '/tools/setup/branded_token/helper')
+  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
 const stakerAddr = coreAddresses.getAddressForUser('staker')
@@ -37,7 +38,7 @@ const MintBrandedToken = function (params) {
   ;
 
   oThis.brandedTokenUuid = params.uuid;
-  oThis.amountToStakeInWeis = new BigNumber(params.amount_to_stake_in_weis);
+  oThis.amountToStakeInWeis = params.amount_to_stake_in_weis;
   oThis.reserveAddr = params.reserve_address;
   oThis.reservePassphrase = params.reserve_passphrase;
   oThis.erc20Address = params.erc20_address;
@@ -51,10 +52,31 @@ MintBrandedToken.prototype = {
    */
   perform: async function () {
     const oThis = this
-      , amountToStakeForBT = oThis.amountToStakeInWeis.mul(0.9)
-      , amountToStakeForSTP = oThis.amountToStakeInWeis.mul(0.1)
+    ;
+
+    // validations
+    if (!basicHelper.isNonZeroWeiValid(oThis.amountToStakeInWeis)) {
+      logger.error('Invalid amount');
+      process.exit(1);
+    }
+
+    // Format to big number
+    oThis.amountToStakeInWeis = basicHelper.convertToBigNumber(oThis.amountToStakeInWeis);
+
+    const amountToStakeForBT = (oThis.amountToStakeInWeis.mul(0.9) - oThis.amountToStakeInWeis.mul(0.9).modulo(1))
+      , amountToStakeForSTP = oThis.amountToStakeInWeis.minus(amountToStakeForBT)
       , stPrimeUuid = coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID
     ;
+
+    // validations
+    if (!basicHelper.isNonZeroWeiValid(amountToStakeForBT)) {
+      logger.error('Invalid wei amount to stake for BT', amountToStakeForBT.toString(10));
+      process.exit(1);
+    }
+    if (!basicHelper.isNonZeroWeiValid(amountToStakeForSTP)) {
+      logger.error('Invalid wei amount to stake for ST Prime', amountToStakeForSTP.toString(10));
+      process.exit(1);
+    }
 
     logger.step('** Starting stake mint for branded token for beneficiary reserve of BT Reserve:', oThis.reserveAddr);
 

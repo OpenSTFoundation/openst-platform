@@ -55,18 +55,6 @@ const timeInMilli = function(hrTime) {
 };
 
 /**
- * Find out the difference between request start time and complete time
- */
-const calculateRequestTime = function() {
-  var reqTime = 0;
-  if (requestNamespace && requestNamespace.get('startTime')) {
-    const hrTime = process.hrtime();
-    reqTime = timeInMilli(hrTime) - timeInMilli(requestNamespace.get('startTime'));
-  }
-  return reqTime;
-};
-
-/**
  * Custom COnsole Logger
  *
  * @constructor
@@ -171,27 +159,6 @@ CustomConsoleLoggerKlass.prototype = {
    */
   log: function () {
     console.log.apply(console, arguments);
-  },
-
-  //Method to Log Request Started.
-  requestStartLog: function (requestUrl) {
-    const oThis = this
-      , d = new Date()
-      , dateTime = d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate() + " " + d.getHours() + ":" +
-                    d.getMinutes() + ":" + d.getSeconds() + "." + d.getMilliseconds()
-      , message = 'Started \'' + requestUrl + '\' at ' + dateTime
-    ;
-
-    oThis.info(message);
-  },
-
-  //Method to Log Request Completed.
-  requestCompleteLog: function (status) {
-    const oThis = this
-      , message = 'Completed \'' + status + '\' in ' + calculateRequestTime() + 'ms'
-    ;
-
-    oThis.info(message);
   }
 
 };

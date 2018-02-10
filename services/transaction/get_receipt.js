@@ -11,12 +11,15 @@ const rootPrefix = '../..'
   , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , web3EventsDecoder = require(rootPrefix + '/lib/web3/events/decoder')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
+  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
 /**
  * Get Transaction Receipt Service
  *
- * @param {object} params - this is object with keys - transaction_hash, chain
+ * @param {object} params -
+ * @param {string} params.chain - Chain on which transaction was executed
+ * @param {string} params.transaction_hash - Transaction hash for lookup
  *
  * @constructor
  */
@@ -24,6 +27,7 @@ const GetReceiptKlass = function(params) {
   const oThis = this
   ;
 
+  params = params || {};
   oThis.transactionHash = params.transaction_hash;
   oThis.chain = params.chain;
 };
@@ -40,15 +44,20 @@ GetReceiptKlass.prototype = {
 
     try {
 
+      // validations
+      if (!basicHelper.isTxHashValid(oThis.transactionHash)) {
+        return Promise.resolve(responseHelper.error('s_t_gr_1', 'Invalid transaction hash'));
+      }
+
       const web3Provider = web3ProviderFactory.getProvider(oThis.chain, web3ProviderFactory.typeRPC);
       if(!web3Provider) {
-        return Promise.resolve(responseHelper.error('s_t_gr_1', 'Invalid chain.'));
+        return Promise.resolve(responseHelper.error('s_t_gr_2', 'Invalid chain.'));
       }
 
       const txReceipt = await web3Provider.eth.getTransactionReceipt( oThis.transactionHash);
 
       if(!txReceipt){
-        return Promise.resolve(responseHelper.error('s_t_gr_2', 'Transaction yet not mined.'));
+        return Promise.resolve(responseHelper.error('s_t_gr_3', 'Transaction yet not mined.'));
       } else {
         const web3EventsDecoderResponse = web3EventsDecoder.perform(txReceipt, {});
         openSTNotification.publishEvent.perform(
@@ -68,7 +77,7 @@ GetReceiptKlass.prototype = {
       }
 
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_t_gr_3', 'Something went wrong. ' + err.message));
+      return Promise.resolve(responseHelper.error('s_t_gr_4', 'Something went wrong. ' + err.message));
     }
   }
 };

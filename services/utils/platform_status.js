@@ -52,6 +52,7 @@ PlatformStatusKlass.prototype = {
    *
    * @return {promise<result>}
    * @private
+   * @ignore
    */
   _gethStatus: function(chain) {
     const web3Provider = web3ProviderFactory.getProvider(chain, web3ProviderFactory.typeRPC)
@@ -61,7 +62,7 @@ PlatformStatusKlass.prototype = {
       ;
     if(!web3Provider) {
       // this is a error scenario.
-      return Promise.reject(responseHelper.error('s_s_gethStatus_1', 'Invalid chain name ' + chain));
+      return Promise.reject(responseHelper.error('s_u_ps_1', 'Invalid chain name ' + chain));
     }
 
     return new Promise(function (onResolve, onReject) {
@@ -79,7 +80,7 @@ PlatformStatusKlass.prototype = {
           });
         } else {
           logger.error("Geth Checker - " + chain + " chain has no new blocks.");
-          onReject(responseHelper.error('s_s_gethStatus_2', 'No new blocks on ' + chain + ' chain'));
+          onReject(responseHelper.error('s_u_ps_2', 'No new blocks on ' + chain + ' chain'));
         }
         chainTimer['retryCounter']++;
       }, timerInterval);

@@ -77,7 +77,7 @@ STPrimeContractKlass.prototype = {
     }
 
     const stPrime = new StPrimeKlass(simpleTokenPrimeContractAddress);
-    await stPrime.initializeTransfer(utilityDeployerName, {gasPrice: UC_GAS_PRICE, gas: UC_GAS_LIMIT});
+    await stPrime.initialTransferToContract(utilityDeployerName, {gasPrice: UC_GAS_PRICE, gas: UC_GAS_LIMIT});
 
     const simpleTokenPrimeContractBalanceInWei = await web3Provider.eth.getBalance(simpleTokenPrimeContractAddress);
 

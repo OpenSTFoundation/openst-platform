@@ -76,6 +76,14 @@ The default Platform setup is done with "in-process" caching and EventEmitter no
   > source $HOME/openst-setup/openst_env_vars.sh
 ```
 
+* <b>Set the corrent OPENST_PLATFORM_PATH on new terminal</b>
+```bash
+  # for standalone system
+  > export OPENST_PLATFORM_PATH=$(pwd)
+  # for RESTful APIs
+  > export OPENST_PLATFORM_PATH=$(pwd)/node_modules/@openstfoundation/openst-platform
+```
+
 * <b>Start all platform services in background</b>   
 ```bash
   > node $OPENST_PLATFORM_PATH/tools/setup/start_services.js
@@ -93,7 +101,7 @@ Note: Script also monitor these services and alert if any required service termi
     # for RESTful APIs
     > export OPENST_PLATFORM_PATH=$(pwd)/node_modules/@openstfoundation/openst-platform
   ```
-  - Listen notification published from platform
+  - Listen notifications published from platform over RabbitMQ
   ```bash
     > node $OPENST_PLATFORM_PATH/executables/notification_subscribe.js
   ```
@@ -193,8 +201,8 @@ Example: For 500 OST, reserve address will get:
 
 * Generate new address on utility chain
 ```bash
-node> const platformServices = require('./services/manifest');
-node> const generateAddressObj = new platformServices.utils.generateAddress({'passphrase': 'my-secret-pass', 'chain': 'utility'});
+node> const platformServices = require('./index');
+node> const generateAddressObj = new platformServices.services.utils.generateAddress({'passphrase': 'my-secret-pass', 'chain': 'utility'});
 node> generateAddressObj.perform().then(function(response) { 
   if (response.isSuccess()){
     console.log(response.data.address);

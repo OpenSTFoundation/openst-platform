@@ -15,6 +15,7 @@ const rootPrefix = '../..'
   , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , RegistrationStatusKlass = require(rootPrefix + '/helpers/registration_status')
+  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
 const openStUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility')
@@ -26,7 +27,8 @@ const openStUtilityContractAddr = coreAddresses.getAddressForContract('openSTUti
 /**
  * Registration status service
  *
- * @param {object} params - this is object with keys - transaction_hash (BT proposal)
+ * @param {object} params -
+ * @param {string} params.transaction_hash - Transaction hash for lookup
  *
  * @constructor
  */
@@ -34,6 +36,7 @@ const GetRegistrationStatusKlass = function(params) {
   const oThis = this
   ;
 
+  params = params || {};
   oThis.transactionHash = params.transaction_hash;
 };
 
@@ -49,6 +52,11 @@ GetRegistrationStatusKlass.prototype = {
     ;
 
     try {
+      // validations
+      if (!basicHelper.isTxHashValid(oThis.transactionHash)) {
+        return Promise.resolve(responseHelper.error('s_ob_grs_1', 'Invalid transaction hash'));
+      }
+
       // returns the registration status of the proposal
       const registrationStatus = new RegistrationStatusKlass()
       ;
@@ -65,7 +73,7 @@ GetRegistrationStatusKlass.prototype = {
       // check whether ProposedBrandedToken is present in the events in the transaction receipt
       if(!proposalFormattedEvents || !proposalFormattedEvents['ProposedBrandedToken']) {
         // this is a error scenario.
-        return Promise.resolve(responseHelper.error('s_ob_grs_1',
+        return Promise.resolve(responseHelper.error('s_ob_grs_2',
           'Proposal was not done correctly. Transaction does not have ProposedBrandedToken event'));
       }
 
@@ -98,7 +106,7 @@ GetRegistrationStatusKlass.prototype = {
 
       return registrationStatus.returnResultPromise();
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_ob_grs_2', 'Something went wrong. ' + err.message));
+      return Promise.resolve(responseHelper.error('s_ob_grs_3', 'Something went wrong. ' + err.message));
     }
   }
 };

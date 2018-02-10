@@ -13,6 +13,7 @@ const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , simpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
+  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
 const openSTValueContractName = 'openSTValue'
@@ -57,6 +58,8 @@ ApproveOpenstValueContractKlass.prototype = {
    * @param {BigNumber} toApproveAmount - this is the amount which is used for approval
    *
    * @return {promise<result>}
+   * @private
+   * @ignore
    */
   _approve: async function (toApproveAmount) {
     const transactionHash = await simpleToken.approve(
@@ -73,7 +76,9 @@ ApproveOpenstValueContractKlass.prototype = {
   /**
    * Get ST balance of staker
    *
-   * @return {promise<BigNumber>}
+   * @return {promise<result>}
+   * @private
+   * @ignore
    */
   _getStakerSTBalance: function() {
     return simpleToken.balanceOf(stakerAddress)

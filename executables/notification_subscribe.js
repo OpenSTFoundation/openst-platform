@@ -2,18 +2,19 @@
 
 const openSTNotification = require('@openstfoundation/openst-notification');
 
+const rootPrefix = '..'
+  , logger = require(rootPrefix + '/helpers/custom_console_logger');
+
 
 function subscribe(){
   openSTNotification.subscribeEvent.rabbit(
     ['#'],
     function(msgContent){
-      console.log('[RECEIVED]', msgContent, '\n')
+      logger.info('[RECEIVED]', msgContent, '\n');
     }
-  );
+  ).catch(function (err) {logger.error(err);});
 }
-subscribe();
 
-openSTNotification.subscribeEvent.local(['rmq_fail'], function(err){
-  console.log('RMQ Failed event received.');
-  setTimeout(subscribe, 2000);
-});
+// Start
+logger.step("* Started the OpenST Notifications");
+subscribe();

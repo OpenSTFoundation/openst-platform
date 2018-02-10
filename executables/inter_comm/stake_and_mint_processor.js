@@ -53,7 +53,7 @@ const openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility'
  *
  * @param {string} compareWith - string to compare with
  *
- * @return {booelan} true when equal
+ * @return {boolean} true when equal
  */
 String.prototype.equalsIgnoreCase = function ( compareWith ) {
   const oThis = this
