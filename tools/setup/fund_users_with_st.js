@@ -37,7 +37,10 @@ FundUsersWithStKlass.prototype = {
    */
   perform: async function () {
     logger.info('* Foundation funding ST on value chain to utilityChainOwner');
-    await setupFundManager.transferST(foundationAddr, foundationPassphrase, utilityChainOwnerAddr, MIN_FUND.mul(100000000).toString(10));
+    await setupFundManager.transferST(
+        foundationAddr, foundationPassphrase, utilityChainOwnerAddr, MIN_FUND.mul(100000000).toString(10),
+        {tag: 'transferSTToUCOwner', returnType: 'txReceipt'}
+    );
 
     return Promise.resolve();
   }

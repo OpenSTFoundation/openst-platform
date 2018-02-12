@@ -8,9 +8,9 @@
 
 const rootPrefix = '../../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , fundManager = require(rootPrefix + '/lib/fund_manager')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , simpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
 ;
 
 /**
@@ -23,10 +23,14 @@ const rootPrefix = '../../..'
  * @param {string} params.recipient_address - Recipient address
  * @param {string} [params.recipient_name] - Recipient name name where only platform has address and passphrase
  * @param {number} params.amount_in_wei - Amount (in wei) to transfer
+ * @param {object} params.options -
+ * @param {string} params.options.tag - extra param which gets logged for transaction as transaction type
+ * @param {boolean} [params.options.returnType] - Desired return type. possible values: uuid, txHash, txReceipt. Default: txHash
  *
  * @constructor
  */
 const TransferSimpleTokenKlass = function(params) {
+
   const oThis = this
   ;
 
@@ -37,6 +41,10 @@ const TransferSimpleTokenKlass = function(params) {
   oThis.recipientAddress = params.recipient_address;
   oThis.recipientName = params.recipient_name;
   oThis.amountInWei = params.amount_in_wei;
+  params.options = params.options || {};
+  oThis.tag = params.options.tag;
+  oThis.returnType = params.options.returnType || 'txHash';
+
 };
 
 TransferSimpleTokenKlass.prototype = {
@@ -50,6 +58,7 @@ TransferSimpleTokenKlass.prototype = {
     ;
 
     try {
+
       // Get sender details by name
       if(oThis.senderName) {
         oThis.senderAddress = coreAddresses.getAddressForUser(oThis.senderName);
@@ -71,15 +80,25 @@ TransferSimpleTokenKlass.prototype = {
       if (!basicHelper.isNonZeroWeiValid(oThis.amountInWei)) {
         return Promise.resolve(responseHelper.error('s_t_t_st_3', 'Invalid amount'));
       }
+      if (!basicHelper.isTagValid(oThis.tag)) {
+        return Promise.resolve(responseHelper.error('s_t_t_st_4', 'Invalid tag'));
+      }
 
       // Format wei
       oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
 
-      return fundManager.transferST(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei);
+      return simpleToken.transfer(
+        oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei,
+        {tag: oThis.tag, returnType: oThis.returnType}
+      );
+
+
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_t_t_st_4', 'Something went wrong. ' + err.message));
+      return Promise.resolve(responseHelper.error('s_t_t_st_5', 'Something went wrong. ' + err.message));
     }
+
   }
+
 };
 
 module.exports = TransferSimpleTokenKlass;

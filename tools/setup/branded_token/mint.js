@@ -83,7 +83,10 @@ MintBrandedToken.prototype = {
     // NOTE: In real case, Member Company transfers ST to staker and then approve is called. To simulate this, foundation
     // is transfering ST to staker.
     logger.info('* Foundation transfers ST to BT Reserve');
-    await fundManager.transferST(foundationAddr, foundationPassphrase, stakerAddr, oThis.amountToStakeInWeis);
+    await fundManager.transferST(
+        foundationAddr, foundationPassphrase, stakerAddr, oThis.amountToStakeInWeis,
+        {tag: 'transferSTToBTReserve', returnType: 'txReceipt'}
+    );
 
     logger.info('* Staker approves openSTValue contract');
     const approveResponse = await (new approveService()).perform();

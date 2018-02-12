@@ -46,7 +46,10 @@ StakeAndMintSimpleTokenPrime.prototype = {
     ;
 
     logger.info('* Utility Chain Owner transfers ST to staker');
-    await fundManager.transferST(utilityChainOwnerAddr, utilityChainOwnerPassphrase, stakerAddr, toStakeAmount);
+    await fundManager.transferST(
+        utilityChainOwnerAddr, utilityChainOwnerPassphrase, stakerAddr, toStakeAmount,
+        {tag: 'transferSTToStaker', returnType: 'txReceipt'}
+    );
 
     logger.info('* Staker approves openSTValue contract');
     const approveResponse = await (new approveService()).perform();
