@@ -20,7 +20,11 @@ var testValidData = {
   sender_name: 'utilityChainOwner',
   recipient_address: process.env.OST_STAKER_ADDR,
   recipient_name: 'staker',
-  amount_in_wei: 20
+  amount_in_wei: 20,
+  options: {
+    returnType: 'txHash',
+    tag: 'GasRefill'
+  }
 };
 
 describe('services/transaction/transfer/simple_token_prime', function() {

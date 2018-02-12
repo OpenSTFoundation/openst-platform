@@ -201,11 +201,24 @@ Example: For 500 OST, reserve address will get:
 
 * Generate new address on utility chain
 ```bash
-node> const platformServices = require('./index');
-node> const generateAddressObj = new platformServices.services.utils.generateAddress({'passphrase': 'my-secret-pass', 'chain': 'utility'});
+node> var platformServices = require('./index');
+node> var generateAddressObj = new platformServices.services.utils.generateAddress({passphrase: 'my-secret-pass', chain: 'utility'});
 node> generateAddressObj.perform().then(function(response) { 
   if (response.isSuccess()){
-    console.log(response.data.address);
+    console.log(response.data);
+  } else {
+    console.log(response.err)
+  } 
+});
+```
+
+* Transfer ST'
+```bash
+node> var platformServices = require('./index');
+node> var transferSTPrimeObj = new platformServices.services.transaction.transfer.simpleTokenPrime({sender_name: 'utilityChainOwner', recipient_name: 'foundation', amount_in_wei: 10, options: {returnType: 'txHash', tag: 'GasRefill'}});
+node> transferSTPrimeObj.perform().then(function(response) {
+  if (response.isSuccess()){
+    console.log(response.data);
   } else {
     console.log(response.err)
   } 

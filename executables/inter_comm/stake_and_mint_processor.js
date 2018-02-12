@@ -291,6 +291,7 @@ StakeAndMintProcessorInterComm.prototype = {
 
     logger.step(stakingIntentHash, ' :: performing claim');
 
+    // TODO: Manage ST' or BT cache from here
     await utilityTokenInterfaceContract.claim(
       stakerAddress,
       stakerPassphrase,

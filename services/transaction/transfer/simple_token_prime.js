@@ -27,6 +27,9 @@ const stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
  * @param {string} params.recipient_address - Recipient address
  * @param {string} [params.recipient_name] - Recipient name name where only platform has address and passphrase
  * @param {number} params.amount_in_wei - Amount (in wei) to transfer
+ * @param {object} params.options -
+ * @param {string} params.options.tag - extra param which gets logged for transaction as transaction type
+ * @param {boolean} [params.options.returnType] - Desired return type. possible values: uuid, txHash, txReceipt. Default: txHash
  *
  * @constructor
  */
@@ -41,8 +44,9 @@ const TransferSimpleTokenPrimeKlass = function(params) {
   oThis.recipientAddress = params.recipient_address;
   oThis.recipientName = params.recipient_name;
   oThis.amountInWei = params.amount_in_wei;
-  oThis.tag = 'GasRefill';
-  oThis.inAsync = true;
+  params.options = params.options || {};
+  oThis.tag = params.options.tag;
+  oThis.returnType = params.options.returnType || 'txHash';
 };
 
 TransferSimpleTokenPrimeKlass.prototype = {
@@ -76,14 +80,17 @@ TransferSimpleTokenPrimeKlass.prototype = {
       if (!basicHelper.isNonZeroWeiValid(oThis.amountInWei)) {
         return Promise.resolve(responseHelper.error('s_t_t_stp_3', 'Invalid amount'));
       }
+      if (!basicHelper.isTagValid(oThis.tag)) {
+        return Promise.resolve(responseHelper.error('s_t_t_stp_4', 'Invalid transaction tag'));
+      }
 
       // Format wei
       oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
 
       return stPrime.transfer(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei,
-        {tag: oThis.tag, inAsync: oThis.inAsync});
+        {tag: oThis.tag, returnType: oThis.returnType});
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_t_t_stp_4', 'Something went wrong. ' + err.message));
+      return Promise.resolve(responseHelper.error('s_t_t_stp_5', 'Something went wrong. ' + err.message));
     }
   }
 };

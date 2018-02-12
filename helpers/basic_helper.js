@@ -89,6 +89,64 @@ BasicHelperKlass.prototype = {
   },
 
   /**
+   * Check if tag is valid or not
+   *
+   * @param {string} tag - transaction tag
+   *
+   * @return {boolean}
+   */
+  isTagValid: function (tag) {
+    if (typeof tag !== "string") {
+      return false;
+    }
+    return (/[a-z0-9_\-]/i).test(tag);
+  },
+
+  /**
+   * get return type for transaction
+   *
+   * @param {string} returnType - return from geth transactions when following event is received
+   *
+   * @return {string}
+   */
+  getReturnType: function (returnType) {
+    return ['uuid', 'txHash', 'txReceipt'].includes(returnType) ? returnType : 'txHash';
+  },
+
+  /**
+   * check if return type is uuid or not
+   *
+   * @param {string} returnType - return type
+   *
+   * @return {boolean}
+   */
+  isReturnTypeUUID: function(returnType) {
+    return returnType === 'uuid';
+  },
+
+  /**
+   * check if return type is txHash or not
+   *
+   * @param {string} returnType - return type
+   *
+   * @return {boolean}
+   */
+  isReturnTypeTxHash: function(returnType) {
+    return returnType === 'txHash';
+  },
+
+  /**
+   * check if return type is txReceipt or not
+   *
+   * @param {string} returnType - return type
+   *
+   * @return {boolean}
+   */
+  isReturnTypeTxReceipt: function(returnType) {
+    return returnType === 'txReceipt';
+  },
+
+  /**
    * Check if branded token name is valid or not
    *
    * @param {string} name - Branded token name

@@ -7,6 +7,7 @@
  */
 
 const rootPrefix = '../..'
+  , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , StPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
