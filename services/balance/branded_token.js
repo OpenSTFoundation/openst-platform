@@ -8,6 +8,7 @@
 
 const rootPrefix = '../..'
   , fundManager = require(rootPrefix + '/lib/fund_manager')
+  , BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
@@ -43,7 +44,9 @@ BrandedTokenBalanceKlass.prototype = {
         return Promise.resolve(responseHelper.error('s_b_bt_2', 'Invalid address'));
       }
 
-      return fundManager.getBrandedTokenBalanceOf(this.erc20Address, oThis.address);
+      var brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address});
+
+      return brandedToken.getBalanceOf(oThis.address);
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_b_bt_3', 'Something went wrong. ' + err.message));
     }

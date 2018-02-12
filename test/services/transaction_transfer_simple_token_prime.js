@@ -74,6 +74,27 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     assert.equal(response.isSuccess(), false);
   });
 
+  // Options Variations
+  it('should fail when tag is blank', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.options.tag = '';
+
+    var getTransactionReceiptObj = new platformServices.simpleTokenPrime(dupData)
+      , response = await getTransactionReceiptObj.perform()
+    ;
+    assert.equal(response.isSuccess(), false);
+  });
+
+  it('should fail when tag is invalid', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.options.tag = 'a@b';
+
+    var getTransactionReceiptObj = new platformServices.simpleTokenPrime(dupData)
+      , response = await getTransactionReceiptObj.perform()
+    ;
+    assert.equal(response.isSuccess(), false);
+  });
+
   // Sender Variations
 
   it('should fail when sender name is invalid, as named keys have higher priority', async function() {
@@ -108,7 +129,7 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should pass when sender passphrase is invalid, but balance should rollback in cache', async function() {
+  it('should pass when sender passphrase is invalid', async function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.sender_name = ''; // has higher priority
     dupData.sender_passphrase = 'abc';
@@ -116,11 +137,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     var getTransactionReceiptObj = new platformServices.simpleTokenPrime(dupData)
       , response = await getTransactionReceiptObj.perform()
     ;
-    assert.equal(response.isSuccess(), true);
-    assert.isNotNull(response.data.txUuid);
-    assert.isUndefined(response.data.transactionHash);
-
-    //TODO: how to check balance rollback
+    console.log(response);
+    assert.equal(response.isSuccess(), false);
   });
 
   // Recipient Variations
@@ -218,9 +236,52 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     ;
     assert.equal(response.isSuccess(), true);
     assert.isNotNull(response.data.txUuid);
-    assert.isUndefined(response.data.transactionHash);
-
-    //TODO: how to check balance change in cache
+    assert.isNotNull(response.data.txHash);
   });
+
+  it('should pass when returnType is invalid, with default returnType txHash', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.options.returnType = 'myReturnType';
+
+    var getTransactionReceiptObj = new platformServices.simpleTokenPrime(dupData)
+      , response = await getTransactionReceiptObj.perform()
+    ;
+
+    assert.equal(response.isSuccess(), true);
+    assert.isNotNull(response.data.txUuid);
+    assert.isNotNull(response.data.txHash);
+    assert.deepEqual(response.data.txReceipt, {});
+  });
+
+  it('should pass when returnType is uuid', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.options.returnType = 'uuid';
+
+    var getTransactionReceiptObj = new platformServices.simpleTokenPrime(dupData)
+      , response = await getTransactionReceiptObj.perform()
+    ;
+
+    assert.equal(response.isSuccess(), true);
+    assert.isNotNull(response.data.txUuid);
+    assert.equal(response.data.txHash, '');
+    assert.deepEqual(response.data.txReceipt, {});
+  });
+
+  it('should pass when returnType is txReceipt', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.options.returnType = 'txReceipt';
+
+    var getTransactionReceiptObj = new platformServices.simpleTokenPrime(dupData)
+      , response = await getTransactionReceiptObj.perform()
+    ;
+
+    assert.equal(response.isSuccess(), true);
+    assert.isNotNull(response.data.txUuid);
+    assert.isNotNull(response.data.txHash);
+    assert.isNumber(response.data.txReceipt.blockNumber);
+  });
+
+  //TODO: check balance in cache
+
 
 });

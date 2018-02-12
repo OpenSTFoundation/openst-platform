@@ -37,6 +37,6 @@ script:
   - sleep 300
   - source $HOME/openst-setup/openst_env_vars.sh
   - node tools/setup/branded_token/register.js "ACME Coin" "ACME" 10
-  - mocha --timeout 10000 test/* --exit
+  - mocha --timeout 60000 test/* --exit
 after_script:
   - kill $(ps aux | grep 'tools/setup/start_services.js' | awk '{print $2}')

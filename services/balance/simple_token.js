@@ -8,6 +8,7 @@
 
 const rootPrefix = '../..'
   , fundManager = require(rootPrefix + '/lib/fund_manager')
+  , simpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
@@ -38,7 +39,7 @@ SimpleTokenBalanceKlass.prototype = {
         return Promise.resolve(responseHelper.error('s_b_st_1', 'Invalid address'));
       }
 
-      return fundManager.getSTBalanceOf(oThis.address);
+      return simpleToken.balanceOf(oThis.address);
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_b_st_2', 'Something went wrong. ' + err.message));
     }
