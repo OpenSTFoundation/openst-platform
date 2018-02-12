@@ -7,9 +7,13 @@
  */
 
 const rootPrefix = '../..'
-  , fundManager = require(rootPrefix + '/lib/fund_manager')
+  , StPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+;
+
+const stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
+  , stPrime = new StPrimeKlass(stPrimeContractAddress)
 ;
 
 /**
@@ -38,7 +42,7 @@ SimpleTokenPrimeBalanceKlass.prototype = {
         return Promise.resolve(responseHelper.error('s_b_st_1', 'Invalid address'));
       }
 
-      return fundManager.getSTPrimeBalanceOf(oThis.address);
+      return stPrime.getBalanceOf(oThis.address);
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_b_st_2', 'Something went wrong. ' + err.message));
     }
