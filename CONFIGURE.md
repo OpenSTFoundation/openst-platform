@@ -250,7 +250,7 @@ node> serviceObj.perform().then(function(response) {
 ```bash
 node> var platformServices = require('./index');
 node> var serviceObj = new platformServices.services.transaction.transfer.simpleTokenPrime({sender_name: 'utilityChainOwner', recipient_name: 'foundation', amount_in_wei: 10, options: {returnType: 'txHash', tag: 'GasRefill'}});
-node> v.perform().then(function(response) {
+node> serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
     console.log(response.data);
   } else {
@@ -262,7 +262,7 @@ node> v.perform().then(function(response) {
 * Get transaction receipt
 ```bash
 node> var platformServices = require('./index');
-node> var serviceObj = new platformServices.services.transaction.getTransactionReceipt({chain: 'utility', transaction_hash: '0xa756863b53315f2924a00959348fc474822a39d71227e5aef434d25df3479178'}});
+node> var serviceObj = new platformServices.services.transaction.getTransactionReceipt({chain: 'utility', transaction_hash: '0xe4945b1c90d291074b74c9ed211c6fbae2702d1bd33e7b53c3f55a6b3c62c270'});
 node> serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
     console.log(response.data);

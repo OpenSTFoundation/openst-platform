@@ -234,8 +234,8 @@ describe('services/transaction/transfer/simple_token', function() {
       , response = await simpleTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), true);
-    assert.isNotNull(response.data.txUuid);
-    assert.isNotNull(response.data.txHash);
+    assert.isNotNull(response.data.transaction_uuid);
+    assert.isNotNull(response.data.transaction_hash);
   });
 
   it('should pass when returnType is invalid, with default returnType txHash', async function() {
@@ -247,9 +247,9 @@ describe('services/transaction/transfer/simple_token', function() {
     ;
 
     assert.equal(response.isSuccess(), true);
-    assert.isNotNull(response.data.txUuid);
-    assert.isNotNull(response.data.txHash);
-    assert.deepEqual(response.data.txReceipt, {});
+    assert.isNotNull(response.data.transaction_uuid);
+    assert.isNotNull(response.data.transaction_hash);
+    assert.deepEqual(response.data.transaction_receipt, {});
   });
 
   it('should pass when returnType is uuid', async function() {
@@ -261,9 +261,9 @@ describe('services/transaction/transfer/simple_token', function() {
     ;
 
     assert.equal(response.isSuccess(), true);
-    assert.isNotNull(response.data.txUuid);
-    assert.equal(response.data.txHash, '');
-    assert.deepEqual(response.data.txReceipt, {});
+    assert.isNotNull(response.data.transaction_uuid);
+    assert.equal(response.data.transaction_hash, '');
+    assert.deepEqual(response.data.transaction_receipt, {});
   });
 
   it('should pass when returnType is txReceipt', async function() {
@@ -275,9 +275,9 @@ describe('services/transaction/transfer/simple_token', function() {
     ;
 
     assert.equal(response.isSuccess(), true);
-    assert.isNotNull(response.data.txUuid);
-    assert.isNotNull(response.data.txHash);
-    assert.isNumber(response.data.txReceipt.blockNumber);
+    assert.isNotNull(response.data.transaction_uuid);
+    assert.isNotNull(response.data.transaction_hash);
+    assert.isNumber(response.data.transaction_receipt.blockNumber);
   });
 
 });

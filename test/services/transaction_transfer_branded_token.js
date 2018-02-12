@@ -14,35 +14,69 @@ const rootPrefix = "../.."
   , brandedTokenConfig = require(brandedTokenConfigPath)
 ;
 
+var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]]
+
 var testValidData = {
+  erc20_address: brandedTokenDetails['ERC20'],
+  reserve_address: brandedTokenDetails['Reserve'],
+  reserve_passphrase: brandedTokenDetails['ReservePassphrase'],
   sender_address: process.env.OST_UTILITY_CHAIN_OWNER_ADDR,
   sender_passphrase: process.env.OST_UTILITY_CHAIN_OWNER_PASSPHRASE,
   sender_name: 'utilityChainOwner',
   recipient_address: process.env.OST_STAKER_ADDR,
   recipient_name: 'staker',
-  amount_in_wei: 20,
+  amount_in_wei: 2,
   options: {
     returnType: 'txHash',
-    tag: 'GasRefill'
+    tag: 'ILoveOST'
   }
 };
 
-describe('services/transaction/transfer/simple_token_prime', function() {
+describe('services/transaction/transfer/branded_token', function() {
 
   it('should return promise', async function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = brandedTokenObj.perform()
     ;
     assert.typeOf(response, 'Promise');
   });
 
+  // Prefil BT to sender
+
+  it('should pass prefil BT to sender promise', async function() {
+    // refill gas
+    var serviceObj = new openstPlatform.services.transaction.transfer.simpleTokenPrime(
+      {sender_name: 'utilityChainOwner', recipient_address: brandedTokenDetails['Reserve'],
+        amount_in_wei: 1000000000000000000, options: {returnType: 'txReceipt', tag: 'GasRefill'}});
+    await serviceObj.perform();
+
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.options.returnType = 'txReceipt';
+    dupData.sender_name = '';
+    dupData.sender_address = brandedTokenDetails['Reserve'];
+    dupData.sender_passphrase = brandedTokenDetails['ReservePassphrase'];
+    dupData.recipient_name = 'utilityChainOwner';
+    dupData.amount_in_wei = 100;
+
+
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
+    ;
+    assert.equal(response.isSuccess(), true);
+    assert.isNotNull(response.data.transaction_uuid);
+    assert.isNotNull(response.data.transaction_hash);
+    assert.isNumber(response.data.transaction_receipt.blockNumber);
+  });
+
+  // Params validations
+
   it('should fail when params is undefined', async function() {
     var dupData = undefined;
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -50,8 +84,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
   it('should fail when params is a string', async function() {
     var dupData = 'abc';
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -59,8 +93,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
   it('should fail when params is empty object', async function() {
     var dupData = {};
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -68,8 +102,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
   it('should fail when params is empty array', async function() {
     var dupData = [];
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -79,8 +113,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.options.tag = '';
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -89,8 +123,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.options.tag = 'a@b';
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -101,8 +135,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.sender_name = 'Google';
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -112,8 +146,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     dupData.sender_name = ''; // has higher priority
     dupData.sender_address = 'abc';
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -123,8 +157,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     dupData.sender_name = ''; // has higher priority
     dupData.sender_address = '0xb4d7bedf714e6c7cd1a641f705870fa19144a061';
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -134,8 +168,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     dupData.sender_name = ''; // has higher priority
     dupData.sender_passphrase = 'abc';
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -147,8 +181,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     dupData.recipient_name = ''; // has higher priority
     dupData.recipient_address = 'abc';
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -157,8 +191,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.recipient_name = 'abc';
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -169,8 +203,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = undefined;
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -179,8 +213,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = 'abc';
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -189,8 +223,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = 100.2;
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -199,8 +233,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = 0.2;
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -209,8 +243,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = 0;
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -219,8 +253,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = -100;
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -230,8 +264,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
   it('should pass when everything is valid', async function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
     assert.equal(response.isSuccess(), true);
     assert.isNotNull(response.data.transaction_uuid);
@@ -242,8 +276,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.options.returnType = 'myReturnType';
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
 
     assert.equal(response.isSuccess(), true);
@@ -256,8 +290,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.options.returnType = 'uuid';
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
 
     assert.equal(response.isSuccess(), true);
@@ -270,8 +304,8 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.options.returnType = 'txReceipt';
 
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
+    var brandedTokenObj = new platformServices.brandedToken(dupData)
+      , response = await brandedTokenObj.perform()
     ;
 
     assert.equal(response.isSuccess(), true);

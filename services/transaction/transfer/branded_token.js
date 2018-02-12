@@ -8,6 +8,7 @@
 
 const rootPrefix = '../../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
   , fundManager = require(rootPrefix + '/lib/fund_manager')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
@@ -25,6 +26,9 @@ const rootPrefix = '../../..'
  * @param {string} params.recipient_address - Recipient address
  * @param {string} [params.recipient_name] - Recipient name name where only platform has address and passphrase
  * @param {number} params.amount_in_wei - Amount (in wei) to transfer
+ * @param {object} params.options -
+ * @param {string} params.options.tag - extra param which gets logged for transaction as transaction type
+ * @param {boolean} [params.options.returnType] - Desired return type. possible values: uuid, txHash, txReceipt. Default: txHash
  *
  * @param {string} params.reserve_address - Reserve address to give ST' (gas) to sender, if required
  * @param {string} params.reserve_passphrase - Reserve passphrase
@@ -45,6 +49,8 @@ const TransferBrandedTokenKlass = function(params) {
   oThis.recipientAddress = params.recipient_address;
   oThis.recipientName = params.recipient_name;
   oThis.amountInWei = params.amount_in_wei;
+  oThis.tag = (params.options || {}).tag;
+  oThis.returnType = (params.options || {}).returnType || 'txHash';
 };
 
 TransferBrandedTokenKlass.prototype = {
@@ -82,17 +88,22 @@ TransferBrandedTokenKlass.prototype = {
       if (!basicHelper.isNonZeroWeiValid(oThis.amountInWei)) {
         return Promise.resolve(responseHelper.error('s_t_t_bt_4', 'Invalid amount'));
       }
+      if (!basicHelper.isTagValid(oThis.tag)) {
+        return Promise.resolve(responseHelper.error('s_t_t_bt_5', 'Invalid transaction tag'));
+      }
       if (!basicHelper.isAddressValid(oThis.reserveAddress) || !oThis.reservePassphrase) {
-        return Promise.resolve(responseHelper.error('s_t_t_bt_6', 'Invalid reserve details'));
+        return Promise.resolve(responseHelper.error('s_t_t_bt_7', 'Invalid reserve details'));
       }
 
       // Format wei
       oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
 
-      return fundManager.transferBrandedToken(oThis.erc20Address, oThis.reserveAddress, oThis.reservePassphrase,
-        oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei);
+      var brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address, Reserve: oThis.reserveAddress})
+
+      return brandedToken.transfer(oThis.senderAddress, oThis.senderPassphrase, oThis.reservePassphrase,
+        oThis.recipientAddress, oThis.amountInWei, {tag: oThis.tag, returnType: oThis.returnType});
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_t_t_bt_5', 'Something went wrong. ' + err.message));
+      return Promise.resolve(responseHelper.error('s_t_t_bt_6', 'Something went wrong. ' + err.message));
     }
   }
 };
