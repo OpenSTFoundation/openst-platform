@@ -72,7 +72,7 @@ CoreConstants.prototype = {
    * @constant {string}
    *
    */
-  OST_GETH_VALUE_RPC_PROVIDER: process.env.OST_GETH_VALUE_RPC_PROVIDER,
+  OST_VALUE_GETH_RPC_PROVIDER: process.env.OST_VALUE_GETH_RPC_PROVIDER,
 
   /**
    * Value Chain Geth WS provider
@@ -80,7 +80,7 @@ CoreConstants.prototype = {
    * @constant {string}
    *
    */
-  OST_GETH_VALUE_WS_PROVIDER: process.env.OST_GETH_VALUE_WS_PROVIDER,
+  OST_VALUE_GETH_WS_PROVIDER: process.env.OST_VALUE_GETH_WS_PROVIDER,
 
   /**
    * Value Chain ID
@@ -96,7 +96,7 @@ CoreConstants.prototype = {
    * @constant {string}
    *
    */
-  OST_GETH_UTILITY_RPC_PROVIDER: process.env.OST_GETH_UTILITY_RPC_PROVIDER,
+  OST_UTILITY_GETH_RPC_PROVIDER: process.env.OST_UTILITY_GETH_RPC_PROVIDER,
 
   /**
    * Utility Chain Geth WS provider
@@ -104,7 +104,7 @@ CoreConstants.prototype = {
    * @constant {string}
    *
    */
-  OST_GETH_UTILITY_WS_PROVIDER: process.env.OST_GETH_UTILITY_WS_PROVIDER,
+  OST_UTILITY_GETH_WS_PROVIDER: process.env.OST_UTILITY_GETH_WS_PROVIDER,
 
   /**
    * Utility Chain ID

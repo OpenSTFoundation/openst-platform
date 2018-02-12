@@ -7,7 +7,6 @@
  */
 
 const rootPrefix = '../..'
-  , fundManager = require(rootPrefix + '/lib/fund_manager')
   , simpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')

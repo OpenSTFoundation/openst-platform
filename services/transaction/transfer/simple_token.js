@@ -41,9 +41,8 @@ const TransferSimpleTokenKlass = function(params) {
   oThis.recipientAddress = params.recipient_address;
   oThis.recipientName = params.recipient_name;
   oThis.amountInWei = params.amount_in_wei;
-  params.options = params.options || {};
-  oThis.tag = params.options.tag;
-  oThis.returnType = params.options.returnType || 'txHash';
+  oThis.tag = (params.options || {}).tag;
+  oThis.returnType = (params.options || {}).returnType || 'txHash';
 
 };
 

@@ -29,11 +29,11 @@ const setupConfig = {
         value: '0xBA43B7400' //Editable
       },
       ws_provider: {
-        env_var: 'OST_GETH_VALUE_WS_PROVIDER',
+        env_var: 'OST_VALUE_GETH_WS_PROVIDER',
         value: 'ws://127.0.0.1:18545' //Editable
       },
       rpc_provider: {
-        env_var: 'OST_GETH_VALUE_RPC_PROVIDER',
+        env_var: 'OST_VALUE_GETH_RPC_PROVIDER',
         value: 'http://127.0.0.1:8545' //Editable
       }
     },
@@ -59,11 +59,11 @@ const setupConfig = {
         value: '0x12A05F200' //Editable
       },
       ws_provider: {
-        env_var: 'OST_GETH_UTILITY_WS_PROVIDER',
+        env_var: 'OST_UTILITY_GETH_WS_PROVIDER',
         value: 'ws://127.0.0.1:19546' //Editable
       },
       rpc_provider: {
-        env_var: 'OST_GETH_UTILITY_RPC_PROVIDER',
+        env_var: 'OST_UTILITY_GETH_RPC_PROVIDER',
         value: 'http://127.0.0.1:9546' //Editable
       }
     }
@@ -336,6 +336,23 @@ const setupConfig = {
       },
       passphrase: {
         env_var: 'OST_VALUE_OPS_PASSPHRASE',
+        value: 'testtest' //Editable
+      },
+      chains: {
+        value: {
+          fund: ''
+        }
+      }
+    },
+
+    // Utility Ops Address
+    utilityOps: {
+      address: {
+        env_var: 'OST_UTILITY_OPS_ADDR',
+        value: ''
+      },
+      passphrase: {
+        env_var: 'OST_UTILITY_OPS_PASSPHRASE',
         value: 'testtest' //Editable
       },
       chains: {

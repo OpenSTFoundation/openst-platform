@@ -20,6 +20,8 @@ const utilityChainOwnerAddr = coreAddresses.getAddressForUser('utilityChainOwner
   , stakerAddr = coreAddresses.getAddressForUser('staker')
   , redeemerAddr = coreAddresses.getAddressForUser('redeemer')
   , utilityRegistrarAddr = coreAddresses.getAddressForUser('utilityRegistrar')
+  , utilityOpsAddr = coreAddresses.getAddressForUser('utilityOps')
+  , utilityDeployerAddr = coreAddresses.getAddressForUser('utilityDeployer')
   , MIN_FUND = (new BigNumber(10)).toPower(18)
 ;
 
@@ -49,6 +51,14 @@ FundUsersWithSTPrimeKlass.prototype = {
 
     logger.info('* Utility Chain Owner funding ST\' on utility chain to utilityRegistrar');
     await setupFundManager.transferSTP(utilityChainOwnerAddr, utilityChainOwnerPassphrase, utilityRegistrarAddr,
+      MIN_FUND.mul(100).toString(10));
+
+    logger.info('* Utility Chain Owner funding ST\' on utility chain to utilityOps');
+    await setupFundManager.transferSTP(utilityChainOwnerAddr, utilityChainOwnerPassphrase, utilityOpsAddr,
+      MIN_FUND.mul(100).toString(10));
+
+    logger.info('* Utility Chain Owner funding ST\' on utility chain to utilityDeployer');
+    await setupFundManager.transferSTP(utilityChainOwnerAddr, utilityChainOwnerPassphrase, utilityDeployerAddr,
       MIN_FUND.mul(100).toString(10));
 
     return Promise.resolve();

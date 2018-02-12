@@ -108,6 +108,15 @@ const allAddresses = {
     valueOps: {
       address: process.env.OST_VALUE_OPS_ADDR,
       passphrase: process.env.OST_VALUE_OPS_PASSPHRASE
+    },
+
+    /**
+     * utility ops account details
+     * @constant {object}
+     */
+    utilityOps: {
+      address: process.env.OST_UTILITY_OPS_ADDR,
+      passphrase: process.env.OST_UTILITY_OPS_PASSPHRASE
     }
 
   },
