@@ -212,11 +212,24 @@ node> generateAddressObj.perform().then(function(response) {
 });
 ```
 
-* Transfer ST'
+* Transfer ST' (gas) on utility chain
 ```bash
 node> var platformServices = require('./index');
 node> var transferSTPrimeObj = new platformServices.services.transaction.transfer.simpleTokenPrime({sender_name: 'utilityChainOwner', recipient_name: 'foundation', amount_in_wei: 10, options: {returnType: 'txHash', tag: 'GasRefill'}});
 node> transferSTPrimeObj.perform().then(function(response) {
+  if (response.isSuccess()){
+    console.log(response.data);
+  } else {
+    console.log(response.err)
+  } 
+});
+```
+
+* Transfer OST on value chain
+```bash
+node> var platformServices = require('./index');
+node> var transferOSTObj = new platformServices.services.transaction.transfer.simpleToken({sender_name: 'foundation', recipient_name: 'utilityChainOwner', amount_in_wei: 10, options: {returnType: 'txHash', tag: 'Grant'}});
+node> transferOSTObj.perform().then(function(response) {
   if (response.isSuccess()){
     console.log(response.data);
   } else {
