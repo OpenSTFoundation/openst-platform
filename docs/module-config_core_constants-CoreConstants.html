@@ -47,7 +47,7 @@
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#approve">approve</a></li><li><a href="global.html#approveOpenStUtilityContract">approveOpenStUtilityContract</a></li><li><a href="global.html#BigNumber">BigNumber</a></li><li><a href="global.html#getBTBalance">getBTBalance</a></li><li><a href="global.html#getNonceForRedeeming">getNonceForRedeeming</a></li><li><a href="global.html#rootPrefix">rootPrefix</a></li><li><a href="global.html#runHelperService">runHelperService</a></li><li><a href="global.html#shellSource">shellSource</a></li><li><a href="global.html#startRedeem">startRedeem</a></li>
+					<li><a href="global.html#approve">approve</a></li><li><a href="global.html#approveOpenStUtilityContract">approveOpenStUtilityContract</a></li><li><a href="global.html#BigNumber">BigNumber</a></li><li><a href="global.html#getBTBalance">getBTBalance</a></li><li><a href="global.html#getNonceForRedeeming">getNonceForRedeeming</a></li><li><a href="global.html#openSTNotification">openSTNotification</a></li><li><a href="global.html#rootPrefix">rootPrefix</a></li><li><a href="global.html#runHelperService">runHelperService</a></li><li><a href="global.html#shellSource">shellSource</a></li><li><a href="global.html#startRedeem">startRedeem</a></li><li><a href="global.html#subscribe">subscribe</a></li>
 				</ul>
 			</li>
 			
@@ -202,290 +202,6 @@
     
     <div class="description">
         ALLOWED VALUES => NONE/REDIS/MEMCACHED
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">string</span>
-
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt class="name" id="OST_GETH_UTILITY_RPC_PROVIDER">
-    <h4 id="OST_GETH_UTILITY_RPC_PROVIDER"><span class="type-signature">&lt;constant> </span>OST_GETH_UTILITY_RPC_PROVIDER<span class="type-signature"> :string</span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Utility Chain Geth RPC provider
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">string</span>
-
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt class="name" id="OST_GETH_UTILITY_WS_PROVIDER">
-    <h4 id="OST_GETH_UTILITY_WS_PROVIDER"><span class="type-signature">&lt;constant> </span>OST_GETH_UTILITY_WS_PROVIDER<span class="type-signature"> :string</span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Utility Chain Geth WS provider
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">string</span>
-
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt class="name" id="OST_GETH_VALUE_RPC_PROVIDER">
-    <h4 id="OST_GETH_VALUE_RPC_PROVIDER"><span class="type-signature">&lt;constant> </span>OST_GETH_VALUE_RPC_PROVIDER<span class="type-signature"> :string</span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Value Chain Geth RPC provider
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">string</span>
-
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt class="name" id="OST_GETH_VALUE_WS_PROVIDER">
-    <h4 id="OST_GETH_VALUE_WS_PROVIDER"><span class="type-signature">&lt;constant> </span>OST_GETH_VALUE_WS_PROVIDER<span class="type-signature"> :string</span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        Value Chain Geth WS provider
     </div>
     
 
@@ -903,6 +619,148 @@
         
             
 <hr>
+<dt class="name" id="OST_UTILITY_GETH_RPC_PROVIDER">
+    <h4 id="OST_UTILITY_GETH_RPC_PROVIDER"><span class="type-signature">&lt;constant> </span>OST_UTILITY_GETH_RPC_PROVIDER<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Utility Chain Geth RPC provider
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="OST_UTILITY_GETH_WS_PROVIDER">
+    <h4 id="OST_UTILITY_GETH_WS_PROVIDER"><span class="type-signature">&lt;constant> </span>OST_UTILITY_GETH_WS_PROVIDER<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Utility Chain Geth WS provider
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
 <dt class="name" id="OST_UTILITY_STPRIME_TOTAL_SUPPLY">
     <h4 id="OST_UTILITY_STPRIME_TOTAL_SUPPLY"><span class="type-signature">&lt;constant> </span>OST_UTILITY_STPRIME_TOTAL_SUPPLY<span class="type-signature"> :number</span></h4>
 
@@ -1134,6 +992,148 @@
             <li>
                 
 <span class="param-type">number</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="OST_VALUE_GETH_RPC_PROVIDER">
+    <h4 id="OST_VALUE_GETH_RPC_PROVIDER"><span class="type-signature">&lt;constant> </span>OST_VALUE_GETH_RPC_PROVIDER<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Value Chain Geth RPC provider
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="OST_VALUE_GETH_WS_PROVIDER">
+    <h4 id="OST_VALUE_GETH_WS_PROVIDER"><span class="type-signature">&lt;constant> </span>OST_VALUE_GETH_WS_PROVIDER<span class="type-signature"> :string</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        Value Chain Geth WS provider
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">string</span>
 
 
 

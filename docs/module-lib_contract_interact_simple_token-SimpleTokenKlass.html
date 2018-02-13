@@ -47,7 +47,7 @@
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#approve">approve</a></li><li><a href="global.html#approveOpenStUtilityContract">approveOpenStUtilityContract</a></li><li><a href="global.html#BigNumber">BigNumber</a></li><li><a href="global.html#getBTBalance">getBTBalance</a></li><li><a href="global.html#getNonceForRedeeming">getNonceForRedeeming</a></li><li><a href="global.html#rootPrefix">rootPrefix</a></li><li><a href="global.html#runHelperService">runHelperService</a></li><li><a href="global.html#shellSource">shellSource</a></li><li><a href="global.html#startRedeem">startRedeem</a></li>
+					<li><a href="global.html#approve">approve</a></li><li><a href="global.html#approveOpenStUtilityContract">approveOpenStUtilityContract</a></li><li><a href="global.html#BigNumber">BigNumber</a></li><li><a href="global.html#getBTBalance">getBTBalance</a></li><li><a href="global.html#getNonceForRedeeming">getNonceForRedeeming</a></li><li><a href="global.html#openSTNotification">openSTNotification</a></li><li><a href="global.html#rootPrefix">rootPrefix</a></li><li><a href="global.html#runHelperService">runHelperService</a></li><li><a href="global.html#shellSource">shellSource</a></li><li><a href="global.html#startRedeem">startRedeem</a></li><li><a href="global.html#subscribe">subscribe</a></li>
 				</ul>
 			</li>
 			
@@ -943,7 +943,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="transfer"><span class="type-signature"></span>transfer(senderAddress, senderPassphrase, receiverAddress, valueInWeis)</h4>
+    <h4 class="name" id="transfer"><span class="type-signature"></span>transfer(senderAddress, senderPassphrase, receiverAddress, amountInWei, options)</h4>
     
     
 </dt>
@@ -1058,7 +1058,7 @@
 
         <tr>
             
-                <td class="name"><code>valueInWeis</code></td>
+                <td class="name"><code>amountInWei</code></td>
             
 
             <td class="type">
@@ -1076,6 +1076,125 @@
             
 
             <td class="description last">OST to transfer in Weis</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>options</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last">-
+                <h6 class="method-params-label method-subparams-label">Properties</h6>
+                
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>tag</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">extra param which gets logged for transaction as transaction type</td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>returnType</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">boolean</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+                    &lt;optional><br>
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">'uuid': return after basic validations.
+'txHash': return when TX Hash received. 'txReceipt': return when TX receipt received.  Default: uuid</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+            </td>
         </tr>
 
     

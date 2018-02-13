@@ -233,6 +233,35 @@ node> serviceObj.perform().then(function(response) {
 });
 ```
 
+* Transfer branded token on utility chain
+```bash
+node> var os = require('os');
+node> var brandedTokenConfig = require(os.homedir() + "/openst-setup/branded_tokens.json");
+node> var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]];
+node> var data = {
+  erc20_address: brandedTokenDetails['ERC20'],
+  reserve_address: brandedTokenDetails['Reserve'],
+  reserve_passphrase: brandedTokenDetails['ReservePassphrase'],
+  sender_address: brandedTokenDetails['Reserve'],
+  sender_passphrase: brandedTokenDetails['ReservePassphrase'],
+  recipient_name: 'foundation',
+  amount_in_wei: 2,
+  options: {
+    returnType: 'txReceipt',
+    tag: 'ILoveOST'
+  }
+};
+node> var platformServices = require('./index');
+node> var serviceObj = new platformServices.services.transaction.transfer.brandedToken(data);
+node> serviceObj.perform().then(function(response) {
+  if (response.isSuccess()){
+    console.log(response.data);
+  } else {
+    console.log(response.err)
+  } 
+});
+```
+
 * Transfer OST on value chain
 ```bash
 node> var platformServices = require('./index');
@@ -276,7 +305,7 @@ node> serviceObj.perform().then(function(response) {
 ```bash
 node> var os = require('os');
 node> var brandedTokenConfig = require(os.homedir() + "/openst-setup/branded_tokens.json");
-node> var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]]
+node> var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]];
 node> var data = {address: brandedTokenDetails['Reserve'], erc20_address: brandedTokenDetails['ERC20']};
 node> var platformServices = require('./index');
 node> var serviceObj = new platformServices.services.balance.brandedToken(data);

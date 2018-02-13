@@ -47,7 +47,7 @@
 			<li class="dropdown">
 				<a href="global.html" class="dropdown-toggle" data-toggle="dropdown">Global<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="global.html#approve">approve</a></li><li><a href="global.html#approveOpenStUtilityContract">approveOpenStUtilityContract</a></li><li><a href="global.html#BigNumber">BigNumber</a></li><li><a href="global.html#getBTBalance">getBTBalance</a></li><li><a href="global.html#getNonceForRedeeming">getNonceForRedeeming</a></li><li><a href="global.html#rootPrefix">rootPrefix</a></li><li><a href="global.html#runHelperService">runHelperService</a></li><li><a href="global.html#shellSource">shellSource</a></li><li><a href="global.html#startRedeem">startRedeem</a></li>
+					<li><a href="global.html#approve">approve</a></li><li><a href="global.html#approveOpenStUtilityContract">approveOpenStUtilityContract</a></li><li><a href="global.html#BigNumber">BigNumber</a></li><li><a href="global.html#getBTBalance">getBTBalance</a></li><li><a href="global.html#getNonceForRedeeming">getNonceForRedeeming</a></li><li><a href="global.html#openSTNotification">openSTNotification</a></li><li><a href="global.html#rootPrefix">rootPrefix</a></li><li><a href="global.html#runHelperService">runHelperService</a></li><li><a href="global.html#shellSource">shellSource</a></li><li><a href="global.html#startRedeem">startRedeem</a></li><li><a href="global.html#subscribe">subscribe</a></li>
 				</ul>
 			</li>
 			
@@ -1180,7 +1180,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="transfer"><span class="type-signature"></span>transfer(senderAddr, senderPassphrase, recipient, amountInWei [, options])</h4>
+    <h4 class="name" id="transfer"><span class="type-signature"></span>transfer(senderAddr, senderPassphrase, recipient, amountInWei, options)</h4>
     
     
 </dt>
@@ -1211,8 +1211,6 @@
         <th>Type</th>
 
         
-        <th>Argument</th>
-        
 
         
 
@@ -1239,14 +1237,6 @@
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
@@ -1270,14 +1260,6 @@
             
             </td>
 
-            
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
             
 
             
@@ -1303,14 +1285,6 @@
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
@@ -1335,14 +1309,6 @@
             </td>
 
             
-                <td class="attributes">
-                
-
-                
-
-                
-                </td>
-            
 
             
 
@@ -1366,16 +1332,6 @@
             
             </td>
 
-            
-                <td class="attributes">
-                
-                    &lt;optional><br>
-                
-
-                
-
-                
-                </td>
             
 
             
@@ -1424,8 +1380,6 @@
             
                 <td class="attributes">
                 
-                    &lt;optional><br>
-                
 
                 
 
@@ -1442,7 +1396,7 @@
 
         <tr>
             
-                <td class="name"><code>inAsync</code></td>
+                <td class="name"><code>returnType</code></td>
             
 
             <td class="type">
@@ -1469,7 +1423,8 @@
 
             
 
-            <td class="description last">'false' if you want to wait till TX mining. 'true' will only send txUUID. Default: true</td>
+            <td class="description last">'uuid': return after basic validations.
+'txHash': return when TX Hash received. 'txReceipt': return when TX receipt received.  Default: uuid</td>
         </tr>
 
     
