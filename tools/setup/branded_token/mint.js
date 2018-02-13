@@ -163,7 +163,7 @@ MintBrandedToken.prototype = {
 
       // NOTE: NOT Relying on CACHE - this is because for in process memory, this goes into infinite loop
       const BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
-        , brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address, Reserve: oThis.reserveAddr});
+        , brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address});
 
       const beforeBalanceResponse = await brandedToken._callMethod('balanceOf', [oThis.reserveAddr]);
       const beforeBalance = new BigNumber(beforeBalanceResponse.data.balanceOf);

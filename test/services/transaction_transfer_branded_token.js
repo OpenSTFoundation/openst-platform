@@ -18,8 +18,6 @@ var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]]
 
 var testValidData = {
   erc20_address: brandedTokenDetails['ERC20'],
-  reserve_address: brandedTokenDetails['Reserve'],
-  reserve_passphrase: brandedTokenDetails['ReservePassphrase'],
   sender_address: process.env.OST_UTILITY_CHAIN_OWNER_ADDR,
   sender_passphrase: process.env.OST_UTILITY_CHAIN_OWNER_PASSPHRASE,
   sender_name: 'utilityChainOwner',

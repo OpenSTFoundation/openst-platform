@@ -30,9 +30,6 @@ const rootPrefix = '../../..'
  * @param {string} params.options.tag - extra param which gets logged for transaction as transaction type
  * @param {boolean} [params.options.returnType] - Desired return type. possible values: uuid, txHash, txReceipt. Default: txHash
  *
- * @param {string} params.reserve_address - Reserve address to give ST' (gas) to sender, if required
- * @param {string} params.reserve_passphrase - Reserve passphrase
- *
  * @constructor
  */
 const TransferBrandedTokenKlass = function(params) {
@@ -41,8 +38,6 @@ const TransferBrandedTokenKlass = function(params) {
 
   params = params || {};
   oThis.erc20Address = params.erc20_address;
-  oThis.reserveAddress = params.reserve_address;
-  oThis.reservePassphrase = params.reserve_passphrase;
   oThis.senderAddress = params.sender_address;
   oThis.senderPassphrase = params.sender_passphrase;
   oThis.senderName = params.sender_name;
@@ -91,16 +86,13 @@ TransferBrandedTokenKlass.prototype = {
       if (!basicHelper.isTagValid(oThis.tag)) {
         return Promise.resolve(responseHelper.error('s_t_t_bt_5', 'Invalid transaction tag'));
       }
-      if (!basicHelper.isAddressValid(oThis.reserveAddress) || !oThis.reservePassphrase) {
-        return Promise.resolve(responseHelper.error('s_t_t_bt_7', 'Invalid reserve details'));
-      }
 
       // Format wei
       oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
 
-      var brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address, Reserve: oThis.reserveAddress})
+      var brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address})
 
-      return brandedToken.transfer(oThis.senderAddress, oThis.senderPassphrase, oThis.reservePassphrase,
+      return brandedToken.transfer(oThis.senderAddress, oThis.senderPassphrase,
         oThis.recipientAddress, oThis.amountInWei, {tag: oThis.tag, returnType: oThis.returnType});
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_t_t_bt_6', 'Something went wrong. ' + err.message));
