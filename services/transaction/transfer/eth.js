@@ -8,7 +8,7 @@
 
 const rootPrefix = '../../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , fundManager = require(rootPrefix + '/lib/fund_manager')
+  , EtherInteractKlass = require(rootPrefix + '/lib/contract_interact/ether')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
@@ -23,10 +23,14 @@ const rootPrefix = '../../..'
  * @param {string} params.recipient_address - Recipient address
  * @param {string} [params.recipient_name] - Recipient name name where only platform has address and passphrase
  * @param {number} params.amount_in_wei - Amount (in wei) to transfer
+ * @param {object} params.options -
+ * @param {string} params.options.tag - extra param which gets logged for transaction as transaction type
+ * @param {boolean} [params.options.returnType] - Desired return type. possible values: uuid, txHash, txReceipt. Default: txHash
  *
  * @constructor
  */
 const TransferEthKlass = function(params) {
+
   const oThis = this
   ;
 
@@ -37,6 +41,9 @@ const TransferEthKlass = function(params) {
   oThis.recipientAddress = params.recipient_address;
   oThis.recipientName = params.recipient_name;
   oThis.amountInWei = params.amount_in_wei;
+  oThis.tag = (params.options || {}).tag;
+  oThis.returnType = (params.options || {}).returnType || 'txHash';
+
 };
 
 TransferEthKlass.prototype = {
@@ -75,11 +82,19 @@ TransferEthKlass.prototype = {
       // Format wei
       oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
 
-      return fundManager.transferEth(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei);
+      var etherInteractObj = new EtherInteractKlass();
+
+      return etherInteractObj.transfer(
+          oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei
+          , {tag: oThis.tag, returnType: oThis.returnType}
+        );
+
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_t_t_e_4', 'Something went wrong. ' + err.message));
     }
+
   }
+
 };
 
 module.exports = TransferEthKlass;

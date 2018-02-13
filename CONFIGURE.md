@@ -275,6 +275,19 @@ node> serviceObj.perform().then(function(response) {
 });
 ```
 
+* Transfer Ether on value chain
+```bash
+node> var platformServices = require('./index');
+node> var serviceObj = new platformServices.services.transaction.transfer.eth({sender_name: 'foundation', recipient_name: 'utilityChainOwner', amount_in_wei: 10000, options: {returnType: 'txHash', tag: 'GasRefill'}});
+node> serviceObj.perform().then(function(response) {
+  if (response.isSuccess()){
+    console.log(response.data);
+  } else {
+    console.log(response.err)
+  } 
+});
+```
+
 * Transfer ST' (gas) on utility chain
 ```bash
 node> var platformServices = require('./index');
