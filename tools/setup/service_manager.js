@@ -203,7 +203,7 @@ ServiceManagerKlass.prototype = {
     return "geth --networkid " + networkId + " --datadir " + chainDataDir + " --port " + chainPort +
       " --rpc --rpcapi eth,net,web3,personal --rpcport " + rpcPort + " --rpcaddr " + rpcHost + " --ws" +
       " --wsport " + wsPort + " --wsorigins '*' --wsaddr " + wsHost + " --etherbase " + sealerAddr +
-      " --mine --minerthreads 1 --targetgaslimit " + gasLimit[chain] + "  --gasprice \"" + gasPrice + "\" --unlock " +
+      " --mine --minerthreads 2 --targetgaslimit " + gasLimit[chain] + "  --gasprice \"" + gasPrice + "\" --unlock " +
       sealerAddr + " --password "+ chainDataDir + "/" + sealerPassphraseFile + " 2> " +
       setupHelper.logsFolderAbsolutePath() + "/chain-" + chain + ".log";
   }
