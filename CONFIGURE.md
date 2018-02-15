@@ -240,8 +240,6 @@ node> var brandedTokenConfig = require(os.homedir() + "/openst-setup/branded_tok
 node> var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]];
 node> var data = {
   erc20_address: brandedTokenDetails['ERC20'],
-  reserve_address: brandedTokenDetails['Reserve'],
-  reserve_passphrase: brandedTokenDetails['ReservePassphrase'],
   sender_address: brandedTokenDetails['Reserve'],
   sender_passphrase: brandedTokenDetails['ReservePassphrase'],
   recipient_name: 'foundation',
