@@ -70,6 +70,8 @@ PlatformStatusKlass.prototype = {
         if (chainTimer['retryCounter'] <= retryAttempts) {
           web3Provider.eth.getBlockNumber(function (err, blocknumber) {
             if (err) {
+              logger.error("Geth Checker - " + chain + " fetch block number failed.", err);
+              chainTimer['retryCounter']++;
             } else {
               if (chainTimer['blockNumber']!=0 && chainTimer['blockNumber']!=blocknumber) {
                 clearInterval(chainTimer['timer']);
