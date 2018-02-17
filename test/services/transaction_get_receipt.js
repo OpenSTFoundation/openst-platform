@@ -24,8 +24,8 @@ describe('services/transaction/get_receipt', function() {
   it('should return promise', async function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
-    var getTransactionReceiptObj = new platformServices.getTransactionReceipt(dupData)
-      , response = getTransactionReceiptObj.perform()
+    var getReceiptObj = new platformServices.getReceipt(dupData)
+      , response = getReceiptObj.perform()
     ;
     assert.typeOf(response, 'Promise');
   });
@@ -33,8 +33,8 @@ describe('services/transaction/get_receipt', function() {
   it('should fail when params is undefined', async function() {
     var dupData = undefined;
 
-    var getTransactionReceiptObj = new platformServices.getTransactionReceipt(dupData)
-      , response = await getTransactionReceiptObj.perform()
+    var getReceiptObj = new platformServices.getReceipt(dupData)
+      , response = await getReceiptObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -42,8 +42,8 @@ describe('services/transaction/get_receipt', function() {
   it('should fail when params is a string', async function() {
     var dupData = 'abc';
 
-    var getTransactionReceiptObj = new platformServices.getTransactionReceipt(dupData)
-      , response = await getTransactionReceiptObj.perform()
+    var getReceiptObj = new platformServices.getReceipt(dupData)
+      , response = await getReceiptObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -51,8 +51,8 @@ describe('services/transaction/get_receipt', function() {
   it('should fail when params is empty object', async function() {
     var dupData = {};
 
-    var getTransactionReceiptObj = new platformServices.getTransactionReceipt(dupData)
-      , response = await getTransactionReceiptObj.perform()
+    var getReceiptObj = new platformServices.getReceipt(dupData)
+      , response = await getReceiptObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -60,8 +60,8 @@ describe('services/transaction/get_receipt', function() {
   it('should fail when params is empty array', async function() {
     var dupData = [];
 
-    var getTransactionReceiptObj = new platformServices.getTransactionReceipt(dupData)
-      , response = await getTransactionReceiptObj.perform()
+    var getReceiptObj = new platformServices.getReceipt(dupData)
+      , response = await getReceiptObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -71,8 +71,8 @@ describe('services/transaction/get_receipt', function() {
     dupData.transaction_hash = 'my-tx';
     dupData.chain = 'my-chain';
 
-    var getTransactionReceiptObj = new platformServices.getTransactionReceipt(dupData)
-      , response = await getTransactionReceiptObj.perform()
+    var getReceiptObj = new platformServices.getReceipt(dupData)
+      , response = await getReceiptObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -81,8 +81,8 @@ describe('services/transaction/get_receipt', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.transaction_hash = 'my-tx';
 
-    var getTransactionReceiptObj = new platformServices.getTransactionReceipt(dupData)
-      , response = await getTransactionReceiptObj.perform()
+    var getReceiptObj = new platformServices.getReceipt(dupData)
+      , response = await getReceiptObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -91,8 +91,8 @@ describe('services/transaction/get_receipt', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.chain = 'my-chain';
 
-    var getTransactionReceiptObj = new platformServices.getTransactionReceipt(dupData)
-      , response = await getTransactionReceiptObj.perform()
+    var getReceiptObj = new platformServices.getReceipt(dupData)
+      , response = await getReceiptObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -100,8 +100,8 @@ describe('services/transaction/get_receipt', function() {
   it('should fail when chain is valid and transaction_hash is valid but not mined', async function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
-    var getTransactionReceiptObj = new platformServices.getTransactionReceipt(dupData)
-      , response = await getTransactionReceiptObj.perform()
+    var getReceiptObj = new platformServices.getReceipt(dupData)
+      , response = await getReceiptObj.perform()
     ;
     assert.equal(response.isSuccess(), true);
     assert.deepEqual(response.data, {});
@@ -121,8 +121,8 @@ describe('services/transaction/get_receipt', function() {
     // TODO: How to get a pre-mined transaction hash here?
     // var transaction_hash = '0xfa235356d336bc16fbb50c274adbde2ab35e7a6de6e70b2339d018f0feff4db1'
     //   , chain = 'utility'
-    //   , getTransactionReceiptObj = new platformServices.getTransactionReceipt({chain: chain, transaction_hash: transaction_hash})
-    //   , response = await getTransactionReceiptObj.perform()
+    //   , getReceiptObj = new platformServices.getReceipt({chain: chain, transaction_hash: transaction_hash})
+    //   , response = await getReceiptObj.perform()
     // ;
     // assert.equal(response.isSuccess(), false);
   });

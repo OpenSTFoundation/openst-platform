@@ -16,7 +16,8 @@ const rootPrefix = '../../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , approveService = require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract')
-  , getApprovalStatusService = require(rootPrefix + '/services/stake_and_mint/get_approval_status')
+  , web3Provider = require(rootPrefix + '/lib/web3/providers/value_rpc')
+  , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
   , startStakeService = require(rootPrefix + '/services/stake_and_mint/start_stake')
   , fundManager = require(rootPrefix + '/lib/fund_manager')
   , tokenHelper = require(rootPrefix + '/tools/setup/branded_token/helper')
@@ -97,7 +98,11 @@ MintBrandedToken.prototype = {
     const approveTransactionHash = approveResponse.data.transaction_hash;
 
     logger.info('* Get approval status and keep doing so till success');
-    await oThis._getApprovalStatus(approveTransactionHash);
+    const approveReceiptResponse =  await contractInteractHelper.waitAndGetTransactionReceipt(web3Provider, approveTransactionHash, {});
+    if (!approveReceiptResponse.isSuccess()) {
+      logger.error('Approval receipt error ' + JSON.stringify(approveReceiptResponse));
+      process.exit(1);
+    }
 
     logger.info('* Start stake for Branded Token');
     await (new startStakeService({
@@ -120,33 +125,6 @@ MintBrandedToken.prototype = {
     await oThis._waitForSimpleTokenPrimeMint();
 
     return Promise.resolve(responseHelper.successWithData({}));
-  },
-
-  /**
-   * Get approval status
-   *
-   * @param {string} approveTransactionHash - transaction hash of the approval
-   *
-   * @return {promise}
-   * * @private
-   */
-  _getApprovalStatus: function(approveTransactionHash) {
-    return new Promise(function(onResolve, onReject) {
-
-      const getStatus = async function(){
-
-        const getApprovalStatusResponse = await (new getApprovalStatusService({
-          transaction_hash: approveTransactionHash})).perform();
-
-        if(getApprovalStatusResponse.isSuccess()){
-          return onResolve(getApprovalStatusResponse);
-        } else {
-          setTimeout(getStatus, 10000);
-        }
-      };
-
-      getStatus();
-    });
   },
 
   /**

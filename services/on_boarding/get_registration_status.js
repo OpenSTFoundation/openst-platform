@@ -8,7 +8,7 @@
 
 const rootPrefix = '../..'
   , web3UcRpcProvider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
-  , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
+  , getReceipt = require(rootPrefix + '/services/transaction/get_receipt')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
@@ -62,22 +62,16 @@ GetRegistrationStatusKlass.prototype = {
       ;
 
       // check if the proposal transaction is mined
-      const proposalTxReceiptResponse = await contractInteractHelper.getTxReceipt(web3UcRpcProvider, oThis.transactionHash);
-      if(!proposalTxReceiptResponse || !proposalTxReceiptResponse.isSuccess()) {
+      const getReceiptObj = new getReceipt({transaction_hash: oThis.transactionHash, chain: web3UcRpcProvider.chainKind});
+      const proposalTxReceiptResponse = await getReceiptObj.perform();
+      // if error or transaction not yet mined or transaction failed, return. Else proceed and check for other things
+      if (!proposalTxReceiptResponse.isSuccess() || !proposalTxReceiptResponse.data.formattedTransactionReceipt) {
         return registrationStatus.returnResultPromise();
       }
+      registrationStatus.setIsProposalDone(1);
 
       const proposalFormattedTxReceipt = proposalTxReceiptResponse.data.formattedTransactionReceipt;
       const proposalFormattedEvents = await web3EventsFormatter.perform(proposalFormattedTxReceipt);
-
-      // check whether ProposedBrandedToken is present in the events in the transaction receipt
-      if(!proposalFormattedEvents || !proposalFormattedEvents['ProposedBrandedToken']) {
-        // this is a error scenario.
-        return Promise.resolve(responseHelper.error('s_ob_grs_2',
-          'Proposal was not done correctly. Transaction does not have ProposedBrandedToken event'));
-      }
-
-      registrationStatus.setIsProposalDone(1);
 
       const uuid = proposalFormattedEvents['ProposedBrandedToken']['_uuid'];
       registrationStatus.setUuid(uuid);

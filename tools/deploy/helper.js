@@ -14,6 +14,7 @@ const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
+  , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
 ;
 
 const gasPrice = coreConstants.OST_VALUE_GAS_PRICE
@@ -111,18 +112,24 @@ DeployHelperKlass.prototype = {
     logger.info('* Deploying contract:', contractName);
     var deployFailedReason = null;
 
-    const transactionReceipt = await deploy().then(
-      function (transactionHash) {
-        return oThis._getReceipt(web3Provider, transactionHash);
-      }
-    ).catch(reason => {
-      deployFailedReason = reason;
-      logger.error(deployFailedReason);
-      return null;
-    });
+    const transactionReceipt = await deploy().then(function (transactionHash) {
+        return contractInteractHelper.waitAndGetTransactionReceipt(web3Provider, transactionHash, {});
+      })
+      .then(function(response){
+        if (!response.isSuccess()) {
+          throw response.err.msg;
+        } else {
+          return Promise.resolve(response.data.rawTransactionReceipt);
+        }
+      })
+      .catch(reason => {
+        deployFailedReason = reason;
+        logger.error(deployFailedReason);
+        return Promise.resolve({});
+      });
 
     if ( deployFailedReason ) {
-      return Promise.reject( deployFailedReason );
+      process.exit(1);
     }
 
     logger.info('* Deploy transactionReceipt ::', transactionReceipt);
@@ -166,54 +173,8 @@ DeployHelperKlass.prototype = {
     } else {
       logger.win(" event: " + eventName + " is present in Reciept.");
     }
-  },
-
-  /**
-   * Wait for Transaction to be included in block
-   *
-   * @param {web3} web3Provider - It could be value chain or utility chain provider
-   * @param {string} transactionHash - Hash for which receipt is required.
-   *
-   * @ignore
-   * @return {promise<string>}
-   */
-  _getReceipt: function (web3Provider, transactionHash) {
-    return new Promise(function (onResolve, onReject) {
-
-      var txSetInterval = null;
-
-      const handleResponse = function (response) {
-        if (response) {
-          clearInterval(txSetInterval);
-
-          openSTNotification.publishEvent.perform(
-            {
-              topics: ['transaction_mined'],
-              message: {
-                kind: 'transaction_mined',
-                payload: {
-                  transaction_hash: transactionHash,
-                  chain_id: web3Provider.chainId,
-                  chain_kind: web3Provider.chainKind
-                }
-              }
-            }
-          );
-
-          onResolve(response);
-        } else {
-          logger.info('Waiting for mining:', transactionHash);
-        }
-      };
-
-      txSetInterval = setInterval(
-        function () {
-          web3Provider.eth.getTransactionReceipt(transactionHash).then(handleResponse);
-        },
-        5000
-      );
-    });
   }
+
 };
 
 module.exports = new DeployHelperKlass();

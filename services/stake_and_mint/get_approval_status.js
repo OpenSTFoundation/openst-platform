@@ -8,11 +8,8 @@
  */
 
 const rootPrefix = '../..'
-  , web3VcRpcProvider = require(rootPrefix + '/lib/web3/providers/value_rpc')
+  , getReceipt = require(rootPrefix + '/services/transaction/get_receipt')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
-  , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
-  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
 /**
@@ -28,7 +25,8 @@ const GetApprovalStatusKlass = function(params) {
   ;
 
   params = params || {};
-  oThis.approvalTransactionHash = params.transaction_hash;
+  oThis.transactionHash = params.transaction_hash;
+  oThis.chain = 'value';
 };
 
 GetApprovalStatusKlass.prototype = {
@@ -42,29 +40,11 @@ GetApprovalStatusKlass.prototype = {
     ;
 
     try {
-      // validations
-      if (!basicHelper.isTxHashValid(oThis.approvalTransactionHash)) {
-        return Promise.resolve(responseHelper.error('s_sam_gas_1', 'Invalid transaction hash'));
-      }
-
-      const approvalTxReceipt = await contractInteractHelper.getTxReceipt(web3VcRpcProvider, oThis.approvalTransactionHash);
-
-      if (!approvalTxReceipt || !approvalTxReceipt.isSuccess()) {
-        return Promise.resolve(responseHelper.error('s_sam_gas_2', 'Approval not yet mined.'));
-      }
-
-      const approvalFormattedTxReceipt = approvalTxReceipt.data.formattedTransactionReceipt;
-      const approvalFormattedEvents = await web3EventsFormatter.perform(approvalFormattedTxReceipt);
-
-      // check whether Approval is present in the events.
-      if (!approvalFormattedEvents || !approvalFormattedEvents['Approval']) {
-        // this is a error scenario.
-        return Promise.resolve(responseHelper.error('s_sam_gas_3', 'Approval event was not found in the reseipt.'));
-      }
-
-      return Promise.resolve(responseHelper.successWithData({}));
+      const getReceiptObj = new getReceipt({transaction_hash: oThis.transactionHash, chain: oThis.chain});
+      const receiptResponse = await getReceiptObj.perform();
+      return Promise.resolve(receiptResponse);
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_sam_gas_4', 'Something went wrong. ' + err.message));
+      return Promise.resolve(responseHelper.error('s_sam_gas_1', 'Something went wrong. ' + err.message));
     }
   }
 };

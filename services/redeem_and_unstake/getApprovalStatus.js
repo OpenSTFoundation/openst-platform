@@ -13,7 +13,7 @@ const rootPrefix = '../..'
 
 const getApprovalStatus = async function (approvalTransactionHash) {
   try {
-    const approvalTxReceipt = await contractInteractHelper.getTxReceipt(web3UcRpcProvider, approvalTransactionHash);
+    const approvalTxReceipt = await contractInteractHelper.waitAndGetTransactionReceipt(web3UcRpcProvider, approvalTransactionHash);
 
     if (!approvalTxReceipt || !approvalTxReceipt.isSuccess()) {
       return Promise.resolve(responseHelper.error('s_rau_gas_1', 'approval not yet mined.'));

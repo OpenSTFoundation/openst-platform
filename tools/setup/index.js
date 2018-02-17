@@ -89,15 +89,15 @@ const performer = async function () {
   setupConfig.contracts['openSTUtility'].address.value = openSTUtilityDeployResponse.data.address;
   envManager.generateEnvFile();
 
+  // Deploy Value Core Contract and update ENV
+  const valueCoreDeployResponse = await runHelperService(rootPrefix + '/tools/deploy/value_core');
+  setupConfig.contracts['valueCore'].address.value = valueCoreDeployResponse.data.address;
+  envManager.generateEnvFile();
+
   // Deploy OpenST Utility Contract and update ENV
   const stPrimeDeploymentStepsResponse = await runHelperService(rootPrefix + '/tools/deploy/st_prime');
   setupConfig.contracts['stPrime'].address.value = stPrimeDeploymentStepsResponse.data.address;
   setupConfig.misc_deployment.st_prime_uuid.value = stPrimeDeploymentStepsResponse.data.uuid;
-  envManager.generateEnvFile();
-
-  // Deploy Value Core Contract and update ENV
-  const valueCoreDeployResponse = await runHelperService(rootPrefix + '/tools/deploy/value_core');
-  setupConfig.contracts['valueCore'].address.value = valueCoreDeployResponse.data.address;
   envManager.generateEnvFile();
 
   // Deploy Value Core Contract and update ENV

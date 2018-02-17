@@ -41,7 +41,6 @@ const valueDeployerName = 'valueDeployer'
   , valueOpsPassphrase = coreAddresses.getPassphraseForUser(valueOpsName)
   , valueDeployerAddress = coreAddresses.getAddressForUser(valueDeployerName)
   , valueRegistrarContractAddress = coreAddresses.getAddressForContract(valueRegistrarContractName)
-  , valueCoreContractAddress = coreAddresses.getAddressForContract(valueCoreContractName)
   , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
   , openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName)
   , valueRegistrar = new ValueRegistrarKlass(valueRegistrarContractAddress)
@@ -110,9 +109,6 @@ RegisterStPrimeKlass.prototype = {
       prompts.close();
     }
 
-    logger.step('** Calling addCore of Value Registrar Contract');
-    await valueRegistrar.addCore(valueOpsName, openSTValueContractAddress, valueCoreContractAddress);
-
     const getSimpleTokenPrimeSymbolResponse = await openStUtility.getSimpleTokenPrimeSymbol()
       , stPrimeSymbol = getSimpleTokenPrimeSymbolResponse.data.symbol
       , getSimpleTokenPrimeNameResponse = await openStUtility.getSimpleTokenPrimeName()
@@ -127,8 +123,8 @@ RegisterStPrimeKlass.prototype = {
       UTILITY_CHAIN_ID, 0, stPrimeUUID, valueDeployerName);
 
 
-    if (registerUtilityTokenResponse.data.rawTransactionReceipt.logs.length == 0) {
-      logger.error('UtilityTokenRegistered event not found in receipt.');
+    if (!registerUtilityTokenResponse.isSuccess()) {
+      logger.error('registerUtilityToken of valueRegistrar Contract for ST Prime failed.');
       process.exit(1);
     }
 

@@ -302,7 +302,7 @@ node> serviceObj.perform().then(function(response) {
 * Get transaction receipt
 ```bash
 node> var platformServices = require('./index');
-node> var serviceObj = new platformServices.services.transaction.getTransactionReceipt({chain: 'utility', transaction_hash: '0xe4945b1c90d291074b74c9ed211c6fbae2702d1bd33e7b53c3f55a6b3c62c270'});
+node> var serviceObj = new platformServices.services.transaction.getReceipt({chain: 'utility', transaction_hash: '0xe4945b1c90d291074b74c9ed211c6fbae2702d1bd33e7b53c3f55a6b3c62c270'});
 node> serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
     console.log(response.data);

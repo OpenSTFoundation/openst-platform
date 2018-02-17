@@ -7,7 +7,6 @@
  */
 
 const rootPrefix = '../..'
-  , openSTNotification = require('@openstfoundation/openst-notification')
   , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , web3EventsDecoder = require(rootPrefix + '/lib/web3/events/decoder')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
@@ -56,7 +55,7 @@ GetReceiptKlass.prototype = {
 
       const txReceipt = await web3Provider.eth.getTransactionReceipt( oThis.transactionHash);
 
-      if(!txReceipt){
+      if (!txReceipt) {
         return Promise.resolve(responseHelper.successWithData({}));
       } else {
         const web3EventsDecoderResponse = web3EventsDecoder.perform(txReceipt, {});
