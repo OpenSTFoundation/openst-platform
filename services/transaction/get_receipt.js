@@ -57,22 +57,9 @@ GetReceiptKlass.prototype = {
       const txReceipt = await web3Provider.eth.getTransactionReceipt( oThis.transactionHash);
 
       if(!txReceipt){
-        return Promise.resolve(responseHelper.error('s_t_gr_3', 'Transaction yet not mined.'));
+        return Promise.resolve(responseHelper.successWithData({}));
       } else {
         const web3EventsDecoderResponse = web3EventsDecoder.perform(txReceipt, {});
-        openSTNotification.publishEvent.perform(
-          {
-            topics: ['transaction_mined'],
-            message: {
-              kind: 'transaction_mined',
-              payload: {
-                transaction_hash: oThis.transactionHash,
-                chain_id: web3Provider.chainId,
-                chain_kind: web3Provider.chainKind
-              }
-            }
-          }
-        );
         return Promise.resolve(web3EventsDecoderResponse);
       }
 

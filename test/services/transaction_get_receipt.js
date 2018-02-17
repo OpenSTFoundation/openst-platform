@@ -103,7 +103,8 @@ describe('services/transaction/get_receipt', function() {
     var getTransactionReceiptObj = new platformServices.getTransactionReceipt(dupData)
       , response = await getTransactionReceiptObj.perform()
     ;
-    assert.equal(response.isSuccess(), false);
+    assert.equal(response.isSuccess(), true);
+    assert.deepEqual(response.data, {});
   });
 
   it('should pass when chain is valid and transaction_hash is valid and mined', async function() {
