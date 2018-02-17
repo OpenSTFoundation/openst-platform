@@ -8,7 +8,7 @@
 
 const rootPrefix = '../../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , EtherInteractKlass = require(rootPrefix + '/lib/contract_interact/ether')
+  , etherInteractKlass = require(rootPrefix + '/lib/contract_interact/ether')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
@@ -82,7 +82,7 @@ TransferEthKlass.prototype = {
       // Format wei
       oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
 
-      var etherInteractObj = new EtherInteractKlass();
+      var etherInteractObj = new etherInteractKlass();
 
       return etherInteractObj.transfer(
           oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei

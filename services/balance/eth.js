@@ -7,7 +7,7 @@
  */
 
 const rootPrefix = '../..'
-  , fundManager = require(rootPrefix + '/lib/fund_manager')
+  , etherInteractKlass = require(rootPrefix + '/lib/contract_interact/ether')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
@@ -38,7 +38,9 @@ EthBalanceKlass.prototype = {
         return Promise.resolve(responseHelper.error('s_b_e_1', 'Invalid address'));
       }
 
-      return fundManager.getEthBalanceOf(oThis.address);
+      var etherInteractObj = new etherInteractKlass();
+
+      return etherInteractObj.getBalanceOf(oThis.address);
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_b_e_2', 'Something went wrong. ' + err.message));
     }

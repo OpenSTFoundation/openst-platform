@@ -9,7 +9,6 @@
 const rootPrefix = '../../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
-  , fundManager = require(rootPrefix + '/lib/fund_manager')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;

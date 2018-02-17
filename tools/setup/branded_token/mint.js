@@ -19,7 +19,7 @@ const rootPrefix = '../../..'
   , web3Provider = require(rootPrefix + '/lib/web3/providers/value_rpc')
   , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
   , startStakeService = require(rootPrefix + '/services/stake_and_mint/start_stake')
-  , fundManager = require(rootPrefix + '/lib/fund_manager')
+  , fundManager = require(rootPrefix + '/tools/setup/fund_manager')
   , tokenHelper = require(rootPrefix + '/tools/setup/branded_token/helper')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
