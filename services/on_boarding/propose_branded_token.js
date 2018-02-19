@@ -65,6 +65,8 @@ ProposeBrandedTokenKlass.prototype = {
         return Promise.resolve(responseHelper.error('s_ob_pbt_3', 'Invalid branded token conversion rate'));
       }
 
+      oThis.conversionRate = parseInt(oThis.conversionRate, 10);
+
       const proposalTransactionHash = await openSTUtility.proposeBrandedToken(stakerAddr, stakerPassphrase, oThis.symbol,
         oThis.name, oThis.conversionRate);
 
