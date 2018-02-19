@@ -46,7 +46,7 @@ BrandedTokenBalanceKlass.prototype = {
       }
 
       var brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address});
-      
+
       if (oThis.use_cache == 0) {
         return brandedToken.getBalanceWithoutCache(oThis.address);
       } else {
