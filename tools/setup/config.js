@@ -18,7 +18,7 @@ const setupConfig = {
       },
       network_id: {
         env_var: '',
-        value: 1411 //Editable
+        value: 2001 //Editable
       },
       port: {
         env_var: '',
@@ -48,7 +48,7 @@ const setupConfig = {
       },
       network_id: {
         env_var: '',
-        value: 1410 //Editable
+        value: 2000 //Editable
       },
       port: {
         env_var: '',
