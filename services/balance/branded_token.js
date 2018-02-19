@@ -18,6 +18,7 @@ const rootPrefix = '../..'
  * @param {object} params -
  * @param {string} params.erc20_address - Branded token EIP20 address
  * @param {string} params.address - Account address
+ * @param {boolean} [params.use_cache] - Should caching be used for balance. 1 -> use cache. 0 -> don't use cache. Default: 1
  *
  * @constructor
  */
@@ -27,6 +28,7 @@ const BrandedTokenBalanceKlass = function(params) {
   params = params || {};
   oThis.erc20Address = params.erc20_address;
   oThis.address = params.address;
+  oThis.use_cache = params.use_cache == 0 ? 0 : 1;
 };
 
 BrandedTokenBalanceKlass.prototype = {
@@ -44,8 +46,12 @@ BrandedTokenBalanceKlass.prototype = {
       }
 
       var brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address});
-
-      return brandedToken.getBalanceOf(oThis.address);
+      
+      if (oThis.use_cache == 0) {
+        return brandedToken.getBalanceWithoutCache(oThis.address);
+      } else {
+        return brandedToken.getBalanceOf(oThis.address);
+      }
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_b_bt_3', 'Something went wrong. ' + err.message));
     }
