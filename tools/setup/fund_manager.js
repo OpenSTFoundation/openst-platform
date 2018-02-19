@@ -7,7 +7,7 @@
 const BigNumber = require('bignumber.js')
 ;
 
-const rootPrefix = ".."
+const rootPrefix = "../.."
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')

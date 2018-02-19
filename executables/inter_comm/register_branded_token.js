@@ -48,7 +48,25 @@ const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue
   , valueRegistrarContractInteract = new ValueRegistrarKlass(valueRegistrarContractAddr)
   , utilityRegistrarContractInteract = new UtilityRegistrarKlass(utilityRegistrarContractAddr)
   , eventQueueManager = new eventQueueManagerKlass()
+  , notificationData = {
+    topics: ['openst_event.branded_token.proposed_branded_token'],
+    message: {
+      kind: '', // populate later: with every stage
+      payload: {
+        contract_name: '', // populate later: with every stage
+        contract_address: '', // populate later: with every stage
+        event_name: '', // populate later: with every stage
+        params: {args: [], eventParams: ''}, // populate later: when event params created
+        transaction_hash: '', // populate later: when Tx submitted
+        chain_id: web3WsProvider.chainId,
+        chain_kind: web3WsProvider.chainKind,
+        error_data: {} // populate later: when error received
+      }
+    }
+  }
 ;
+
+
 
 /**
  * Inter comm process to register branded token.
@@ -115,6 +133,14 @@ RegisterBrandedTokenInterComm.prototype = {
    *
    */
   onEvent: function (eventObj) {
+    // Fire notification event
+    notificationData.message.kind = 'event_received';
+    notificationData.message.payload.contract_name = 'openSTUtility';
+    notificationData.message.payload.contract_address = openSTUtilityContractAddr;
+    notificationData.message.payload.event_name = 'ProposedBrandedToken';
+    notificationData.message.payload.params.eventParams = eventObj.returnValues;
+    notificationData.message.payload.transaction_hash = eventObj.transactionHash;
+
     openSTNotification.publishEvent.perform(
       {
         topics: ['event.ProposedBrandedToken'],
@@ -130,6 +156,8 @@ RegisterBrandedTokenInterComm.prototype = {
         }
       }
     );
+
+    // Wait for sometime in queue for block confirmation
     eventQueueManager.addEditEventInQueue(eventObj);
   },
 

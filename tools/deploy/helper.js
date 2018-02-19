@@ -6,9 +6,6 @@
  * @module tools/deploy/helper
  */
 
-const openSTNotification = require('@openstfoundation/openst-notification')
-;
-
 const rootPrefix = '../..'
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
@@ -79,27 +76,6 @@ DeployHelperKlass.prototype = {
       return new Promise(function (onResolve, onReject) {
         contract.deploy(options).send()
           .on('transactionHash', function(transactionHash){
-
-            openSTNotification.publishEvent.perform(
-              {
-                topics: ['deploy.' + contractName],
-                message: {
-                  kind: 'transaction_initiated',
-                  payload: {
-                    contract_name: contractName,
-                    contract_address: '',
-                    method: 'deploy',
-                    params: {args: constructorArgs, txParams: txParams},
-                    transaction_hash: transactionHash,
-                    chain_id: web3Provider.chainId,
-                    chain_kind: web3Provider.chainKind,
-                    uuid: '',
-                    tag: ''
-                  }
-                }
-              }
-            );
-
             onResolve(transactionHash)
           })
           .on('error', onReject);
