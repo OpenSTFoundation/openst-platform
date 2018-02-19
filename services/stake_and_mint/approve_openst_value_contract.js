@@ -7,6 +7,7 @@
  */
 
 const BigNumber = require('bignumber.js')
+  , uuid = require('uuid');
 ;
 
 const rootPrefix = '../..'
@@ -45,7 +46,7 @@ ApproveOpenstValueContractKlass.prototype = {
 
       const transactionHash = await oThis._approve(bigBalance);
 
-      return Promise.resolve(responseHelper.successWithData({transaction_hash: transactionHash}));
+      return Promise.resolve(responseHelper.successWithData({transaction_uuid: uuid.v4(), transaction_hash: transactionHash}));
 
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_sam_aovc_1', 'Something went wrong. ' + err.message));

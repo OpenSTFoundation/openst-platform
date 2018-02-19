@@ -6,6 +6,8 @@
  * @module services/stake_and_mint/start_stake
  */
 
+const uuid = require('uuid');
+
 const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
@@ -70,7 +72,7 @@ startStakeKlass.prototype = {
       const stakeTransactionHash = await openSTValueContractInteract.stake(stakerAddress, stakerPassphrase, oThis.uuid,
         oThis.toStakeAmount, oThis.beneficiary, true);
 
-      return Promise.resolve(responseHelper.successWithData({transaction_hash: stakeTransactionHash}));
+      return Promise.resolve(responseHelper.successWithData({transaction_uuid: uuid.v4(), transaction_hash: stakeTransactionHash}));
 
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_sam_ss_5', 'Something went wrong. ' + err.message));

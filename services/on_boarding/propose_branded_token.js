@@ -5,6 +5,7 @@
  *
  * @module services/on_boarding/propose_branded_token
  */
+const uuid = require('uuid');
 
 const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
@@ -67,7 +68,7 @@ ProposeBrandedTokenKlass.prototype = {
       const proposalTransactionHash = await openSTUtility.proposeBrandedToken(stakerAddr, stakerPassphrase, oThis.symbol,
         oThis.name, oThis.conversionRate);
 
-      return responseHelper.successWithData({transaction_hash: proposalTransactionHash});
+      return responseHelper.successWithData({transaction_uuid: uuid.v4(), transaction_hash: proposalTransactionHash});
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_ob_pbt_4', 'Something went wrong. ' + err.message));
     }
