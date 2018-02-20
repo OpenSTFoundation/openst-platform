@@ -356,7 +356,7 @@ const setupConfig = {
         value: 'testtest' //Editable
       },
       chains: {
-        value: {
+        utility: {
           fund: ''
         }
       }
