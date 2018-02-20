@@ -122,10 +122,6 @@ const setupConfig = {
       env_var: 'OST_RMQ_PORT',
       value: '' //Editable
     },
-    rmq_monitor_port: {
-      env_var: 'OST_RMQ_MONITOR_PORT',
-      value: '' //Editable
-    },
     rmq_username: {
       env_var: 'OST_RMQ_USERNAME',
       value: '' //Editable
@@ -136,10 +132,6 @@ const setupConfig = {
     },
     rmq_heartbeats: {
       env_var: 'OST_RMQ_HEARTBEATS',
-      value: '' //Editable
-    },
-    rmq_primary_exchange: {
-      env_var: 'OST_RMQ_PRIMARY_EXCHANGE',
       value: '' //Editable
     }
   },
