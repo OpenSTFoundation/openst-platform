@@ -25,6 +25,7 @@ const rootPrefix = ".."
   , approveForStake = require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract')
   , getApprovalStatusForStake = require(rootPrefix + '/services/stake_and_mint/get_approval_status')
   , startStake = require(rootPrefix + '/services/stake_and_mint/start_stake')
+  , getStakedAmount = require(rootPrefix + '/services/stake_and_mint/get_staked_amount')
 
   , approveForRedeem = require(rootPrefix + '/services/redeem_and_unstake/approveOpenStUtilityContract')
   , getApprovalStatusForRedeem = require(rootPrefix + '/services/redeem_and_unstake/getApprovalStatus')
@@ -89,7 +90,8 @@ ServiceManifestKlass.prototype = {
   stake: {
     approveForStake: approveForStake,
     getApprovalStatus: getApprovalStatusForStake,
-    start: startStake
+    start: startStake,
+    getStakedAmount: getStakedAmount
   },
 
   /**
