@@ -7,10 +7,24 @@
  */
 
 const getNamespace = require('continuation-local-storage').getNamespace
+  // Get common local storage namespace to read
+  // request identifiers for debugging and logging
+  , openSTNotification = require('@openstfoundation/openst-notification')
+  ;
+
+const rootPrefix = ".."
+  , packageFile = require(rootPrefix + '/package.json')
+  , coreConstants = require(rootPrefix + '/config/core_constants')
 ;
+
+const packageName = packageFile.name
+  , packageVersion = packageFile.version
+;
+
 
 const CONSOLE_RESET = "\x1b[0m"
   , ERR_PRE = "\x1b[31m" //Error. (RED)
+  , NOTE_PRE = "\x1b[91m" //Notify Error. (Purple)
   , INFO_PRE = "\x1b[33m  " //Info (YELLOW)
   , WIN_PRE = "\x1b[32m" //Success (GREEN)
   , WARN_PRE = "\x1b[43m"
@@ -102,6 +116,13 @@ CustomConsoleLoggerKlass.prototype = {
    *
    * @constant {string}
    */
+  NOTE_PRE: NOTE_PRE,
+
+  /**
+   * @ignore
+   *
+   * @constant {string}
+   */
   CONSOLE_RESET: CONSOLE_RESET,
 
   /**
@@ -132,6 +153,33 @@ CustomConsoleLoggerKlass.prototype = {
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
+  },
+
+  /**
+   * Notify error through email
+   */
+  notify: function (code, msg, data, backtrace) {
+    var args = [appendRequest(this.NOTE_PRE)];
+    args = args.concat(Array.prototype.slice.call(arguments));
+    args.push(this.CONSOLE_RESET);
+    console.log.apply(console, args);
+
+    if (coreConstants.OST_UTILITY_CHAIN_ID > 1400) {
+      openSTNotification.publishEvent.perform(
+        {
+          topics:["email_error."+packageName],
+          publisher: 'OST',
+          message: {
+            kind: "email",
+            payload: {
+              from: 'notifier@ost.com',
+              to: 'backend@ost.com',
+              subject: packageName + " :: UC " + coreConstants.OST_UTILITY_CHAIN_ID + "::" + code,
+              body: " Message: " + msg + " \n Data: " + data + " \n backtrace: " + backtrace
+            }
+          }
+        });
+    }
   },
 
   /**

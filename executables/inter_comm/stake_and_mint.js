@@ -28,6 +28,7 @@ const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , web3WsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
   , UtilityRegistrarKlass = require(rootPrefix + '/lib/contract_interact/utility_registrar')
+  , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
 ;
 
 const openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
@@ -38,6 +39,15 @@ const openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
   , utilityRegistrarContractAddress = coreAddresses.getAddressForContract("utilityRegistrar")
   , utilityRegistrarContractInteract = new UtilityRegistrarKlass(utilityRegistrarContractAddress)
   , eventQueueManager = new eventQueueManagerKlass()
+  , notificationData = {
+    topics: ['event.stake_and_mint'], // override later: with every stage
+    publisher: 'OST',
+    message: {
+      kind: '', // populate later: with every stage
+      payload: {
+      }
+    }
+  }
 ;
 
 /**
@@ -106,21 +116,12 @@ StakeAndMintInterComm.prototype = {
    *
    */
   onEvent: function (eventObj) {
-    openSTNotification.publishEvent.perform(
-      {
-        topics: ['event.StakingIntentDeclared'],
-        message: {
-          kind: 'event_received',
-          payload: {
-            event_name: 'StakingIntentDeclared',
-            params: eventObj.returnValues,
-            contract_address: openSTValueContractAddr,
-            chain_id: web3WsProvider.chainId,
-            chain_kind: web3WsProvider.chainKind
-          }
-        }
-      }
-    );
+    // Fire notification event
+    notificationData.topics = ['event.stake_and_mint.staking_intent_declared_on_vc'];
+    notificationData.message.kind = 'event_received';
+    notificationData.message.payload.event_name = 'StakingIntentDeclared';
+    notificationData.message.payload.event_data = eventObj;
+    openSTNotification.publishEvent.perform(notificationData);
 
     eventQueueManager.addEditEventInQueue(eventObj);
   },
@@ -132,21 +133,13 @@ StakeAndMintInterComm.prototype = {
    *
    */
   onEventSubscriptionError: function (error) {
-    openSTNotification.publishEvent.perform(
-      {
-        topics: ['error'],
-        message: {
-          kind: 'error',
-          payload: {
-            text: error || '',
-            code: 'e_ic_sam_onEventSubscriptionError_1'
-          }
-        }
-      }
-    );
 
-    logger.error('onEventSubscriptionError triggered');
-    logger.error(error);
+    // Fire notification event
+    notificationData.message.kind = 'error';
+    notificationData.message.payload.error_data = error;
+    openSTNotification.publishEvent.perform(notificationData);
+
+    logger.notify('e_ic_sam_onEventSubscriptionError_1', 'onEventSubscriptionError triggered', error);
   },
 
   /**
@@ -169,21 +162,14 @@ StakeAndMintInterComm.prototype = {
       , beneficiary = returnValues._beneficiary
       , chainIdUtility = returnValues._chainIdUtility;
 
-    openSTNotification.publishEvent.perform(
-      {
-        topics: ['staking.confirmStakingIntent.start'],
-        message: {
-          kind: 'info',
-          payload: {
-            staking_intent_hash: stakingIntentHash
-          }
-        }
-      }
-    );
+    // Fire notification event
+    notificationData.topics = ['event.stake_and_mint.confirm_staking_intent_on_uc.start'];
+    notificationData.message.kind = 'info';
+    openSTNotification.publishEvent.perform(notificationData);
 
     logger.step(stakingIntentHash, ' :: performing confirmStakingIntent');
 
-    await utilityRegistrarContractInteract.confirmStakingIntent(
+    const ucRegistrarResponse =  await utilityRegistrarContractInteract.confirmStakingIntent(
       utilityRegistrarAddr,
       utilityRegistrarPassphrase,
       openSTUtilityCurrContractAddr,
@@ -197,21 +183,31 @@ StakeAndMintInterComm.prototype = {
       stakingIntentHash
     );
 
-    openSTNotification.publishEvent.perform(
-      {
-        topics: ['staking.confirmStakingIntent.done'],
-        message: {
-          kind: 'info',
-          payload: {
-            staking_intent_hash: stakingIntentHash
-          }
-        }
-      }
-    );
+    if (ucRegistrarResponse.isSuccess()) {
+      const ucFormattedTransactionReceipt = ucRegistrarResponse.data.formattedTransactionReceipt
+        , ucFormattedEvents = await web3EventsFormatter.perform(ucFormattedTransactionReceipt);
 
-    logger.win(stakingIntentHash, ' :: performed confirmStakingIntent');
+      // Fire notification event
+      notificationData.topics = ['event.stake_and_mint.confirm_staking_intent_on_uc.done'];
+      notificationData.message.kind = 'info';
+      notificationData.message.payload.transaction_hash = ucFormattedTransactionReceipt.transactionHash;
+      openSTNotification.publishEvent.perform(notificationData);
 
-    return Promise.resolve();
+      logger.win(stakingIntentHash, ':: performed confirmStakingIntent of utilityRegistrar contract.', ucFormattedEvents);
+    } else {
+
+      // Fire notification event
+      notificationData.message.kind = 'error';
+      notificationData.message.payload.error_data = ucRegistrarResponse;
+      openSTNotification.publishEvent.perform(notificationData);
+
+      var errMessage = stakingIntentHash + ' confirmStakingIntent of utilityRegistrar contract ERROR. Something went wrong!';
+      logger.notify('e_ic_sam_processor_1', errMessage);
+
+      return Promise.reject(errMessage);
+    }
+
+    return Promise.resolve(ucRegistrarResponse);
   }
 
 };
