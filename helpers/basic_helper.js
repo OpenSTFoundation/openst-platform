@@ -196,7 +196,7 @@ BasicHelperKlass.prototype = {
    * @return {boolean}
    */
   isBTConversionRateDecimalsValid: function (conversionRateDecimals) {
-    if (isNaN(conversionRateDecimals) || parseInt(conversionRateDecimals) < 0 || parseInt(conversionRateDecimals) > 5) {
+    if (isNaN(conversionRateDecimals) || (conversionRateDecimals % 1) != 0 || parseInt(conversionRateDecimals) < 0 || parseInt(conversionRateDecimals) > 5) {
       return false;
     }
     return true;

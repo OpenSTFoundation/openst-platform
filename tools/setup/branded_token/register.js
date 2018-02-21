@@ -35,7 +35,12 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
 /**
  * Constructor for proposing branded token
  *
- * @param {object} params - this is object with keys - bt_symbol, bt_name, bt_conversion_rate, bt_conversion_rate_decimals
+ * @param {object} params - this is params 
+ * @param {object} params.bt_symbol - branded token symbol
+ * @param {object} params.bt_name - branded token name
+ * @param {object} params.bt_conversion_rate - branded token conversion rate
+ * @param {object} params.bt_conversion_rate_decimals - branded token conversion rate decimal
+ 
  *
  * @constructor
  */
