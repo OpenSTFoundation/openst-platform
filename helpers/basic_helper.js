@@ -157,7 +157,7 @@ BasicHelperKlass.prototype = {
     if (typeof name !== "string") {
       return false;
     }
-    return (/^[a-z0-9\s]{1,}$/i).test(name);
+    return (/^[a-z\s]{1,}$/i).test(name);
   },
 
   /**
@@ -171,7 +171,7 @@ BasicHelperKlass.prototype = {
     if (typeof symbol !== "string") {
       return false;
     }
-    return (/^[a-z0-9]{1,}$/i).test(symbol);
+    return (/^[a-z]{1,}$/i).test(symbol);
   },
 
   /**
