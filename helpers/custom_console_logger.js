@@ -175,7 +175,7 @@ CustomConsoleLoggerKlass.prototype = {
               from: 'notifier@ost.com',
               to: 'backend@ost.com',
               subject: packageName + " :: UC " + coreConstants.OST_UTILITY_CHAIN_ID + "::" + code,
-              body: " Message: " + msg + " \n Data: " + data + " \n backtrace: " + backtrace
+              body: " Message: " + msg + " \n Data: " + JSON.stringify(data) + " \n backtrace: " + backtrace
             }
           }
         });
