@@ -198,6 +198,7 @@ RegisterBrandedTokenInterComm.prototype = {
       , symbol = returnValues._symbol
       , name = returnValues._name
       , conversionRate = returnValues._conversionRate
+      , conversionRateDecimals = returnValues._conversionRateDecimals
       , requester = returnValues._requester
       , token = returnValues._token
       , uuid = returnValues._uuid;
@@ -222,6 +223,7 @@ RegisterBrandedTokenInterComm.prototype = {
       symbol,
       name,
       conversionRate,
+      conversionRateDecimals,
       requester,
       token,
       uuid
@@ -275,6 +277,7 @@ RegisterBrandedTokenInterComm.prototype = {
       symbol,
       name,
       conversionRate,
+      conversionRateDecimals,
       utilityChainId,
       requester,
       uuid

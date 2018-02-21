@@ -30,6 +30,7 @@ const senderName = 'staker'
  * @param {string} params.name - Branded token name
  * @param {string} params.symbol - Branded token symbol
  * @param {string} params.conversion_rate - Conversion rate (1 OST = ? Branded token)
+ * @param {string} params.conversion_rate_decimals - Conversion rate decimals (10^conversion_rate_decimals)
  *
  * @constructor
  */
@@ -41,6 +42,7 @@ const ProposeBrandedTokenKlass = function(params) {
   oThis.name = params.name;
   oThis.symbol = params.symbol;
   oThis.conversionRate = params.conversion_rate;
+  oThis.conversionRateDecimals = params.conversion_rate_decimals;
 };
 
 ProposeBrandedTokenKlass.prototype = {
@@ -64,11 +66,14 @@ ProposeBrandedTokenKlass.prototype = {
       if (!basicHelper.isBTConversionRateValid(oThis.conversionRate)) {
         return Promise.resolve(responseHelper.error('s_ob_pbt_3', 'Invalid branded token conversion rate'));
       }
+      if (!basicHelper.isBTConversionRateDecimalsValid(oThis.conversionRateDecimals)) {
+        return Promise.resolve(responseHelper.error('s_ob_pbt_5', 'Invalid branded token conversion rate decimals'));
+      }
 
       oThis.conversionRate = parseInt(oThis.conversionRate, 10);
 
       const proposalTransactionHash = await openSTUtility.proposeBrandedToken(stakerAddr, stakerPassphrase, oThis.symbol,
-        oThis.name, oThis.conversionRate);
+        oThis.name, oThis.conversionRate, oThis.conversionRateDecimals);
 
       return responseHelper.successWithData({transaction_uuid: uuid.v4(), transaction_hash: proposalTransactionHash});
     } catch (err) {
