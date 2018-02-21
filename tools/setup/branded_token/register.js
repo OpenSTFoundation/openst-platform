@@ -35,7 +35,12 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
 /**
  * Constructor for proposing branded token
  *
- * @param {object} params - this is object with keys - bt_symbol, bt_name, bt_conversion_rate
+ * @param {object} params - this is params 
+ * @param {object} params.bt_symbol - branded token symbol
+ * @param {object} params.bt_name - branded token name
+ * @param {object} params.bt_conversion_rate - branded token conversion rate
+ * @param {object} params.bt_conversion_rate_decimals - branded token conversion rate decimal
+ 
  *
  * @constructor
  */
@@ -45,6 +50,7 @@ const RegisterBTKlass = function (params) {
   oThis.btName = params.bt_name; // branded token name
   oThis.btSymbol = params.bt_symbol; // branded token symbol
   oThis.btConversionRate = params.bt_conversion_rate; // branded token to OST conversion rate, 1 OST = 10 ACME
+  oThis.btConversionRateDecimals = params.bt_conversion_rate_decimals; // conversion rate decimals 
 
   oThis.reserveAddress = ''; // Member company address (will be generated and populated)
   oThis.reservePassphrase = 'acmeOnopenST'; // Member company address passphrase
@@ -115,9 +121,9 @@ RegisterBTKlass.prototype = {
     const oThis = this
     ;
     logger.step("** Starting BT proposal");
-    logger.info("* Name:", oThis.btName, "Symbol:", oThis.btSymbol, "Conversion Rate:", oThis.btConversionRate);
+    logger.info("* Name:", oThis.btName, "Symbol:", oThis.btSymbol, "Conversion Rate:", oThis.btConversionRate, "Conversion Rate Decimals: ", oThis.btConversionRateDecimals);
     const proposeBTObj = new proposeBrandedToken(
-      {name: oThis.btName, symbol: oThis.btSymbol, conversion_rate: oThis.btConversionRate}
+      {name: oThis.btName, symbol: oThis.btSymbol, conversion_rate: oThis.btConversionRate, conversion_rate_decimals: oThis.btConversionRateDecimals}
     );
     const proposeBTResponse = await proposeBTObj.perform();
     if (proposeBTResponse.isFailure()) {
@@ -219,6 +225,7 @@ RegisterBTKlass.prototype = {
       Name: oThis.btName,
       Symbol: oThis.btSymbol,
       ConversionRate: oThis.btConversionRate,
+      ConversionRateDecimals: oThis.btConversionRateDecimals,
       Reserve: oThis.reserveAddress,
       ReservePassphrase: oThis.reservePassphrase,
       UUID: oThis.uuid,
@@ -245,8 +252,9 @@ const args = process.argv
   , btName = args[2]
   , btSymbol = args[3]
   , btConversionRate = args[4]
+  , btConversionRateDecimals = args[5] 
 ;
 
 // Start Registration
-const services = new RegisterBTKlass({bt_name: btName, bt_symbol: btSymbol, bt_conversion_rate: btConversionRate});
+const services = new RegisterBTKlass({bt_name: btName, bt_symbol: btSymbol, bt_conversion_rate: btConversionRate, bt_conversion_rate_decimals: btConversionRateDecimals});
 services.perform();

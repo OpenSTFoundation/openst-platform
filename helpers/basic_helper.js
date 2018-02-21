@@ -189,6 +189,20 @@ BasicHelperKlass.prototype = {
   },
 
   /**
+   * Check if branded token conversion rate decimal is valid or not
+   *
+   * @param {number} conversionRateDecimals - Branded token conversion rate decimals
+   *
+   * @return {boolean}
+   */
+  isBTConversionRateDecimalsValid: function (conversionRateDecimals) {
+    if (isNaN(conversionRateDecimals) || (conversionRateDecimals % 1) != 0 || parseInt(conversionRateDecimals) < 0 || parseInt(conversionRateDecimals) > 5) {
+      return false;
+    }
+    return true;
+  },
+
+  /**
    * Convert wei to proper string. Make sure it's a valid number
    *
    * @param {number} amountInWei - amount in wei to be formatted

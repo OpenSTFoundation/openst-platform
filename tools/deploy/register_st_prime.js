@@ -115,12 +115,14 @@ RegisterStPrimeKlass.prototype = {
       , stPrimeName = getSimpleTokenPrimeNameResponse.data.name
       , getSimpleTokenPrimeConversationRateResponse = await openStUtility.getSimpleTokenPrimeConversationRate()
       , stPrimeConversationRate = getSimpleTokenPrimeConversationRateResponse.data.conversion_rate
+      , getSimpleTokenPrimeConversationRateDecimalsResponse = await openStUtility.getSimpleTokenPrimeConversationRateDecimals()
+      , stPrimeConversationRateDecimals = getSimpleTokenPrimeConversationRateDecimalsResponse.data.conversion_rate_decimals
     ;
 
     logger.step('** Calling registerUtilityToken of valueRegistrar Contract for ST Prime');
     const registerUtilityTokenResponse = await valueRegistrar.registerUtilityToken(
       valueOpsAddress, valueOpsPassphrase, openSTValueContractAddress, stPrimeSymbol, stPrimeName, stPrimeConversationRate,
-      UTILITY_CHAIN_ID, 0, stPrimeUUID, valueDeployerName);
+      stPrimeConversationRateDecimals, UTILITY_CHAIN_ID, 0, stPrimeUUID, valueDeployerName);
 
 
     if (!registerUtilityTokenResponse.isSuccess()) {

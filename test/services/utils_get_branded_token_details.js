@@ -18,6 +18,12 @@ var testValidData = {
   uuid: Object.keys(brandedTokenConfig)[0]
 };
 
+var verifyAgainstData = {
+  symbol: brandedTokenConfig[testValidData.uuid]['Symbol'],
+  name: brandedTokenConfig[testValidData.uuid]['Name'],
+  conversion_rate: brandedTokenConfig[testValidData.uuid]['ConversionRate'],
+  conversion_rate_decimals: brandedTokenConfig[testValidData.uuid]['ConversionRateDecimals']
+};
 
 describe('services/utils/get_branded_token_details', function() {
 
@@ -83,8 +89,7 @@ describe('services/utils/get_branded_token_details', function() {
     var getBrandedTokenDetailsObj = new platformServices.getBrandedTokenDetails(dupData)
       , response = await getBrandedTokenDetailsObj.perform()
     ;
-    assert.equal(response.isSuccess(), true);
-    assert.equal(response.data.symbol, '');
+    assert.equal(response.isSuccess(), false);    
   });
 
   it('should pass when chain is valid and associated with BT', async function() {
@@ -94,7 +99,15 @@ describe('services/utils/get_branded_token_details', function() {
       , response = await getBrandedTokenDetailsObj.perform()
     ;
     assert.equal(response.isSuccess(), true);
-    assert.notEqual(response.data.symbol, '');
+
+    assert.equal(response.data.symbol, verifyAgainstData.symbol);
+    assert.equal(response.data.name, verifyAgainstData.name);
+    assert.equal(response.data.conversion_rate, verifyAgainstData.conversion_rate);
+    assert.equal(response.data.conversion_rate_decimals, verifyAgainstData.conversion_rate_decimals);    
+
+    assert.hasAllKeys(response.data, ['symbol', 'name', 'conversion_rate',
+       'conversion_rate_decimals', 'decimals',
+         'chain_id_utility', 'simple_stake_contract_address', 'staking_account']);
   });
 
 });
