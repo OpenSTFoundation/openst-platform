@@ -143,13 +143,14 @@ ServiceManagerKlass.prototype = {
       "stake_and_mint.js", "stake_and_mint_processor.js"];
     for (var i=0; i < intercommExes.length; i++) {
       var binFolder = setupHelper.binFolder()
-        , executablePath = '$OPENST_PLATFORM_PATH/executables/inter_comm/' + intercommExes[i]
+        , executablePath = 'executables/inter_comm/' + intercommExes[i]
         , execName = executablePath.split('/').slice(-1)[0].split('.')[0]
         , cmd = oThis._startExecutableCommand(executablePath)
         , runScript = "run-" + execName + ".sh"
+      ;
 
       fileManager.touch(binFolder + "/" + runScript, '#!/bin/sh');
-      fileManager.append(binFolder + "/" + runScript, cmd);
+      shellAsyncCmd.run("echo '"+ cmd +"' >> " + setupHelper.binFolderAbsolutePath() + "/" + runScript);
       logger.info("* Start " + intercommExes[i] + " intercomm: sh " + setupHelper.setupFolderAbsolutePath() + "/" + binFolder + "/" + runScript);
     }
   },
@@ -164,7 +165,7 @@ ServiceManagerKlass.prototype = {
    */
   _startExecutableCommand: function(executablePath) {
     var logFilename = executablePath.split('/').slice(-1)[0].split('.')[0];
-    return 'node ' + Path.join(__dirname) + '/' + executablePath + ' >> ' +
+    return 'node $OPENST_PLATFORM_PATH/' + executablePath + ' >> ' +
       setupHelper.logsFolderAbsolutePath() + '/executables-' + logFilename + '.log'
   },
 

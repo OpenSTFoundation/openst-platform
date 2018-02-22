@@ -105,11 +105,11 @@ const performer = async function () {
 
   // Starting stake and mint intercomm
   logger.step("** Starting stake and mint intercomm");
-  await serviceManager.startExecutable(rootPrefix + '/executables/inter_comm/stake_and_mint.js');
+  await serviceManager.startExecutable('executables/inter_comm/stake_and_mint.js');
 
   // Starting stake and mint processor intercomm
   logger.step("** Starting stake and mint processor intercomm");
-  await serviceManager.startExecutable(rootPrefix + '/executables/inter_comm/stake_and_mint_processor.js');
+  await serviceManager.startExecutable('executables/inter_comm/stake_and_mint_processor.js');
 
   // Stake and mint simple token prime
   await runHelperService(rootPrefix + '/tools/setup/simple_token_prime/mint');

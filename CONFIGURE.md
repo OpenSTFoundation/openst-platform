@@ -103,6 +103,7 @@ Note: Script also monitor these services and alert if any required service termi
   ```
   - Listen notifications published from platform over RabbitMQ
   ```bash
+    > source $HOME/openst-setup/openst_env_vars.sh
     > node $OPENST_PLATFORM_PATH/executables/notification_subscribe.js
   ```
   
@@ -186,6 +187,7 @@ Example: For 500 OST, reserve address will get:
 * <b>Load platform environment variables</b>  
 
 ```bash
+  > export OPENST_PLATFORM_PATH=$(pwd)/node_modules/@openstfoundation/openst-platform
   > source $HOME/openst-setup/openst_env_vars.sh
 ```
 
@@ -207,7 +209,9 @@ Example: For 500 OST, reserve address will get:
 
 * Open node console
 ```bash
-> node
+  > source $HOME/openst-setup/openst_env_vars.sh
+  > export OPENST_PLATFORM_PATH=$(pwd)
+  > node
 ```
 
 * Generate new address on utility chain
