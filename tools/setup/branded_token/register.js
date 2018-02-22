@@ -38,8 +38,8 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
  * @param {object} params - this is params 
  * @param {object} params.bt_symbol - branded token symbol
  * @param {object} params.bt_name - branded token name
- * @param {object} params.bt_conversion_rate - branded token conversion rate
- * @param {object} params.bt_conversion_rate_decimals - branded token conversion rate decimal
+ * @param {object} params.bt_conversion_factor - branded token conversion factor
+ 
  
  *
  * @constructor
@@ -49,9 +49,8 @@ const RegisterBTKlass = function (params) {
 
   oThis.btName = params.bt_name; // branded token name
   oThis.btSymbol = params.bt_symbol; // branded token symbol
-  oThis.btConversionRate = params.bt_conversion_rate; // branded token to OST conversion rate, 1 OST = 10 ACME
-  oThis.btConversionRateDecimals = params.bt_conversion_rate_decimals; // conversion rate decimals 
-
+  oThis.btConversionFactor = params.bt_conversion_factor; // branded token to OST conversion factor, 1 OST = 10 ACME
+  
   oThis.reserveAddress = ''; // Member company address (will be generated and populated)
   oThis.reservePassphrase = 'acmeOnopenST'; // Member company address passphrase
 
@@ -121,9 +120,9 @@ RegisterBTKlass.prototype = {
     const oThis = this
     ;
     logger.step("** Starting BT proposal");
-    logger.info("* Name:", oThis.btName, "Symbol:", oThis.btSymbol, "Conversion Rate:", oThis.btConversionRate, "Conversion Rate Decimals: ", oThis.btConversionRateDecimals);
+    logger.info("* Name:", oThis.btName, "Symbol:", oThis.btSymbol, "Conversion Factor:", oThis.btConversionFactor);
     const proposeBTObj = new proposeBrandedToken(
-      {name: oThis.btName, symbol: oThis.btSymbol, conversion_rate: oThis.btConversionRate, conversion_rate_decimals: oThis.btConversionRateDecimals}
+      {name: oThis.btName, symbol: oThis.btSymbol, conversion_factor: oThis.btConversionFactor}
     );
     const proposeBTResponse = await proposeBTObj.perform();
     if (proposeBTResponse.isFailure()) {
@@ -224,8 +223,7 @@ RegisterBTKlass.prototype = {
     existingBrandedTokens[oThis.uuid] = {
       Name: oThis.btName,
       Symbol: oThis.btSymbol,
-      ConversionRate: oThis.btConversionRate,
-      ConversionRateDecimals: oThis.btConversionRateDecimals,
+      ConversionFactor: oThis.btConversionFactor,
       Reserve: oThis.reserveAddress,
       ReservePassphrase: oThis.reservePassphrase,
       UUID: oThis.uuid,
@@ -251,10 +249,9 @@ RegisterBTKlass.prototype = {
 const args = process.argv
   , btName = args[2]
   , btSymbol = args[3]
-  , btConversionRate = args[4]
-  , btConversionRateDecimals = args[5] 
+  , btConversionFactor = args[4]  
 ;
 
 // Start Registration
-const services = new RegisterBTKlass({bt_name: btName, bt_symbol: btSymbol, bt_conversion_rate: btConversionRate, bt_conversion_rate_decimals: btConversionRateDecimals});
+const services = new RegisterBTKlass({bt_name: btName, bt_symbol: btSymbol, bt_conversion_factor: btConversionFactor});
 services.perform();

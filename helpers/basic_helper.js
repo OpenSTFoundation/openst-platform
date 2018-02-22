@@ -8,9 +8,10 @@
 
 const rootPrefix = '..'
   , BigNumber = require('bignumber.js')
+  , responseHelper = require(rootPrefix + '/lib/formatter/response')
 ;
 
-
+const CONVERSION_RATE_DECIMALS = 5;
 /**
  * Basic helper methods constructor
  *
@@ -189,6 +190,21 @@ BasicHelperKlass.prototype = {
   },
 
   /**
+   * Check if branded token conversion factor is valid or not
+   *
+   * @param {number} conversionFactor - Branded token conversion factor
+   *
+   * @return {boolean}
+   */
+  isBTConversionFactorValid: function (conversionFactor) {
+    if (isNaN(conversionFactor) || conversionFactor <= 0) {
+      return false;
+    }
+    return true;
+  },
+
+
+  /**
    * Check if branded token conversion rate decimal is valid or not
    *
    * @param {number} conversionRateDecimals - Branded token conversion rate decimals
@@ -223,7 +239,56 @@ BasicHelperKlass.prototype = {
    */
   convertToBigNumber: function (number) {
     return (number instanceof BigNumber) ? number : new BigNumber(number);
-  }
+  },
+
+  /**
+   * Convert conversion factor to conversion rate and conversion rate decimals. Make sure it's a valid number
+   *
+   * @param {number} conversionFactor - this is decimal number
+   *
+   * @return {object} - response
+   */
+  convertConversionFactorToConversionRate: function (conversionFactor) {
+
+    const oThis = this;
+
+    if (!oThis.isBTConversionFactorValid(conversionFactor)) {
+      return responseHelper.error('bh_ccftcr_1', 'Conversion factor is invalid');
+    }
+    const conversionRate = (new BigNumber(String(conversionFactor))).mul((new BigNumber(10)).toPower(CONVERSION_RATE_DECIMALS));
+    if (conversionRate.modulo(1).equals(0)){
+      return responseHelper.successWithData({conversionRate: conversionRate.toString(10), conversionRateDecimals: CONVERSION_RATE_DECIMALS});      
+    } else {
+      return responseHelper.error('bh_ccftcr_2', 'Conversion factor is invalid');
+    }
+
+  },
+
+  /**
+   * Convert conversion rate and conversion rate decimals to conversion factor. Make sure it's a valid number
+   *
+   * @param {number} conversionRate - this is conversion rate
+   * @param {number} conversionRateDecimals - this is conversion rate decimals
+   *
+   * @return {object} - response
+   */
+  convertConversionRateToConversionFactor: function (conversionRate, conversionRateDecimals) {
+    const oThis = this;
+    if (!oThis.isBTConversionRateValid(conversionRate)) {
+      return responseHelper.error('bh_ccrtcf_1', 'Conversion rate is invalid');
+    }
+    
+    if (!oThis.isBTConversionRateDecimalsValid(conversionRateDecimals)) {
+      return responseHelper.error('bh_ccrtcf_2', 'Conversion rate decimals is invalid');
+    }
+
+
+    const conversionFactor = (new BigNumber(conversionRate)).div((new BigNumber(10)).toPower(conversionRateDecimals))
+    return responseHelper.successWithData({conversionFactor: conversionFactor.toString(10)});
+  },
+
+
+
 
 };
 

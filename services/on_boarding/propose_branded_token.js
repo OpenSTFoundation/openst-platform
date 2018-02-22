@@ -25,12 +25,10 @@ const senderName = 'staker'
 /**
  * Propose Branded Token Service
  *
- * @param {object} params - this is object with keys - symbol, name, conversion_rate
  * @param {object} params -
  * @param {string} params.name - Branded token name
  * @param {string} params.symbol - Branded token symbol
- * @param {string} params.conversion_rate - Conversion rate (1 OST = ? Branded token)
- * @param {string} params.conversion_rate_decimals - Conversion rate decimals (10^conversion_rate_decimals)
+ * @param {string} params.conversion_factor - Conversion factor (1 OST = ? Branded token)
  *
  * @constructor
  */
@@ -41,8 +39,9 @@ const ProposeBrandedTokenKlass = function(params) {
   params = params || {};
   oThis.name = params.name;
   oThis.symbol = params.symbol;
-  oThis.conversionRate = params.conversion_rate;
-  oThis.conversionRateDecimals = params.conversion_rate_decimals;
+  oThis.conversionFactor = params.conversion_factor;
+  oThis.conversionRate = null;
+  oThis.conversionRateDecimals = null;
 };
 
 ProposeBrandedTokenKlass.prototype = {
@@ -62,20 +61,27 @@ ProposeBrandedTokenKlass.prototype = {
       }
       if (!basicHelper.isBTSymbolValid(oThis.symbol)) {
         return Promise.resolve(responseHelper.error('s_ob_pbt_2', 'Invalid branded token symbol'));
-      }
-      if (!basicHelper.isBTConversionRateValid(oThis.conversionRate)) {
-        return Promise.resolve(responseHelper.error('s_ob_pbt_3', 'Invalid branded token conversion rate'));
-      }
-      if (!basicHelper.isBTConversionRateDecimalsValid(oThis.conversionRateDecimals)) {
-        return Promise.resolve(responseHelper.error('s_ob_pbt_5', 'Invalid branded token conversion rate decimals'));
+      }      
+      if (!basicHelper.isBTConversionFactorValid(oThis.conversionFactor)) {
+        return responseHelper.error('s_ob_pbt_3', 'Conversion factor is invalid');
       }
 
-      oThis.conversionRate = parseInt(oThis.conversionRate, 10);
+      const conversionRateConversionResponse = basicHelper.convertConversionFactorToConversionRate(oThis.conversionFactor);
 
-      const proposalTransactionHash = await openSTUtility.proposeBrandedToken(stakerAddr, stakerPassphrase, oThis.symbol,
+      if (conversionRateConversionResponse.isSuccess()) {
+
+        oThis.conversionRate = conversionRateConversionResponse.data.conversionRate;
+        oThis.conversionRateDecimals = conversionRateConversionResponse.data.conversionRateDecimals;
+
+        const proposalTransactionHash = await openSTUtility.proposeBrandedToken(stakerAddr, stakerPassphrase, oThis.symbol,
         oThis.name, oThis.conversionRate, oThis.conversionRateDecimals);
-
-      return responseHelper.successWithData({transaction_uuid: uuid.v4(), transaction_hash: proposalTransactionHash});
+        
+        return responseHelper.successWithData({transaction_uuid: uuid.v4(), transaction_hash: proposalTransactionHash});
+      
+      } else {
+        return conversionRateConversionResponse; 
+      }
+      
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_ob_pbt_4', 'Something went wrong. ' + err.message));
     }
