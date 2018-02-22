@@ -130,7 +130,13 @@ Note: Script also monitor these services and alert if any required service termi
 * <b>Onboard/Register Branded Token</b> - Registration requires three input parameters:
 1. Name - branded token name (example: "ACME Coin")
 2. Symbol - branded token symbol (example: "ACME")
-3. Conversion Rate - branded token to OST conversion rate, 1 OST = x BT (example: 10)
+3. Conversion Factor - branded token to OST conversion factor, 1 OST = x BT (example: 10).
+   - This is a number and has a precision of <b>5</b>. 
+   - This cannot be <b>0</b>
+   - Valid examples: 
+     ``` 1.0 ``` , ``` 0.222 ``` , ``` .3 ``` , ``` 1000 ``` , ``` 15.001 ``` 
+   - Invalid examples:
+      ``` 2.002222 ``` , ``` 0 ``` ,  ``` xyz ``` 
 
 ```bash
   > node $OPENST_PLATFORM_PATH/tools/setup/branded_token/register.js "ACME Coin" "ACME" 10
@@ -145,7 +151,7 @@ NOTE: Upon successful registration, branded token details will be published in t
     "0x9b8f63ed597ca654262e21647d59f5ef495d173909d7816982d367b85f5ebc76": {
       "Name": "ACME Coin",
       "Symbol": "ACME",
-      "ConversionRate": 10,
+      "ConversionFactor": 10,
       "Reserve": "0xEB05083DE29860b912151d93DB24C55b7beB6936", // Branded Token owner address on utility chain
       "ReservePassphrase": "acmeOnopenST",
       "UUID": "0x9b8f63ed597ca654262e21647d59f5ef495d173909d7816982d367b85f5ebc76",
