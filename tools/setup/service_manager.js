@@ -143,7 +143,7 @@ ServiceManagerKlass.prototype = {
       "stake_and_mint.js", "stake_and_mint_processor.js"];
     for (var i=0; i < intercommExes.length; i++) {
       var binFolder = setupHelper.binFolder()
-        , executablePath = rootPrefix + '/executables/inter_comm/' + intercommExes[i]
+        , executablePath = '$OPENST_PLATFORM_PATH/executables/inter_comm/' + intercommExes[i]
         , execName = executablePath.split('/').slice(-1)[0].split('.')[0]
         , cmd = oThis._startExecutableCommand(executablePath)
         , runScript = "run-" + execName + ".sh"
