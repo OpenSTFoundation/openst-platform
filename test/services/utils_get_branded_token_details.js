@@ -21,8 +21,7 @@ var testValidData = {
 var verifyAgainstData = {
   symbol: brandedTokenConfig[testValidData.uuid]['Symbol'],
   name: brandedTokenConfig[testValidData.uuid]['Name'],
-  conversion_rate: brandedTokenConfig[testValidData.uuid]['ConversionRate'],
-  conversion_rate_decimals: brandedTokenConfig[testValidData.uuid]['ConversionRateDecimals']
+  conversion_factor: brandedTokenConfig[testValidData.uuid]['ConversionFactor'],  
 };
 
 describe('services/utils/get_branded_token_details', function() {
@@ -102,11 +101,10 @@ describe('services/utils/get_branded_token_details', function() {
 
     assert.equal(response.data.symbol, verifyAgainstData.symbol);
     assert.equal(response.data.name, verifyAgainstData.name);
-    assert.equal(response.data.conversion_rate, verifyAgainstData.conversion_rate);
-    assert.equal(response.data.conversion_rate_decimals, verifyAgainstData.conversion_rate_decimals);    
+    assert.equal(response.data.conversion_factor, verifyAgainstData.conversion_factor);
 
     assert.hasAllKeys(response.data, ['symbol', 'name', 'conversion_rate',
-       'conversion_rate_decimals', 'decimals',
+       'conversion_rate_decimals', 'conversion_factor', 'decimals',
          'chain_id_utility', 'simple_stake_contract_address', 'staking_account']);
   });
 

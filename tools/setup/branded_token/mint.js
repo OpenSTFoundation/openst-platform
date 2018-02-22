@@ -64,7 +64,7 @@ MintBrandedToken.prototype = {
     // Format to big number
     oThis.amountToStakeInWeis = basicHelper.convertToBigNumber(oThis.amountToStakeInWeis);
 
-    const amountToStakeForBT = (oThis.amountToStakeInWeis.mul(0.9) - oThis.amountToStakeInWeis.mul(0.9).modulo(1))
+    const amountToStakeForBT = ((oThis.amountToStakeInWeis.mul(0.9)).minus(oThis.amountToStakeInWeis.mul(0.9).modulo(1)))
       , amountToStakeForSTP = oThis.amountToStakeInWeis.minus(amountToStakeForBT)
       , stPrimeUuid = coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID
     ;
