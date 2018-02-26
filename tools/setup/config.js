@@ -1,7 +1,10 @@
+const os = require('os');
+
 const setupConfig = {
 
   // Platform environment variables filename
-  env_vars_file: "openst_env_vars.sh", //Editable
+  env_vars_file: process.env.OST_SETUP_ENV_FILE || "openst_env_vars.sh", //Editable
+  setup_path: process.env.OST_SETUP_PATH || os.homedir(),
 
   /**
    * Chain configurations

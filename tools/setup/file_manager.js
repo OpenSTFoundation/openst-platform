@@ -43,6 +43,10 @@ FileManagerKlass.prototype = {
     // Create bin setup folder
     logger.info("* Creating openST setup bin folder");
     oThis.mkdir(setupHelper.binFolder());
+
+    // Create empty ENV file
+    logger.info("* Create empty ENV file");
+    oThis.touch(setupConfig.env_vars_file, '#!/bin/sh');
   },
 
   /**

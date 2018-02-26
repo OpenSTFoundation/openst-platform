@@ -24,8 +24,7 @@ EnvManagerKlass.prototype = {
   generateEnvFile: function() {
     const oThis = this;
 
-    // Create empty ENV file
-    fileManager.touch(setupConfig.env_vars_file, '#!/bin/sh');
+    // Append defaults
     fileManager.append(setupConfig.env_vars_file, '#################');
     fileManager.append(setupConfig.env_vars_file, "# opentST Platform Environment file");
     fileManager.append(setupConfig.env_vars_file, "#################");

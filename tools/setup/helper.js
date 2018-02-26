@@ -44,7 +44,7 @@ SetupHelperKlass.prototype = {
    */
   setupFolderAbsolutePath: function() {
     const oThis = this;
-    return os.homedir() + "/" + oThis.setupFolder();
+    return setupConfig.setup_path + "/" + oThis.setupFolder();
   },
 
   /**
