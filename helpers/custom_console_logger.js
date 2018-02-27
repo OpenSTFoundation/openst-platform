@@ -10,7 +10,7 @@ const getNamespace = require('continuation-local-storage').getNamespace
   // Get common local storage namespace to read
   // request identifiers for debugging and logging
   , openSTNotification = require('@openstfoundation/openst-notification')
-  ;
+;
 
 const rootPrefix = ".."
   , packageFile = require(rootPrefix + '/package.json')
@@ -41,20 +41,20 @@ const requestNamespace = getNamespace('openST-Platform-NameSpace')
  *
  * @param {string} message
  */
-const appendRequest = function(message) {
-    var newMessage = "";
-    if (requestNamespace) {
-      if (requestNamespace.get('reqId')) {
-        newMessage += "[" + requestNamespace.get('reqId') + "]";
-      }
-      if (requestNamespace.get('workerId')) {
-        newMessage += "[Worker - " + requestNamespace.get('workerId') + "]";
-      }
-      const hrTime = process.hrtime();
-      newMessage += "[" + timeInMilli(hrTime) + "]";
+const appendRequest = function (message) {
+  var newMessage = "";
+  if (requestNamespace) {
+    if (requestNamespace.get('reqId')) {
+      newMessage += "[" + requestNamespace.get('reqId') + "]";
     }
-    newMessage += message;
-    return newMessage;
+    if (requestNamespace.get('workerId')) {
+      newMessage += "[Worker - " + requestNamespace.get('workerId') + "]";
+    }
+    const hrTime = process.hrtime();
+    newMessage += "[" + timeInMilli(hrTime) + "]";
+  }
+  newMessage += message;
+  return newMessage;
 };
 
 /**
@@ -64,7 +64,7 @@ const appendRequest = function(message) {
  *
  * @return {number} - returns time in milli seconds
  */
-const timeInMilli = function(hrTime) {
+const timeInMilli = function (hrTime) {
   return (hrTime[0] * 1000 + hrTime[1] / 1000000);
 };
 
@@ -73,7 +73,8 @@ const timeInMilli = function(hrTime) {
  *
  * @constructor
  */
-const CustomConsoleLoggerKlass = function() {};
+const CustomConsoleLoggerKlass = function () {
+};
 
 CustomConsoleLoggerKlass.prototype = {
   /**
@@ -164,22 +165,20 @@ CustomConsoleLoggerKlass.prototype = {
     args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
 
-    if (coreConstants.OST_UTILITY_CHAIN_ID > 1400) {
-      openSTNotification.publishEvent.perform(
-        {
-          topics:["email_error."+packageName],
-          publisher: 'OST',
-          message: {
-            kind: "email",
-            payload: {
-              from: 'notifier@ost.com',
-              to: 'backend@ost.com',
-              subject: packageName + " :: UC " + coreConstants.OST_UTILITY_CHAIN_ID + "::" + code,
-              body: " Message: " + msg + " \n Data: " + JSON.stringify(data) + " \n backtrace: " + backtrace
-            }
+    openSTNotification.publishEvent.perform(
+      {
+        topics: ["email_error." + packageName],
+        publisher: 'OST',
+        message: {
+          kind: "email",
+          payload: {
+            from: 'notifier@ost.com',
+            to: 'backend@ost.com',
+            subject: packageName + " :: UC " + coreConstants.OST_UTILITY_CHAIN_ID + "::" + code,
+            body: " Message: " + msg + " \n Data: " + JSON.stringify(data) + " \n backtrace: " + backtrace
           }
-        });
-    }
+        }
+      });
   },
 
   /**
