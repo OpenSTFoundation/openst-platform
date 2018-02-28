@@ -8,6 +8,8 @@
 
 const rootPrefix = ".."
 
+  , approveForBrandedToken = require(rootPrefix + '/services/approve/branded_token')
+
   , getReceipt = require(rootPrefix + '/services/transaction/get_receipt')
   , transferBrandedToken = require(rootPrefix + '/services/transaction/transfer/branded_token')
   , transferSimpleToken = require(rootPrefix + '/services/transaction/transfer/simple_token')
@@ -44,6 +46,15 @@ const rootPrefix = ".."
 const ServiceManifestKlass = function() {};
 
 ServiceManifestKlass.prototype = {
+  /**
+   * Approve for spending services
+   *
+   * @constant {object}
+   */
+  approve: {
+    brandedToken: approveForBrandedToken
+  },
+
   /**
    * Transactions related services
    *
