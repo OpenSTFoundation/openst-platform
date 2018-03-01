@@ -75,7 +75,6 @@ StakeAndMintSimpleTokenPrime.prototype = {
       uuid: coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID
     })).perform();
 
-    logger.info('* Waiting for credit of ST\' to utility chain owner');
     await oThis._waitForSTPrimeMint();
 
     return Promise.resolve(responseHelper.successWithData({}));
@@ -95,9 +94,11 @@ StakeAndMintSimpleTokenPrime.prototype = {
         const getSTPBalanceResponse = await fundManager.getSTPrimeBalanceOf(utilityChainOwnerAddr);
 
         if(getSTPBalanceResponse.isSuccess() && (new BigNumber(getSTPBalanceResponse.data.balance)).greaterThan(0)){
+          logger.info('* ST\' credited to utility chain owner');
           return onResolve(getSTPBalanceResponse);
         } else {
-          setTimeout(getBalance, 10000);
+          logger.info('* Waiting for credit of ST\' to utility chain owner');
+          setTimeout(getBalance, 60000);
         }
       };
 
