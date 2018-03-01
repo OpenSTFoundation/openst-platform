@@ -94,6 +94,7 @@ FundManagerKlass.prototype = {
           return responseHelper.successWithData({transactionHash: transactionHash});
         })
         .catch(function(reason) {
+          logger.error('reason', reason);
           return responseHelper.error('t_s_fm_5', 'Something went wrong');
         });
     };
