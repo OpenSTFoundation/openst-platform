@@ -165,6 +165,14 @@ CustomConsoleLoggerKlass.prototype = {
     args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
 
+    var bodyData = null;
+
+    try {
+      bodyData = JSON.stringify(data);
+    } catch {
+      bodyData = data;
+    }
+
     openSTNotification.publishEvent.perform(
       {
         topics: ["email_error." + packageName],
@@ -175,7 +183,7 @@ CustomConsoleLoggerKlass.prototype = {
             from: 'notifier@ost.com',
             to: 'backend@ost.com',
             subject: packageName + " :: UC " + coreConstants.OST_UTILITY_CHAIN_ID + "::" + code,
-            body: " Message: " + msg + " \n Data: " + JSON.stringify(data) + " \n backtrace: " + backtrace
+            body: " Message: " + msg + " \n Data: " + bodyData + " \n backtrace: " + backtrace
           }
         }
       });
