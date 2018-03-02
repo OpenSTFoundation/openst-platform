@@ -5,8 +5,6 @@ const fs = require('fs');
 const rootPrefix = '../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , web3WsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
-  , UtilityRegistrarKlass = require(rootPrefix + '/lib/contract_interact/utility_registrar')
 ;
 
 const openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
@@ -15,11 +13,7 @@ const openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
   , utilityRegistrarAddr = coreAddresses.getAddressForUser('utilityRegistrar')
   , utilityRegistrarPassphrase = coreAddresses.getPassphraseForUser('utilityRegistrar')
   , utilityRegistrarContractAddress = coreAddresses.getAddressForContract("utilityRegistrar")
-  , utilityRegistrarContractInteract = new UtilityRegistrarKlass(utilityRegistrarContractAddress)
 ;
-
-var completeContract = new web3WsProvider.eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
-completeContract.setProvider(web3WsProvider.currentProvider);
 
 /**
  * Inter comm process for the stake and mint.
@@ -38,8 +32,22 @@ const StakeAndMintInterCommUsingScannerKlass = function (params) {
 
 StakeAndMintInterCommUsingScannerKlass.prototype = {
   init: function () {
+
+    const clearCacheOfExpr = /(openst-platform\/config\/)|(openst-platform\/lib\/)/
+    Object.keys(require.cache).forEach(function(key)
+    {
+      if (key.search(clearCacheOfExpr) !== -1) {
+        delete require.cache[key];
+      }
+    });
+
+
     const oThis = this
+      , web3WsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
     ;
+
+    oThis.completeContract = new web3WsProvider.eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
+    oThis.completeContract.setProvider(web3WsProvider.currentProvider);
 
     // Read this from a file
     oThis.snmData = JSON.parse(fs.readFileSync(oThis.filePath).toString());
@@ -54,7 +62,8 @@ StakeAndMintInterCommUsingScannerKlass.prototype = {
     ;
 
     try {
-      const highestBlock = await web3WsProvider.eth.getBlockNumber()
+      const web3WsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
+        , highestBlock = await web3WsProvider.eth.getBlockNumber()
       ;
 
       // return if nothing more to do.
@@ -66,7 +75,7 @@ StakeAndMintInterCommUsingScannerKlass.prototype = {
       oThis.fromBlock = oThis.snmData.lastProcessedBlock + 1;
       oThis.toBlock = highestBlock - 6;
 
-      const events = await completeContract.getPastEvents(
+      const events = await oThis.completeContract.getPastEvents(
         oThis.EVENT_NAME,
         {fromBlock: oThis.fromBlock, toBlock: oThis.toBlock},
         oThis.getPastEventsCallback
@@ -76,7 +85,7 @@ StakeAndMintInterCommUsingScannerKlass.prototype = {
       oThis.schedule();
     } catch(err) {
       logger.info('Exception got:', err);
-      oThis.schedule();
+      oThis.reInit();
     }
   },
 
@@ -115,6 +124,14 @@ StakeAndMintInterCommUsingScannerKlass.prototype = {
     }, 5000);
   },
 
+  reInit: function () {
+    const oThis = this
+    ;
+    setTimeout(function () {
+      oThis.init();
+    }, 5000);
+  },
+
   updateSnmDataFile: function () {
     const oThis = this
     ;
@@ -142,6 +159,8 @@ StakeAndMintInterCommUsingScannerKlass.prototype = {
       , stakingIntentHash = returnValues._stakingIntentHash
       , beneficiary = returnValues._beneficiary
       , chainIdUtility = returnValues._chainIdUtility
+      , UtilityRegistrarKlass = require(rootPrefix + '/lib/contract_interact/utility_registrar')
+      , utilityRegistrarContractInteract = new UtilityRegistrarKlass(utilityRegistrarContractAddress)
     ;
 
     const transactionHash = await utilityRegistrarContractInteract.confirmStakingIntent(
