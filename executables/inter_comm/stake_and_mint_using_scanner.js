@@ -90,7 +90,10 @@ StakeAndMintInterCommUsingScannerKlass.prototype = {
     ;
 
     // nothing to do
-    if (!events || events.length === 0) return Promise.resolve();
+    if (!events || events.length === 0) {
+      oThis.updateSnmDataFile();
+      return Promise.resolve();
+    }
 
     //TODO: last processed transaction index.
     for (var i = 0; i < events.length; i++) {
@@ -100,9 +103,7 @@ StakeAndMintInterCommUsingScannerKlass.prototype = {
       await oThis.processEventObj(eventObj);
     }
 
-    oThis.snmData.lastProcessedBlock = oThis.toBlock;
     oThis.updateSnmDataFile();
-
     return Promise.resolve();
   },
 
@@ -117,6 +118,9 @@ StakeAndMintInterCommUsingScannerKlass.prototype = {
   updateSnmDataFile: function () {
     const oThis = this
     ;
+
+    oThis.snmData.lastProcessedBlock = oThis.toBlock;
+
     fs.writeFileSync(
       oThis.filePath,
       JSON.stringify(oThis.snmData),
