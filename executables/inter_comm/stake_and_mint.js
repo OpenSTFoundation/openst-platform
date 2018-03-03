@@ -26,14 +26,6 @@ const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
 ;
 
-const openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
-  , openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
-  , openSTUtilityCurrContractAddr = coreAddresses.getAddressForContract('openSTUtility')
-  , utilityRegistrarAddr = coreAddresses.getAddressForUser('utilityRegistrar')
-  , utilityRegistrarPassphrase = coreAddresses.getPassphraseForUser('utilityRegistrar')
-  , utilityRegistrarContractAddress = coreAddresses.getAddressForContract("utilityRegistrar")
-;
-
 /**
  * Inter comm process for the stake and mint.
  *
@@ -70,6 +62,8 @@ StakeAndMintInterCommKlass.prototype = {
 
     const oThis = this
       , web3WsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
+      , openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
+      , openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
     ;
 
     oThis.completeContract = new web3WsProvider.eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
@@ -210,6 +204,10 @@ StakeAndMintInterCommKlass.prototype = {
       , beneficiary = returnValues._beneficiary
       , chainIdUtility = returnValues._chainIdUtility
       , UtilityRegistrarKlass = require(rootPrefix + '/lib/contract_interact/utility_registrar')
+      , utilityRegistrarContractAddress = coreAddresses.getAddressForContract("utilityRegistrar")
+      , openSTUtilityCurrContractAddr = coreAddresses.getAddressForContract('openSTUtility')
+      , utilityRegistrarAddr = coreAddresses.getAddressForUser('utilityRegistrar')
+      , utilityRegistrarPassphrase = coreAddresses.getPassphraseForUser('utilityRegistrar')
       , utilityRegistrarContractInteract = new UtilityRegistrarKlass(utilityRegistrarContractAddress)
     ;
 
