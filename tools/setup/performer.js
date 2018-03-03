@@ -127,7 +127,8 @@ openSTSetup.prototype = {
 		if (step == 'stake_n_mint' || step == 'all') {
 			// Starting stake and mint intercomm
 		  logger.step("** Starting stake and mint intercomm");
-		  await serviceManager.startExecutable('executables/inter_comm/stake_and_mint.js');
+      var intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/stake_and_mint.data';
+		  await serviceManager.startExecutable('executables/inter_comm/stake_and_mint.js '+ intercomProcessDataFile);
 		}
 
 		if (step == 'stake_and_mint_processor' || step == 'all') {

@@ -139,19 +139,18 @@ ServiceManagerKlass.prototype = {
     }
 
     // Generate executables
-    const intercommExes = ["redeem_and_unstake.js", "redeem_and_unstake_processor.js", "register_branded_token.js",
-      "stake_and_mint.js", "stake_and_mint_processor.js"];
-    for (var i=0; i < intercommExes.length; i++) {
+    const intercomProcessIdentifiers = setupHelper.intercomProcessIdentifiers();
+    for (var i=0; i < intercomProcessIdentifiers.length; i++) {
       var binFolder = setupHelper.binFolder()
-        , executablePath = 'executables/inter_comm/' + intercommExes[i]
-        , execName = executablePath.split('/').slice(-1)[0].split('.')[0]
-        , cmd = oThis._startExecutableCommand(executablePath)
-        , runScript = "run-" + execName + ".sh"
+        , executablePath = 'executables/inter_comm/' + intercomProcessIdentifiers[i] + '.js'
+        , intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/' + intercomProcessIdentifiers[i] + '.data'
+        , cmd = oThis._startExecutableCommand(executablePath + " " + intercomProcessDataFile)
+        , runScript = "run-" + intercomProcessIdentifiers[i] + ".sh"
       ;
 
       fileManager.touch(binFolder + "/" + runScript, '#!/bin/sh');
       shellAsyncCmd.run("echo '"+ cmd +"' >> " + setupHelper.binFolderAbsolutePath() + "/" + runScript);
-      logger.info("* Start " + intercommExes[i] + " intercomm: sh " + setupHelper.setupFolderAbsolutePath() + "/" + binFolder + "/" + runScript);
+      logger.info("* Start " + intercomProcessIdentifiers[i] + " intercomm: sh " + setupHelper.setupFolderAbsolutePath() + "/" + binFolder + "/" + runScript);
     }
   },
 
@@ -164,7 +163,7 @@ ServiceManagerKlass.prototype = {
    * @private
    */
   _startExecutableCommand: function(executablePath) {
-    var logFilename = executablePath.split('/').slice(-1)[0].split('.')[0];
+    var logFilename = executablePath.split(' ')[0].split('/').slice(-1)[0].split('.')[0];
     return 'node $OPENST_PLATFORM_PATH/' + executablePath + ' >> ' +
       setupHelper.logsFolderAbsolutePath() + '/executables-' + logFilename + '.log'
   },
