@@ -44,8 +44,7 @@ FileManagerKlass.prototype = {
     logger.info("* Creating openST intercom data files");
     const intercomProcessIdentifiers = setupHelper.intercomProcessIdentifiers();
     for (var i=0; i < intercomProcessIdentifiers.length; i++) {
-      var intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/' + intercomProcessIdentifiers[i] + '.data';
-      oThis.touch(intercomProcessDataFile, JSON.stringify({lastProcessedBlock: 0, lastProcessedTransactionIndex: 0}));
+      oThis.touch(intercomProcessIdentifiers[i] + '.data', "{\\\"lastProcessedBlock\\\":0,\\\"lastProcessedTransactionIndex\\\":0}");
     }
 
     // Create bin setup folder
