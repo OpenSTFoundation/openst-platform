@@ -22,6 +22,7 @@
 const rootPrefix = '../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , IntercomBaseKlass = require(rootPrefix + '/executables/inter_comm/base')
 ;
 
@@ -113,7 +114,7 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
 
     logger.info(stakingIntentHash, ':: transaction hash for confirmStakingIntent:', transactionHash);
 
-    return Promise.resolve();
+    return Promise.resolve(responseHelper.successWithData({}));
   }
 };
 

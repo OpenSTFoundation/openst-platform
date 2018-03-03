@@ -135,7 +135,8 @@ openSTSetup.prototype = {
 
 		  // Starting stake and mint processor intercomm
 		  logger.step("** Starting stake and mint processor intercomm");
-		  await serviceManager.startExecutable('executables/inter_comm/stake_and_mint_processor.js');
+      var intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/stake_and_mint_processor.data';
+		  await serviceManager.startExecutable('executables/inter_comm/stake_and_mint_processor.js '+ intercomProcessDataFile);
 		}
 
 		if (step == 'st_prime_mint' || step == 'all') {
