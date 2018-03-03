@@ -1,5 +1,24 @@
 "use strict";
 
+/**
+ * This executable / script is intermediate communicator between value chain and utility chain used for the stake and mint.
+ *
+ * <br>It listens to the StakingIntentDeclared event emitted by stake method of openSTValue contract.
+ * On getting this event, it calls confirmStakingIntent method of utilityRegistrar contract.
+ *
+ * <br><br>Following are the steps which are performed in here:
+ * <ol>
+ *   <li> It scans for StakingIntentDeclared event in the blocks which were not scanned until now till the latest
+ *   block minus 6th block.</li>
+ *   <li> When events are obtained, it processes the events one by one, in which confirmStakingIntent method of
+ *   utilityRegistrar contract is called. When processing a single event from the array of events, it waits for the moment till
+ *   transaction hash is obtained and then picks the next event for processing.</li>
+ * </ol>
+ *
+ * @module executables/inter_comm/stake_and_mint_bak
+ *
+ */
+
 const fs = require('fs');
 
 const rootPrefix = '../..'
@@ -18,6 +37,8 @@ const openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
 /**
  * Inter comm process for the stake and mint.
  *
+ * @param {string} params.file_path - this is the file path for the data file
+ *
  * @constructor
  *
  */
@@ -31,9 +52,15 @@ const StakeAndMintInterCommKlass = function (params) {
 };
 
 StakeAndMintInterCommKlass.prototype = {
+  /**
+   * Starts the process of the script with initializing processor
+   *
+   */
   init: function () {
 
     const clearCacheOfExpr = /(openst-platform\/config\/)|(openst-platform\/lib\/)/
+    ;
+
     Object.keys(require.cache).forEach(function(key)
     {
       if (key.search(clearCacheOfExpr) !== -1) {
@@ -51,11 +78,13 @@ StakeAndMintInterCommKlass.prototype = {
     // Read this from a file
     oThis.snmData = JSON.parse(fs.readFileSync(oThis.filePath).toString());
 
-    console.log('oThis.snmData', oThis.snmData.lastProcessedBlock);
-
     oThis.checkForFurtherEvents();
   },
 
+  /**
+   * Check for further events
+   *
+   */
   checkForFurtherEvents: async function () {
     const oThis = this
     ;
@@ -87,18 +116,28 @@ StakeAndMintInterCommKlass.prototype = {
     }
   },
 
+  /**
+   * Get past events call back function
+   *
+   */
   getPastEventsCallback: function (error, logs) {
     if (error) logger.error('getPastEvents error:', error);
     logger.log('getPastEvents done.');
   },
 
+  /**
+   * Process events array
+   *
+   * @param {array} events - events array
+   *
+   */
   processEventsArray: async function (events) {
     const oThis = this
     ;
 
     // nothing to do
     if (!events || events.length === 0) {
-      oThis.updateSnmDataFile();
+      oThis.updateIntercomDataFile();
       return Promise.resolve();
     }
 
@@ -110,10 +149,13 @@ StakeAndMintInterCommKlass.prototype = {
       await oThis.processEventObj(eventObj);
     }
 
-    oThis.updateSnmDataFile();
+    oThis.updateIntercomDataFile();
     return Promise.resolve();
   },
 
+  /**
+   * Schedule
+   */
   schedule: function () {
     const oThis = this
     ;
@@ -122,6 +164,9 @@ StakeAndMintInterCommKlass.prototype = {
     }, 5000);
   },
 
+  /**
+   * Re init
+   */
   reInit: function () {
     const oThis = this
     ;
@@ -130,7 +175,10 @@ StakeAndMintInterCommKlass.prototype = {
     }, 5000);
   },
 
-  updateSnmDataFile: function () {
+  /**
+   * Update intercom data file
+   */
+  updateIntercomDataFile: function () {
     const oThis = this
     ;
 
@@ -141,11 +189,15 @@ StakeAndMintInterCommKlass.prototype = {
       JSON.stringify(oThis.snmData),
       function (err) {
         if (err)
-          console.log(err);
+          logger.error(err);
       }
     );
   },
 
+  /**
+   * Process event object
+   * @param {object} eventObj - event object
+   */
   processEventObj: async function (eventObj) {
     const returnValues = eventObj.returnValues
       , uuid = returnValues._uuid
