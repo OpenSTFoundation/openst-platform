@@ -80,7 +80,14 @@ IntercomBaseKlass.prototype = {
       oThis.schedule();
     } catch(err) {
       logger.info('Exception got:', err);
-      oThis.reInit();
+
+      if(oThis.interruptSignalObtained){
+        console.log('Exiting Process....');
+        process.exit(1);
+      } else {
+        oThis.reInit();
+      }
+
     }
   },
 
