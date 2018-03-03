@@ -40,10 +40,25 @@ const StakeAndMintInterCommKlass = function (params) {
   oThis.filePath = params.file_path;
   oThis.fromBlock = 0;
   oThis.toBlock = 0;
-  oThis.snmData = {}
+  oThis.snmData = {};
+  oThis.interruptSignalObtained = false;
 };
 
 StakeAndMintInterCommKlass.prototype = {
+
+  registerInterruptSignalHandlers: function () {
+    const oThis = this;
+
+    process.on('SIGINT', function() {
+      console.log("Received SIGINT, cancelling block scaning");
+      oThis.interruptSignalObtained = true;
+    });
+    process.on('SIGTERM', function() {
+      console.log("Received SIGTERM, cancelling block scaning");
+      oThis.interruptSignalObtained = true;
+    });
+  },
+
   /**
    * Starts the process of the script with initializing processor
    *
@@ -186,6 +201,13 @@ StakeAndMintInterCommKlass.prototype = {
           logger.error(err);
       }
     );
+
+    console.log("Writtennnn. Fileee");
+
+    if(oThis.interruptSignalObtained){
+      console.log('Exiting Process....');
+      process.exit(1);
+    }
   },
 
   /**
@@ -238,6 +260,9 @@ const args = process.argv
   , filePath = args[2]
 ;
 
-new StakeAndMintInterCommKlass({file_path: filePath}).init();
+
+const stakeAndMintInterCommObj = new StakeAndMintInterCommKlass({file_path: filePath});
+stakeAndMintInterCommObj.registerInterruptSignalHandlers();
+stakeAndMintInterCommObj.init();
 
 logger.win("InterComm Script for Stake and Mint initiated.");
