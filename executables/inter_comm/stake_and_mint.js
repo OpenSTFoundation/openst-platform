@@ -19,11 +19,10 @@
  *
  */
 
-const fs = require('fs');
-
 const rootPrefix = '../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , IntercomBaseKlass = require(rootPrefix + '/executables/inter_comm/base')
 ;
 
 /**
@@ -32,49 +31,27 @@ const rootPrefix = '../..'
  * @param {string} params.file_path - this is the file path for the data file
  *
  * @constructor
+ * @augments IntercomBaseKlass
  *
  */
 const StakeAndMintInterCommKlass = function (params) {
-  const oThis = this;
+  const oThis = this
+  ;
 
-  oThis.filePath = params.file_path;
-  oThis.fromBlock = 0;
-  oThis.toBlock = 0;
-  oThis.snmData = {};
-  oThis.interruptSignalObtained = false;
+  IntercomBaseKlass.call(oThis, params);
 };
 
-StakeAndMintInterCommKlass.prototype = {
+StakeAndMintInterCommKlass.prototype = Object.create(IntercomBaseKlass.prototype);
 
-  registerInterruptSignalHandlers: function () {
-    const oThis = this;
+const StakeAndMintInterCommKlassSpecificPrototype = {
 
-    process.on('SIGINT', function() {
-      console.log("Received SIGINT, cancelling block scaning");
-      oThis.interruptSignalObtained = true;
-    });
-    process.on('SIGTERM', function() {
-      console.log("Received SIGTERM, cancelling block scaning");
-      oThis.interruptSignalObtained = true;
-    });
-  },
+  EVENT_NAME: 'StakingIntentDeclared',
 
   /**
-   * Starts the process of the script with initializing processor
+   * Set contract object for listening to events
    *
    */
-  init: function () {
-
-    const clearCacheOfExpr = /(openst-platform\/config\/)|(openst-platform\/lib\/)/
-    ;
-
-    Object.keys(require.cache).forEach(function(key)
-    {
-      if (key.search(clearCacheOfExpr) !== -1) {
-        delete require.cache[key];
-      }
-    });
-
+  setContractObj: function () {
     const oThis = this
       , web3WsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
       , openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
@@ -83,131 +60,17 @@ StakeAndMintInterCommKlass.prototype = {
 
     oThis.completeContract = new web3WsProvider.eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
     oThis.completeContract.setProvider(web3WsProvider.currentProvider);
-
-    // Read this from a file
-    oThis.snmData = JSON.parse(fs.readFileSync(oThis.filePath).toString());
-
-    oThis.checkForFurtherEvents();
   },
 
   /**
-   * Check for further events
+   * Get chain highest block
    *
    */
-  checkForFurtherEvents: async function () {
-    const oThis = this
+  getChainHighestBlock: async function () {
+    const web3WsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
+      , highestBlock = await web3WsProvider.eth.getBlockNumber()
     ;
-
-    try {
-      const web3WsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
-        , highestBlock = await web3WsProvider.eth.getBlockNumber()
-      ;
-
-      // return if nothing more to do.
-      if (highestBlock - 6 <= oThis.lastProcessedBlock) return oThis.schedule();
-
-      // consider case in which last block was not processed completely
-
-      oThis.fromBlock = oThis.snmData.lastProcessedBlock + 1;
-      oThis.toBlock = highestBlock - 6;
-
-      const events = await oThis.completeContract.getPastEvents(
-        oThis.EVENT_NAME,
-        {fromBlock: oThis.fromBlock, toBlock: oThis.toBlock},
-        oThis.getPastEventsCallback
-      );
-      await oThis.processEventsArray(events);
-
-      oThis.schedule();
-    } catch(err) {
-      logger.info('Exception got:', err);
-      oThis.reInit();
-    }
-  },
-
-  /**
-   * Get past events call back function
-   *
-   */
-  getPastEventsCallback: function (error, logs) {
-    if (error) logger.error('getPastEvents error:', error);
-    logger.log('getPastEvents done.');
-  },
-
-  /**
-   * Process events array
-   *
-   * @param {array} events - events array
-   *
-   */
-  processEventsArray: async function (events) {
-    const oThis = this
-    ;
-
-    // nothing to do
-    if (!events || events.length === 0) {
-      oThis.updateIntercomDataFile();
-      return Promise.resolve();
-    }
-
-    //TODO: last processed transaction index.
-    for (var i = 0; i < events.length; i++) {
-      const eventObj = events[i]
-      ;
-
-      await oThis.processEventObj(eventObj);
-    }
-
-    oThis.updateIntercomDataFile();
-    return Promise.resolve();
-  },
-
-  /**
-   * Schedule
-   */
-  schedule: function () {
-    const oThis = this
-    ;
-    setTimeout(function () {
-      oThis.checkForFurtherEvents();
-    }, 5000);
-  },
-
-  /**
-   * Re init
-   */
-  reInit: function () {
-    const oThis = this
-    ;
-    setTimeout(function () {
-      oThis.init();
-    }, 5000);
-  },
-
-  /**
-   * Update intercom data file
-   */
-  updateIntercomDataFile: function () {
-    const oThis = this
-    ;
-
-    oThis.snmData.lastProcessedBlock = oThis.toBlock;
-
-    fs.writeFileSync(
-      oThis.filePath,
-      JSON.stringify(oThis.snmData),
-      function (err) {
-        if (err)
-          logger.error(err);
-      }
-    );
-
-    console.log("Writtennnn. Fileee");
-
-    if(oThis.interruptSignalObtained){
-      console.log('Exiting Process....');
-      process.exit(1);
-    }
+    return highestBlock;
   },
 
   /**
@@ -251,15 +114,14 @@ StakeAndMintInterCommKlass.prototype = {
     logger.info(stakingIntentHash, ':: transaction hash for confirmStakingIntent:', transactionHash);
 
     return Promise.resolve();
-  },
-
-  EVENT_NAME: 'StakingIntentDeclared'
+  }
 };
+
+Object.assign(StakeAndMintInterCommKlass.prototype, StakeAndMintInterCommKlassSpecificPrototype);
 
 const args = process.argv
   , filePath = args[2]
 ;
-
 
 const stakeAndMintInterCommObj = new StakeAndMintInterCommKlass({file_path: filePath});
 stakeAndMintInterCommObj.registerInterruptSignalHandlers();
