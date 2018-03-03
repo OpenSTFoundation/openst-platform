@@ -40,6 +40,13 @@ FileManagerKlass.prototype = {
     logger.info("* Creating openST setup logs folder");
     oThis.mkdir(setupHelper.logsFolder());
 
+    // Create intercom data files in logs folder
+    logger.info("* Creating openST intercom data files");
+    const intercomProcessIdentifiers = setupHelper.intercomProcessIdentifiers();
+    for (var i=0; i < intercomProcessIdentifiers.length; i++) {
+      oThis.touch(intercomProcessIdentifiers[i] + '.data', "{\\\"lastProcessedBlock\\\":0,\\\"lastProcessedTransactionIndex\\\":0}");
+    }
+
     // Create bin setup folder
     logger.info("* Creating openST setup bin folder");
     oThis.mkdir(setupHelper.binFolder());

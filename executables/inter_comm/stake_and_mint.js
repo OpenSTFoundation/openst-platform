@@ -1,34 +1,12 @@
 "use strict";
 
-/**
- * This executable / script is intermediate communicator between value chain and utility chain used for the stake and mint.
- *
- * <br>It listens to the StakingIntentDeclared event emitted by stake method of openSTValue contract.
- * On getting this event, it calls confirmStakingIntent method of utilityRegistrar contract.
- *
- * <br><br>Following are the steps which are performed in here:
- * <ol>
- *   <li> Set the processor on {@link module:lib/web3/events/queue_manager|queue manager} </li>
- *   <li> It waits for the event StakingIntentDeclared from openSTValue contract. </li>
- *   <li> On the event arrival it initiate a task in the internal queue to run it with 6 blocks delay. </li>
- *   <li> When the task executes it run the processor passed on step1,
- *   in which confirmStakingIntent method of utilityRegistrar contract is called. </li>
- * </ol>
- *
- * @module executables/inter_comm/stake_and_mint
- *
- */
-
-const openSTNotification = require('@openstfoundation/openst-notification')
-;
+const fs = require('fs');
 
 const rootPrefix = '../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , eventQueueManagerKlass = require(rootPrefix + '/lib/web3/events/queue_manager')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , web3WsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
   , UtilityRegistrarKlass = require(rootPrefix + '/lib/contract_interact/utility_registrar')
-  , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
 ;
 
 const openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
@@ -38,17 +16,10 @@ const openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
   , utilityRegistrarPassphrase = coreAddresses.getPassphraseForUser('utilityRegistrar')
   , utilityRegistrarContractAddress = coreAddresses.getAddressForContract("utilityRegistrar")
   , utilityRegistrarContractInteract = new UtilityRegistrarKlass(utilityRegistrarContractAddress)
-  , eventQueueManager = new eventQueueManagerKlass()
-  , notificationData = {
-    topics: ['event.stake_and_mint'], // override later: with every stage
-    publisher: 'OST',
-    message: {
-      kind: '', // populate later: with every stage
-      payload: {
-      }
-    }
-  }
 ;
+
+var completeContract = new web3WsProvider.eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
+completeContract.setProvider(web3WsProvider.currentProvider);
 
 /**
  * Inter comm process for the stake and mint.
@@ -56,102 +27,112 @@ const openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
  * @constructor
  *
  */
-const StakeAndMintInterComm = function () {
+const StakeAndMintInterCommKlass = function (params) {
+  const oThis = this;
+
+  oThis.filePath = params.file_path;
+  oThis.fromBlock = 0;
+  oThis.toBlock = 0;
+  oThis.snmData = {}
 };
 
-StakeAndMintInterComm.prototype = {
-
-  /**
-   * Starts the process of the script with initializing processor
-   *
-   */
+StakeAndMintInterCommKlass.prototype = {
   init: function () {
-    var oThis = this;
-
-    eventQueueManager.setProcessor(oThis.processor);
-    oThis.bindEvents();
-  },
-
-  /**
-   *
-   * Bind to start listening the desired event
-   *
-   */
-  bindEvents: function () {
-    var oThis = this;
-    logger.log("bindEvents binding StakingIntentDeclared");
-
-    oThis.listenToDesiredEvent(
-      oThis.onEventSubscriptionError,
-      oThis.onEvent,
-      oThis.onEvent
-    );
-
-    logger.log("bindEvents done");
-  },
-
-  /**
-   * Listening StakingIntentDeclared event emitted by stake method of openSTValue contract.
-   *
-   * @param {function} onError - The method to run on error.
-   * @param {function} onData - The method to run on success.
-   * @param {function} onChange - The method to run on changed.
-   *
-   */
-  listenToDesiredEvent: function (onError, onData, onChange) {
-    var completeContract = new web3WsProvider.eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
-    completeContract.setProvider(web3WsProvider.currentProvider);
-
-    completeContract.events.StakingIntentDeclared({})
-      .on('error', onError)
-      .on('data', onData)
-      .on('changed', onChange);
-  },
-
-  /**
-   * Processing of StakingIntentDeclared event is delayed for n block confirmation by enqueueing to
-   * {@link module:lib/web3/events/queue_manager|queue manager}.
-   *
-   * @param {Object} eventObj - Object of event.
-   *
-   */
-  onEvent: function (eventObj) {
-    // Fire notification event
-    notificationData.topics = ['event.stake_and_mint.staking_intent_declared_on_vc'];
-    notificationData.message.kind = 'event_received';
-    notificationData.message.payload.event_name = 'StakingIntentDeclared';
-    notificationData.message.payload.event_data = eventObj;
-    openSTNotification.publishEvent.perform(notificationData);
-
-    eventQueueManager.addEditEventInQueue(eventObj);
-  },
-
-  /**
-   * Generic Method to log event subscription error
-   *
-   * @param {Object} error - Object of event.
-   *
-   */
-  onEventSubscriptionError: function (error) {
-
-    // Fire notification event
-    notificationData.message.kind = 'error';
-    notificationData.message.payload.error_data = error;
-    openSTNotification.publishEvent.perform(notificationData);
-
-    logger.notify('e_ic_sam_onEventSubscriptionError_1', 'onEventSubscriptionError triggered', error);
-  },
-
-  /**
-   * Processor gets executed from {@link module:lib/web3/events/queue_manager|queue manager} for
-   * every StakingIntentDeclared event after waiting for n block confirmation.
-   *
-   * @param {Object} eventObj - Object of event.
-   *
-   */
-  processor: async function (eventObj) {
     const oThis = this
-      , returnValues = eventObj.returnValues
+    ;
+
+    // Read this from a file
+    oThis.snmData = JSON.parse(fs.readFileSync(oThis.filePath).toString());
+
+    console.log('oThis.snmData', oThis.snmData.lastProcessedBlock);
+
+    oThis.checkForFurtherEvents();
+  },
+
+  checkForFurtherEvents: async function () {
+    const oThis = this
+    ;
+
+    try {
+      const highestBlock = await web3WsProvider.eth.getBlockNumber()
+      ;
+
+      // return if nothing more to do.
+      if (highestBlock - 6 <= oThis.lastProcessedBlock) return oThis.schedule();
+
+
+      // consider case in which last block was not processed completely
+
+      oThis.fromBlock = oThis.snmData.lastProcessedBlock + 1;
+      oThis.toBlock = highestBlock - 6;
+
+      const events = await completeContract.getPastEvents(
+        oThis.EVENT_NAME,
+        {fromBlock: oThis.fromBlock, toBlock: oThis.toBlock},
+        oThis.getPastEventsCallback
+      );
+      await oThis.processEventsArray(events);
+
+      oThis.schedule();
+    } catch(err) {
+      logger.info('Exception got:', err);
+      oThis.schedule();
+    }
+  },
+
+  getPastEventsCallback: function (error, logs) {
+    if (error) logger.error('getPastEvents error:', error);
+    logger.log('getPastEvents done.');
+  },
+
+  processEventsArray: async function (events) {
+    const oThis = this
+    ;
+
+    // nothing to do
+    if (!events || events.length === 0) {
+      oThis.updateSnmDataFile();
+      return Promise.resolve();
+    }
+
+    //TODO: last processed transaction index.
+    for (var i = 0; i < events.length; i++) {
+      const eventObj = events[i]
+      ;
+
+      await oThis.processEventObj(eventObj);
+    }
+
+    oThis.updateSnmDataFile();
+    return Promise.resolve();
+  },
+
+  schedule: function () {
+    const oThis = this
+    ;
+    setTimeout(function () {
+      oThis.checkForFurtherEvents();
+    }, 5000);
+  },
+
+  updateSnmDataFile: function () {
+    const oThis = this
+    ;
+
+    oThis.snmData.lastProcessedBlock = oThis.toBlock;
+
+    fs.writeFileSync(
+      oThis.filePath,
+      JSON.stringify(oThis.snmData),
+      function (err) {
+        if (err)
+          console.log(err);
+      }
+    );
+  },
+
+  processEventObj: async function (eventObj) {
+    const returnValues = eventObj.returnValues
       , uuid = returnValues._uuid
       , staker = returnValues._staker
       , stakerNonce = returnValues._stakerNonce
@@ -160,16 +141,10 @@ StakeAndMintInterComm.prototype = {
       , unlockHeight = returnValues._unlockHeight
       , stakingIntentHash = returnValues._stakingIntentHash
       , beneficiary = returnValues._beneficiary
-      , chainIdUtility = returnValues._chainIdUtility;
+      , chainIdUtility = returnValues._chainIdUtility
+    ;
 
-    // Fire notification event
-    notificationData.topics = ['event.stake_and_mint.confirm_staking_intent_on_uc.start'];
-    notificationData.message.kind = 'info';
-    openSTNotification.publishEvent.perform(notificationData);
-
-    logger.step(stakingIntentHash, ' :: performing confirmStakingIntent');
-
-    const ucRegistrarResponse =  await utilityRegistrarContractInteract.confirmStakingIntent(
+    const transactionHash = await utilityRegistrarContractInteract.confirmStakingIntent(
       utilityRegistrarAddr,
       utilityRegistrarPassphrase,
       openSTUtilityCurrContractAddr,
@@ -180,38 +155,22 @@ StakeAndMintInterComm.prototype = {
       amountST,
       amountUT,
       unlockHeight,
-      stakingIntentHash
+      stakingIntentHash,
+      true
     );
 
-    if (ucRegistrarResponse.isSuccess()) {
-      const ucFormattedTransactionReceipt = ucRegistrarResponse.data.formattedTransactionReceipt
-        , ucFormattedEvents = await web3EventsFormatter.perform(ucFormattedTransactionReceipt);
+    logger.info(stakingIntentHash, ':: transaction hash for confirmStakingIntent:', transactionHash);
 
-      // Fire notification event
-      notificationData.topics = ['event.stake_and_mint.confirm_staking_intent_on_uc.done'];
-      notificationData.message.kind = 'info';
-      notificationData.message.payload.transaction_hash = ucFormattedTransactionReceipt.transactionHash;
-      openSTNotification.publishEvent.perform(notificationData);
+    return Promise.resolve();
+  },
 
-      logger.win(stakingIntentHash, ':: performed confirmStakingIntent of utilityRegistrar contract.', ucFormattedEvents);
-    } else {
-
-      // Fire notification event
-      notificationData.message.kind = 'error';
-      notificationData.message.payload.error_data = ucRegistrarResponse;
-      openSTNotification.publishEvent.perform(notificationData);
-
-      var errMessage = stakingIntentHash + ' confirmStakingIntent of utilityRegistrar contract ERROR. Something went wrong!';
-      logger.notify('e_ic_sam_processor_1', errMessage);
-
-      return Promise.reject(errMessage);
-    }
-
-    return Promise.resolve(ucRegistrarResponse);
-  }
-
+  EVENT_NAME: 'StakingIntentDeclared'
 };
 
-new StakeAndMintInterComm().init();
+const args = process.argv
+  , filePath = args[2]
+;
+
+new StakeAndMintInterCommKlass({file_path: filePath}).init();
 
 logger.win("InterComm Script for Stake and Mint initiated.");

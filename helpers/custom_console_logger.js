@@ -169,7 +169,7 @@ CustomConsoleLoggerKlass.prototype = {
 
     try {
       bodyData = JSON.stringify(data);
-    } catch {
+    } catch(err) {
       bodyData = data;
     }
 
