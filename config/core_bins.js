@@ -104,7 +104,15 @@ coreBins.prototype = {
    * @constant {binary}
    *
    */
-  simpleStake: readFile(rootPrefix + '/contracts/bin/SimpleStake.bin', 'utf8')
+  simpleStake: readFile(rootPrefix + '/contracts/bin/SimpleStake.bin', 'utf8'),
+
+  /**
+   * Airdrop contract binary
+   *
+   * @constant {binary}
+   *
+   */
+  airdrop: readFile(rootPrefix + '/contracts/bin/Airdrop.bin', 'utf8')
 };
 
 module.exports = new coreBins();

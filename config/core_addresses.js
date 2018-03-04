@@ -211,6 +211,12 @@ const allAddresses = {
       address: null,
       abi: coreAbis.simpleStake,
       bin: coreBins.simpleStake
+    },
+
+    airdrop: {
+      address: null,
+      abi: coreAbis.airdrop,
+      bin: coreBins.airdrop
     }
   }
 };
