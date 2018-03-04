@@ -26,11 +26,15 @@ EnvManagerKlass.prototype = {
 
     // Append defaults
     fileManager.append(setupConfig.env_vars_file, '#################');
-    fileManager.append(setupConfig.env_vars_file, "# opentST Platform Environment file");
-    fileManager.append(setupConfig.env_vars_file, "#################");
+    fileManager.append(setupConfig.env_vars_file, '# opentST Platform Environment file');
+    fileManager.append(setupConfig.env_vars_file, '#################');
+
+    logger.info('* writing env basic, geth, cache and addresses related env vars');
+
+    // Create basic ENV variables
+    oThis._basicVars();
 
     // Create geth ENV variables
-    logger.info("* writing geth, cache and addresses related env vars");
     oThis._gethVars();
 
     // Create cache ENV variables
@@ -61,6 +65,15 @@ EnvManagerKlass.prototype = {
       // Add content
       oThis._scanAndPopulateEnvVars(setupConfig.chains[chain]);
     }
+  },
+
+  /**
+   * Populate  env variables
+   */
+  _basicVars: function () {
+    const oThis = this;
+    fileManager.append(setupConfig.env_vars_file, "\n# basic variables");
+    oThis._scanAndPopulateEnvVars(setupConfig.basic);
   },
 
   /**

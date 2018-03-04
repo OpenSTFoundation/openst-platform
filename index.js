@@ -5,7 +5,6 @@
  */
 
 const rootPrefix = "."
-  , openSTNotification = require('@openstfoundation/openst-notification')
   , serviceManifest = require(rootPrefix + '/services/manifest')
   , version = require(rootPrefix + '/package.json').version
   , BrandedTokenKlass = require(rootPrefix + "/lib/contract_interact/branded_token")
