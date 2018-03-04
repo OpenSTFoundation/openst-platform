@@ -29,6 +29,7 @@ const GetReceiptKlass = function(params) {
   params = params || {};
   oThis.transactionHash = params.transaction_hash;
   oThis.chain = params.chain;
+  oThis.addressToNameMap = params.address_to_name_map || {};
 };
 
 GetReceiptKlass.prototype = {
@@ -58,7 +59,7 @@ GetReceiptKlass.prototype = {
       if (!txReceipt) {
         return Promise.resolve(responseHelper.successWithData({}));
       } else {
-        const web3EventsDecoderResponse = web3EventsDecoder.perform(txReceipt, {});
+        const web3EventsDecoderResponse = web3EventsDecoder.perform(txReceipt, oThis.addressToNameMap);
         return Promise.resolve(web3EventsDecoderResponse);
       }
 
