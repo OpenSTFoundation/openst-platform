@@ -116,7 +116,7 @@ coreAbis.prototype = {
    * @constant {object}
    *
    */
-  simpleStake: parseFile(rootPrefix + '/contracts/abi/SimpleStake.abi', "utf8").prototype,
+  simpleStake: parseFile(rootPrefix + '/contracts/abi/SimpleStake.abi', "utf8"),
 
   /**
    * Utility Chain Contract: Airdrop contract ABI.<br><br>
@@ -125,7 +125,7 @@ coreAbis.prototype = {
    * @constant {object}
    *
    */
-  airdrop: parseFile(rootPrefix + '/contracts/abi/Airdrop.abi', "utf8").prototype
+  airdrop: parseFile(rootPrefix + '/contracts/abi/Airdrop.abi', "utf8")
 };
 
 module.exports = new coreAbis();
