@@ -19,6 +19,7 @@ const rootPrefix = '../..'
  * @param {object} params -
  * @param {string} params.chain - Chain on which transaction was executed
  * @param {string} params.transaction_hash - Transaction hash for lookup
+ * @param {object} params.address_to_name_map - hash of contract address to contract name
  *
  * @constructor
  */
