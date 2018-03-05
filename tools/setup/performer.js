@@ -127,7 +127,7 @@ openSTSetup.prototype = {
 		if (step == 'stake_n_mint' || step == 'all') {
 			// Starting stake and mint intercomm
 		  logger.step("** Starting stake and mint intercomm");
-      var intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/stake_and_mint.data';
+      var intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/logs/stake_and_mint.data';
 		  await serviceManager.startExecutable('executables/inter_comm/stake_and_mint.js '+ intercomProcessDataFile);
 		}
 
@@ -135,7 +135,7 @@ openSTSetup.prototype = {
 
 		  // Starting stake and mint processor intercomm
 		  logger.step("** Starting stake and mint processor intercomm");
-      var intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/stake_and_mint_processor.data';
+      var intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/logs/stake_and_mint_processor.data';
 		  await serviceManager.startExecutable('executables/inter_comm/stake_and_mint_processor.js '+ intercomProcessDataFile);
 		}
 

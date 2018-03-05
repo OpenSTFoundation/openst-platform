@@ -143,7 +143,7 @@ ServiceManagerKlass.prototype = {
     for (var i=0; i < intercomProcessIdentifiers.length; i++) {
       var binFolder = setupHelper.binFolder()
         , executablePath = 'executables/inter_comm/' + intercomProcessIdentifiers[i] + '.js'
-        , intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/' + intercomProcessIdentifiers[i] + '.data'
+        , intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/logs/' + intercomProcessIdentifiers[i] + '.data'
         , cmd = oThis._startExecutableCommand(executablePath + " " + intercomProcessDataFile)
         , runScript = "run-" + intercomProcessIdentifiers[i] + ".sh"
       ;
