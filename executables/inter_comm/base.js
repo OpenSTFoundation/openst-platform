@@ -116,6 +116,7 @@ IntercomBaseKlass.prototype = {
    */
   processEventsArray: async function (events) {
     const oThis = this
+      , promiseArray = []
     ;
 
     // nothing to do
@@ -130,10 +131,14 @@ IntercomBaseKlass.prototype = {
       ;
 
       if(oThis.parallelProcessingAllowed()) {
-        oThis.processEventObj(eventObj);
+        promiseArray.push(oThis.processEventObj(eventObj));
       } else {
         await oThis.processEventObj(eventObj);
       }
+    }
+
+    if(oThis.parallelProcessingAllowed()) {
+      await Promise.all(promiseArray);
     }
 
     oThis.updateIntercomDataFile();
