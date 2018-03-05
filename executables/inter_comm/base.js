@@ -129,7 +129,11 @@ IntercomBaseKlass.prototype = {
       const eventObj = events[i]
       ;
 
-      await oThis.processEventObj(eventObj);
+      if(oThis.parallelProcessingAllowed()) {
+        oThis.processEventObj(eventObj);
+      } else {
+        await oThis.processEventObj(eventObj);
+      }
     }
 
     oThis.updateIntercomDataFile();

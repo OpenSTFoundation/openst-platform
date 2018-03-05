@@ -56,8 +56,6 @@ const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue
   }
 ;
 
-
-
 /**
  * Inter comm process to register branded token.
  *
@@ -99,6 +97,14 @@ const RegisterBrandedTokenInterCommSpecificPrototype = {
       , highestBlock = await web3WsProvider.eth.getBlockNumber()
     ;
     return highestBlock;
+  },
+
+  /**
+   * Parallel processing allowed
+   * @return bool
+   */
+  parallelProcessingAllowed: function() {
+    return true;
   },
 
   /**

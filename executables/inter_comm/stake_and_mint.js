@@ -75,6 +75,14 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
   },
 
   /**
+   * Parallel processing allowed
+   * @return bool
+   */
+  parallelProcessingAllowed: function() {
+    return false;
+  },
+
+  /**
    * Process event object
    * @param {object} eventObj - event object
    */
