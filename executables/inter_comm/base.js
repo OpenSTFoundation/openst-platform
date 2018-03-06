@@ -116,7 +116,7 @@ IntercomBaseKlass.prototype = {
    */
   processEventsArray: async function (events) {
     const oThis = this
-      // , promiseArray = []
+      , promiseArray = []
     ;
 
     // nothing to do
@@ -128,20 +128,24 @@ IntercomBaseKlass.prototype = {
     //TODO: last processed transaction index.
     for (var i = 0; i < events.length; i++) {
       const eventObj = events[i]
+        , j = i
       ;
 
-      await oThis.processEventObj(eventObj);
+      // await oThis.processEventObj(eventObj);
 
-      // if(oThis.parallelProcessingAllowed()) {
-      //   promiseArray.push(oThis.processEventObj(eventObj));
-      // } else {
-      //   await oThis.processEventObj(eventObj);
-      // }
+      if(oThis.parallelProcessingAllowed()) {
+        promiseArray.push(new Promise(function(onResolve, onReject){
+          setTimeout(function() {oThis.processEventObj(eventObj).then(onResolve);},
+            (j*1000 + 100));
+        }));
+      } else {
+        await oThis.processEventObj(eventObj);
+      }
     }
 
-    // if(oThis.parallelProcessingAllowed()) {
-    //   await Promise.all(promiseArray);
-    // }
+    if(oThis.parallelProcessingAllowed()) {
+      await Promise.all(promiseArray);
+    }
 
     oThis.updateIntercomDataFile();
     return Promise.resolve();
