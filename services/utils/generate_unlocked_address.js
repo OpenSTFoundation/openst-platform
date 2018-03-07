@@ -18,7 +18,7 @@ const rootPrefix = '../..'
  *
  * @param {object} params
  * @param {string} params.chain - Chain on which this new address should be generated and stored
- * @param {string} [params.passphrase] - Passphrase for the new address. Default: blank
+ * @param {string} [params.salt] - salt for the new address. Default: blank
  *
  * @constructor
  */
@@ -27,8 +27,13 @@ const GenerateUnlockedAddressKlass = function (params) {
   ;
 
   params = params || {};
-  oThis.passphrase = params.passphrase || '';
+  oThis.salt = params.salt;
   oThis.chain = params.chain;
+
+  if (!oThis.salt) {
+    oThis.salt = basicHelper.generateRandomString(16);
+  }
+
 };
 
 GenerateUnlockedAddressKlass.prototype = {
@@ -46,7 +51,7 @@ GenerateUnlockedAddressKlass.prototype = {
       return Promise.resolve(responseHelper.error('s_u_gua_1', 'Invalid chain'));
     }
 
-    var newAddress = web3Provider.eth.accounts.create(oThis.passphrase);
+    var newAddress = web3Provider.eth.accounts.create(oThis.salt);
 
     // returns a promise which resolves to an address which was created.
     return Promise.resolve(responseHelper.successWithData({address: newAddress.address, privateKey: newAddress.privateKey}));

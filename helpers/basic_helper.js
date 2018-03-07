@@ -287,8 +287,25 @@ BasicHelperKlass.prototype = {
     return responseHelper.successWithData({conversionFactor: conversionFactor.toString(10)});
   },
 
+  /**
+   * Generate a secure random String
+   *
+   * @param {number} length - length of string to be genrated
+   *
+   * @return {object} - response
+   */
+  generateRandomString: function(length) {
 
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
+    for (var i = 0; i < length; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+
+    return text;
+
+  }
 
 };
 
