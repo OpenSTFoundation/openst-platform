@@ -72,9 +72,12 @@ DeployHelperKlass.prototype = {
     // this is needed since the contract object
     contract.setProvider(web3Provider.currentProvider);
 
-    const deploy = function () {
+    const deploy = async function () {
+      const encodeABI = contract.deploy(options).encodeABI();
+      txParams.data = encodeABI;
+
       return new Promise(function (onResolve, onReject) {
-        contract.deploy(options).send()
+        web3Provider.eth.sendTransaction(txParams)
           .on('transactionHash', function(transactionHash){
             onResolve(transactionHash)
           })
