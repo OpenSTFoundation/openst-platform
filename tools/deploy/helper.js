@@ -72,7 +72,7 @@ DeployHelperKlass.prototype = {
     // this is needed since the contract object
     contract.setProvider(web3Provider.currentProvider);
 
-    const deploy = async function () {
+    const deploy = function () {
       const encodeABI = contract.deploy(options).encodeABI();
       txParams.data = encodeABI;
 
