@@ -26,7 +26,7 @@ const rootPrefix = '../../..'
 
 const stakerAddr = coreAddresses.getAddressForUser('staker')
   , foundationAddr = coreAddresses.getAddressForUser('foundation')
-  , foundationPassphrase = coreAddresses.getPassphraseForUser('utilityChainOwner')
+  , foundationPassphrase = coreAddresses.getPassphraseForUser('foundation')
 ;
 
 /**

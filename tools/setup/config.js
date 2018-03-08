@@ -58,7 +58,7 @@ const setupConfig = {
     // Utility Chain
     utility: {
       folder_name: "openst-geth-utility", //Editable
-      alloc_balance_to_addr: 'utilityDeployer',
+      alloc_balance_to_addr: 'utilityInitialSTPrimeHolder',
       chain_id: {
         env_var: 'OST_UTILITY_CHAIN_ID',
         value: 2000 //Editable
@@ -189,21 +189,39 @@ const setupConfig = {
       }
     },
 
-    // utility chain owner
-    utilityChainOwner: {
+    // Value registrar address
+    valueRegistrar: {
+      owner: {
+        env_var: '',
+        value: 'foundation'
+      },
       address: {
-        env_var: 'OST_UTILITY_CHAIN_OWNER_ADDR',
+        env_var: 'OST_VALUE_REGISTRAR_ADDR',
         value: ''
       },
       passphrase: {
-        env_var: 'OST_UTILITY_CHAIN_OWNER_PASSPHRASE',
+        env_var: 'OST_VALUE_REGISTRAR_PASSPHRASE',
+        value: 'testtest' //Editable
+      },
+      chains: {
+        value: {
+          fund: ''
+        }
+      }
+    },
+
+    // Utility registrar address
+    utilityRegistrar: {
+      address: {
+        env_var: 'OST_UTILITY_REGISTRAR_ADDR',
+        value: ''
+      },
+      passphrase: {
+        env_var: 'OST_UTILITY_REGISTRAR_PASSPHRASE',
         value: 'testtest' //Editable
       },
       chains: {
         utility: {
-          fund: ''
-        },
-        value: {
           fund: ''
         }
       }
@@ -224,6 +242,43 @@ const setupConfig = {
           fund: ''
         },
         value: {
+          fund: ''
+        }
+      }
+    },
+
+    // utility chain owner
+    utilityChainOwner: {
+      address: {
+        env_var: 'OST_UTILITY_CHAIN_OWNER_ADDR',
+        value: ''
+      },
+      passphrase: {
+        env_var: 'OST_UTILITY_CHAIN_OWNER_PASSPHRASE',
+        value: 'testtest' //Editable
+      },
+      chains: {
+        utility: {
+          fund: ''
+        },
+        value: {
+          fund: ''
+        }
+      }
+    },
+
+    // initial ST Prime holder
+    utilityInitialSTPrimeHolder: {
+      address: {
+        env_var: 'OST_UTILITY_INITIAL_ST_PRIME_HOLDER_ADDR',
+        value: ''
+      },
+      passphrase: {
+        env_var: 'OST_UTILITY_INITIAL_ST_PRIME_HOLDER_PASSPHRASE',
+        value: 'testtest' //Editable
+      },
+      chains: {
+        utility: {
           fund: ''
         }
       }
@@ -264,40 +319,6 @@ const setupConfig = {
           fund: ''
         },
         value: {
-          fund: ''
-        }
-      }
-    },
-
-    // Value registrar address
-    valueRegistrar: {
-      address: {
-        env_var: 'OST_VALUE_REGISTRAR_ADDR',
-        value: ''
-      },
-      passphrase: {
-        env_var: 'OST_VALUE_REGISTRAR_PASSPHRASE',
-        value: 'testtest' //Editable
-      },
-      chains: {
-        value: {
-          fund: ''
-        }
-      }
-    },
-
-    // Utility registrar address
-    utilityRegistrar: {
-      address: {
-        env_var: 'OST_UTILITY_REGISTRAR_ADDR',
-        value: ''
-      },
-      passphrase: {
-        env_var: 'OST_UTILITY_REGISTRAR_PASSPHRASE',
-        value: 'testtest' //Editable
-      },
-      chains: {
-        utility: {
           fund: ''
         }
       }
@@ -369,7 +390,7 @@ const setupConfig = {
           fund: ''
         }
       }
-    },
+    }
 
   },
 

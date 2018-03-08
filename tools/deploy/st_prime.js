@@ -24,6 +24,7 @@ const rootPrefix = '../..'
 ;
 
 const utilityDeployerName = 'utilityDeployer'
+  , utilityInitialSTPrimeHolder = 'utilityInitialSTPrimeHolder'
   , openSTUtilityContractName = 'openSTUtility'
   , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
   , UC_GAS_PRICE = coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT
@@ -67,17 +68,17 @@ STPrimeContractKlass.prototype = {
       process.exit(1);
     }
 
-    logger.step('** Initialize Transfer of ST Prime - all base tokens from deployer address to ST Prime contract address');
-    const deployerSTPrimeBalanceInWei = await web3Provider.eth.getBalance(
-      coreAddresses.getAddressForUser(utilityDeployerName));
+    logger.step('** Initialize Transfer of ST Prime - all base tokens from initial ST Prime holder address to ST Prime contract address');
+    const initialSTPrimeHolderBalanceInWei = await web3Provider.eth.getBalance(
+      coreAddresses.getAddressForUser(utilityInitialSTPrimeHolder));
 
-    if (deployerSTPrimeBalanceInWei != stPrimeTotalSupplyInWei) {
-      logger.error('Deployer - ' + utilityDeployerName + ' doesn\'t have max total supply of ST Prime');
+    if (initialSTPrimeHolderBalanceInWei != stPrimeTotalSupplyInWei) {
+      logger.error('Initial ST Prime holder - ' + utilityInitialSTPrimeHolder + ' doesn\'t have max total supply of ST Prime');
       process.exit(1);
     }
 
     const stPrime = new StPrimeKlass(simpleTokenPrimeContractAddress);
-    await stPrime.initialTransferToContract(utilityDeployerName, {gasPrice: UC_GAS_PRICE, gas: UC_GAS_LIMIT});
+    await stPrime.initialTransferToContract(utilityInitialSTPrimeHolder, {gasPrice: UC_GAS_PRICE, gas: UC_GAS_LIMIT});
 
     const simpleTokenPrimeContractBalanceInWei = await web3Provider.eth.getBalance(simpleTokenPrimeContractAddress);
 
@@ -86,9 +87,9 @@ STPrimeContractKlass.prototype = {
       process.exit(1);
     }
 
-    const deployerBalanceInWeiAfterTransfer = await web3Provider.eth.getBalance(coreAddresses.getAddressForUser(utilityDeployerName));
-    if (deployerBalanceInWeiAfterTransfer != 0) {
-      logger.error('Deployer balance should be 0 after transfer');
+    const initialSTPrimeHolderBalanceInWeiAfterTransfer = await web3Provider.eth.getBalance(coreAddresses.getAddressForUser(utilityInitialSTPrimeHolder));
+    if (initialSTPrimeHolderBalanceInWeiAfterTransfer != 0) {
+      logger.error('Initial ST Prime holder balance should be 0 after transfer');
       process.exit(1);
     }
 

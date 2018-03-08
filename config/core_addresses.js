@@ -48,6 +48,15 @@ const allAddresses = {
     },
 
     /**
+     * utility initial ST' Holder account details
+     * @constant {object}
+     */
+    utilityInitialSTPrimeHolder: {
+      address: process.env.OST_UTILITY_INITIAL_ST_PRIME_HOLDER_ADDR,
+      passphrase: process.env.OST_UTILITY_INITIAL_ST_PRIME_HOLDER_PASSPHRASE
+    },
+
+    /**
      * staker account details
      * @constant {object}
      */

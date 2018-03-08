@@ -35,7 +35,7 @@ const rootPrefix = ".."
   , startRedeem = require(rootPrefix + '/services/redeem_and_unstake/startRedeem')
 
   , generateAddress = require(rootPrefix + '/services/utils/generate_address')
-  , generateUnlockedAddress = require(rootPrefix + '/services/utils/generate_unlocked_address')
+  , generateRawKey = require(rootPrefix + '/services/utils/generate_raw_key')
   , platformStatus = require(rootPrefix + '/services/utils/platform_status')
   , getBrandedTokenDetails = require(rootPrefix + '/services/utils/get_branded_token_details')
 ;
@@ -128,7 +128,7 @@ ServiceManifestKlass.prototype = {
     generateAddress: generateAddress,
     platformStatus: platformStatus,
     getBrandedTokenDetails: getBrandedTokenDetails,
-    generateUnlockedAddress: generateUnlockedAddress
+    generateRawKey: generateRawKey
   }
 };
 

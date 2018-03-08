@@ -22,6 +22,7 @@ this document for both kind of setups.
   > git clone git@github.com:OpenSTFoundation/openst-platform.git
   > cd openst-platform
   > export OPENST_PLATFORM_PATH=$(pwd)
+  > echo "export OPENST_PLATFORM_PATH=$(pwd)" >> ~/.bash_profile
 ```
 
 #### * Platform with Sample RESTful APIs
@@ -32,6 +33,7 @@ this document for both kind of setups.
   > git clone git@github.com:OpenSTFoundation/openst-platform-apis.git
   > cd openst-platform-apis
   > export OPENST_PLATFORM_PATH=$(pwd)/node_modules/@openstfoundation/openst-platform
+  > echo "export OPENST_PLATFORM_PATH=$(pwd)/node_modules/@openstfoundation/openst-platform" >> ~/.bash_profile
 ```
 
 ## Start OpenST Platform Setup
@@ -76,14 +78,6 @@ The default Platform setup is done with "in-process" caching and EventEmitter no
   > source $HOME/openst-setup/openst_env_vars.sh
 ```
 
-* <b>Set the corrent OPENST_PLATFORM_PATH on new terminal</b>
-```bash
-  # for standalone system
-  > export OPENST_PLATFORM_PATH=$(pwd)
-  # for RESTful APIs
-  > export OPENST_PLATFORM_PATH=$(pwd)/node_modules/@openstfoundation/openst-platform
-```
-
 * <b>Start all platform services in background</b>   
 ```bash
   > node $OPENST_PLATFORM_PATH/tools/setup/start_services.js
@@ -94,13 +88,6 @@ Let this script be running while branded tokens are registered and minted.
 Note: Script also monitor these services and alert if any required service terminates.
 
 * <b>Optional steps on separate Terminals</b>
-  - Set the corrent OPENST_PLATFORM_PATH on new terminal
-  ```bash
-    # for standalone system
-    > export OPENST_PLATFORM_PATH=$(pwd)
-    # for RESTful APIs
-    > export OPENST_PLATFORM_PATH=$(pwd)/node_modules/@openstfoundation/openst-platform
-  ```
   - Listen notifications published from platform over RabbitMQ
   ```bash
     > source $HOME/openst-setup/openst_env_vars.sh
@@ -114,13 +101,6 @@ Note: Script also monitor these services and alert if any required service termi
   ```
 
 ### [x] On Terminal 2 - Once all required services are up and running, let's onboard our first branded token
-* <b>Set the corrent OPENST_PLATFORM_PATH on new terminal</b>
-  ```bash
-    # for standalone system
-    > export OPENST_PLATFORM_PATH=$(pwd)
-    # for RESTful APIs
-    > export OPENST_PLATFORM_PATH=$(pwd)/node_modules/@openstfoundation/openst-platform
-  ```
 
 * <b>Load platform environment variables</b>  
 
@@ -187,7 +167,6 @@ Example: For 500 OST, reserve address will get:
 * <b>Load platform environment variables</b>  
 
 ```bash
-  > export OPENST_PLATFORM_PATH=$(pwd)/node_modules/@openstfoundation/openst-platform
   > source $HOME/openst-setup/openst_env_vars.sh
 ```
 
@@ -210,15 +189,14 @@ Example: For 500 OST, reserve address will get:
 * Open node console
 ```bash
   > source $HOME/openst-setup/openst_env_vars.sh
-  > export OPENST_PLATFORM_PATH=$(pwd)
   > node
 ```
 
 * Generate new address on utility chain
 ```bash
-node> var platformServices = require('./index');
-node> var serviceObj = new platformServices.services.utils.generateAddress({passphrase: 'my-secret-pass', chain: 'utility'});
-node> serviceObj.perform().then(function(response) { 
+var platformServices = require('./index');
+var serviceObj = new platformServices.services.utils.generateAddress({passphrase: 'my-secret-pass', chain: 'utility'});
+serviceObj.perform().then(function(response) { 
   if (response.isSuccess()){
     console.log(response.data);
   } else {
@@ -229,12 +207,12 @@ node> serviceObj.perform().then(function(response) {
 
 * Get branded token details
 ```bash
-node> var os = require('os');
-node> var brandedTokenConfig = require(os.homedir() + "/openst-setup/branded_tokens.json");
-node> var uuid = Object.keys(brandedTokenConfig)[0];
-node> var platformServices = require('./index');
-node> var serviceObj = new platformServices.services.utils.getBrandedTokenDetails({uuid: uuid});
-node> serviceObj.perform().then(function(response) { 
+var os = require('os');
+var brandedTokenConfig = require(os.homedir() + "/openst-setup/branded_tokens.json");
+var uuid = Object.keys(brandedTokenConfig)[0];
+var platformServices = require('./index');
+var serviceObj = new platformServices.services.utils.getBrandedTokenDetails({uuid: uuid});
+serviceObj.perform().then(function(response) { 
   if (response.isSuccess()){
     console.log(response.data);
   } else {
@@ -245,10 +223,10 @@ node> serviceObj.perform().then(function(response) {
 
 * Transfer branded token on utility chain
 ```bash
-node> var os = require('os');
-node> var brandedTokenConfig = require(os.homedir() + "/openst-setup/branded_tokens.json");
-node> var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]];
-node> var data = {
+var os = require('os');
+var brandedTokenConfig = require(os.homedir() + "/openst-setup/branded_tokens.json");
+var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]];
+var data = {
   erc20_address: brandedTokenDetails['ERC20'],
   sender_address: brandedTokenDetails['Reserve'],
   sender_passphrase: brandedTokenDetails['ReservePassphrase'],
@@ -259,9 +237,9 @@ node> var data = {
     tag: 'ILoveOST'
   }
 };
-node> var platformServices = require('./index');
-node> var serviceObj = new platformServices.services.transaction.transfer.brandedToken(data);
-node> serviceObj.perform().then(function(response) {
+var platformServices = require('./index');
+var serviceObj = new platformServices.services.transaction.transfer.brandedToken(data);
+serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
     console.log(response.data);
   } else {
@@ -272,9 +250,9 @@ node> serviceObj.perform().then(function(response) {
 
 * Transfer OST on value chain
 ```bash
-node> var platformServices = require('./index');
-node> var serviceObj = new platformServices.services.transaction.transfer.simpleToken({sender_name: 'foundation', recipient_name: 'utilityChainOwner', amount_in_wei: 10, options: {returnType: 'txHash', tag: 'Grant'}});
-node> serviceObj.perform().then(function(response) {
+var platformServices = require('./index');
+var serviceObj = new platformServices.services.transaction.transfer.simpleToken({sender_name: 'foundation', recipient_name: 'utilityChainOwner', amount_in_wei: 10, options: {returnType: 'txHash', tag: 'Grant'}});
+serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
     console.log(response.data);
   } else {
@@ -285,9 +263,9 @@ node> serviceObj.perform().then(function(response) {
 
 * Transfer Ether on value chain
 ```bash
-node> var platformServices = require('./index');
-node> var serviceObj = new platformServices.services.transaction.transfer.eth({sender_name: 'foundation', recipient_name: 'utilityChainOwner', amount_in_wei: 10000, options: {returnType: 'txHash', tag: 'GasRefill'}});
-node> serviceObj.perform().then(function(response) {
+var platformServices = require('./index');
+var serviceObj = new platformServices.services.transaction.transfer.eth({sender_name: 'foundation', recipient_name: 'utilityChainOwner', amount_in_wei: 10000, options: {returnType: 'txHash', tag: 'GasRefill'}});
+serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
     console.log(response.data);
   } else {
@@ -298,9 +276,9 @@ node> serviceObj.perform().then(function(response) {
 
 * Transfer ST' (gas) on utility chain
 ```bash
-node> var platformServices = require('./index');
-node> var serviceObj = new platformServices.services.transaction.transfer.simpleTokenPrime({sender_name: 'utilityChainOwner', recipient_name: 'foundation', amount_in_wei: 10, options: {returnType: 'txHash', tag: 'GasRefill'}});
-node> serviceObj.perform().then(function(response) {
+var platformServices = require('./index');
+var serviceObj = new platformServices.services.transaction.transfer.simpleTokenPrime({sender_name: 'utilityChainOwner', recipient_name: 'foundation', amount_in_wei: 10, options: {returnType: 'txHash', tag: 'GasRefill'}});
+serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
     console.log(response.data);
   } else {
@@ -311,9 +289,9 @@ node> serviceObj.perform().then(function(response) {
 
 * Get transaction receipt
 ```bash
-node> var platformServices = require('./index');
-node> var serviceObj = new platformServices.services.transaction.getReceipt({chain: 'utility', transaction_hash: '0xe4945b1c90d291074b74c9ed211c6fbae2702d1bd33e7b53c3f55a6b3c62c270'});
-node> serviceObj.perform().then(function(response) {
+var platformServices = require('./index');
+var serviceObj = new platformServices.services.transaction.getReceipt({chain: 'utility', transaction_hash: '0xe4945b1c90d291074b74c9ed211c6fbae2702d1bd33e7b53c3f55a6b3c62c270'});
+serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
     console.log(response.data);
   } else {
@@ -324,13 +302,13 @@ node> serviceObj.perform().then(function(response) {
 
 * Get branded token balance
 ```bash
-node> var os = require('os');
-node> var brandedTokenConfig = require(os.homedir() + "/openst-setup/branded_tokens.json");
-node> var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]];
-node> var data = {address: brandedTokenDetails['Reserve'], erc20_address: brandedTokenDetails['ERC20']};
-node> var platformServices = require('./index');
-node> var serviceObj = new platformServices.services.balance.brandedToken(data);
-node> serviceObj.perform().then(function(response) {
+var os = require('os');
+var brandedTokenConfig = require(os.homedir() + "/openst-setup/branded_tokens.json");
+var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]];
+var data = {address: brandedTokenDetails['Reserve'], erc20_address: brandedTokenDetails['ERC20']};
+var platformServices = require('./index');
+var serviceObj = new platformServices.services.balance.brandedToken(data);
+serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
     console.log(response.data);
   } else {
@@ -341,9 +319,9 @@ node> serviceObj.perform().then(function(response) {
 
 * Get OST balance
 ```bash
-node> var platformServices = require('./index');
-node> var serviceObj = new platformServices.services.balance.simpleToken({address: process.env.OST_FOUNDATION_ADDR});
-node> serviceObj.perform().then(function(response) {
+var platformServices = require('./index');
+var serviceObj = new platformServices.services.balance.simpleToken({address: process.env.OST_FOUNDATION_ADDR});
+serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
     console.log(response.data);
   } else {
@@ -354,9 +332,9 @@ node> serviceObj.perform().then(function(response) {
 
 * Get ST' (gas) balance
 ```bash
-node> var platformServices = require('./index');
-node> var serviceObj = new platformServices.services.balance.simpleTokenPrime({address: process.env.OST_UTILITY_CHAIN_OWNER_ADDR});
-node> serviceObj.perform().then(function(response) {
+var platformServices = require('./index');
+var serviceObj = new platformServices.services.balance.simpleTokenPrime({address: process.env.OST_UTILITY_CHAIN_OWNER_ADDR});
+serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
     console.log(response.data);
   } else {
