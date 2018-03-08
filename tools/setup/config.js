@@ -7,21 +7,6 @@ const setupConfig = {
   setup_path: process.env.OST_SETUP_PATH || os.homedir(),
 
   /**
-   * Basic environment varibles
-   */
-  basic: {
-    environment: {
-      env_var: 'OST_ENVIRONMENT',
-      value: 'development'
-    },
-
-    sub_environment: {
-      env_var: 'OST_SUB_ENVIRONMENT',
-      value: 'sandbox'
-    }
-  },
-
-  /**
    * Chain configurations
    */
   chains: {

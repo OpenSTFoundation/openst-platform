@@ -28,22 +28,6 @@ const CoreConstants = function() {};
 CoreConstants.prototype = {
 
   /**
-   * Environment.<br><br>
-   *
-   * @constant {string}
-   *
-   */
-  ENVIRONMENT: process.env.OST_ENVIRONMENT,
-
-  /**
-   * Sub environment.<br><br>
-   *
-   * @constant {string}
-   *
-   */
-  SUB_ENVIRONMENT: process.env.OST_SUB_ENVIRONMENT,
-
-  /**
    * Gas price for value chain transactions.<br><br>
    *
    * @constant {number}

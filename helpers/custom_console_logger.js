@@ -18,8 +18,6 @@ const rootPrefix = ".."
 ;
 
 const packageName = packageFile.name
-  , environment = coreConstants.ENVIRONMENT
-  , subEnvironment = coreConstants.SUB_ENVIRONMENT
 ;
 
 
@@ -166,19 +164,8 @@ CustomConsoleLoggerKlass.prototype = {
     args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
 
-    var fromEmail = null
-      , bodyData = null
+    var bodyData = null
     ;
-
-    if(environment == 'production') {
-      if (subEnvironment == 'main') {
-        fromEmail = 'notifier@ost.com';
-      } else {
-        fromEmail = 'sandbox.notifier@ost.com';
-      }
-    } else {
-      fromEmail = 'staging.notifier@ost.com';
-    }
 
     try {
       bodyData = JSON.stringify(data);
@@ -193,8 +180,6 @@ CustomConsoleLoggerKlass.prototype = {
         message: {
           kind: "email",
           payload: {
-            from: fromEmail,
-            to: 'backend@ost.com',
             subject: packageName + " :: UC " + coreConstants.OST_UTILITY_CHAIN_ID + "::" + code,
             body: " Message: " + msg + " \n\n Data: " + bodyData + " \n\n backtrace: " + backtrace
           }

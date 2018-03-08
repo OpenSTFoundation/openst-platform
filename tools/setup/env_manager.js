@@ -32,9 +32,6 @@ EnvManagerKlass.prototype = {
 
     logger.info('* writing env basic, geth, cache and addresses related env vars');
 
-    // Create basic ENV variables
-    oThis._basicVars();
-
     // Create geth ENV variables
     oThis._gethVars();
 
@@ -66,15 +63,6 @@ EnvManagerKlass.prototype = {
       // Add content
       oThis._scanAndPopulateEnvVars(setupConfig.chains[chain]);
     }
-  },
-
-  /**
-   * Populate  env variables
-   */
-  _basicVars: function () {
-    const oThis = this;
-    fileManager.append(setupConfig.env_vars_file, "\n# basic variables");
-    oThis._scanAndPopulateEnvVars(setupConfig.basic);
   },
 
   /**
