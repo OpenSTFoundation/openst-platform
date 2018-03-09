@@ -4,7 +4,7 @@ Document has steps to configure OpenST platform for development and test environ
 For production environment, following steps are not recommended to avoid single point 
 failures and scalability issues caused because of single machine.
 
-You can test platform as standalone system or with Sample RESTful APIs. We have publish 
+You can test platform as standalone system or with Platform RESTful APIs. We have publish 
 this document for both kind of setups.
 
 ## Installation prerequisite 
@@ -25,7 +25,7 @@ this document for both kind of setups.
   > echo "export OPENST_PLATFORM_PATH=$(pwd)" >> ~/.bash_profile
 ```
 
-#### * Platform with Sample RESTful APIs
+#### * Platform with Platform RESTful APIs
 
 * Checkout RESTful APIs code from repository
 
@@ -162,7 +162,7 @@ Example: For 500 OST, reserve address will get:
 
 ## Start using branded tokens on utility chain
 
-### For Sample RESTful APIs
+### For Platform RESTful APIs
 
 * <b>Start utility chain in new terminal</b>
 
