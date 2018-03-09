@@ -3,7 +3,7 @@
 /**
  * This is the base class for intercom classes
  *
- * @module executables/inter_comm/base
+ * @module services/inter_comm/base
  *
  */
 

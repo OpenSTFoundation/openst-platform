@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * This executable / script is intermediate communicator between value chain and utility chain used for the registering branded token.
+ * This service is intermediate communicator between value chain and utility chain used for the registering branded token.
  *
  * <br>It listens to the ProposedBrandedToken event emitted by proposeBrandedToken method of openSTUtility contract.
  * On getting this event, it calls registerBrandedToken method of utilityRegistrar contract followed
@@ -17,8 +17,7 @@
  *   by calling registerUtilityToken method of valueRegistrar contract. </li>
  * </ol>
  *
- * @module executables/inter_comm/register_branded_token
- *
+ * @module services/inter_comm/register_branded_token
  */
 
 const openSTNotification = require('@openstfoundation/openst-notification')
@@ -28,11 +27,8 @@ const rootPrefix = '../..'
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , eventQueueManagerKlass = require(rootPrefix + '/lib/web3/events/queue_manager')
-  , web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
-  , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
-  , ValueRegistrarKlass = require(rootPrefix + '/lib/contract_interact/value_registrar')
-  , UtilityRegistrarKlass = require(rootPrefix + '/lib/contract_interact/utility_registrar')
+  , IntercomBaseKlass = require(rootPrefix + '/services/inter_comm/base')
+  , responseHelper = require(rootPrefix + '/lib/formatter/response')
 ;
 
 const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
@@ -45,9 +41,6 @@ const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue
   , valueRegistrarAddr = coreAddresses.getAddressForUser('valueRegistrar')
   , valueRegistrarPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar')
   , utilityChainId = coreConstants.OST_UTILITY_CHAIN_ID
-  , valueRegistrarContractInteract = new ValueRegistrarKlass(valueRegistrarContractAddr)
-  , utilityRegistrarContractInteract = new UtilityRegistrarKlass(utilityRegistrarContractAddr)
-  , eventQueueManager = new eventQueueManagerKlass()
   , notificationData = {
     topics: ['event.register_branded_token'], // override later: with every stage
     publisher: 'OST',
@@ -59,108 +52,71 @@ const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue
   }
 ;
 
-
-
 /**
  * Inter comm process to register branded token.
  *
  * @constructor
  *
  */
-const RegisterBrandedTokenInterComm = function () {
+const RegisterBrandedTokenInterComm = function (params) {
+  const oThis = this
+  ;
+
+  IntercomBaseKlass.call(oThis, params);
 };
 
-RegisterBrandedTokenInterComm.prototype = {
+RegisterBrandedTokenInterComm.prototype = Object.create(IntercomBaseKlass.prototype);
+
+const RegisterBrandedTokenInterCommSpecificPrototype = {
+
+  EVENT_NAME: 'ProposedBrandedToken',
 
   /**
-   * Starts the process of the script with initializing processor
+   * Set contract object for listening to events
    *
    */
-  init: function () {
-    var oThis = this;
+  setContractObj: function () {
+    const oThis = this
+      , web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
+    ;
 
-    eventQueueManager.setProcessor(oThis.processor);
-    oThis.bindEvents();
+    oThis.completeContract = new web3WsProvider.eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
+    oThis.completeContract.setProvider(web3WsProvider.currentProvider);
   },
 
   /**
-   * Bind to start listening the desired event
+   * Get chain highest block
    *
    */
-  bindEvents: function () {
-    var oThis = this;
-    logger.log("bindEvents binding ProposedBrandedToken");
-
-    oThis.listenToDesiredEvent(
-      oThis.onEventSubscriptionError,
-      oThis.onEvent,
-      oThis.onEvent
-    );
-
-    logger.log("bindEvents done");
+  getChainHighestBlock: async function () {
+    const web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
+      , highestBlock = await web3WsProvider.eth.getBlockNumber()
+    ;
+    return highestBlock;
   },
 
   /**
-   * Listening ProposedBrandedToken event emitted by proposeBrandedToken method of openSTUtility contract.
-   *
-   * @param {function} onError - The method to run on error.
-   * @param {function} onData - The method to run on success.
-   * @param {function} onChange - The method to run on changed.
-   *
+   * Parallel processing allowed
+   * @return bool
    */
-  listenToDesiredEvent: function (onError, onData, onChange) {
-    var completeContract = new web3WsProvider.eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
-    completeContract.setProvider(web3WsProvider.currentProvider);
-
-    completeContract.events.ProposedBrandedToken({})
-      .on('error', onError)
-      .on('data', onData)
-      .on('changed', onChange);
+  parallelProcessingAllowed: function() {
+    return true;
   },
 
   /**
-   * Processing of ProposedBrandedToken event is delayed for n block confirmation by enqueueing to
-   * {@link module:lib/web3/events/queue_manager|queue manager}.
-   *
-   * @param {Object} eventObj - Object of event.
-   *
+   * Process event object
+   * @param {object} eventObj - event object
    */
-  onEvent: function (eventObj) {
-    // Fire notification event
-    notificationData.topics = ['event.register_branded_token.propose_on_uc'];
-    notificationData.message.kind = 'event_received';
-    notificationData.message.payload.event_name = 'ProposedBrandedToken';
-    notificationData.message.payload.event_data = eventObj;
-    openSTNotification.publishEvent.perform(notificationData);
+  processEventObj: async function (eventObj) {
+    const web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
+      , ValueRegistrarKlass = require(rootPrefix + '/lib/contract_interact/value_registrar')
+      , UtilityRegistrarKlass = require(rootPrefix + '/lib/contract_interact/utility_registrar')
+    ;
 
-    // Wait for sometime in queue for block confirmation
-    eventQueueManager.addEditEventInQueue(eventObj);
-  },
+    const valueRegistrarContractInteract = new ValueRegistrarKlass(valueRegistrarContractAddr)
+      , utilityRegistrarContractInteract = new UtilityRegistrarKlass(utilityRegistrarContractAddr)
+    ;
 
-  /**
-   * Generic Method to log event subscription error
-   *
-   * @param {Object} error - Object of event.
-   *
-   */
-  onEventSubscriptionError: function (error) {
-
-    // Fire notification event
-    notificationData.message.kind = 'error';
-    notificationData.message.payload.error_data = error;
-    openSTNotification.publishEvent.perform(notificationData);
-
-    logger.notify('e_ic_rbt_onEventSubscriptionError_1', 'onEventSubscriptionError triggered', error);
-  },
-
-  /**
-   * Processor gets executed from {@link module:lib/web3/events/queue_manager|queue manager} for
-   * every ProposedBrandedToken event after waiting for n block confirmation.
-   *
-   * @param {Object} eventObj - Object of event.
-   *
-   */
-  processor: async function (eventObj) {
     const oThis = this
       , returnValues = eventObj.returnValues
       , symbol = returnValues._symbol
@@ -212,7 +168,7 @@ RegisterBrandedTokenInterComm.prototype = {
       var errMessage = uuid + ' registerBrandedToken of utilityRegistrar contract ERROR. Something went wrong!';
       logger.notify('e_ic_rbt_processor_1', errMessage);
 
-      return Promise.reject(errMessage);
+      return Promise.resolve(responseHelper.error('e_ic_rbt_1', errMessage));
     }
 
     // Fire notification event
@@ -256,13 +212,13 @@ RegisterBrandedTokenInterComm.prototype = {
       var errMessage = uuid + ' registerUtilityToken of valueRegistrar contract ERROR. Something went wrong!';
       logger.notify('e_ic_rbt_processor_2', errMessage);
 
-      return Promise.reject(errMessage);
+      return Promise.resolve(responseHelper.error('e_ic_rbt_2', errMessage));
     }
 
-    return Promise.resolve(vcRegistrarResponse)
+    return Promise.resolve(responseHelper.successWithData({}));
   }
 };
 
-new RegisterBrandedTokenInterComm().init();
+Object.assign(RegisterBrandedTokenInterComm.prototype, RegisterBrandedTokenInterCommSpecificPrototype);
 
-logger.win("InterComm Script for Register Branded Token initiated.");
+module.exports = RegisterBrandedTokenInterComm;
