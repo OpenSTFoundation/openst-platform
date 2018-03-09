@@ -137,7 +137,7 @@ CoreConstants.prototype = {
    * @constant {string}
    *
    */
-  CACHING_ENGINE: process.env.CACHING_ENGINE
+  CACHING_ENGINE: process.env.OST_CACHING_ENGINE
 };
 
 module.exports = new CoreConstants();
