@@ -184,7 +184,7 @@ Example: For 500 OST, reserve address will get:
   > source $HOME/openst-setup/openst_env_vars.sh
   > node app.js
 ```
-* <b>Use PostMan files for Platform Reftful Apis testing and reference: https://github.com/OpenSTFoundation/openst-platform-apis/tree/master/postman</b>
+* <b>Use PostMan files for Platform RESTful Apis testing and reference: https://github.com/OpenSTFoundation/openst-platform-apis/tree/master/postman</b>
 
 ### For Standalone System
 
