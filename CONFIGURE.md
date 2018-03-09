@@ -164,25 +164,27 @@ Example: For 500 OST, reserve address will get:
 
 ### For Sample RESTful APIs
 
-* <b>Load platform environment variables</b>  
+* <b>Start utility chain in new terminal</b>
 
 ```bash
   > source $HOME/openst-setup/openst_env_vars.sh
+  > sh $HOME/openst-setup/bin/run-utility.sh
 ```
 
-* <b>Start geth nodes for both the chains</b>
+* <b>Start value chain in new terminal</b>
 
 ```bash
-  > sh $HOME/openst-setup/bin/run-utility.sh
+  > source $HOME/openst-setup/openst_env_vars.sh
   > sh $HOME/openst-setup/bin/run-value.sh
 ```
 
-* <b>Start application server</b>
+* <b>Start application server in new terminal</b>
 
 ```bash
+  > source $HOME/openst-setup/openst_env_vars.sh
   > node app.js
 ```
-* <b>TODO: How to use PostMan files</b>
+* <b>Use PostMan files for Platform Reftful Apis testing and reference: https://github.com/OpenSTFoundation/openst-platform-apis/tree/master/postman</b>
 
 ### For Standalone System
 
