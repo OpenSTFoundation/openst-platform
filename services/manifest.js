@@ -38,6 +38,10 @@ const rootPrefix = ".."
   , generateRawKey = require(rootPrefix + '/services/utils/generate_raw_key')
   , platformStatus = require(rootPrefix + '/services/utils/platform_status')
   , getBrandedTokenDetails = require(rootPrefix + '/services/utils/get_branded_token_details')
+
+  , RegisterBrandedTokenInterComm = require(rootPrefix + '/services/inter_comm/register_branded_token')
+  , StakeAndMintInterCommKlass = require(rootPrefix + '/services/inter_comm/stake_and_mint')
+  , StakeAndMintProcessorInterCommKlass = require(rootPrefix + '/services/inter_comm/stake_and_mint_processor')
 ;
 
 /**
@@ -129,6 +133,17 @@ ServiceManifestKlass.prototype = {
     platformStatus: platformStatus,
     getBrandedTokenDetails: getBrandedTokenDetails,
     generateRawKey: generateRawKey
+  },
+
+  /**
+   * Intercomm services
+   *
+   * @constant {object}
+   */
+  interComm: {
+    registerBrandedToken: RegisterBrandedTokenInterComm,
+    stakeAndMint: StakeAndMintInterCommKlass,
+    stakeAndMintProcessor: StakeAndMintProcessorInterCommKlass
   }
 };
 
