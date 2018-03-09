@@ -202,7 +202,7 @@ Example: For 500 OST, reserve address will get:
   > sh $HOME/openst-setup/bin/run-value.sh
 ```
 
-* <b>Open node console in new terminal</a>
+* <b>Open node console in new terminal</b>
 ```bash
   > source $HOME/openst-setup/openst_env_vars.sh
   > node
