@@ -194,7 +194,7 @@ openSTSetup.prototype = {
  */
 const runHelperService = function (deployPath) {
   const envFilePath = setupHelper.setupFolderAbsolutePath() + '/' + setupConfig.env_vars_file
-    , clearCacheOfExpr = /(openst-platform\/config\/)|(openst-platform\/lib\/)/;
+    , clearCacheOfExpr = /(openst-platform\/config\/)|(openst-platform\/lib\/)|(openst-platform\/services\/)/;
 
   return new Promise(function (onResolve, onReject) {
     // source env
