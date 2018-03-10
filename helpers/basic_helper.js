@@ -97,6 +97,9 @@ BasicHelperKlass.prototype = {
    * @return {boolean}
    */
   isTagValid: function (tag) {
+    if(tag == ''){
+      return true;
+    }
     if (typeof tag !== "string") {
       return false;
     }
