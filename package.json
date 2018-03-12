@@ -27,7 +27,7 @@
     "make-docs": "node_modules/.bin/jsdoc -c .jsdoc.json"
   },
   "dependencies": {
-    "@openstfoundation/openst-cache": "1.0.1-beta.1",
+    "@openstfoundation/openst-cache": "1.0.1-beta.2",
     "@openstfoundation/openst-notification": "1.0.0-beta.11",
     "abi-decoder": "1.0.9",
     "bignumber.js": "4.1.0",
