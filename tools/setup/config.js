@@ -58,7 +58,7 @@ const setupConfig = {
       },
       gas_price: {
         env_var: 'OST_UTILITY_GAS_PRICE',
-        value: '0x12A05F200' //Editable
+        value: '0x3B9ACA00' //Editable
       },
       ws_provider: {
         env_var: 'OST_UTILITY_GETH_WS_PROVIDER',
