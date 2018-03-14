@@ -22,6 +22,8 @@ Stake and mint inter chain communicator needs to confirm staking intent hash in 
 which became inconsistent in presence of multiple workers/processes. Caching layer now provide Redis, Memcached and none (in process) options to suite the platform 
 run environment. Decision of which caching layer to use is governed by an ENV variable 'OST_CACHING_ENGINE'.
 
+[OpenST Notification](https://www.npmjs.com/package/@openstfoundation/openst-notification/tutorial) was developed to publish events into RabbitMQ. OpenST Platform sends critical events which help subscribers to maintain the state of various transactions.
+
 Detailed changelog:
 - Platform [Sample Restful APIs](https://github.com/OpenSTFoundation/openst-platform-apis) in separate repository ([openst-platform#97](https://github.com/OpenSTFoundation/openst-platform/issues/97))
 - Publish platform as node module ([openst-platform#98](https://github.com/OpenSTFoundation/openst-platform/issues/98))
