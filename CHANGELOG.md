@@ -1,7 +1,7 @@
 ## OpenST-platform v0.9.2
 
 In this release OpenST platform is published as a [node module](https://www.npmjs.com/package/@openstfoundation/openst-platform), now independent development can be supported using platform as the base layer.
-Sample restful APIs have been released in a separate repository [Sample Restful APIs](https://github.com/OpenSTFoundation/openst-platform-apis). Various services are exposed for handling tasks in on boarding, get balance, transfer, stake & mint.
+Sample restful APIs have been released in a separate repository [Sample Restful APIs](https://github.com/OpenSTFoundation/openst-platform-apis). Various services are exposed for handling tasks involved in on boarding, get balance, stake & mint and transactions.
 
 Auto registration is introduced after propose branded token to support requests coming from sandbox environments.
 
@@ -11,11 +11,16 @@ There was a limitation in the earlier stake and mint process because the keystor
 This was solved by change in process in which all the transactions are now done by a single address and the beneficiary address is credited with the desired value in terms of Branded tokens in stake & mint and in terms of Simple tokens in redeem and unstake.
 Process staking, process minting and claim is now to be done using inter chain communicator.
 
-[OpenST Cache](https://www.npmjs.com/package/@openstfoundation/openst-cache) is also developed to replace "in process" caching implemented in previous version, 
+Event listening using web3 websocket provider in inter chain communicator was not robust to process restarts and network glitches. To solve this, the approach was changed to scanning each block and maintaining the last processed block in a file. 
+So if the process restarts, the processing continues from where it left and events are not missed.
+
+Inter chain communicators now have SIGINT handling. The current processing is completed and then the process stops gracefully.
+
+Stake and mint inter chain communicator needs to confirm staking intent hash in the same order in which it was generated, i.e. in the order of staking nonce. This was solved by adding the option to process events sequentially for the events.
+
+[OpenST Cache](https://www.npmjs.com/package/@openstfoundation/openst-cache) was developed to replace "in process" caching implemented in previous version, 
 which became inconsistent in presence of multiple workers/processes. Caching layer now provide Redis, Memcached and none (in process) options to suite the platform 
 run environment. Decision of which caching layer to use is governed by an ENV variable 'OST_CACHING_ENGINE'.
-
-Simple Token Prime Balance was cached to improve performance. Stake and mint related cache inconsistency bug was resolved.
 
 Detailed changelog:
 - Platform [Sample Restful APIs](https://github.com/OpenSTFoundation/openst-platform-apis) in separate repository ([openst-platform#97](https://github.com/OpenSTFoundation/openst-platform/issues/97))
@@ -24,17 +29,24 @@ Detailed changelog:
 - Service for following tasks were exposed out of the platform module:
     - Get transaction receipt([openst-platform#109](https://github.com/OpenSTFoundation/openst-platform/issues/109))
     - Services for transfer of branded tokens, simple tokens, eth and simple token prime([openst-platform#108](https://github.com/OpenSTFoundation/openst-platform/issues/108))
-    - Stake and mint(([openst-platform#107](https://github.com/OpenSTFoundation/openst-platform/issues/107)))
-    - On Boarding service - propose branded token (([openst-platform#105](https://github.com/OpenSTFoundation/openst-platform/issues/105)))
-    - On Boarding service - get registration information (([openst-platform#102](https://github.com/OpenSTFoundation/openst-platform/issues/102)))
-    - Get balance services for Simple Token, Simple Token Prime, Eth and Branded Token (([openst-platform#104](https://github.com/OpenSTFoundation/openst-platform/issues/104)))
-
+    - Stake and mint ([openst-platform#107](https://github.com/OpenSTFoundation/openst-platform/issues/107))
+    - On Boarding service - propose branded token ([openst-platform#105](https://github.com/OpenSTFoundation/openst-platform/issues/105))
+    - On Boarding service - get registration information ([openst-platform#102](https://github.com/OpenSTFoundation/openst-platform/issues/102))
+    - Get balance services for Simple Token, Simple Token Prime, Eth and Branded Token ([openst-platform#104](https://github.com/OpenSTFoundation/openst-platform/issues/104))
+    - Service to do approve on branded token contract. ([openst-platform#119](https://github.com/OpenSTFoundation/openst-platform/issues/119))
+    - Service for estimating gas for a transaction ([openst-platform#120](https://github.com/OpenSTFoundation/openst-platform/issues/120))
+    - Service to generate new address having keystore file on a particular chain's geth machine ([openst-platform#121](https://github.com/OpenSTFoundation/openst-platform/issues/121))
+    - Generate raw key via a service ([openst-platform#122](https://github.com/OpenSTFoundation/openst-platform/issues/122))
+    - Get branded token details using a uuid via a service ([openst-platform#123](https://github.com/OpenSTFoundation/openst-platform/issues/123))
+    - Service to get geth status to help writing apis around it ([openst-platform#124](https://github.com/OpenSTFoundation/openst-platform/issues/124))
 - Enable auto-register on both chains after proposal using an Inter chain communicator ([openst-platform#101](https://github.com/OpenSTFoundation/openst-platform/issues/101))
 - Stake and mint process changes ([openst-platform#106](https://github.com/OpenSTFoundation/openst-platform/issues/106))
+- Inter chain communicator should depend on block scanning and not websocket events ([openst-platform#116](https://github.com/OpenSTFoundation/openst-platform/issues/116))
+- Inter chain communicators to have SIGINT handling ([openst-platform#117](https://github.com/OpenSTFoundation/openst-platform/issues/117))
+- Stake and mint inter chain communicator needs to confirm staking intent hash in the same order in which it was generated, i.e. in the order of staking nonce. ([openst-platform#118](https://github.com/OpenSTFoundation/openst-platform/issues/118))
 - Integrate openst-cache in platform ([openst-platform#96](https://github.com/OpenSTFoundation/openst-platform/issues/96))
 - Publish events from platform ([openst-platform#100](https://github.com/OpenSTFoundation/openst-platform/issues/100))
 - Cache flush not happening in stake and mint for branded token ([openst-platform#76](https://github.com/OpenSTFoundation/openst-platform/issues/76))
-- Enable caching for simple token prime ([openst-platform#77](https://github.com/OpenSTFoundation/openst-platform/issues/77))
 - Fixed - Scripts: variables/members are appended and not overwritten ([openst-platform#94](https://github.com/OpenSTFoundation/openst-platform/issues/94))
 - Fixed - Scripts: make confirmations case-insensitive and clarify fails ([openst-platform#84](https://github.com/OpenSTFoundation/openst-platform/issues/84))
 - Fixed - Failed to unlock Reserve ([openst-platform#95](https://github.com/OpenSTFoundation/openst-platform/issues/95))
