@@ -1,73 +1,219 @@
 "use strict";
 
-/*
- * Custom Console log methods. Apply different colors for different log levels/severity.
+/**
+ * Custom console logger
  *
+ * @module helpers/custom_console_logger
  */
-//
-// const CONSOLE_RESET = "\x1b[0m";
-// const ERR_PRE = "\x1b[31m"; //Error. (RED)
-// const INFO_PRE = "\x1b[33m  "; //Info (YELLOW)
-// const WIN_PRE = "\x1b[32m"; //Success (GREEN)
-// const WARN_PRE = "\x1b[43m";
-// const STEP_PRE = "\n\x1b[34m"; //Step Description (BLUE)
+
+const getNamespace = require('continuation-local-storage').getNamespace
+  // Get common local storage namespace to read
+  // request identifiers for debugging and logging
+  , openSTNotification = require('@openstfoundation/openst-notification')
+;
+
+const rootPrefix = ".."
+  , packageFile = require(rootPrefix + '/package.json')
+  , coreConstants = require(rootPrefix + '/config/core_constants')
+;
+
+const packageName = packageFile.name
+;
 
 
-const CONSOLE_RESET = "";
-const ERR_PRE = "";
-const INFO_PRE = "";
-const WIN_PRE = "";
-const WARN_PRE = "";
-const STEP_PRE = "";
+const CONSOLE_RESET = "\x1b[0m"
+  , ERR_PRE = "\x1b[31m" //Error. (RED)
+  , NOTE_PRE = "\x1b[91m" //Notify Error. (Purple)
+  , INFO_PRE = "\x1b[33m  " //Info (YELLOW)
+  , WIN_PRE = "\x1b[32m" //Success (GREEN)
+  , WARN_PRE = "\x1b[43m"
+  , STEP_PRE = "\n\x1b[34m"
+;
 
+// Get common local storage namespace to read
+// request identifiers for debugging and logging
+const requestNamespace = getNamespace('openST-Platform-NameSpace')
+;
 
-module.exports = {
-  "STEP_PRE": STEP_PRE
-  , "WARN_PRE": WARN_PRE
-  , "WIN_PRE": WIN_PRE
-  , "INFO_PRE": INFO_PRE
-  , "ERR_PRE": ERR_PRE
-  , "CONSOLE_RESET": CONSOLE_RESET
+/**
+ * Method to append Request in each log line.
+ *
+ * @param {string} message
+ */
+const appendRequest = function (message) {
+  var newMessage = "";
+  if (requestNamespace) {
+    if (requestNamespace.get('reqId')) {
+      newMessage += "[" + requestNamespace.get('reqId') + "]";
+    }
+    if (requestNamespace.get('workerId')) {
+      newMessage += "[Worker - " + requestNamespace.get('workerId') + "]";
+    }
+    const hrTime = process.hrtime();
+    newMessage += "[" + timeInMilli(hrTime) + "]";
+  }
+  newMessage += message;
+  return newMessage;
+};
 
-  , step: function () {
-    var args = [this.STEP_PRE];
+/**
+ * Method to convert Process hrTime to Milliseconds
+ *
+ * @param {number} hrTime - this is the time in hours
+ *
+ * @return {number} - returns time in milli seconds
+ */
+const timeInMilli = function (hrTime) {
+  return (hrTime[0] * 1000 + hrTime[1] / 1000000);
+};
+
+/**
+ * Custom COnsole Logger
+ *
+ * @constructor
+ */
+const CustomConsoleLoggerKlass = function () {
+};
+
+CustomConsoleLoggerKlass.prototype = {
+  /**
+   * @ignore
+   *
+   * @constant {string}
+   */
+  STEP_PRE: STEP_PRE,
+
+  /**
+   * @ignore
+   *
+   * @constant {string}
+   */
+  WARN_PRE: WARN_PRE,
+
+  /**
+   * @ignore
+   *
+   * @constant {string}
+   */
+  WIN_PRE: WIN_PRE,
+
+  /**
+   * @ignore
+   *
+   * @constant {string}
+   */
+  INFO_PRE: INFO_PRE,
+
+  /**
+   * @ignore
+   *
+   * @constant {string}
+   */
+  ERR_PRE: ERR_PRE,
+
+  /**
+   * @ignore
+   *
+   * @constant {string}
+   */
+  NOTE_PRE: NOTE_PRE,
+
+  /**
+   * @ignore
+   *
+   * @constant {string}
+   */
+  CONSOLE_RESET: CONSOLE_RESET,
+
+  /**
+   * Log step
+   */
+  step: function () {
+    var args = [appendRequest(this.STEP_PRE)];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
-  }
+  },
 
-  //Method to Log Information
-  , info: function () {
-    var args = [this.INFO_PRE];
+  /**
+   * Log info
+   */
+  info: function () {
+    var args = [appendRequest(this.INFO_PRE)];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
-  }
+  },
 
-  //Method to Log Error.
-  , error: function () {
-    var args = [this.ERR_PRE];
+  /**
+   * Log error
+   */
+  error: function () {
+    var args = [appendRequest(this.ERR_PRE)];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
-  }
+  },
 
-  , warn: function () {
-    var args = [this.WARN_PRE];
+  /**
+   * Notify error through email
+   */
+  notify: function (code, msg, data, backtrace) {
+    var args = [appendRequest(this.NOTE_PRE)];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
-  }
 
-  //Method to Log Success/Win.
-  , win: function () {
-    var args = [this.WIN_PRE];
+    var bodyData = null
+    ;
+
+    try {
+      bodyData = JSON.stringify(data);
+    } catch(err) {
+      bodyData = data;
+    }
+
+    openSTNotification.publishEvent.perform(
+      {
+        topics: ["email_error." + packageName],
+        publisher: 'OST',
+        message: {
+          kind: "email",
+          payload: {
+            subject: packageName + " :: UC " + coreConstants.OST_UTILITY_CHAIN_ID + "::" + code,
+            body: " Message: " + msg + " \n\n Data: " + bodyData + " \n\n backtrace: " + backtrace
+          }
+        }
+      });
+  },
+
+  /**
+   * Log warn
+   */
+  warn: function () {
+    var args = [appendRequest(this.WARN_PRE)];
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
-  }
+  },
 
-  , log: function () {
+  /**
+   * Log win - on done
+   */
+  win: function () {
+    var args = [appendRequest(this.WIN_PRE)];
+    args = args.concat(Array.prototype.slice.call(arguments));
+    args.push(this.CONSOLE_RESET);
+    console.log.apply(console, args);
+  },
+
+  /**
+   * Log normal level
+   */
+  log: function () {
     console.log.apply(console, arguments);
   }
+
 };
+
+module.exports = new CustomConsoleLoggerKlass();
