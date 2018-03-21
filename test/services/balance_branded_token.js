@@ -110,17 +110,6 @@ describe('services/balance/branded_token', function() {
 
   // Success Variations
 
-  it('should pass when erc20 address is valid, but does not exist. Name returned in this case will be blank.', async function() {
-    var dupData = JSON.parse(JSON.stringify(testValidData));
-    dupData.erc20_address = '0xb4d7bedf714e6c7cd1a641f705870fa19144a062';
-
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
-    ;
-    assert.equal(response.isSuccess(), true);
-    assert.equal((response.data.name || '').length, 0);
-  });
-
   it('should pass when everything is valid', async function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 

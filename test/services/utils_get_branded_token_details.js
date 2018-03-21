@@ -81,16 +81,6 @@ describe('services/utils/get_branded_token_details', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when uuid is valid but not associated with BT', async function() {
-    var dupData = JSON.parse(JSON.stringify(testValidData));
-    dupData.uuid = '0x40a3bf6c2f1c802bcb7b1f10c7d11726b3926a5e4dcf083cd72a9f69d4109c7b';
-
-    var getBrandedTokenDetailsObj = new platformServices.getBrandedTokenDetails(dupData)
-      , response = await getBrandedTokenDetailsObj.perform()
-    ;
-    assert.equal(response.isSuccess(), false);    
-  });
-
   it('should pass when chain is valid and associated with BT', async function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
