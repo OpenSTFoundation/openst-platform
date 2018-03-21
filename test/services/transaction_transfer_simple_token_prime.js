@@ -74,17 +74,6 @@ describe('services/transaction/transfer/simple_token_prime', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  // Options Variations
-  it('should fail when tag is blank', async function() {
-    var dupData = JSON.parse(JSON.stringify(testValidData));
-    dupData.options.tag = '';
-
-    var simpleTokenPrimeObj = new platformServices.simpleTokenPrime(dupData)
-      , response = await simpleTokenPrimeObj.perform()
-    ;
-    assert.equal(response.isSuccess(), false);
-  });
-
   it('should fail when tag is invalid', async function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.options.tag = 'a@b';

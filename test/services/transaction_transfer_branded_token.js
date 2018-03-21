@@ -106,17 +106,6 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  // Options Variations
-  it('should fail when tag is blank', async function() {
-    var dupData = JSON.parse(JSON.stringify(testValidData));
-    dupData.options.tag = '';
-
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
-    ;
-    assert.equal(response.isSuccess(), false);
-  });
-
   it('should fail when tag is invalid', async function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.options.tag = 'a@b';

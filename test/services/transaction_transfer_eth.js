@@ -74,17 +74,6 @@ describe('services/transaction/transfer/eth', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  // Options Variations
-  it('should fail when tag is blank', async function() {
-    var dupData = JSON.parse(JSON.stringify(testValidData));
-    dupData.options.tag = '';
-
-    var ethObj = new platformServices.eth(dupData)
-        , response = await ethObj.perform()
-    ;
-    assert.equal(response.isSuccess(), false);
-  });
-
   it('should fail when tag is invalid', async function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.options.tag = 'a@b';

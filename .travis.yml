@@ -6,7 +6,6 @@ branches:
   - master
   - develop
   - release-0.9
-  - geth_version_test
 notifications:
   email:
     recipients:
