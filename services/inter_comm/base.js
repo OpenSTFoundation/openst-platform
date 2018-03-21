@@ -135,11 +135,21 @@ IntercomBaseKlass.prototype = {
 
       if(oThis.parallelProcessingAllowed()) {
         promiseArray.push(new Promise(function(onResolve, onReject){
-          setTimeout(function() {oThis.processEventObj(eventObj).then(onResolve);},
-            (j*1000 + 100));
+          setTimeout(function() {
+            oThis.processEventObj(eventObj)
+              .then(onResolve)
+              .catch(function(error) {
+                logger.error('##### inside catch block #####: ', error);
+                return onResolve();
+              });
+            }, (j*1000 + 100));
         }));
       } else {
-        await oThis.processEventObj(eventObj);
+        await oThis.processEventObj(eventObj)
+          .catch(function(error) {
+            logger.error('inside catch block: ', error);
+            return Promise.resolve();
+          });
       }
     }
 

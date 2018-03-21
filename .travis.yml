@@ -15,8 +15,6 @@ notifications:
     on_failure: always
 node_js:
   - "9"
-  - "8"
-  - "7"
 before_install:
   - sudo apt-get update
   - sudo apt-get install nodejs
@@ -25,7 +23,6 @@ before_install:
   - sudo add-apt-repository -y ppa:ethereum/ethereum
   - sudo apt-get update
   - sudo apt-get install ethereum
-#  - sudo bash tools/setup/install_geth_1_7_3.sh
   - geth version
 install:
   - npm install
@@ -40,5 +37,6 @@ script:
   - source $HOME/openst-setup/openst_env_vars.sh
   - node tools/setup/branded_token/register.js "ACME Coin" "ACME" 500000000000000000000
   - node tools/setup/branded_token/mint.js "ACME" 500000000000000000000
+  - mocha --timeout 120000 test/* --exit
 after_script:
   - kill $(ps aux | grep 'tools/setup/start_services.js' | awk '{print $2}')
