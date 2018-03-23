@@ -152,6 +152,10 @@ ServiceManagerKlass.prototype = {
       shellAsyncCmd.run("echo '"+ cmd +"' >> " + setupHelper.binFolderAbsolutePath() + "/" + runScript);
       logger.info("* Start " + intercomProcessIdentifiers[i] + " intercomm: sh " + setupHelper.setupFolderAbsolutePath() + "/" + binFolder + "/" + runScript);
     }
+
+      //Make Utility gas price to default after deployment
+      var cmd = "export " + setupConfig.chains.utility.gas_price.env_var + "=" + "'" + setupConfig.chains.utility.gas_price.value + "'";
+      fileManager.append(setupConfig.env_vars_file, cmd);
   },
 
   /**
