@@ -65,7 +65,7 @@ openSTSetup.prototype = {
 
       // Write environment file
       logger.step("** Writing env variables file");
-      envManager.generateEnvFile();
+      envManager.generateEnvFile('deployment');
 
       // Chains have started mining
       logger.step("** Checking if chains have started generating blocks");
