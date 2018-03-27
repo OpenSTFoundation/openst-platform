@@ -7,7 +7,7 @@
  */
 
 const rootPrefix = '../..'
-  , web3UcRpcProvider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
+  , web3UcRpcProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
   , getReceipt = require(rootPrefix + '/services/transaction/get_receipt')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')

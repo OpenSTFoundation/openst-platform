@@ -38,12 +38,14 @@ StartServicesKlass.prototype = {
     // Start Value Chain
     logger.step("** Start value chain");
     var cmd = "sh " + setupHelper.binFolderAbsolutePath() + "/run-value.sh";
+    console.log("1 cmd:=>",cmd);
     servicesList.push(cmd);
     oThis._asyncCommand(cmd);
 
     // Start Utility Chain
     logger.step("** Start utility chain");
     var cmd = "sh " + setupHelper.binFolderAbsolutePath() + "/run-utility.sh";
+    console.log("2 cmd:=>",cmd);
     servicesList.push(cmd);
     oThis._asyncCommand(cmd);
 

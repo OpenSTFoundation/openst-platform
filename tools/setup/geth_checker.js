@@ -5,8 +5,8 @@
  * @module tools/setup/geth_checker
  */
 const rootPrefix = "../.."
-  , web3RpcUtilityProvider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
-  , web3RpcValueProvider = require(rootPrefix + '/lib/web3/providers/value_rpc')
+  , web3RpcUtilityProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
+  , web3RpcValueProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , setupConfig = require(rootPrefix + '/tools/setup/config')
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
@@ -53,6 +53,7 @@ GethCheckerKlass.prototype = {
     return new Promise(function (onResolve, onReject) {
       chainTimer['timer'] = setInterval(function () {
         if (chainTimer['retryCounter'] <= retryAttempts) {
+          console.log("here inside geth checker: ", provider.chainKind);
           provider.eth.getBlockNumber(function (err, blocknumber) {
             if (err) {
             } else {

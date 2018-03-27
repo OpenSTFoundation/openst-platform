@@ -8,7 +8,7 @@
 
 const rootPrefix = "../../.."
   , deployHelper = require(rootPrefix + '/tools/deploy/helper')
-  , web3RpcValueProvider = require(rootPrefix + '/lib/web3/providers/value_rpc')
+  , web3RpcValueProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')

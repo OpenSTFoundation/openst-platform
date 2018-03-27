@@ -58,7 +58,7 @@ EstimateGasKlass.prototype = {
     ;
 
     contractObj.options.address = oThis.contractAddress;
-    contractObj.setProvider(web3RpcProvider.currentProvider);
+    //contractObj.setProvider(web3RpcProvider.currentProvider);
 
     const transactionOptions = {
       from: oThis.senderAddress,

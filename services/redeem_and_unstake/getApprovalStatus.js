@@ -5,7 +5,7 @@
  */
 
 const rootPrefix = '../..'
-  , web3UcRpcProvider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
+  , web3UcRpcProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
