@@ -47,6 +47,12 @@ StartServicesKlass.prototype = {
     servicesList.push(cmd);
     oThis._asyncCommand(cmd);
 
+    // Wait for 5 seconds for geth to come up
+    const sleep = function(ms) {
+      return new Promise(function(resolve) {setTimeout(resolve, ms)});
+    };
+    await sleep(5000);
+
     // Check geths are up and running
     logger.step("** Check chains are up and responding");
     const statusObj = new platformStatus()
