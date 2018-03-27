@@ -8,7 +8,7 @@
 
 const rootPrefix = "../../.."
   , deployHelper = require(rootPrefix + '/tools/deploy/helper')
-  , web3RpcValueProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
+  , web3ValueProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
@@ -37,7 +37,7 @@ DeploySimpleTokenContractKlass.prototype = {
     logger.step('** Deploying Simple Token Contract');
     const deploymentResult = await deployHelper.perform(
       simpleTokenContractName,
-      web3RpcValueProvider,
+      web3ValueProvider,
       simpleTokenContractAbi,
       simpleTokenContractBin,
       'foundation');

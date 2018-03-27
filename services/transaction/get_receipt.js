@@ -50,7 +50,7 @@ GetReceiptKlass.prototype = {
         return Promise.resolve(responseHelper.error('s_t_gr_1', 'Invalid transaction hash'));
       }
 
-      const web3Provider = web3ProviderFactory.getProvider(oThis.chain, web3ProviderFactory.typeRPC);
+      const web3Provider = web3ProviderFactory.getProvider(oThis.chain, web3ProviderFactory.typeWS);
       if(!web3Provider) {
         return Promise.resolve(responseHelper.error('s_t_gr_2', 'Invalid chain.'));
       }

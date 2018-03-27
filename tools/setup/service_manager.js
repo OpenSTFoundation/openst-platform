@@ -194,7 +194,6 @@ ServiceManagerKlass.prototype = {
       , sealerAddr = setupConfig.addresses['sealer'].address.value
       , sealerPassword = setupConfig.addresses['sealer'].passphrase.value
       , rpcProviderHostPort = chainDetails.rpc_provider.value.replace("http://", "").split(":")
-      //, rpcProviderHostPort = chainDetails.ws_provider.value.replace("ws://", "").split(":")
       , rpcHost = rpcProviderHostPort[0]
       , rpcPort = rpcProviderHostPort[1]
       , wsProviderHostPort = chainDetails.ws_provider.value.replace("ws://", "").split(":")

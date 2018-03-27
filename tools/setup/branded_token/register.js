@@ -255,4 +255,3 @@ const args = process.argv
 // Start Registration
 const services = new RegisterBTKlass({bt_name: btName, bt_symbol: btSymbol, bt_conversion_factor: btConversionFactor});
 services.perform();
-

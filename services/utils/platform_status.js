@@ -55,7 +55,7 @@ PlatformStatusKlass.prototype = {
    * @ignore
    */
   _gethStatus: function(chain) {
-    const web3Provider = web3ProviderFactory.getProvider(chain, web3ProviderFactory.typeRPC)
+    const web3Provider = web3ProviderFactory.getProvider(chain, web3ProviderFactory.typeWS)
       ,retryAttempts = 100
       , timerInterval = 5000
       , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
