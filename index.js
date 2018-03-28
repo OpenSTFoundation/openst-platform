@@ -7,7 +7,7 @@
 const rootPrefix = "."
   , serviceManifest = require(rootPrefix + '/services/manifest')
   , version = require(rootPrefix + '/package.json').version
-  , BrandedTokenKlass = require(rootPrefix + "/lib/contract_interact/branded_token")
+  , coreAbis = require(rootPrefix + '/config/core_abis')
 ;
 
 const OpenSTPlatform = function () {
@@ -15,10 +15,9 @@ const OpenSTPlatform = function () {
 
   oThis.version = version;
 
-  oThis.contracts = {};
-  oThis.contracts.brandedToken = BrandedTokenKlass;
-
   oThis.services = serviceManifest;
+
+  oThis.abis = coreAbis;
 };
 
 module.exports = new OpenSTPlatform();
