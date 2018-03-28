@@ -86,7 +86,7 @@ RedeemAndUnstakeInterComm.prototype = {
    */
   listenToDesiredEvent: function (onError, onData, onChange) {
     var completeContract = new web3WsProvider.eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
-    completeContract.setProvider(web3WsProvider.currentProvider);
+    //completeContract.setProvider(web3WsProvider.currentProvider);
 
     completeContract.events.RedemptionIntentDeclared({})
       .on('error', onError)

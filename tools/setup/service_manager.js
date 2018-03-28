@@ -205,7 +205,7 @@ ServiceManagerKlass.prototype = {
     fileManager.touch(chainFolder + '/' + sealerPassphraseFile, sealerPassword);
 
     return "geth --networkid " + networkId + " --datadir " + chainDataDir + " --port " + chainPort +
-      " --rpc --rpcapi eth,net,web3,personal,txpool --rpcport " + rpcPort + " --rpcaddr " + rpcHost + " --ws" +
+      " --rpc --rpcapi eth,net,web3,personal,txpool --wsapi eth,net,web3,personal,txpool --rpcport " + rpcPort + " --rpcaddr " + rpcHost + " --ws" +
       " --wsport " + wsPort + " --wsorigins '*' --wsaddr " + wsHost + " --etherbase " + sealerAddr +
       " --mine --minerthreads 1 --targetgaslimit " + gasLimit[chain] + "  --gasprice \"" + gasPrice + "\" --unlock " +
       sealerAddr + " --password "+ chainDataDir + "/" + sealerPassphraseFile + " 2> " +

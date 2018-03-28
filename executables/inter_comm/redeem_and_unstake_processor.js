@@ -104,7 +104,7 @@ RedeemAndUnstakeProcessorInterComm.prototype = {
    */
   listenToDesiredEvent: function (onError, onData, onChange) {
     var completeContract = new web3WsProvider.eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
-    completeContract.setProvider(web3WsProvider.currentProvider);
+    //completeContract.setProvider(web3WsProvider.currentProvider);
 
     completeContract.events.RedemptionIntentConfirmed({})
       .on('error', onError)

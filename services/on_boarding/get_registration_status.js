@@ -7,7 +7,7 @@
  */
 
 const rootPrefix = '../..'
-  , web3UcRpcProvider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
+  , web3UcProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
   , getReceipt = require(rootPrefix + '/services/transaction/get_receipt')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
@@ -62,7 +62,7 @@ GetRegistrationStatusKlass.prototype = {
       ;
 
       // check if the proposal transaction is mined
-      const getReceiptObj = new getReceipt({transaction_hash: oThis.transactionHash, chain: web3UcRpcProvider.chainKind});
+      const getReceiptObj = new getReceipt({transaction_hash: oThis.transactionHash, chain: web3UcProvider.chainKind});
       const proposalTxReceiptResponse = await getReceiptObj.perform();
       // if error or transaction not yet mined or transaction failed, return. Else proceed and check for other things
       if (!proposalTxReceiptResponse.isSuccess() || !proposalTxReceiptResponse.data.formattedTransactionReceipt) {

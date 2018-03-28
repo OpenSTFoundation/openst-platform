@@ -16,7 +16,7 @@ const rootPrefix = '../../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , approveService = require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract')
-  , web3Provider = require(rootPrefix + '/lib/web3/providers/value_rpc')
+  , web3Provider = require(rootPrefix + '/lib/web3/providers/value_ws')
   , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
   , startStakeService = require(rootPrefix + '/services/stake_and_mint/start_stake')
   , fundManager = require(rootPrefix + '/tools/setup/fund_manager')
@@ -173,18 +173,18 @@ MintBrandedToken.prototype = {
    */
   _waitForSimpleTokenPrimeMint: function() {
     const oThis = this
-      , web3RpcProvider = web3ProviderFactory.getProvider('utility', 'rpc')
+      , web3UcProvider = web3ProviderFactory.getProvider('utility', 'ws')
     ;
 
     return new Promise(async function(onResolve, onReject) {
 
-      const beforeBalance = new BigNumber(await web3RpcProvider.eth.getBalance(oThis.reserveAddr));
+      const beforeBalance = new BigNumber(await web3UcProvider.eth.getBalance(oThis.reserveAddr));
 
       logger.info('Balance of Reserve for Simple Token Prime before mint:', beforeBalance.toString(10));
 
       const getBalance = async function(){
 
-        const afterBalance = new BigNumber(await web3RpcProvider.eth.getBalance(oThis.reserveAddr));
+        const afterBalance = new BigNumber(await web3UcProvider.eth.getBalance(oThis.reserveAddr));
 
         if((new BigNumber(afterBalance)).greaterThan(beforeBalance)){
           logger.info('Balance of Reserve for Simple Token Prime after mint:', afterBalance.toString(10));

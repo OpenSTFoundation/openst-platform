@@ -59,7 +59,7 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
     ;
 
     oThis.completeContract = new web3WsProvider.eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
-    oThis.completeContract.setProvider(web3WsProvider.currentProvider);
+    //oThis.completeContract.setProvider(web3WsProvider.currentProvider);
   },
 
   /**

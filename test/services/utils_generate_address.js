@@ -80,7 +80,7 @@ describe('services/utils/generate_address', function() {
     assert.equal(response.isSuccess(), true);
 
     // unlock account
-    const web3Provider = web3ProviderFactory.getProvider(dupData.chain, web3ProviderFactory.typeRPC);
+    const web3Provider = web3ProviderFactory.getProvider(dupData.chain, web3ProviderFactory.typeWS);
     var unlocked = await web3Provider.eth.personal.unlockAccount(response.data.address, dupData.passphrase);
     assert.equal(unlocked, true);
   });
@@ -95,7 +95,7 @@ describe('services/utils/generate_address', function() {
     assert.equal(response.isSuccess(), true);
 
     // unlock account
-    const web3Provider = web3ProviderFactory.getProvider(dupData.chain, web3ProviderFactory.typeRPC);
+    const web3Provider = web3ProviderFactory.getProvider(dupData.chain, web3ProviderFactory.typeWS);
     var unlocked = await web3Provider.eth.personal.unlockAccount(response.data.address, dupData.passphrase);
     assert.equal(unlocked, true);
   });

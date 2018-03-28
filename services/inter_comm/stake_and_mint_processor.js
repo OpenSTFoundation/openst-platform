@@ -95,7 +95,7 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
     ;
 
     oThis.completeContract = new web3WsProvider.eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
-    oThis.completeContract.setProvider(web3WsProvider.currentProvider);
+    //oThis.completeContract.setProvider(web3WsProvider.currentProvider);
   },
 
   /**

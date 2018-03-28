@@ -54,7 +54,7 @@ FundManagerKlass.prototype = {
   transferEth: async function(senderAddr, senderPassphrase, recipient, amountInWei) {
     // TODO: should we have isAsync with UUID (unlock account will take time) and also tag, publish events?
     const oThis = this
-      , web3RpcProvider = web3ProviderFactory.getProvider('value', 'rpc')
+      , web3Provider = web3ProviderFactory.getProvider('value', 'ws')
       , gasPrice = coreConstants.OST_VALUE_GAS_PRICE
       , gas = coreConstants.OST_VALUE_GAS_LIMIT
     ;
@@ -85,9 +85,9 @@ FundManagerKlass.prototype = {
 
     // Perform transfer async
     const asyncTransfer = async function() {
-      return web3RpcProvider.eth.personal.unlockAccount(senderAddr, senderPassphrase)
+      return web3Provider.eth.personal.unlockAccount(senderAddr, senderPassphrase)
         .then(function() {
-          return web3RpcProvider.eth.sendTransaction(
+          return web3Provider.eth.sendTransaction(
             {from: senderAddr, to: recipient, value: bigNumAmount.toString(10), gasPrice: gasPrice, gas: gas});
         })
         .then(function(transactionHash) {
@@ -174,7 +174,7 @@ FundManagerKlass.prototype = {
    *
    */
   getEthBalanceOf: function (owner) {
-    const web3RpcProvider = web3ProviderFactory.getProvider('value', 'rpc')
+    const web3Provider = web3ProviderFactory.getProvider('value', 'ws')
     ;
 
     // Validate addresses
@@ -182,7 +182,7 @@ FundManagerKlass.prototype = {
       return Promise.resolve(responseHelper.error('t_s_fm_8', `Invalid blockchain address: ${owner}`));
     }
 
-    return web3RpcProvider.eth.getBalance(owner)
+    return web3Provider.eth.getBalance(owner)
       .then(function(balance) {
         return responseHelper.successWithData({balance: balance});
       })
@@ -202,7 +202,7 @@ FundManagerKlass.prototype = {
    *
    */
   getSTPrimeBalanceOf: function (owner) {
-    const web3RpcProvider = web3ProviderFactory.getProvider('utility', 'rpc')
+    const web3Provider = web3ProviderFactory.getProvider('utility', 'ws')
     ;
 
     // Validate addresses
@@ -210,7 +210,7 @@ FundManagerKlass.prototype = {
       return Promise.resolve(responseHelper.error('t_s_fm_10', `Invalid blockchain address: ${owner}`));
     }
 
-    return web3RpcProvider.eth.getBalance(owner)
+    return web3Provider.eth.getBalance(owner)
       .then(function(balance) {
         return responseHelper.successWithData({balance: balance});
       })

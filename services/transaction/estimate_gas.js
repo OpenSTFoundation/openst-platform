@@ -52,13 +52,13 @@ EstimateGasKlass.prototype = {
    */
   perform: async function () {
     const oThis = this
-      , web3RpcProvider = web3ProviderFactory.getProvider(oThis.chain, 'rpc')
+      , web3Provider = web3ProviderFactory.getProvider(oThis.chain, 'ws')
       , abi = coreAddresses.getAbiForContract(oThis.contractName)
-      , contractObj = new web3RpcProvider.eth.Contract(abi)
+      , contractObj = new web3Provider.eth.Contract(abi)
     ;
 
     contractObj.options.address = oThis.contractAddress;
-    contractObj.setProvider(web3RpcProvider.currentProvider);
+    //contractObj.setProvider(web3Provider.currentProvider);
 
     const transactionOptions = {
       from: oThis.senderAddress,
