@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@openstfoundation/openst-cache": "1.0.1",
+    "@openstfoundation/openst-core": "git+ssh://git@github.com/OpenSTFoundation/openst-core.git",
     "@openstfoundation/openst-notification": "1.0.0",
     "abi-decoder": "1.0.9",
     "bignumber.js": "4.1.0",
