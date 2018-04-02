@@ -73,13 +73,17 @@ ProposeBrandedTokenKlass.prototype = {
         oThis.conversionRate = conversionRateConversionResponse.data.conversionRate;
         oThis.conversionRateDecimals = conversionRateConversionResponse.data.conversionRateDecimals;
 
-        const proposalTransactionHash = await openSTUtility.proposeBrandedToken(stakerAddr, stakerPassphrase, oThis.symbol,
-        oThis.name, oThis.conversionRate, oThis.conversionRateDecimals);
-        
-        return responseHelper.successWithData({transaction_uuid: uuid.v4(), transaction_hash: proposalTransactionHash});
-      
+        const proposalRsp = await openSTUtility.proposeBrandedToken(stakerAddr, stakerPassphrase, oThis.symbol,
+            oThis.name, oThis.conversionRate, oThis.conversionRateDecimals);
+
+        if (proposalRsp.isSuccess()) {
+          proposalRsp.data.transaction_uuid = uuid.v4();
+        }
+
+        return Promise.resolve(proposalRsp);
+
       } else {
-        return conversionRateConversionResponse; 
+        return Promise.resolve(conversionRateConversionResponse);
       }
       
     } catch (err) {

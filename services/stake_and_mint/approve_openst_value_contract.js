@@ -26,9 +26,27 @@ const openSTValueContractName = 'openSTValue'
 /**
  * Approve OpenST Value Contract Service
  *
+ * @param {object} params -
+ * @param {object} params.options -
+ * @param {string} params.options.returnType - Desired return type. possible values: uuid, txHash, txReceipt. Default: txHash
+ *
  * @constructor
  */
-const ApproveOpenstValueContractKlass = function() {};
+const ApproveOpenstValueContractKlass = function(params) {
+
+  const oThis = this
+  ;
+
+  params = params || {};
+  params.options = params.options || {};
+
+  if(params.options.returnType === 'txReceipt') {
+    oThis.runInAsync = false;
+  } else {
+    oThis.runInAsync = true;
+  }
+
+};
 
 ApproveOpenstValueContractKlass.prototype = {
 
@@ -42,11 +60,13 @@ ApproveOpenstValueContractKlass.prototype = {
     ;
 
     try {
+
       const bigBalance = await oThis._getStakerSTBalance();
 
-      const transactionHash = await oThis._approve(bigBalance);
+      var approveRsp = await oThis._approve(bigBalance);
+      approveRsp.transaction_uuid = uuid.v4();
 
-      return Promise.resolve(responseHelper.successWithData({transaction_uuid: uuid.v4(), transaction_hash: transactionHash}));
+      return Promise.resolve(approveRsp);
 
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_sam_aovc_1', 'Something went wrong. ' + err.message));
@@ -63,15 +83,20 @@ ApproveOpenstValueContractKlass.prototype = {
    * @ignore
    */
   _approve: async function (toApproveAmount) {
-    const transactionHash = await simpleToken.approve(
+
+    const oThis = this
+    ;
+
+    const approveRsp = await simpleToken.approve(
       stakerAddress,
       stakerPassphrase,
       openSTValueContractAddress,
       toApproveAmount,
-      true // we need this to be done in async and not to wait for the tx to get mined.
+      oThis.runInAsync
     );
 
-    return Promise.resolve(transactionHash);
+    return Promise.resolve(approveRsp);
+
   },
 
   /**
