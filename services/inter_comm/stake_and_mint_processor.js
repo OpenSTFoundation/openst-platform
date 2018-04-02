@@ -36,16 +36,6 @@ const rootPrefix = '../..'
   , IntercomBaseKlass = require(rootPrefix + '/services/inter_comm/base')
 ;
 
-const notificationData = {
-  topics: ['event.stake_and_mint_processor'], // override later: with every stage
-  publisher: 'OST',
-  message: {
-    kind: '', // populate later: with every stage
-    payload: {
-    }
-  }
-};
-
 /**
  * is equal ignoring case
  *
@@ -138,6 +128,23 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
       , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
       , openSTValueContractInteract = new OpenSTValueKlass()
     ;
+
+    const notificationData = {
+      topics: [],
+      publisher: 'OST',
+      message: {
+        kind: '',
+        payload: {
+          status: '',
+          staking_params: {
+            stakingIntentHash: stakingIntentHash,
+            staker: staker,
+            beneficiary: beneficiary,
+            uuid: uuid
+          }
+        }
+      }
+    };
 
     // do not perform any action if the stake was not done using the internal address.
     if (!stakerAddress.equalsIgnoreCase(staker)) {
