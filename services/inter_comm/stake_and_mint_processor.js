@@ -129,6 +129,28 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
       , openSTValueContractInteract = new OpenSTValueKlass()
     ;
 
+    // do not perform any action if the stake was not done using the internal address.
+    if (!stakerAddress.equalsIgnoreCase(staker)) {
+      return Promise.resolve(responseHelper.successWithData({}));
+    }
+
+    // Pick either ST Prime or BT contract
+    var utilityTokenInterfaceContract = null
+      , displayTokenType = ''
+      , tokenType = ''
+    ;
+
+    if (uuid.equalsIgnoreCase(coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID)) {
+      utilityTokenInterfaceContract = stPrime;
+      displayTokenType = 'ST Prime';
+      tokenType = 'st_prime';
+    } else {
+      const registeredOnUCResult = await openSTUtilityContractInteract.registeredToken(uuid);
+      utilityTokenInterfaceContract = new BrandedTokenKlass({ERC20: registeredOnUCResult.data.erc20Address});
+      displayTokenType = 'Branded Token';
+      tokenType = 'bt';
+    }
+
     const notificationData = {
       topics: [],
       publisher: 'OST',
@@ -136,32 +158,18 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
         kind: '',
         payload: {
           status: '',
+          transaction_hash: '',
+          error_data: {},
           staking_params: {
             stakingIntentHash: stakingIntentHash,
             staker: staker,
             beneficiary: beneficiary,
-            uuid: uuid
+            uuid: uuid,
+            tokenType: tokenType
           }
         }
       }
     };
-
-    // do not perform any action if the stake was not done using the internal address.
-    if (!stakerAddress.equalsIgnoreCase(staker)) {
-      return Promise.resolve(responseHelper.successWithData({}));
-    }
-
-    // Pick either ST Prime or BT contract
-    var utilityTokenInterfaceContract = null,
-      displayTokenType = '';
-    if (uuid.equalsIgnoreCase(coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID)) {
-      utilityTokenInterfaceContract = stPrime;
-      displayTokenType = 'ST Prime';
-    } else {
-      const registeredOnUCResult = await openSTUtilityContractInteract.registeredToken(uuid);
-      utilityTokenInterfaceContract = new BrandedTokenKlass({ERC20: registeredOnUCResult.data.erc20Address});
-      displayTokenType = 'Branded Token';
-    }
 
     /**
      * processStaking
@@ -169,6 +177,8 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
     // Fire notification event
     notificationData.topics = ['event.stake_and_mint_processor.process_staking_on_vc.start'];
     notificationData.message.kind = 'info';
+    notificationData.message.payload.status = 'process_staking_on_vc_start';
+    notificationData.message.payload.transaction_hash = '';
     openSTNotification.publishEvent.perform(notificationData);
 
     logger.step(stakingIntentHash, ' :: performing processStaking for ' + displayTokenType);
@@ -183,6 +193,7 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
       notificationData.topics = ['event.stake_and_mint_processor.process_staking_on_vc.done'];
       notificationData.message.kind = 'info';
       notificationData.message.payload.transaction_hash = vcFormattedTransactionReceipt.transactionHash;
+      notificationData.message.payload.status = 'process_staking_on_vc_done';
       openSTNotification.publishEvent.perform(notificationData);
 
       logger.win(stakingIntentHash, ':: performed processStaking on openSTValue contract for ' + displayTokenType, vcFormattedEvents);
@@ -191,6 +202,8 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
       // Fire notification event
       notificationData.message.kind = 'error';
       notificationData.message.payload.error_data = vcStakeResponse;
+      notificationData.message.payload.transaction_hash = '';
+      notificationData.message.payload.status = 'process_staking_on_vc_failed';
       openSTNotification.publishEvent.perform(notificationData);
 
       var errMessage = stakingIntentHash + ' processStaking on openSTValue contract failed for ' + displayTokenType;
@@ -205,6 +218,8 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
     // Fire notification event
     notificationData.topics = ['event.stake_and_mint_processor.process_minting_on_uc.start'];
     notificationData.message.kind = 'info';
+    notificationData.message.payload.transaction_hash = '';
+    notificationData.message.payload.status = 'process_minting_on_uc_start';
     openSTNotification.publishEvent.perform(notificationData);
 
     logger.step(stakingIntentHash, ' :: performing processMinting for ' + displayTokenType);
@@ -219,6 +234,7 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
       notificationData.topics = ['event.stake_and_mint_processor.process_minting_on_uc.done'];
       notificationData.message.kind = 'info';
       notificationData.message.payload.transaction_hash = ucFormattedTransactionReceipt.transactionHash;
+      notificationData.message.payload.status = 'process_minting_on_uc_done';
       openSTNotification.publishEvent.perform(notificationData);
 
       logger.win(stakingIntentHash, ':: performed processMinting on openSTUtility contract for ' + displayTokenType, ucFormattedEvents);
@@ -227,6 +243,8 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
       // Fire notification event
       notificationData.message.kind = 'error';
       notificationData.message.payload.error_data = ucMintResponse;
+      notificationData.message.payload.transaction_hash = '';
+      notificationData.message.payload.status = 'process_minting_on_uc_failed';
       openSTNotification.publishEvent.perform(notificationData);
 
       var errMessage = stakingIntentHash + ' processMinting on openSTUtility contract failed for ' + displayTokenType;
@@ -241,6 +259,8 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
     // Fire notification event
     notificationData.topics = ['event.stake_and_mint_processor.claim_token_on_uc.start'];
     notificationData.message.kind = 'info';
+    notificationData.message.payload.transaction_hash = '';
+    notificationData.message.payload.status = 'claim_token_on_uc_start';
     openSTNotification.publishEvent.perform(notificationData);
 
     logger.step(stakingIntentHash, ' :: performing claim for ' + displayTokenType);
@@ -252,9 +272,10 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
         , ucFormattedEvents = await web3EventsFormatter.perform(ucFormattedTransactionReceipt);
 
       // Fire notification event
-      notificationData.topics = ['event.stake_and_mint.claim_token_on_uc.done'];
+      notificationData.topics = ['event.stake_and_mint_processor.claim_token_on_uc.done'];
       notificationData.message.kind = 'info';
       notificationData.message.payload.transaction_hash = ucFormattedTransactionReceipt.transactionHash;
+      notificationData.message.payload.status = 'claim_token_on_uc_done';
       openSTNotification.publishEvent.perform(notificationData);
 
       logger.win(stakingIntentHash, ':: performed claim for ' + displayTokenType, ucFormattedEvents);
@@ -262,7 +283,9 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
 
       // Fire notification event
       notificationData.message.kind = 'error';
+      notificationData.message.payload.transaction_hash = '';
       notificationData.message.payload.error_data = ucClaimResponse;
+      notificationData.message.payload.status = 'claim_token_on_uc_failed';
       openSTNotification.publishEvent.perform(notificationData);
 
       var errMessage = stakingIntentHash + ' claim failed for ' + displayTokenType;
