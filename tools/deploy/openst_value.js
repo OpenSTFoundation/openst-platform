@@ -15,7 +15,7 @@
 const readline = require('readline');
 
 const rootPrefix = '../..'
-  , web3Provider = require(rootPrefix + '/lib/web3/providers/value_ws')
+  , web3Provider = require(rootPrefix + '/lib/web3/providers/value_rpc')
   , deployHelper = require(rootPrefix + '/tools/deploy/helper')
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
