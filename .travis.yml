@@ -21,7 +21,7 @@ before_install:
   - sudo apt-get install software-properties-common
   - sudo add-apt-repository -y ppa:ethereum/ethereum
   - sudo apt-get update
-  - sudo bash tools/setup/install_geth_1_7_3.sh
+  - sudo bash tools/setup/install_geth_1_8_3.sh
   - geth version
 install:
   - npm install
