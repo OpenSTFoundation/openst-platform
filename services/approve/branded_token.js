@@ -13,6 +13,7 @@ const rootPrefix = '../..'
   , BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
 /**
@@ -42,28 +43,66 @@ const ApproveForBrandedTokenKlass = function(params) {
 
 ApproveForBrandedTokenKlass.prototype = {
 
+  /**
+   * Perform
+   *
+   * @return {promise<result>}
+   */
   perform: function () {
     const oThis = this;
 
-    try {
-      //Validations
-      if (!basicHelper.isAddressValid(oThis.erc20Address)) {
-        return Promise.resolve(responseHelper.error('s_a_bt_1', 'Invalid ERC20 address'));
-      }
+    return oThis.asyncPerform()
+      .catch(function (error) {
+        if (responseHelper.isCustomResult(error)) {
+          return error;
+        } else {
+          logger.error('openst-platform::services/approve/branded_token.js::perform::catch');
+          logger.error(error);
 
-      if (!basicHelper.isAddressValid(oThis.approverAddress)) {
-        return Promise.resolve(responseHelper.error('s_a_bt_2', 'Invalid approver address'));
-      }
+          return responseHelper.error('s_a_bt_1', "Unhandled result", null, {}, {sendErrorEmail: false});
+        }
+      });
+  },
 
-      if(oThis.toApproveAmount.lessThan(0)) {
-        return Promise.resolve(responseHelper.error('s_a_bt_3', 'Invalid to approve amount'));
-      }
+  /**
+   * Async Perform
+   *
+   * @return {promise<result>}
+   */
+  asyncPerform: async function () {
+    const oThis = this
+    ;
 
-      return oThis._approve();
+    await oThis._validate();
 
-    } catch (err) {
-      return Promise.resolve(responseHelper.error('s_a_bt_4', 'Something went wrong. ' + err.message));
+    return oThis._approve();
+  },
+
+  /**
+   * Validate
+   *
+   * @return {promise<result>}
+   * @private
+   * @ignore
+   */
+  _validate: async function() {
+    const oThis = this
+    ;
+
+    //Validations
+    if (!basicHelper.isAddressValid(oThis.erc20Address)) {
+      return Promise.reject(responseHelper.error('s_a_bt_2', 'Invalid ERC20 address'));
     }
+
+    if (!basicHelper.isAddressValid(oThis.approverAddress)) {
+      return Promise.reject(responseHelper.error('s_a_bt_3', 'Invalid approver address'));
+    }
+
+    if(oThis.toApproveAmount.lessThan(0)) {
+      return Promise.reject(responseHelper.error('s_a_bt_4', 'Invalid to approve amount'));
+    }
+
+    return Promise.resolve(responseHelper.successWithData({}));
   },
 
   /**
@@ -87,12 +126,7 @@ ApproveForBrandedTokenKlass.prototype = {
       isTxHashOnlyNeeded // we need this to be done in async and not to wait for the tx to get mined.
     );
 
-    if (isTxHashOnlyNeeded) {
-      return Promise.resolve(responseHelper.successWithData({transaction_hash: r}));
-    } else {
-      return Promise.resolve(r);
-    }
-
+    return Promise.resolve(r);
   }
 
 };
