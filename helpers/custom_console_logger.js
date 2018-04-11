@@ -23,6 +23,7 @@ const packageName = packageFile.name
 
 const CONSOLE_RESET = "\x1b[0m"
   , ERR_PRE = "\x1b[31m" //Error. (RED)
+  , DEBUG_PRE = "\x1b[36m" //Debug log (Cyan)
   , NOTE_PRE = "\x1b[91m" //Notify Error. (Purple)
   , INFO_PRE = "\x1b[33m  " //Info (YELLOW)
   , WIN_PRE = "\x1b[32m" //Success (GREEN)
@@ -116,6 +117,13 @@ CustomConsoleLoggerKlass.prototype = {
    *
    * @constant {string}
    */
+  DEBUG_PRE: DEBUG_PRE,
+
+  /**
+   * @ignore
+   *
+   * @constant {string}
+   */
   NOTE_PRE: NOTE_PRE,
 
   /**
@@ -153,6 +161,18 @@ CustomConsoleLoggerKlass.prototype = {
     args = args.concat(Array.prototype.slice.call(arguments));
     args.push(this.CONSOLE_RESET);
     console.log.apply(console, args);
+  },
+
+  /**
+   * Log level debug
+   */
+  debug: function () {
+    if (coreConstants.DEBUG_ENABLED == 1) {
+      var args = [appendRequest(this.DEBUG_PRE)];
+      args = args.concat(Array.prototype.slice.call(arguments));
+      args.push(this.CONSOLE_RESET);
+      console.log.apply(console, args);
+    }
   },
 
   /**
