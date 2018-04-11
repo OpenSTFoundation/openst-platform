@@ -17,7 +17,7 @@ function subscribe(){
     ['#'],
     {queue: 'openst_platform'},
     function(msgContent){
-      logger.info('[RECEIVED]', msgContent, '\n');
+      logger.debug('[RECEIVED]', msgContent, '\n');
     }
   ).catch(function (err) {logger.error(err);});
 }
