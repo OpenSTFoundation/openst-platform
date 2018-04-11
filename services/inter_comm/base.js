@@ -82,7 +82,7 @@ IntercomBaseKlass.prototype = {
       logger.info('Exception got:', err);
 
       if(oThis.interruptSignalObtained){
-        console.log('Exiting Process....');
+        logger.info('Exiting Process....');
         process.exit(1);
       } else {
         oThis.reInit();
@@ -99,11 +99,11 @@ IntercomBaseKlass.prototype = {
     const oThis = this;
 
     process.on('SIGINT', function() {
-      console.log("Received SIGINT, cancelling block scaning");
+      logger.info("Received SIGINT, cancelling block scaning");
       oThis.interruptSignalObtained = true;
     });
     process.on('SIGTERM', function() {
-      console.log("Received SIGTERM, cancelling block scaning");
+      logger.info("Received SIGTERM, cancelling block scaning");
       oThis.interruptSignalObtained = true;
     });
   },
@@ -202,7 +202,7 @@ IntercomBaseKlass.prototype = {
     );
 
     if(oThis.interruptSignalObtained){
-      console.log('Exiting Process....');
+      logger.info('Exiting Process....');
       process.exit(1);
     }
   }
