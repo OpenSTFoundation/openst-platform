@@ -55,6 +55,7 @@ EstimateGasKlass.prototype = {
       , web3Provider = web3ProviderFactory.getProvider(oThis.chain, 'ws')
       , abi = coreAddresses.getAbiForContract(oThis.contractName)
       , contractObj = new web3Provider.eth.Contract(abi)
+      , bufferGasLimit = 10000
     ;
 
     contractObj.options.address = oThis.contractAddress;
@@ -70,7 +71,7 @@ EstimateGasKlass.prototype = {
       , gasToUse = await (scope[oThis.methodName].apply(scope,
       (oThis.methodArguments || []))).estimateGas(transactionOptions);
 
-    return responseHelper.successWithData({gas_to_use: gasToUse});
+    return responseHelper.successWithData({gas_to_use: gasToUse + bufferGasLimit});
   }
 };
 
