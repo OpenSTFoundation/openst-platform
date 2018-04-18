@@ -19,7 +19,7 @@ const rootPrefix = ".."
   , coreConstants = require(rootPrefix + '/config/core_constants')
 ;
 
-const Logger  = OSTCore.Logger
+const Logger = OSTCore.Logger
   , loggerLevel = (coreConstants.DEBUG_ENABLED == '1' ? Logger.LOG_LEVELS.TRACE : Logger.LOG_LEVELS.INFO)
   , packageName = packageFile.name
 ;
@@ -57,7 +57,7 @@ const appendRequest = function (message) {
 };
 
 
-Logger.prototype.notify = function(code, msg, data, backtrace){
+Logger.prototype.notify = function (code, msg, data, backtrace) {
   var args = [appendRequest(this.NOTE_PRE)];
   args = args.concat(Array.prototype.slice.call(arguments));
   args.push(this.CONSOLE_RESET);
@@ -68,7 +68,7 @@ Logger.prototype.notify = function(code, msg, data, backtrace){
 
   try {
     bodyData = JSON.stringify(data);
-  } catch(err) {
+  } catch (err) {
     bodyData = data;
   }
 

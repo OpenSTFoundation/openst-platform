@@ -7,10 +7,10 @@
  */
 
 const rootPrefix = '../..'
-    , SimpleStakeKlass = require(rootPrefix + '/lib/contract_interact/simple_stake')
-    , responseHelper = require(rootPrefix + '/lib/formatter/response')
-    , logger = require(rootPrefix + '/helpers/custom_console_logger')
-    , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , SimpleStakeKlass = require(rootPrefix + '/lib/contract_interact/simple_stake')
+  , responseHelper = require(rootPrefix + '/lib/formatter/response')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
 /**
@@ -22,12 +22,12 @@ const rootPrefix = '../..'
  * @constructor
  */
 const GetStakeAmountKlass = function (params) {
-  
+
   const oThis = this;
 
   params = params || {};
   oThis.simpleStakeContractAddress = params.simple_stake_contract_address;
-  
+
 };
 
 GetStakeAmountKlass.prototype = {

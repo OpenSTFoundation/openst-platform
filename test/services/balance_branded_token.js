@@ -19,9 +19,9 @@ var testValidData = {
   erc20_address: brandedTokenDetails['ERC20']
 };
 
-describe('services/balance/branded_token', function() {
+describe('services/balance/branded_token', function () {
 
-  it('should return promise', async function() {
+  it('should return promise', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
     var brandedTokenObj = new platformServices.brandedToken(dupData)
@@ -30,7 +30,7 @@ describe('services/balance/branded_token', function() {
     assert.typeOf(response, 'Promise');
   });
 
-  it('should fail when params is undefined', async function() {
+  it('should fail when params is undefined', async function () {
     var dupData = undefined;
 
     var brandedTokenObj = new platformServices.brandedToken(dupData)
@@ -39,7 +39,7 @@ describe('services/balance/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when params is a string', async function() {
+  it('should fail when params is a string', async function () {
     var dupData = 'abc';
 
     var brandedTokenObj = new platformServices.brandedToken(dupData)
@@ -48,7 +48,7 @@ describe('services/balance/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when params is empty object', async function() {
+  it('should fail when params is empty object', async function () {
     var dupData = {};
 
     var brandedTokenObj = new platformServices.brandedToken(dupData)
@@ -57,7 +57,7 @@ describe('services/balance/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when params is empty array', async function() {
+  it('should fail when params is empty array', async function () {
     var dupData = [];
 
     var brandedTokenObj = new platformServices.brandedToken(dupData)
@@ -67,7 +67,7 @@ describe('services/balance/branded_token', function() {
   });
 
   // Address Variations
-  it('should fail when address is blank', async function() {
+  it('should fail when address is blank', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.address = '';
 
@@ -77,7 +77,7 @@ describe('services/balance/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when address is invalid', async function() {
+  it('should fail when address is invalid', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.address = '0xh32323';
 
@@ -88,7 +88,7 @@ describe('services/balance/branded_token', function() {
   });
 
   // ERC20 Variations
-  it('should fail when erc20 address is blank', async function() {
+  it('should fail when erc20 address is blank', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.erc20_address = '';
 
@@ -98,7 +98,7 @@ describe('services/balance/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when erc20 address is invalid', async function() {
+  it('should fail when erc20 address is invalid', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.erc20_address = '0x2323';
 
@@ -110,7 +110,7 @@ describe('services/balance/branded_token', function() {
 
   // Success Variations
 
-  it('should pass when everything is valid', async function() {
+  it('should pass when everything is valid', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
     var brandedTokenObj = new platformServices.brandedToken(dupData)

@@ -4,7 +4,7 @@
  * Estimate gas for a transaction
  *
  * @module services/transaction/estimate_gas
-*/
+ */
 
 const rootPrefix = '../..'
   , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
@@ -13,7 +13,7 @@ const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
 ;
 
-  const UC_GAS_PRICE = coreConstants.OST_UTILITY_GAS_PRICE
+const UC_GAS_PRICE = coreConstants.OST_UTILITY_GAS_PRICE
   , UC_GAS_LIMIT = coreConstants.OST_UTILITY_GAS_LIMIT
   , VC_GAS_PRICE = coreConstants.OST_VALUE_GAS_PRICE
   , VC_GAS_LIMIT = coreConstants.OST_VALUE_GAS_LIMIT
@@ -32,7 +32,7 @@ const rootPrefix = '../..'
  *
  * @constructor
  */
-const EstimateGasKlass = function(params) {
+const EstimateGasKlass = function (params) {
   const oThis = this
   ;
 

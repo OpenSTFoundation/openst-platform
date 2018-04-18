@@ -25,7 +25,7 @@ const stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
  *
  * @constructor
  */
-const SimpleTokenPrimeBalanceKlass = function(params) {
+const SimpleTokenPrimeBalanceKlass = function (params) {
   const oThis = this;
 
   params = params || {};

@@ -37,12 +37,12 @@ GenerateAddressKlass.prototype = {
    *
    * @return {promise<result>}
    */
-  perform: async function() {
+  perform: async function () {
     const oThis = this
     ;
 
     const web3Provider = web3ProviderFactory.getProvider(oThis.chain, web3ProviderFactory.typeWS);
-    if(!web3Provider) {
+    if (!web3Provider) {
       return Promise.resolve(responseHelper.error('s_u_ga_1', 'Invalid chain'));
     }
 

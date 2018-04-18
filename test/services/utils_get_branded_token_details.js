@@ -21,12 +21,12 @@ var testValidData = {
 var verifyAgainstData = {
   symbol: brandedTokenConfig[testValidData.uuid]['Symbol'],
   name: brandedTokenConfig[testValidData.uuid]['Name'],
-  conversion_factor: brandedTokenConfig[testValidData.uuid]['ConversionFactor'],  
+  conversion_factor: brandedTokenConfig[testValidData.uuid]['ConversionFactor']
 };
 
-describe('services/utils/get_branded_token_details', function() {
+describe('services/utils/get_branded_token_details', function () {
 
-  it('should return promise', async function() {
+  it('should return promise', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
     var getBrandedTokenDetailsObj = new platformServices.getBrandedTokenDetails(dupData)
@@ -35,7 +35,7 @@ describe('services/utils/get_branded_token_details', function() {
     assert.typeOf(response, 'Promise');
   });
 
-  it('should fail when params is undefined', async function() {
+  it('should fail when params is undefined', async function () {
     var dupData = undefined;
 
     var getBrandedTokenDetailsObj = new platformServices.getBrandedTokenDetails(dupData)
@@ -44,7 +44,7 @@ describe('services/utils/get_branded_token_details', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when params is a string', async function() {
+  it('should fail when params is a string', async function () {
     var dupData = 'abc';
 
     var getBrandedTokenDetailsObj = new platformServices.getBrandedTokenDetails(dupData)
@@ -53,7 +53,7 @@ describe('services/utils/get_branded_token_details', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when params is empty object', async function() {
+  it('should fail when params is empty object', async function () {
     var dupData = {};
 
     var getBrandedTokenDetailsObj = new platformServices.getBrandedTokenDetails(dupData)
@@ -62,7 +62,7 @@ describe('services/utils/get_branded_token_details', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when params is empty array', async function() {
+  it('should fail when params is empty array', async function () {
     var dupData = [];
 
     var getBrandedTokenDetailsObj = new platformServices.getBrandedTokenDetails(dupData)
@@ -71,7 +71,7 @@ describe('services/utils/get_branded_token_details', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when invalid uuid is set', async function() {
+  it('should fail when invalid uuid is set', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.uuid = 'abc';
 
@@ -81,7 +81,7 @@ describe('services/utils/get_branded_token_details', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should pass when chain is valid and associated with BT', async function() {
+  it('should pass when chain is valid and associated with BT', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
     var getBrandedTokenDetailsObj = new platformServices.getBrandedTokenDetails(dupData)
@@ -94,8 +94,8 @@ describe('services/utils/get_branded_token_details', function() {
     assert.equal(response.data.conversion_factor, verifyAgainstData.conversion_factor);
 
     assert.hasAllKeys(response.data, ['symbol', 'name', 'conversion_rate',
-       'conversion_rate_decimals', 'conversion_factor', 'decimals',
-         'chain_id_utility', 'simple_stake_contract_address', 'staking_account']);
+      'conversion_rate_decimals', 'conversion_factor', 'decimals',
+      'chain_id_utility', 'simple_stake_contract_address', 'staking_account']);
   });
 
 });

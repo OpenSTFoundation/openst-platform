@@ -18,7 +18,8 @@ const CONVERSION_RATE_DECIMALS = 5;
  * @constructor
  *
  */
-const BasicHelperKlass = function() {};
+const BasicHelperKlass = function () {
+};
 
 BasicHelperKlass.prototype = {
 
@@ -97,7 +98,7 @@ BasicHelperKlass.prototype = {
    * @return {boolean}
    */
   isTagValid: function (tag) {
-    if(tag == ''){
+    if (tag == '') {
       return true;
     }
     if (typeof tag !== "string") {
@@ -124,7 +125,7 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isReturnTypeUUID: function(returnType) {
+  isReturnTypeUUID: function (returnType) {
     return returnType === 'uuid';
   },
 
@@ -135,7 +136,7 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isReturnTypeTxHash: function(returnType) {
+  isReturnTypeTxHash: function (returnType) {
     return returnType === 'txHash';
   },
 
@@ -146,7 +147,7 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isReturnTypeTxReceipt: function(returnType) {
+  isReturnTypeTxReceipt: function (returnType) {
     return returnType === 'txReceipt';
   },
 
@@ -259,8 +260,11 @@ BasicHelperKlass.prototype = {
       return responseHelper.error('bh_ccftcr_1', 'Conversion factor is invalid');
     }
     const conversionRate = (new BigNumber(String(conversionFactor))).mul((new BigNumber(10)).toPower(CONVERSION_RATE_DECIMALS));
-    if (conversionRate.modulo(1).equals(0)){
-      return responseHelper.successWithData({conversionRate: conversionRate.toString(10), conversionRateDecimals: CONVERSION_RATE_DECIMALS});      
+    if (conversionRate.modulo(1).equals(0)) {
+      return responseHelper.successWithData({
+        conversionRate: conversionRate.toString(10),
+        conversionRateDecimals: CONVERSION_RATE_DECIMALS
+      });
     } else {
       return responseHelper.error('bh_ccftcr_2', 'Conversion factor is invalid');
     }
@@ -280,7 +284,7 @@ BasicHelperKlass.prototype = {
     if (!oThis.isBTConversionRateValid(conversionRate)) {
       return responseHelper.error('bh_ccrtcf_1', 'Conversion rate is invalid');
     }
-    
+
     if (!oThis.isBTConversionRateDecimalsValid(conversionRateDecimals)) {
       return responseHelper.error('bh_ccrtcf_2', 'Conversion rate decimals is invalid');
     }
@@ -297,7 +301,7 @@ BasicHelperKlass.prototype = {
    *
    * @return {object} - response
    */
-  generateRandomString: function(length) {
+  generateRandomString: function (length) {
 
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

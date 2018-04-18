@@ -20,7 +20,7 @@ const rootPrefix = '../..'
  *
  * @constructor
  */
-const GetApprovalStatusKlass = function(params) {
+const GetApprovalStatusKlass = function (params) {
   const oThis = this
   ;
 

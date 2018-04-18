@@ -29,7 +29,7 @@ const rootPrefix = '../..'
  *
  * @constructor
  */
-const ApproveForBrandedTokenKlass = function(params) {
+const ApproveForBrandedTokenKlass = function (params) {
   const oThis = this;
 
   params = params || {};
@@ -59,7 +59,7 @@ ApproveForBrandedTokenKlass.prototype = {
           logger.error('openst-platform::services/approve/branded_token.js::perform::catch');
           logger.error(error);
 
-          return responseHelper.error('s_a_bt_1', "Unhandled result", null, {}, {sendErrorEmail: false});
+          return responseHelper.error('s_a_bt_1', "Unhandled result");
         }
       });
   },
@@ -85,7 +85,7 @@ ApproveForBrandedTokenKlass.prototype = {
    * @private
    * @ignore
    */
-  _validate: async function() {
+  _validate: async function () {
     const oThis = this
     ;
 
@@ -98,7 +98,7 @@ ApproveForBrandedTokenKlass.prototype = {
       return Promise.reject(responseHelper.error('s_a_bt_3', 'Invalid approver address'));
     }
 
-    if(oThis.toApproveAmount.lessThan(0)) {
+    if (oThis.toApproveAmount.lessThan(0)) {
       return Promise.reject(responseHelper.error('s_a_bt_4', 'Invalid to approve amount'));
     }
 

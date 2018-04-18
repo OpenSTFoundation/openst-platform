@@ -29,7 +29,7 @@ GenerateRawKeyKlass.prototype = {
    *
    * @return {result}
    */
-  perform: function() {
+  perform: function () {
     const oThis = this
     ;
 

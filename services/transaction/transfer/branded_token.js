@@ -31,7 +31,7 @@ const rootPrefix = '../../..'
  *
  * @constructor
  */
-const TransferBrandedTokenKlass = function(params) {
+const TransferBrandedTokenKlass = function (params) {
   const oThis = this
   ;
 
@@ -59,13 +59,13 @@ TransferBrandedTokenKlass.prototype = {
 
     try {
       // Get sender details by name
-      if(oThis.senderName) {
+      if (oThis.senderName) {
         oThis.senderAddress = coreAddresses.getAddressForUser(oThis.senderName);
         oThis.senderPassphrase = coreAddresses.getPassphraseForUser(oThis.senderName);
       }
 
       // Get recipient details by name
-      if(oThis.recipientName) {
+      if (oThis.recipientName) {
         oThis.recipientAddress = coreAddresses.getAddressForUser(oThis.recipientName);
       }
 

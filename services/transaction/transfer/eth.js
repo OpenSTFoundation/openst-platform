@@ -29,7 +29,7 @@ const rootPrefix = '../../..'
  *
  * @constructor
  */
-const TransferEthKlass = function(params) {
+const TransferEthKlass = function (params) {
 
   const oThis = this
   ;
@@ -58,13 +58,13 @@ TransferEthKlass.prototype = {
 
     try {
       // Get sender details by name
-      if(oThis.senderName) {
+      if (oThis.senderName) {
         oThis.senderAddress = coreAddresses.getAddressForUser(oThis.senderName);
         oThis.senderPassphrase = coreAddresses.getPassphraseForUser(oThis.senderName);
       }
 
       // Get recipient details by name
-      if(oThis.recipientName) {
+      if (oThis.recipientName) {
         oThis.recipientAddress = coreAddresses.getAddressForUser(oThis.recipientName);
       }
 
@@ -85,9 +85,9 @@ TransferEthKlass.prototype = {
       var etherInteractObj = new etherInteractKlass();
 
       return etherInteractObj.transfer(
-          oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei
-          , {tag: oThis.tag, returnType: oThis.returnType}
-        );
+        oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei
+        , {tag: oThis.tag, returnType: oThis.returnType}
+      );
 
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_t_t_e_4', 'Something went wrong. ' + err.message));

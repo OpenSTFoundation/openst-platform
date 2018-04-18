@@ -13,10 +13,11 @@ const rootPrefix = '../..'
 
 const getApprovalStatus = async function (approvalTransactionHash) {
   try {
-    const approvalTxReceipt = await contractInteractHelper.waitAndGetTransactionReceipt(web3UcProvider, approvalTransactionHash);
+    const approvalTxReceipt = await contractInteractHelper
+      .waitAndGetTransactionReceipt(web3UcProvider, approvalTransactionHash);
 
     if (!approvalTxReceipt || !approvalTxReceipt.isSuccess()) {
-      return Promise.resolve(responseHelper.error('s_rau_gas_1', 'approval not yet mined.'));
+      return Promise.resolve(responseHelper.error('s_rau_gas_1', 'Approval transaction not yet mined'));
     }
 
     const approvalFormattedTxReceipt = approvalTxReceipt.data.formattedTransactionReceipt;
@@ -25,7 +26,8 @@ const getApprovalStatus = async function (approvalTransactionHash) {
     // check whether Approval is present in the events.
     if (!approvalFormattedEvents || !approvalFormattedEvents['Approval']) {
       // this is a error scenario.
-      return Promise.resolve(responseHelper.error('s_rau_gas_2', 'Approval event was not found in the reseipt.'));
+      return Promise.resolve(responseHelper.error('s_rau_gas_2',
+        'Approval event was not found in the transaction receipt'));
     }
 
     return Promise.resolve(responseHelper.successWithData({}));

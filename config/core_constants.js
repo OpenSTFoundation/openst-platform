@@ -23,7 +23,8 @@ function absolutePath(filePath) {
  *
  * @constructor
  */
-const CoreConstants = function() {};
+const CoreConstants = function () {
+};
 
 CoreConstants.prototype = {
 

@@ -43,10 +43,10 @@ const rootPrefix = '../..'
  *
  * @return {boolean} true when equal
  */
-String.prototype.equalsIgnoreCase = function ( compareWith ) {
+String.prototype.equalsIgnoreCase = function (compareWith) {
   const oThis = this
     , _self = this.toLowerCase()
-    , _compareWith = String( compareWith ).toLowerCase();
+    , _compareWith = String(compareWith).toLowerCase();
 
   return _self === _compareWith;
 };
@@ -103,7 +103,7 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
    * Parallel processing allowed
    * @return bool
    */
-  parallelProcessingAllowed: function() {
+  parallelProcessingAllowed: function () {
     return true;
   },
 
@@ -183,7 +183,7 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
 
     logger.step(stakingIntentHash, ' :: performing processStaking for ' + displayTokenType);
 
-    const vcStakeResponse =  await openSTValueContractInteract.processStaking(stakerAddress, stakerPassphrase, stakingIntentHash);
+    const vcStakeResponse = await openSTValueContractInteract.processStaking(stakerAddress, stakerPassphrase, stakingIntentHash);
 
     if (vcStakeResponse.isSuccess()) {
       const vcFormattedTransactionReceipt = vcStakeResponse.data.formattedTransactionReceipt

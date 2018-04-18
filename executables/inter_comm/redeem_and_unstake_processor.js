@@ -46,10 +46,10 @@ const openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
  *
  * @return {booelan} true when equal
  */
-String.prototype.equalsIgnoreCase = function ( compareWith ) {
+String.prototype.equalsIgnoreCase = function (compareWith) {
   const oThis = this
     , _self = this.toLowerCase()
-    , _compareWith = String( compareWith ).toLowerCase();
+    , _compareWith = String(compareWith).toLowerCase();
 
   return _self === _compareWith;
 };

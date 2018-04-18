@@ -32,7 +32,7 @@ const senderName = 'staker'
  *
  * @constructor
  */
-const ProposeBrandedTokenKlass = function(params) {
+const ProposeBrandedTokenKlass = function (params) {
   const oThis = this
   ;
 
@@ -50,7 +50,7 @@ ProposeBrandedTokenKlass.prototype = {
    *
    * @return {promise<result>} - returns a promise which resolves to an object of kind Result
    */
-  perform: async function() {
+  perform: async function () {
     const oThis = this
     ;
 
@@ -61,7 +61,7 @@ ProposeBrandedTokenKlass.prototype = {
       }
       if (!basicHelper.isBTSymbolValid(oThis.symbol)) {
         return Promise.resolve(responseHelper.error('s_ob_pbt_2', 'Invalid branded token symbol'));
-      }      
+      }
       if (!basicHelper.isBTConversionFactorValid(oThis.conversionFactor)) {
         return responseHelper.error('s_ob_pbt_3', 'Conversion factor is invalid');
       }
@@ -74,7 +74,7 @@ ProposeBrandedTokenKlass.prototype = {
         oThis.conversionRateDecimals = conversionRateConversionResponse.data.conversionRateDecimals;
 
         const proposalRsp = await openSTUtility.proposeBrandedToken(stakerAddr, stakerPassphrase, oThis.symbol,
-            oThis.name, oThis.conversionRate, oThis.conversionRateDecimals);
+          oThis.name, oThis.conversionRate, oThis.conversionRateDecimals);
 
         if (proposalRsp.isSuccess()) {
           proposalRsp.data.transaction_uuid = uuid.v4();
@@ -85,7 +85,7 @@ ProposeBrandedTokenKlass.prototype = {
       } else {
         return Promise.resolve(conversionRateConversionResponse);
       }
-      
+
     } catch (err) {
       return Promise.resolve(responseHelper.error('s_ob_pbt_4', 'Something went wrong. ' + err.message));
     }

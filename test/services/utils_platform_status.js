@@ -8,9 +8,9 @@ const rootPrefix = "../.."
   , platformServices = openstPlatform.services.utils
 ;
 
-describe('services/utils/platform_status', function() {
+describe('services/utils/platform_status', function () {
 
-  it('should return promise', async function() {
+  it('should return promise', async function () {
     var platformStatusObj = new platformServices.platformStatus()
       , response = platformStatusObj.perform()
     ;

@@ -12,14 +12,16 @@ const rootPrefix = '..'
 /**
  * Subscribe to all events of rabbit.
  */
-function subscribe(){
+function subscribe() {
   openSTNotification.subscribeEvent.rabbit(
     ['#'],
     {queue: 'openst_platform'},
-    function(msgContent){
+    function (msgContent) {
       logger.debug('[RECEIVED]', msgContent, '\n');
     }
-  ).catch(function (err) {logger.error(err);});
+  ).catch(function (err) {
+    logger.error(err);
+  });
 }
 
 // Start

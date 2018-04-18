@@ -22,7 +22,7 @@ const rootPrefix = '../..'
  *
  * @constructor
  */
-const BrandedTokenBalanceKlass = function(params) {
+const BrandedTokenBalanceKlass = function (params) {
   const oThis = this;
 
   params = params || {};

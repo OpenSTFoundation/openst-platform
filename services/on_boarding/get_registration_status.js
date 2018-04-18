@@ -32,7 +32,7 @@ const openStUtilityContractAddr = coreAddresses.getAddressForContract('openSTUti
  *
  * @constructor
  */
-const GetRegistrationStatusKlass = function(params) {
+const GetRegistrationStatusKlass = function (params) {
   const oThis = this
   ;
 
@@ -47,7 +47,7 @@ GetRegistrationStatusKlass.prototype = {
    *
    * @return {promise<result>} - returns a promise which resolves to an object of kind Result
    */
-  perform: async function() {
+  perform: async function () {
     const oThis = this
     ;
 
@@ -79,7 +79,7 @@ GetRegistrationStatusKlass.prototype = {
       // now checking to confirm if registration on UC took place
       const registeredOnUCResponse = await openSTUtilityContractInteract.registeredToken(uuid);
 
-      if(!registeredOnUCResponse ||
+      if (!registeredOnUCResponse ||
         !registeredOnUCResponse.isSuccess() ||
         (registeredOnUCResponse.data.erc20Address == '0x0000000000000000000000000000000000000000')) {
         return registrationStatus.returnResultPromise();
@@ -91,7 +91,7 @@ GetRegistrationStatusKlass.prototype = {
       // now checking to confirm if registration on VC took place
       const registeredOnVCResponse = await openSTValueContractInteract.utilityTokens(uuid);
 
-      if(!registeredOnVCResponse ||
+      if (!registeredOnVCResponse ||
         !registeredOnVCResponse.isSuccess() ||
         (registeredOnVCResponse.data.symbol.length == 0)) {
         return registrationStatus.returnResultPromise();

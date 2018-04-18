@@ -10,7 +10,7 @@ const rootPrefix = '../..'
   , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  ;
+;
 
 /**
  * Constructor for platform service status
@@ -54,13 +54,13 @@ PlatformStatusKlass.prototype = {
    * @private
    * @ignore
    */
-  _gethStatus: function(chain) {
+  _gethStatus: function (chain) {
     const web3Provider = web3ProviderFactory.getProvider(chain, web3ProviderFactory.typeWS)
       , retryAttempts = 100
       , timerInterval = 5000
       , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
-      ;
-    if(!web3Provider) {
+    ;
+    if (!web3Provider) {
       // this is a error scenario.
       return Promise.reject(responseHelper.error('s_u_ps_1', 'Invalid chain name ' + chain));
     }
@@ -73,7 +73,7 @@ PlatformStatusKlass.prototype = {
               logger.error("Geth Checker - " + chain + " fetch block number failed.", err);
               chainTimer['retryCounter']++;
             } else {
-              if (chainTimer['blockNumber']!=0 && chainTimer['blockNumber']!=blocknumber) {
+              if (chainTimer['blockNumber'] != 0 && chainTimer['blockNumber'] != blocknumber) {
                 clearInterval(chainTimer['timer']);
                 onResolve(responseHelper.successWithData({}));
               }

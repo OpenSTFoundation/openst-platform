@@ -23,7 +23,7 @@ const rootPrefix = '../..'
  *
  * @constructor
  */
-const GetReceiptKlass = function(params) {
+const GetReceiptKlass = function (params) {
   const oThis = this
   ;
 
@@ -51,11 +51,11 @@ GetReceiptKlass.prototype = {
       }
 
       const web3Provider = web3ProviderFactory.getProvider(oThis.chain, web3ProviderFactory.typeWS);
-      if(!web3Provider) {
-        return Promise.resolve(responseHelper.error('s_t_gr_2', 'Invalid chain.'));
+      if (!web3Provider) {
+        return Promise.resolve(responseHelper.error('s_t_gr_2', 'Invalid chain'));
       }
 
-      const txReceipt = await web3Provider.eth.getTransactionReceipt( oThis.transactionHash);
+      const txReceipt = await web3Provider.eth.getTransactionReceipt(oThis.transactionHash);
 
       if (!txReceipt) {
         return Promise.resolve(responseHelper.successWithData({}));

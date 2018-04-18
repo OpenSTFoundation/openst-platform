@@ -46,8 +46,7 @@ const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue
     publisher: 'OST',
     message: {
       kind: '', // populate later: with every stage
-      payload: {
-      }
+      payload: {}
     }
   }
 ;
@@ -99,7 +98,7 @@ const RegisterBrandedTokenInterCommSpecificPrototype = {
    * Parallel processing allowed
    * @return bool
    */
-  parallelProcessingAllowed: function() {
+  parallelProcessingAllowed: function () {
     return true;
   },
 

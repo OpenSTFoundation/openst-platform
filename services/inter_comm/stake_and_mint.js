@@ -77,7 +77,7 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
    * Parallel processing allowed
    * @return bool
    */
-  parallelProcessingAllowed: function() {
+  parallelProcessingAllowed: function () {
     return false;
   },
 

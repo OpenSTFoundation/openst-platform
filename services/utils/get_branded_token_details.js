@@ -50,7 +50,7 @@ GetBrandedTokenDetailsKlass.prototype = {
     }
 
     var tokenDetails = await openSTValue.utilityTokens(oThis.uuid);
-    
+
     return tokenDetails;
   }
 };

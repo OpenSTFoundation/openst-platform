@@ -20,7 +20,7 @@ const rootPrefix = '../..'
  *
  * @constructor
  */
-const EthBalanceKlass = function(params) {
+const EthBalanceKlass = function (params) {
   const oThis = this;
 
   params = params || {};

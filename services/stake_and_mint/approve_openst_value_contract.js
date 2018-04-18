@@ -32,7 +32,7 @@ const openSTValueContractName = 'openSTValue'
  *
  * @constructor
  */
-const ApproveOpenstValueContractKlass = function(params) {
+const ApproveOpenstValueContractKlass = function (params) {
 
   const oThis = this
   ;
@@ -40,7 +40,7 @@ const ApproveOpenstValueContractKlass = function(params) {
   params = params || {};
   params.options = params.options || {};
 
-  if(params.options.returnType === 'txReceipt') {
+  if (params.options.returnType === 'txReceipt') {
     oThis.runInAsync = false;
   } else {
     oThis.runInAsync = true;
@@ -106,7 +106,7 @@ ApproveOpenstValueContractKlass.prototype = {
    * @private
    * @ignore
    */
-  _getStakerSTBalance: function() {
+  _getStakerSTBalance: function () {
     return simpleToken.balanceOf(stakerAddress)
       .then(function (result) {
         const stBalance = result.data['balance'];

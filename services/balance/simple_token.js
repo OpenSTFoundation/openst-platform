@@ -20,7 +20,7 @@ const rootPrefix = '../..'
  *
  * @constructor
  */
-const SimpleTokenBalanceKlass = function(params) {
+const SimpleTokenBalanceKlass = function (params) {
   const oThis = this;
 
   params = params || {};
