@@ -10,7 +10,7 @@ const getNamespace = require('continuation-local-storage').getNamespace
   // Get common local storage namespace to read
   // request identifiers for debugging and logging
   , openSTNotification = require('@openstfoundation/openst-notification')
-  , OSTCore = require('@openstfoundation/openst-core')
+  , OSTBase = require('@openstfoundation/openst-base')
   , requestNamespace = getNamespace('openST-Platform-NameSpace')
 ;
 
@@ -19,7 +19,7 @@ const rootPrefix = ".."
   , coreConstants = require(rootPrefix + '/config/core_constants')
 ;
 
-const Logger = OSTCore.Logger
+const Logger = OSTBase.Logger
   , loggerLevel = (coreConstants.DEBUG_ENABLED == '1' ? Logger.LOG_LEVELS.TRACE : Logger.LOG_LEVELS.INFO)
   , packageName = packageFile.name
 ;
