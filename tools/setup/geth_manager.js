@@ -47,7 +47,8 @@ const allocBalancesOn = {
  *
  * @constructor
  */
-const GethManagerKlass = function () {};
+const GethManagerKlass = function () {
+};
 
 GethManagerKlass.prototype = {
 
@@ -55,7 +56,7 @@ GethManagerKlass.prototype = {
   /**
    * Do the build clean up
    */
-  buildCleanup: function() {
+  buildCleanup: function () {
     const oThis = this;
 
     // remove tmp geth
@@ -67,7 +68,7 @@ GethManagerKlass.prototype = {
    *
    * @return {string}
    */
-  getChainAbsoluteDataDir: function(chain) {
+  getChainAbsoluteDataDir: function (chain) {
     const oThis = this;
     return setupHelper.setupFolderAbsolutePath() + '/' + oThis.getChainDataFolder(chain);
   },
@@ -77,7 +78,7 @@ GethManagerKlass.prototype = {
    *
    * @return {string}
    */
-  getChainDataFolder: function(chain) {
+  getChainDataFolder: function (chain) {
     return setupConfig.chains[chain].folder_name;
   },
 
@@ -87,7 +88,7 @@ GethManagerKlass.prototype = {
    * @param options
    * @return {Object} Addresses generated
    */
-  generateAddresses: function(options){
+  generateAddresses: function (options) {
     const oThis = this;
 
     return oThis._createAddresses(options);
@@ -96,14 +97,14 @@ GethManagerKlass.prototype = {
   /**
    * Generate all required pre init addresses in temp geth data dir
    */
-  generatePreInitAddresses: function() {
+  generatePreInitAddresses: function () {
     const oThis = this;
 
     // create temp geth folder
     fileManager.mkdir(tempGethFolder);
 
     // create all required addresses in tmp geth data dir
-    for (var i=0; i < preInitAddressName.length; i++) {
+    for (var i = 0; i < preInitAddressName.length; i++) {
       var name = preInitAddressName[i]
         , nameDetails = setupConfig.addresses[name];
       logger.info("* " + name + " address: ");
@@ -117,12 +118,12 @@ GethManagerKlass.prototype = {
    *
    * @param {string} chain - name of the chain
    */
-  initChain: function(chain) {
+  initChain: function (chain) {
     const oThis = this
       , chainFolder = oThis.getChainDataFolder(chain)
       , chainDataDir = oThis.getChainAbsoluteDataDir(chain)
-      , chainGenesisTemplateLocation = genesisTemplateLocation + '/genesis-'+chain+'.json'
-      , chainGenesisLocation = chainDataDir + '/genesis-'+chain+'.json'
+      , chainGenesisTemplateLocation = genesisTemplateLocation + '/genesis-' + chain + '.json'
+      , chainGenesisLocation = chainDataDir + '/genesis-' + chain + '.json'
     ;
 
     // create chain folder
@@ -131,7 +132,7 @@ GethManagerKlass.prototype = {
 
     // copy genesis template file in chain folder
     logger.info("* Copying " + chain + " genesis template file");
-    fileManager.exec('cp ' + chainGenesisTemplateLocation +' ' + chainGenesisLocation);
+    fileManager.exec('cp ' + chainGenesisTemplateLocation + ' ' + chainGenesisLocation);
 
     // Alloc balance in genesis files
     logger.info("* Modifying " + chain + " genesis file");
@@ -147,11 +148,11 @@ GethManagerKlass.prototype = {
    *
    * @return {object}
    */
-  copyPreInitAddressesToChains: function() {
+  copyPreInitAddressesToChains: function () {
     const oThis = this;
 
     // copy all keystore files from temp location to required location
-    for (var i=0; i < preInitAddressName.length; i++) {
+    for (var i = 0; i < preInitAddressName.length; i++) {
       var name = preInitAddressName[i]
         , nameDetails = setupConfig.addresses[name]
         , keystoreFileNameLike = nameDetails.address.value.replace(hexStartsWith, '*')
@@ -172,19 +173,19 @@ GethManagerKlass.prototype = {
    *
    * @param addresses
    */
-  importPostInitAddressesToChains: function(addresses) {
+  importPostInitAddressesToChains: function (addresses) {
     const oThis = this;
 
     for (var name in setupConfig.addresses) {
       var nameDetails = setupConfig.addresses[name]
         , privateKey = addresses[nameDetails.address.value]
       ;
-      if(preInitAddressName.includes(name)){
+      if (preInitAddressName.includes(name)) {
         continue;
       }
 
       var chainsToImport = Object.keys(nameDetails.chains);
-      for(var i=0;i<chainsToImport.length;i++){
+      for (var i = 0; i < chainsToImport.length; i++) {
         var chain = chainsToImport[i];
         logger.info("* Copying " + name + " keystore file to " + chain + " chain");
         oThis._importKeyFilesToGeth(setupConfig.chains[chain].folder_name, nameDetails, privateKey);
@@ -211,7 +212,7 @@ GethManagerKlass.prototype = {
           provider.eth.getBlockNumber(function (err, blocknumber) {
             if (err) {
             } else {
-              if (chainTimer['blockNumber']!=0 && chainTimer['blockNumber']!=blocknumber) {
+              if (chainTimer['blockNumber'] != 0 && chainTimer['blockNumber'] != blocknumber) {
                 logger.info("* Geth Checker - " + chain + " chain has new blocks.");
                 clearInterval(chainTimer['timer']);
                 onResolve();
@@ -238,14 +239,15 @@ GethManagerKlass.prototype = {
    * @return {boolean}
    * @private
    */
-  _modifyGenesisFile: function(chain, chainGenesisLocation) {
+  _modifyGenesisFile: function (chain, chainGenesisLocation) {
     const chainId = setupConfig.chains[chain].chain_id.value
       , allocBalanceToAddrName = setupConfig.chains[chain].alloc_balance_to_addr
       , allocAmountToAddress = setupConfig.addresses[allocBalanceToAddrName].address.value
       , allocAmount = hexStartsWith + allocBalancesOn[chain].toString(16)
       , gasLimit = hexStartsWith + gasLimitOn[chain].toString(16)
       , sealerAddress = setupConfig.addresses['sealer'].address.value
-      , extraData = "0x0000000000000000000000000000000000000000000000000000000000000000" + sealerAddress.replace(hexStartsWith, '') + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      ,
+      extraData = "0x0000000000000000000000000000000000000000000000000000000000000000" + sealerAddress.replace(hexStartsWith, '') + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
     ;
 
     // If the file doesn't exist, the content will be an empty object by default.
@@ -280,7 +282,7 @@ GethManagerKlass.prototype = {
    * @return {object}
    * @private
    */
-  _initChain: function(chain, chainDataDir, chainGenesisLocation) {
+  _initChain: function (chain, chainDataDir, chainGenesisLocation) {
     fileManager.exec('geth --datadir "' + chainDataDir + '" init ' + chainGenesisLocation);
   },
 
@@ -293,7 +295,7 @@ GethManagerKlass.prototype = {
    * @return {string} - new account address
    * @private
    */
-  _generatePreInitAddresses: function(relativeDataDir, passphrase) {
+  _generatePreInitAddresses: function (relativeDataDir, passphrase) {
     const tmpPasswordFilePath = relativeDataDir + '/' + tempPasswordFile
       , absoluteDirPath = setupHelper.setupFolderAbsolutePath() + '/' + relativeDataDir;
 
@@ -319,27 +321,29 @@ GethManagerKlass.prototype = {
    * @return {object}
    * @private
    */
-  _createAddresses: function(options){
+  _createAddresses: function (options) {
     var pre_generated_addresses = (options || {}).pre_generated_addresses
       , rawAddresses = {}
-      ;
+    ;
 
-    for (var name in setupConfig.addresses){
+    for (var name in setupConfig.addresses) {
       var nameDetails = setupConfig.addresses[name]
         , privateKey = ''
       ;
-      if(preInitAddressName.includes(name)){
+
+      if (preInitAddressName.includes(name)) {
         continue;
       }
 
       // Check if pre generated address details are provided and can be overwritten
       if (Array.isArray(pre_generated_addresses) && pre_generated_addresses.length > 0) {
         var pre_generated_address = pre_generated_addresses.pop();
+
         // retrieve details from private key
-        try{
+        try {
           if (pre_generated_address.privateKey) {
             var privateKeyObj = (new Web3).eth.accounts.privateKeyToAccount(pre_generated_address.privateKey);
-            if(basicHelper.isAddressValid(pre_generated_address.address) && pre_generated_address.address === privateKeyObj.address){
+            if (basicHelper.isAddressValid(pre_generated_address.address) && pre_generated_address.address === privateKeyObj.address) {
               nameDetails.address.value = privateKeyObj.address;
               privateKey = privateKeyObj.privateKey;
               // override passphrase if provided from outside
@@ -352,14 +356,18 @@ GethManagerKlass.prototype = {
           nameDetails.address.value = '';
         }
       }
-      if(nameDetails.address.value === ''){
+
+      if (nameDetails.address.value === '') {
         // Generate New address
         const response = new generateRawKeyKlass().perform();
+
         if (response.isFailure()) {
           logger.error(response);
           process.exit(1);
         }
+
         nameDetails.address.value = response.data.address;
+
         privateKey = response.data.privateKey;
       }
       rawAddresses[nameDetails.address.value] = privateKey;
@@ -377,7 +385,7 @@ GethManagerKlass.prototype = {
    * @param privateKey
    * @private
    */
-  _importKeyFilesToGeth: function(chainDirectory, nameDetails, privateKey){
+  _importKeyFilesToGeth: function (chainDirectory, nameDetails, privateKey) {
     var relativeDataDir = chainDirectory
       , tmpPasswordFilePath = relativeDataDir + '/' + tempPasswordFile
       , tmpPassphraseFilePath = relativeDataDir + '/' + tempPrivateKeyFile
