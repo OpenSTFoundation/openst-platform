@@ -43,7 +43,12 @@ GenerateAddressKlass.prototype = {
 
     const web3Provider = web3ProviderFactory.getProvider(oThis.chain, web3ProviderFactory.typeWS);
     if (!web3Provider) {
-      return Promise.resolve(responseHelper.error('s_u_ga_1', 'Invalid chain'));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_u_ga_1',
+        api_error_identifier: 'invalid_chain',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      return Promise.resolve(errObj);
     }
 
     var eth_address = await web3Provider.eth.personal.newAccount(oThis.passphrase);

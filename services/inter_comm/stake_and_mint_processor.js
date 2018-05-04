@@ -33,6 +33,7 @@ const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
+  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
   , IntercomBaseKlass = require(rootPrefix + '/services/inter_comm/base')
 ;
 
@@ -206,10 +207,20 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
       notificationData.message.payload.status = 'process_staking_on_vc_failed';
       openSTNotification.publishEvent.perform(notificationData);
 
-      var errMessage = stakingIntentHash + ' processStaking on openSTValue contract failed for ' + displayTokenType;
-      logger.notify('e_ic_samp_processor_1', errMessage);
+      // notify devs about the error
+      logger.notify(
+        'e_ic_samp_processor_1',
+        stakingIntentHash + ' processStaking on openSTValue contract failed for ' + displayTokenType
+      );
 
-      return Promise.resolve(responseHelper.error('e_ic_samp_1', errMessage));
+      // return error response.
+      let errObj = responseHelper.error({
+        internal_error_identifier: 'e_ic_samp_processor_1_' + stakingIntentHash,
+        api_error_identifier: 'process_staking_transaction_error',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
 
     /**
@@ -247,10 +258,18 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
       notificationData.message.payload.status = 'process_minting_on_uc_failed';
       openSTNotification.publishEvent.perform(notificationData);
 
-      var errMessage = stakingIntentHash + ' processMinting on openSTUtility contract failed for ' + displayTokenType;
-      logger.notify('e_ic_samp_processor_2', errMessage);
+      logger.notify(
+        'e_ic_samp_processor_2',
+        stakingIntentHash + ' processMinting on openSTUtility contract failed for ' + displayTokenType
+      );
 
-      return Promise.resolve(responseHelper.error('e_ic_samp_2', errMessage));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 'e_ic_samp_2_' + stakingIntentHash,
+        api_error_identifier: 'process_minting_transaction_error',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
 
     /**
@@ -288,10 +307,18 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
       notificationData.message.payload.status = 'claim_token_on_uc_failed';
       openSTNotification.publishEvent.perform(notificationData);
 
-      var errMessage = stakingIntentHash + ' claim failed for ' + displayTokenType;
-      logger.notify('e_ic_samp_processor_3', errMessage);
+      logger.notify(
+        'e_ic_samp_processor_3',
+        stakingIntentHash + ' claim failed for ' + displayTokenType
+      );
 
-      return Promise.resolve(responseHelper.error('e_ic_samp_3', errMessage));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 'e_ic_samp_3_' + stakingIntentHash,
+        api_error_identifier: 'claim_transaction_error',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
 
     return Promise.resolve(responseHelper.successWithData({}));

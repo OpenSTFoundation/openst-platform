@@ -9,6 +9,7 @@ const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
+  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
 const getApprovalStatus = async function (approvalTransactionHash) {
@@ -17,7 +18,13 @@ const getApprovalStatus = async function (approvalTransactionHash) {
       .waitAndGetTransactionReceipt(web3UcProvider, approvalTransactionHash);
 
     if (!approvalTxReceipt || !approvalTxReceipt.isSuccess()) {
-      return Promise.resolve(responseHelper.error('s_rau_gas_1', 'Approval transaction not yet mined'));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_rau_gas_1',
+        api_error_identifier: 'transaction_not_mined',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
 
     const approvalFormattedTxReceipt = approvalTxReceipt.data.formattedTransactionReceipt;
@@ -26,8 +33,13 @@ const getApprovalStatus = async function (approvalTransactionHash) {
     // check whether Approval is present in the events.
     if (!approvalFormattedEvents || !approvalFormattedEvents['Approval']) {
       // this is a error scenario.
-      return Promise.resolve(responseHelper.error('s_rau_gas_2',
-        'Approval event was not found in the transaction receipt'));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_rau_gas_2',
+        api_error_identifier: 'event_not_found_in_transaction_receipt',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
 
     return Promise.resolve(responseHelper.successWithData({}));
