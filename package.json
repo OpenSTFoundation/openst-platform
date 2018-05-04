@@ -29,7 +29,7 @@
   "dependencies": {
     "@openstfoundation/openst-cache": "1.0.3-beta.1",
     "@openstfoundation/openst-base": "0.9.0-beta.15",
-    "@openstfoundation/openst-notification": "1.0.1-beta.1",
+    "@openstfoundation/openst-notification": "1.0.1-beta.2",
     "abi-decoder": "1.0.9",
     "bignumber.js": "4.1.0",
     "child_process": "1.0.2",
