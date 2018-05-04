@@ -61,17 +61,43 @@ FundManagerKlass.prototype = {
 
     // Validations
     if (!basicHelper.isAddressValid(senderAddr)) {
-      return Promise.resolve(responseHelper.error('t_s_fm_1', `Invalid blockchain address: ${senderAddr}`));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 't_s_fm_1',
+        api_error_identifier: 'invalid_address',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
+
     if (!basicHelper.isAddressValid(recipient)) {
-      return Promise.resolve(responseHelper.error('t_s_fm_2', `Invalid blockchain address: ${recipient}`));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 't_s_fm_2',
+        api_error_identifier: 'invalid_address',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
+
     if (senderAddr.equalsIgnoreCase(recipient)) {
-      return Promise.resolve(responseHelper.error('t_s_fm_3',
-        `Same sender & recipient address provided. Sender: ${senderAddr} , Recipient: ${recipient}`));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 't_s_fm_3',
+        api_error_identifier: 'sender_and_recipient_same',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
+
     if (!basicHelper.isNonZeroWeiValid(amountInWei)) {
-      return Promise.resolve(responseHelper.error('t_s_fm_4', `Invalid amount: ${amountInWei}`));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 't_s_fm_4',
+        api_error_identifier: 'invalid_amount',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
 
     // Convert amount in BigNumber
@@ -95,7 +121,12 @@ FundManagerKlass.prototype = {
         })
         .catch(function(reason) {
           logger.error('reason', reason);
-          return responseHelper.error('t_s_fm_5', 'Something went wrong');
+
+          return responseHelper.error({
+            internal_error_identifier: 't_s_fm_5',
+            api_error_identifier: 'something_went_wrong',
+            error_config: basicHelper.fetchErrorConfig()
+          });
         });
     };
 
@@ -179,7 +210,12 @@ FundManagerKlass.prototype = {
 
     // Validate addresses
     if (!basicHelper.isAddressValid(owner)) {
-      return Promise.resolve(responseHelper.error('t_s_fm_8', `Invalid blockchain address: ${owner}`));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 't_s_fm_8',
+        api_error_identifier: 'invalid_address',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      return Promise.resolve(errObj);
     }
 
     return web3Provider.eth.getBalance(owner)
@@ -189,7 +225,11 @@ FundManagerKlass.prototype = {
       .catch(function (err) {
         //Format the error
         logger.error(err);
-        return responseHelper.error('t_s_fm_9', 'Something went wrong');
+        return responseHelper.error({
+          internal_error_identifier: 't_s_fm_9',
+          api_error_identifier: 'something_went_wrong',
+          error_config: basicHelper.fetchErrorConfig()
+        });
       });
   },
 
@@ -207,7 +247,12 @@ FundManagerKlass.prototype = {
 
     // Validate addresses
     if (!basicHelper.isAddressValid(owner)) {
-      return Promise.resolve(responseHelper.error('t_s_fm_10', `Invalid blockchain address: ${owner}`));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 't_s_fm_10',
+        api_error_identifier: 'invalid_address',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      return Promise.resolve(errObj);
     }
 
     return web3Provider.eth.getBalance(owner)
@@ -217,7 +262,12 @@ FundManagerKlass.prototype = {
       .catch(function (err) {
         //Format the error
         logger.error(err);
-        return responseHelper.error('t_s_fm_11', 'Something went wrong');
+
+        return responseHelper.error({
+          internal_error_identifier: 't_s_fm_11',
+          api_error_identifier: 'something_went_wrong',
+          error_config: basicHelper.fetchErrorConfig()
+        });
       });
   },
 
@@ -274,12 +324,20 @@ FundManagerKlass.prototype = {
 
         var balance = response.data.balance;
         if (typeof balance === "undefined" || isNaN(Number(balance))) {
-          return responseHelper.error('t_s_fm_6', 'Something went wrong');
+          return responseHelper.error({
+            internal_error_identifier: 't_s_fm_6',
+            api_error_identifier: 'something_went_wrong',
+            error_config: basicHelper.fetchErrorConfig()
+          });
         }
 
         var bigNumBalance = new BigNumber(balance);
         if (bigNumBalance.lessThan(bigMinAmount)) {
-          return responseHelper.error('t_s_fm_7', 'Insufficient Funds');
+          return responseHelper.error({
+            internal_error_identifier: 't_s_fm_7',
+            api_error_identifier: 'insufficient_funds',
+            error_config: basicHelper.fetchErrorConfig()
+          });
         }
 
         return responseHelper.successWithData({balance: balance, bigNumBalance: bigNumBalance});

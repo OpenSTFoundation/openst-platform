@@ -54,7 +54,13 @@ GetRegistrationStatusKlass.prototype = {
     try {
       // validations
       if (!basicHelper.isTxHashValid(oThis.transactionHash)) {
-        return Promise.resolve(responseHelper.error('s_ob_grs_1', 'Invalid transaction hash'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_ob_grs_1',
+          api_error_identifier: 'invalid_transaction_hash',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+
+        return Promise.resolve(errObj);
       }
 
       // returns the registration status of the proposal
@@ -100,7 +106,13 @@ GetRegistrationStatusKlass.prototype = {
 
       return registrationStatus.returnResultPromise();
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_ob_grs_3', 'Something went wrong. ' + err.message));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_ob_grs_3',
+        api_error_identifier: 'something_went_wrong',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
   }
 };

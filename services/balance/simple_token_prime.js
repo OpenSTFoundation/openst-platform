@@ -40,16 +40,26 @@ SimpleTokenPrimeBalanceKlass.prototype = {
     try {
       //Validations
       if (!basicHelper.isAddressValid(oThis.address)) {
-        return Promise.resolve(responseHelper.error('s_b_st_1', 'Invalid address'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_b_stp_1',
+          api_error_identifier: 'invalid_address',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+
+        return Promise.resolve(errObj);
       }
 
       return stPrime.getBalanceOf(oThis.address);
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_b_st_2', 'Something went wrong. ' + err.message));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_b_stp_2',
+        api_error_identifier: 'something_went_wrong',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
-
   }
-
 };
 
 module.exports = SimpleTokenPrimeBalanceKlass;

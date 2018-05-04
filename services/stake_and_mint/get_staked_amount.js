@@ -43,7 +43,12 @@ GetStakeAmountKlass.prototype = {
 
     // validations
     if (!basicHelper.isAddressValid(oThis.simpleStakeContractAddress)) {
-      return Promise.resolve(responseHelper.error('s_s_m_gsak_1', 'Invalid simpleStakeContractAddress'));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_s_m_gsak_1',
+        api_error_identifier: 'invalid_address',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      return Promise.resolve(errObj);
     }
 
     const simpleStake = new SimpleStakeKlass({contractAddress: oThis.simpleStakeContractAddress})

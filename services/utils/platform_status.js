@@ -62,7 +62,12 @@ PlatformStatusKlass.prototype = {
     ;
     if (!web3Provider) {
       // this is a error scenario.
-      return Promise.reject(responseHelper.error('s_u_ps_1', 'Invalid chain name ' + chain));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_u_ps_1',
+        api_error_identifier: 'invalid_chain',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      return Promise.reject(errObj);
     }
 
     return new Promise(function (onResolve, onReject) {
@@ -82,7 +87,13 @@ PlatformStatusKlass.prototype = {
           });
         } else {
           logger.error("Geth Checker - " + chain + " chain has no new blocks.");
-          onReject(responseHelper.error('s_u_ps_2', 'No new blocks on ' + chain + ' chain'));
+
+          let errObj = responseHelper.error({
+            internal_error_identifier: 's_u_ps_2_' + chain,
+            api_error_identifier: 'no_new_blocks',
+            error_config: basicHelper.fetchErrorConfig()
+          });
+          onReject(errObj);
         }
         chainTimer['retryCounter']++;
       }, timerInterval);

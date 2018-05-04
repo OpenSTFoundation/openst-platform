@@ -59,7 +59,11 @@ ApproveForBrandedTokenKlass.prototype = {
           logger.error('openst-platform::services/approve/branded_token.js::perform::catch');
           logger.error(error);
 
-          return responseHelper.error('s_a_bt_1', "Unhandled result");
+          return responseHelper.error({
+            internal_error_identifier: 's_a_bt_1',
+            api_error_identifier: 'unhandled_error',
+            error_config: basicHelper.fetchErrorConfig()
+          });
         }
       });
   },
@@ -91,15 +95,33 @@ ApproveForBrandedTokenKlass.prototype = {
 
     //Validations
     if (!basicHelper.isAddressValid(oThis.erc20Address)) {
-      return Promise.reject(responseHelper.error('s_a_bt_2', 'Invalid ERC20 address'));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_a_bt_2',
+        api_error_identifier: 'invalid_address',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.reject(errObj);
     }
 
     if (!basicHelper.isAddressValid(oThis.approverAddress)) {
-      return Promise.reject(responseHelper.error('s_a_bt_3', 'Invalid approver address'));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_a_bt_3',
+        api_error_identifier: 'invalid_address',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.reject(errObj);
     }
 
     if (oThis.toApproveAmount.lessThan(0)) {
-      return Promise.reject(responseHelper.error('s_a_bt_4', 'Invalid to approve amount'));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_a_bt_4',
+        api_error_identifier: 'invalid_amount',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.reject(errObj);
     }
 
     return Promise.resolve(responseHelper.successWithData({}));

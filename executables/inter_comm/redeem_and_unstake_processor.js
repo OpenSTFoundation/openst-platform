@@ -30,6 +30,7 @@ const rootPrefix = '../..'
   , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
 const openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
@@ -158,7 +159,13 @@ RedeemAndUnstakeProcessorInterComm.prototype = {
 
     // do not perform any action if the redeem was not done using the internal address.
     if (!redeemerAddress.equalsIgnoreCase(redeemer)) {
-      return Promise.resolve(responseHelper.error('e_ic_raup_1', 'redeemer is not same as the internal redeemer account.'));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 'e_ic_raup_1',
+        api_error_identifier: 'invalid_redeemer_account',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
 
     logger.step(redemptionIntentHash, ' :: performing processRedeeming');

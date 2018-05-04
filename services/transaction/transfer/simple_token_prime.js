@@ -71,16 +71,36 @@ TransferSimpleTokenPrimeKlass.prototype = {
 
       // Validations
       if (!basicHelper.isAddressValid(oThis.senderAddress) || !oThis.senderPassphrase) {
-        return Promise.resolve(responseHelper.error('s_t_t_stp_1', 'Invalid sender details'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_t_t_stp_1',
+          api_error_identifier: 'invalid_address',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
       if (!basicHelper.isAddressValid(oThis.recipientAddress)) {
-        return Promise.resolve(responseHelper.error('s_t_t_stp_2', 'Invalid recipient details'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_t_t_stp_2',
+          api_error_identifier: 'invalid_address',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
       if (!basicHelper.isNonZeroWeiValid(oThis.amountInWei)) {
-        return Promise.resolve(responseHelper.error('s_t_t_stp_3', 'Invalid amount'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_t_t_stp_3',
+          api_error_identifier: 'invalid_amount',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
       if (!basicHelper.isTagValid(oThis.tag)) {
-        return Promise.resolve(responseHelper.error('s_t_t_stp_4', 'Invalid transaction tag'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_t_t_stp_4',
+          api_error_identifier: 'invalid_transaction_tag',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
 
       // Format wei
@@ -89,7 +109,12 @@ TransferSimpleTokenPrimeKlass.prototype = {
       return stPrime.transfer(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei,
         {tag: oThis.tag, returnType: oThis.returnType});
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_t_t_stp_5', 'Something went wrong. ' + err.message));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_t_t_stp_5',
+        api_error_identifier: 'something_went_wrong',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      return Promise.resolve(errObj);
     }
   }
 };

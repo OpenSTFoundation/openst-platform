@@ -1,0 +1,193 @@
+{
+  "invalid_redeemer_account": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Redeemer is not same as the internal redeemer account."
+  },
+
+  "invalid_conversion_factor": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Conversion factor is invalid."
+  },
+
+  "invalid_conversion_rate": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Conversion rate is invalid."
+  },
+
+  "invalid_conversion_rate_decimals": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Conversion rate decimals is invalid."
+  },
+
+  "invalid_address": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Ethereum address is invalid."
+  },
+
+  "something_went_wrong": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Something went wrong."
+  },
+
+  "sender_and_recipient_same": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Sender and recipient ethereum address cannot be same."
+  },
+
+  "invalid_amount": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Invalid amount."
+  },
+
+  "insufficient_funds": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Insufficient Funds."
+  },
+
+  "invalid_transaction_tag": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Invalid transaction tag."
+  },
+
+  "invalid_transaction_hash": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Invalid transaction hash."
+  },
+
+  "invalid_branded_token_name": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Invalid branded token name."
+  },
+
+  "invalid_branded_token_symbol": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Invalid branded token symbol."
+  },
+
+  "transaction_failed": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Transaction failed."
+  },
+
+  "transaction_not_mined": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Transaction not yet mined."
+  },
+
+  "event_not_found_in_transaction_receipt": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Event not found in transaction receipt. Transaction failed / rolled-back."
+  },
+
+  "transaction_receipt_failed": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Transaction receipt failed."
+  },
+
+  "receipt_not_found": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Unable to get receipt."
+  },
+
+  "max_gas_consumed": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Max gas will be used, as per the estimated gas. Check the params."
+  },
+
+  "invalid_utility_token": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Invalid utility token."
+  },
+
+  "abi_not_found_for_contract": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "ABI file not found for contract."
+  },
+
+  "unhandled_error": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Unhandled error."
+  },
+
+  "register_branded_token_transaction_error": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "registerBrandedToken of utilityRegistrar contract ERROR. Something went wrong!."
+  },
+
+  "register_utility_token_transaction_error": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "registerUtilityToken of valueRegistrar contract ERROR. Something went wrong!."
+  },
+
+  "process_staking_transaction_error": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "processStaking of openSTValue contract ERROR. Something went wrong!."
+  },
+
+  "process_minting_transaction_error": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "processStaking of openSTUtility contract ERROR. Something went wrong!."
+  },
+
+  "claim_transaction_error": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Error in claim transaction. Something went wrong!."
+  },
+
+  "invalid_staker_details": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Invalid staker details."
+  },
+
+  "invalid_beneficiary_details": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Invalid beneficiary details."
+  },
+
+  "invalid_branded_token_uuid": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Invalid branded token uuid."
+  },
+
+  "invalid_chain": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "Invalid chain."
+  },
+
+  "no_new_blocks": {
+    "http_code": "422",
+    "code": "UNPROCESSABLE_ENTITY",
+    "message": "No new blocks on chain."
+  }
+}

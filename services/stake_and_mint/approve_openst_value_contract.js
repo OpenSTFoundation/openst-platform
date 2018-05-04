@@ -69,7 +69,13 @@ ApproveOpenstValueContractKlass.prototype = {
       return Promise.resolve(approveRsp);
 
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_sam_aovc_1', 'Something went wrong. ' + err.message));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_sam_aovc_1',
+        api_error_identifier: 'something_went_wrong',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
   },
 

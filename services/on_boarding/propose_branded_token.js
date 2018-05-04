@@ -57,13 +57,31 @@ ProposeBrandedTokenKlass.prototype = {
     try {
       //validations
       if (!basicHelper.isBTNameValid(oThis.name)) {
-        return Promise.resolve(responseHelper.error('s_ob_pbt_1', 'Invalid branded token name'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_ob_pbt_1',
+          api_error_identifier: 'invalid_branded_token_name',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+
+        return Promise.resolve(errObj);
       }
       if (!basicHelper.isBTSymbolValid(oThis.symbol)) {
-        return Promise.resolve(responseHelper.error('s_ob_pbt_2', 'Invalid branded token symbol'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_ob_pbt_2',
+          api_error_identifier: 'invalid_branded_token_symbol',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+
+        return Promise.resolve(errObj);
       }
       if (!basicHelper.isBTConversionFactorValid(oThis.conversionFactor)) {
-        return responseHelper.error('s_ob_pbt_3', 'Conversion factor is invalid');
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_ob_pbt_3',
+          api_error_identifier: 'invalid_conversion_factor',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+
+        return Promise.resolve(errObj);
       }
 
       const conversionRateConversionResponse = basicHelper.convertConversionFactorToConversionRate(oThis.conversionFactor);
@@ -87,7 +105,13 @@ ProposeBrandedTokenKlass.prototype = {
       }
 
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_ob_pbt_4', 'Something went wrong. ' + err.message));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_ob_pbt_4',
+        api_error_identifier: 'something_went_wrong',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
   }
 };
