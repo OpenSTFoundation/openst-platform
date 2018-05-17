@@ -21,7 +21,7 @@ EnvManagerKlass.prototype = {
   /**
    * Generate ENV file from config.js
    */
-  generateEnvFile: function() {
+  generateEnvFile: function(purpose) {
     const oThis = this;
 
     // Create empty ENV file
@@ -33,7 +33,7 @@ EnvManagerKlass.prototype = {
     logger.info('* writing env basic, geth, cache and addresses related env vars');
 
     // Create geth ENV variables
-    oThis._gethVars();
+    oThis._gethVars(purpose);
 
     // Create cache ENV variables
     oThis._cacheVars();
@@ -54,14 +54,14 @@ EnvManagerKlass.prototype = {
   /**
    * Populate all chains related env variables
    */
-  _gethVars: function () {
+  _gethVars: function (purpose) {
     const oThis = this;
 
     for (var chain in setupConfig.chains) {
       // Add comment to ENV
       fileManager.append(setupConfig.env_vars_file, "\n# "+chain+" chain");
       // Add content
-      oThis._scanAndPopulateEnvVars(setupConfig.chains[chain]);
+      oThis._scanAndPopulateEnvVars(setupConfig.chains[chain],purpose);
     }
   },
 
@@ -134,13 +134,16 @@ EnvManagerKlass.prototype = {
    *
    * @params {object} data - allowed level is hash of hash, with non-blank "env_var" key and "value" key
    */
-  _scanAndPopulateEnvVars: function (data) {
+  _scanAndPopulateEnvVars: function (data, purpose) {
     const oThis = this;
 
     for (var obj in data) {
       var lData = data[obj];
       if (typeof lData.env_var !== 'undefined' && lData.env_var.length > 0) {
         var line = "export " + lData.env_var + "='" + lData.value + "'";
+        if (purpose == 'deployment' && lData.env_var == 'OST_UTILITY_GAS_PRICE') {
+          line = "export " + lData.env_var + "='" + '0x0' + "'";
+        }
         fileManager.append(setupConfig.env_vars_file, line);
       }
     }

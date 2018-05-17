@@ -59,7 +59,7 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
     ;
 
     oThis.completeContract = new web3WsProvider.eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
-    oThis.completeContract.setProvider(web3WsProvider.currentProvider);
+    //oThis.completeContract.setProvider(web3WsProvider.currentProvider);
   },
 
   /**
@@ -77,7 +77,7 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
    * Parallel processing allowed
    * @return bool
    */
-  parallelProcessingAllowed: function() {
+  parallelProcessingAllowed: function () {
     return false;
   },
 

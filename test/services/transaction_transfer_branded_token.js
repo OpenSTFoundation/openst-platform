@@ -30,9 +30,9 @@ var testValidData = {
   }
 };
 
-describe('services/transaction/transfer/branded_token', function() {
+describe('services/transaction/transfer/branded_token', function () {
 
-  it('should return promise', async function() {
+  it('should return promise', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
     var brandedTokenObj = new platformServices.brandedToken(dupData)
@@ -43,11 +43,13 @@ describe('services/transaction/transfer/branded_token', function() {
 
   // Prefil BT to sender
 
-  it('should pass prefil BT to sender promise', async function() {
+  it('should pass prefil BT to sender promise', async function () {
     // refill gas
     var serviceObj = new openstPlatform.services.transaction.transfer.simpleTokenPrime(
-      {sender_name: 'utilityChainOwner', recipient_address: brandedTokenDetails['Reserve'],
-        amount_in_wei: 1000000000000000000, options: {returnType: 'txReceipt', tag: 'GasRefill'}});
+      {
+        sender_name: 'utilityChainOwner', recipient_address: brandedTokenDetails['Reserve'],
+        amount_in_wei: 1000000000000000000, options: {returnType: 'txReceipt', tag: 'GasRefill'}
+      });
     await serviceObj.perform();
 
     var dupData = JSON.parse(JSON.stringify(testValidData));
@@ -70,7 +72,7 @@ describe('services/transaction/transfer/branded_token', function() {
 
   // Params validations
 
-  it('should fail when params is undefined', async function() {
+  it('should fail when params is undefined', async function () {
     var dupData = undefined;
 
     var brandedTokenObj = new platformServices.brandedToken(dupData)
@@ -79,7 +81,7 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when params is a string', async function() {
+  it('should fail when params is a string', async function () {
     var dupData = 'abc';
 
     var brandedTokenObj = new platformServices.brandedToken(dupData)
@@ -88,7 +90,7 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when params is empty object', async function() {
+  it('should fail when params is empty object', async function () {
     var dupData = {};
 
     var brandedTokenObj = new platformServices.brandedToken(dupData)
@@ -97,7 +99,7 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when params is empty array', async function() {
+  it('should fail when params is empty array', async function () {
     var dupData = [];
 
     var brandedTokenObj = new platformServices.brandedToken(dupData)
@@ -106,18 +108,7 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  // Options Variations
-  it('should fail when tag is blank', async function() {
-    var dupData = JSON.parse(JSON.stringify(testValidData));
-    dupData.options.tag = '';
-
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
-    ;
-    assert.equal(response.isSuccess(), false);
-  });
-
-  it('should fail when tag is invalid', async function() {
+  it('should fail when tag is invalid', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.options.tag = 'a@b';
 
@@ -129,7 +120,7 @@ describe('services/transaction/transfer/branded_token', function() {
 
   // Sender Variations
 
-  it('should fail when sender name is invalid, as named keys have higher priority', async function() {
+  it('should fail when sender name is invalid, as named keys have higher priority', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.sender_name = 'Google';
 
@@ -139,7 +130,7 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when sender address is invalid', async function() {
+  it('should fail when sender address is invalid', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.sender_name = ''; // has higher priority
     dupData.sender_address = 'abc';
@@ -150,7 +141,7 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when sender address is valid, but has no balance', async function() {
+  it('should fail when sender address is valid, but has no balance', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.sender_name = ''; // has higher priority
     dupData.sender_address = '0xb4d7bedf714e6c7cd1a641f705870fa19144a061';
@@ -161,7 +152,7 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should pass when sender passphrase is invalid', async function() {
+  it('should pass when sender passphrase is invalid', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.sender_name = ''; // has higher priority
     dupData.sender_passphrase = 'abc';
@@ -174,7 +165,7 @@ describe('services/transaction/transfer/branded_token', function() {
 
   // Recipient Variations
 
-  it('should fail when recipient address is invalid', async function() {
+  it('should fail when recipient address is invalid', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.recipient_name = ''; // has higher priority
     dupData.recipient_address = 'abc';
@@ -185,7 +176,7 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when recipient name is invalid, as named keys have higher priority', async function() {
+  it('should fail when recipient name is invalid, as named keys have higher priority', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.recipient_name = 'abc';
 
@@ -197,7 +188,7 @@ describe('services/transaction/transfer/branded_token', function() {
 
   // Amount Variations
 
-  it('should fail when amount is undefined', async function() {
+  it('should fail when amount is undefined', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = undefined;
 
@@ -207,7 +198,7 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when amount is string', async function() {
+  it('should fail when amount is string', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = 'abc';
 
@@ -217,7 +208,7 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when amount is float', async function() {
+  it('should fail when amount is float', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = 100.2;
 
@@ -227,7 +218,7 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when amount is less than 1 and greater than 0', async function() {
+  it('should fail when amount is less than 1 and greater than 0', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = 0.2;
 
@@ -237,7 +228,7 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when amount is 0', async function() {
+  it('should fail when amount is 0', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = 0;
 
@@ -247,7 +238,7 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when amount is negative number', async function() {
+  it('should fail when amount is negative number', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = -100;
 
@@ -259,7 +250,7 @@ describe('services/transaction/transfer/branded_token', function() {
 
   // Success Variations
 
-  it('should pass when everything is valid', async function() {
+  it('should pass when everything is valid', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
     var brandedTokenObj = new platformServices.brandedToken(dupData)
@@ -270,7 +261,7 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.isNotNull(response.data.transaction_hash);
   });
 
-  it('should pass when returnType is invalid, with default returnType txHash', async function() {
+  it('should pass when returnType is invalid, with default returnType txHash', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.options.returnType = 'myReturnType';
 
@@ -284,7 +275,7 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.deepEqual(response.data.transaction_receipt, {});
   });
 
-  it('should pass when returnType is uuid', async function() {
+  it('should pass when returnType is uuid', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.options.returnType = 'uuid';
 
@@ -298,7 +289,7 @@ describe('services/transaction/transfer/branded_token', function() {
     assert.deepEqual(response.data.transaction_receipt, {});
   });
 
-  it('should pass when returnType is txReceipt', async function() {
+  it('should pass when returnType is txReceipt', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.options.returnType = 'txReceipt';
 

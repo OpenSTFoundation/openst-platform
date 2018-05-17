@@ -49,7 +49,8 @@ const rootPrefix = ".."
  *
  * @constructor
  */
-const ServiceManifestKlass = function() {};
+const ServiceManifestKlass = function () {
+};
 
 ServiceManifestKlass.prototype = {
   /**

@@ -64,6 +64,7 @@ const getBTBalance = function (brandedToken, address) {
  * @return {Promise}
  */
 const approve = function (brandedToken, redeemerAddress, redeemerPassphrase, toApproveAmount) {
+  // following functionality might be broken. Please check when opening it.
   return brandedToken.approve(
     redeemerAddress,
     redeemerPassphrase,

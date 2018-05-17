@@ -20,7 +20,7 @@ const rootPrefix = '../..'
  *
  * @constructor
  */
-const SimpleTokenBalanceKlass = function(params) {
+const SimpleTokenBalanceKlass = function (params) {
   const oThis = this;
 
   params = params || {};
@@ -35,12 +35,24 @@ SimpleTokenBalanceKlass.prototype = {
     try {
       //Validations
       if (!basicHelper.isAddressValid(oThis.address)) {
-        return Promise.resolve(responseHelper.error('s_b_st_1', 'Invalid address'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_b_st_1',
+          api_error_identifier: 'invalid_address',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+
+        return Promise.resolve(errObj);
       }
 
       return simpleToken.balanceOf(oThis.address);
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_b_st_2', 'Something went wrong. ' + err.message));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_b_st_2',
+        api_error_identifier: 'something_went_wrong',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
 
   }

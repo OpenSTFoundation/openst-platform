@@ -24,7 +24,8 @@ function parseFile(filePath, options) {
  *
  * @constructor
  */
-const coreAbis = function() {};
+const coreAbis = function () {
+};
 
 coreAbis.prototype = {
   /**

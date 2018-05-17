@@ -7,10 +7,10 @@
  */
 
 const rootPrefix = '../..'
-    , SimpleStakeKlass = require(rootPrefix + '/lib/contract_interact/simple_stake')
-    , responseHelper = require(rootPrefix + '/lib/formatter/response')
-    , logger = require(rootPrefix + '/helpers/custom_console_logger')
-    , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , SimpleStakeKlass = require(rootPrefix + '/lib/contract_interact/simple_stake')
+  , responseHelper = require(rootPrefix + '/lib/formatter/response')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
 /**
@@ -22,12 +22,12 @@ const rootPrefix = '../..'
  * @constructor
  */
 const GetStakeAmountKlass = function (params) {
-  
+
   const oThis = this;
 
   params = params || {};
   oThis.simpleStakeContractAddress = params.simple_stake_contract_address;
-  
+
 };
 
 GetStakeAmountKlass.prototype = {
@@ -43,7 +43,12 @@ GetStakeAmountKlass.prototype = {
 
     // validations
     if (!basicHelper.isAddressValid(oThis.simpleStakeContractAddress)) {
-      return Promise.resolve(responseHelper.error('s_s_m_gsak_1', 'Invalid simpleStakeContractAddress'));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_s_m_gsak_1',
+        api_error_identifier: 'invalid_address',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      return Promise.resolve(errObj);
     }
 
     const simpleStake = new SimpleStakeKlass({contractAddress: oThis.simpleStakeContractAddress})

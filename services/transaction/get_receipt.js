@@ -23,7 +23,7 @@ const rootPrefix = '../..'
  *
  * @constructor
  */
-const GetReceiptKlass = function(params) {
+const GetReceiptKlass = function (params) {
   const oThis = this
   ;
 
@@ -47,15 +47,25 @@ GetReceiptKlass.prototype = {
 
       // validations
       if (!basicHelper.isTxHashValid(oThis.transactionHash)) {
-        return Promise.resolve(responseHelper.error('s_t_gr_1', 'Invalid transaction hash'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_t_gr_1',
+          api_error_identifier: 'invalid_transaction_hash',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
 
-      const web3Provider = web3ProviderFactory.getProvider(oThis.chain, web3ProviderFactory.typeRPC);
-      if(!web3Provider) {
-        return Promise.resolve(responseHelper.error('s_t_gr_2', 'Invalid chain.'));
+      const web3Provider = web3ProviderFactory.getProvider(oThis.chain, web3ProviderFactory.typeWS);
+      if (!web3Provider) {
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_t_gr_2',
+          api_error_identifier: 'invalid_chain',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
 
-      const txReceipt = await web3Provider.eth.getTransactionReceipt( oThis.transactionHash);
+      const txReceipt = await web3Provider.eth.getTransactionReceipt(oThis.transactionHash);
 
       if (!txReceipt) {
         return Promise.resolve(responseHelper.successWithData({}));
@@ -65,7 +75,12 @@ GetReceiptKlass.prototype = {
       }
 
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_t_gr_4', 'Something went wrong. ' + err.message));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_t_gr_4',
+        api_error_identifier: 'something_went_wrong',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      return Promise.resolve(errObj);
     }
   }
 };

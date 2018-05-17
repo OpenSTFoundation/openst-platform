@@ -9,6 +9,7 @@
 const rootPrefix = '..'
   , BigNumber = require('bignumber.js')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
+  , generalErrorConfig = require(rootPrefix + '/config/error/general')
 ;
 
 const CONVERSION_RATE_DECIMALS = 5;
@@ -18,7 +19,8 @@ const CONVERSION_RATE_DECIMALS = 5;
  * @constructor
  *
  */
-const BasicHelperKlass = function() {};
+const BasicHelperKlass = function () {
+};
 
 BasicHelperKlass.prototype = {
 
@@ -97,7 +99,7 @@ BasicHelperKlass.prototype = {
    * @return {boolean}
    */
   isTagValid: function (tag) {
-    if(tag == ''){
+    if (tag == '') {
       return true;
     }
     if (typeof tag !== "string") {
@@ -124,7 +126,7 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isReturnTypeUUID: function(returnType) {
+  isReturnTypeUUID: function (returnType) {
     return returnType === 'uuid';
   },
 
@@ -135,7 +137,7 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isReturnTypeTxHash: function(returnType) {
+  isReturnTypeTxHash: function (returnType) {
     return returnType === 'txHash';
   },
 
@@ -146,7 +148,7 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isReturnTypeTxReceipt: function(returnType) {
+  isReturnTypeTxReceipt: function (returnType) {
     return returnType === 'txReceipt';
   },
 
@@ -256,13 +258,24 @@ BasicHelperKlass.prototype = {
     const oThis = this;
 
     if (!oThis.isBTConversionFactorValid(conversionFactor)) {
-      return responseHelper.error('bh_ccftcr_1', 'Conversion factor is invalid');
+      return responseHelper.error({
+        internal_error_identifier: 'bh_ccftcr_1',
+        api_error_identifier: 'invalid_conversion_factor',
+        error_config: oThis.fetchErrorConfig()
+      });
     }
     const conversionRate = (new BigNumber(String(conversionFactor))).mul((new BigNumber(10)).toPower(CONVERSION_RATE_DECIMALS));
-    if (conversionRate.modulo(1).equals(0)){
-      return responseHelper.successWithData({conversionRate: conversionRate.toString(10), conversionRateDecimals: CONVERSION_RATE_DECIMALS});      
+    if (conversionRate.modulo(1).equals(0)) {
+      return responseHelper.successWithData({
+        conversionRate: conversionRate.toString(10),
+        conversionRateDecimals: CONVERSION_RATE_DECIMALS
+      });
     } else {
-      return responseHelper.error('bh_ccftcr_2', 'Conversion factor is invalid');
+      return responseHelper.error({
+        internal_error_identifier: 'bh_ccftcr_2',
+        api_error_identifier: 'invalid_conversion_factor',
+        error_config: oThis.fetchErrorConfig()
+      });
     }
 
   },
@@ -278,11 +291,19 @@ BasicHelperKlass.prototype = {
   convertConversionRateToConversionFactor: function (conversionRate, conversionRateDecimals) {
     const oThis = this;
     if (!oThis.isBTConversionRateValid(conversionRate)) {
-      return responseHelper.error('bh_ccrtcf_1', 'Conversion rate is invalid');
+      return responseHelper.error({
+        internal_error_identifier: 'bh_ccrtcf_1',
+        api_error_identifier: 'invalid_conversion_rate',
+        error_config: oThis.fetchErrorConfig()
+      });
     }
-    
+
     if (!oThis.isBTConversionRateDecimalsValid(conversionRateDecimals)) {
-      return responseHelper.error('bh_ccrtcf_2', 'Conversion rate decimals is invalid');
+      return responseHelper.error({
+        internal_error_identifier: 'bh_ccrtcf_2',
+        api_error_identifier: 'invalid_conversion_rate_decimals',
+        error_config: oThis.fetchErrorConfig()
+      });
     }
 
 
@@ -297,7 +318,7 @@ BasicHelperKlass.prototype = {
    *
    * @return {object} - response
    */
-  generateRandomString: function(length) {
+  generateRandomString: function (length) {
 
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -308,8 +329,19 @@ BasicHelperKlass.prototype = {
 
     return text;
 
-  }
+  },
 
+  /**
+   * Fetch Error Config
+   *
+   * @return {object}
+   */
+  fetchErrorConfig: function () {
+    return {
+      param_error_config: {},
+      api_error_config: generalErrorConfig
+    }
+  }
 };
 
 module.exports = new BasicHelperKlass();

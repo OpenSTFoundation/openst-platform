@@ -17,7 +17,7 @@ const rootPrefix = '..'
  * @constructor
  *
  */
-const RegistrationStatusKlass = function() {
+const RegistrationStatusKlass = function () {
   this.uuid = '';
   this.erc20Address = '';
   this.isProposalDone = 0;
@@ -34,7 +34,7 @@ RegistrationStatusKlass.prototype = {
    *
    * @return {object} returns a formatted object of registration status
    */
-  toHash: function() {
+  toHash: function () {
     const oThis = this
     ;
 
@@ -52,7 +52,7 @@ RegistrationStatusKlass.prototype = {
    *
    * @return {promise<result>} returns a Promise which resolves to result object
    */
-  returnResultPromise: function() {
+  returnResultPromise: function () {
     const oThis = this
     ;
 
@@ -64,7 +64,7 @@ RegistrationStatusKlass.prototype = {
    *
    * @param {string} uuid - uuid to set into the object
    */
-  setUuid: function(uuid) {
+  setUuid: function (uuid) {
     const oThis = this
     ;
 
@@ -76,7 +76,7 @@ RegistrationStatusKlass.prototype = {
    *
    * @param {string} erc20Address - ERC20 address to set into the object
    */
-  setErc20Address: function(erc20Address) {
+  setErc20Address: function (erc20Address) {
     const oThis = this
     ;
 
@@ -88,7 +88,7 @@ RegistrationStatusKlass.prototype = {
    *
    * @param {number} isRegisteredOnUc - is registered on UC flag
    */
-  setIsRegisteredOnUc: function(isRegisteredOnUc) {
+  setIsRegisteredOnUc: function (isRegisteredOnUc) {
     const oThis = this
     ;
 
@@ -100,7 +100,7 @@ RegistrationStatusKlass.prototype = {
    *
    * @param {number} isRegisteredOnVc - is registered on VC flag
    */
-  setIsRegisteredOnVc: function(isRegisteredOnVc) {
+  setIsRegisteredOnVc: function (isRegisteredOnVc) {
     const oThis = this
     ;
 
@@ -112,7 +112,7 @@ RegistrationStatusKlass.prototype = {
    *
    * @param {number} isProposalDone - is proposal done
    */
-  setIsProposalDone: function(isProposalDone) {
+  setIsProposalDone: function (isProposalDone) {
     const oThis = this
     ;
 

@@ -31,7 +31,7 @@ const rootPrefix = '../../..'
  *
  * @constructor
  */
-const TransferBrandedTokenKlass = function(params) {
+const TransferBrandedTokenKlass = function (params) {
   const oThis = this
   ;
 
@@ -59,42 +59,73 @@ TransferBrandedTokenKlass.prototype = {
 
     try {
       // Get sender details by name
-      if(oThis.senderName) {
+      if (oThis.senderName) {
         oThis.senderAddress = coreAddresses.getAddressForUser(oThis.senderName);
         oThis.senderPassphrase = coreAddresses.getPassphraseForUser(oThis.senderName);
       }
 
       // Get recipient details by name
-      if(oThis.recipientName) {
+      if (oThis.recipientName) {
         oThis.recipientAddress = coreAddresses.getAddressForUser(oThis.recipientName);
       }
 
       // Validations
       if (!basicHelper.isAddressValid(oThis.erc20Address)) {
-        return Promise.resolve(responseHelper.error('s_t_t_bt_1', 'Invalid ERC20 address'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_t_t_bt_1',
+          api_error_identifier: 'invalid_address',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
       if (!basicHelper.isAddressValid(oThis.senderAddress) || !oThis.senderPassphrase) {
-        return Promise.resolve(responseHelper.error('s_t_t_bt_2', 'Invalid sender details'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_t_t_bt_2',
+          api_error_identifier: 'invalid_address',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
       if (!basicHelper.isAddressValid(oThis.recipientAddress)) {
-        return Promise.resolve(responseHelper.error('s_t_t_bt_3', 'Invalid recipient details'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_t_t_bt_3',
+          api_error_identifier: 'invalid_address',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
       if (!basicHelper.isNonZeroWeiValid(oThis.amountInWei)) {
-        return Promise.resolve(responseHelper.error('s_t_t_bt_4', 'Invalid amount'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_t_t_bt_4',
+          api_error_identifier: 'invalid_amount',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
       if (!basicHelper.isTagValid(oThis.tag)) {
-        return Promise.resolve(responseHelper.error('s_t_t_bt_5', 'Invalid transaction tag'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_t_t_bt_5',
+          api_error_identifier: 'invalid_transaction_tag',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
 
       // Format wei
       oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
 
-      var brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address})
+      var brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address});
 
       return brandedToken.transfer(oThis.senderAddress, oThis.senderPassphrase,
         oThis.recipientAddress, oThis.amountInWei, {tag: oThis.tag, returnType: oThis.returnType});
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_t_t_bt_6', 'Something went wrong. ' + err.message));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_t_t_bt_6',
+        api_error_identifier: 'something_went_wrong',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
   }
 };

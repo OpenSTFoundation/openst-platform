@@ -37,13 +37,18 @@ GenerateAddressKlass.prototype = {
    *
    * @return {promise<result>}
    */
-  perform: async function() {
+  perform: async function () {
     const oThis = this
     ;
 
-    const web3Provider = web3ProviderFactory.getProvider(oThis.chain, web3ProviderFactory.typeRPC);
-    if(!web3Provider) {
-      return Promise.resolve(responseHelper.error('s_u_ga_1', 'Invalid chain'));
+    const web3Provider = web3ProviderFactory.getProvider(oThis.chain, web3ProviderFactory.typeWS);
+    if (!web3Provider) {
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_u_ga_1',
+        api_error_identifier: 'invalid_chain',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      return Promise.resolve(errObj);
     }
 
     var eth_address = await web3Provider.eth.personal.newAccount(oThis.passphrase);

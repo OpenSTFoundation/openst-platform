@@ -14,9 +14,9 @@ var testValidData = {
   passphrase: 'my-passphrase'
 };
 
-describe('services/utils/generate_address', function() {
+describe('services/utils/generate_address', function () {
 
-  it('should return promise', async function() {
+  it('should return promise', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
     var generateAddressObj = new platformServices.generateAddress(dupData)
@@ -25,7 +25,7 @@ describe('services/utils/generate_address', function() {
     assert.typeOf(response, 'Promise');
   });
 
-  it('should fail when params is undefined', async function() {
+  it('should fail when params is undefined', async function () {
     var dupData = undefined;
 
     var generateAddressObj = new platformServices.generateAddress(dupData)
@@ -34,7 +34,7 @@ describe('services/utils/generate_address', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when params is a string', async function() {
+  it('should fail when params is a string', async function () {
     var dupData = 'acb';
 
     var generateAddressObj = new platformServices.generateAddress(dupData)
@@ -43,7 +43,7 @@ describe('services/utils/generate_address', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when params is empty object', async function() {
+  it('should fail when params is empty object', async function () {
     var dupData = {};
 
     var generateAddressObj = new platformServices.generateAddress(dupData)
@@ -52,7 +52,7 @@ describe('services/utils/generate_address', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when params is empty array', async function() {
+  it('should fail when params is empty array', async function () {
     var dupData = [];
 
     var generateAddressObj = new platformServices.generateAddress(dupData)
@@ -61,7 +61,7 @@ describe('services/utils/generate_address', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when invalid chain is set', async function() {
+  it('should fail when invalid chain is set', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.chain = 'my-utility';
 
@@ -71,7 +71,7 @@ describe('services/utils/generate_address', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should pass when chain is valid and passphrase is set', async function() {
+  it('should pass when chain is valid and passphrase is set', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
     var generateAddressObj = new platformServices.generateAddress(dupData)
@@ -80,12 +80,12 @@ describe('services/utils/generate_address', function() {
     assert.equal(response.isSuccess(), true);
 
     // unlock account
-    const web3Provider = web3ProviderFactory.getProvider(dupData.chain, web3ProviderFactory.typeRPC);
+    const web3Provider = web3ProviderFactory.getProvider(dupData.chain, web3ProviderFactory.typeWS);
     var unlocked = await web3Provider.eth.personal.unlockAccount(response.data.address, dupData.passphrase);
     assert.equal(unlocked, true);
   });
 
-  it('should pass when chain is valid and passphrase is not set', async function() {
+  it('should pass when chain is valid and passphrase is not set', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.passphrase = '';
 
@@ -95,7 +95,7 @@ describe('services/utils/generate_address', function() {
     assert.equal(response.isSuccess(), true);
 
     // unlock account
-    const web3Provider = web3ProviderFactory.getProvider(dupData.chain, web3ProviderFactory.typeRPC);
+    const web3Provider = web3ProviderFactory.getProvider(dupData.chain, web3ProviderFactory.typeWS);
     var unlocked = await web3Provider.eth.personal.unlockAccount(response.data.address, dupData.passphrase);
     assert.equal(unlocked, true);
   });
