@@ -18,9 +18,9 @@ var testValidData = {
   address: process.env.OST_UTILITY_CHAIN_OWNER_ADDR
 };
 
-describe('services/balance/simple_token', function() {
+describe('services/balance/simple_token', function () {
 
-  it('should return promise', async function() {
+  it('should return promise', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
     var simpleTokenObj = new platformServices.simpleToken(dupData)
@@ -29,7 +29,7 @@ describe('services/balance/simple_token', function() {
     assert.typeOf(response, 'Promise');
   });
 
-  it('should fail when params is undefined', async function() {
+  it('should fail when params is undefined', async function () {
     var dupData = undefined;
 
     var simpleTokenObj = new platformServices.simpleToken(dupData)
@@ -38,7 +38,7 @@ describe('services/balance/simple_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when params is a string', async function() {
+  it('should fail when params is a string', async function () {
     var dupData = 'abc';
 
     var simpleTokenObj = new platformServices.simpleToken(dupData)
@@ -47,7 +47,7 @@ describe('services/balance/simple_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when params is empty object', async function() {
+  it('should fail when params is empty object', async function () {
     var dupData = {};
 
     var simpleTokenObj = new platformServices.simpleToken(dupData)
@@ -56,7 +56,7 @@ describe('services/balance/simple_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when params is empty array', async function() {
+  it('should fail when params is empty array', async function () {
     var dupData = [];
 
     var simpleTokenObj = new platformServices.simpleToken(dupData)
@@ -66,7 +66,7 @@ describe('services/balance/simple_token', function() {
   });
 
   // Address Variations
-  it('should fail when address is blank', async function() {
+  it('should fail when address is blank', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.address = '';
 
@@ -76,7 +76,7 @@ describe('services/balance/simple_token', function() {
     assert.equal(response.isSuccess(), false);
   });
 
-  it('should fail when address is invalid', async function() {
+  it('should fail when address is invalid', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.address = '0xh32323';
 
@@ -88,7 +88,7 @@ describe('services/balance/simple_token', function() {
 
   // Success Variations
 
-  it('should pass when everything is valid', async function() {
+  it('should pass when everything is valid', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
     var simpleTokenObj = new platformServices.simpleToken(dupData)

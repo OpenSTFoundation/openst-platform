@@ -29,7 +29,7 @@ const rootPrefix = '../../..'
  *
  * @constructor
  */
-const TransferEthKlass = function(params) {
+const TransferEthKlass = function (params) {
 
   const oThis = this
   ;
@@ -58,25 +58,40 @@ TransferEthKlass.prototype = {
 
     try {
       // Get sender details by name
-      if(oThis.senderName) {
+      if (oThis.senderName) {
         oThis.senderAddress = coreAddresses.getAddressForUser(oThis.senderName);
         oThis.senderPassphrase = coreAddresses.getPassphraseForUser(oThis.senderName);
       }
 
       // Get recipient details by name
-      if(oThis.recipientName) {
+      if (oThis.recipientName) {
         oThis.recipientAddress = coreAddresses.getAddressForUser(oThis.recipientName);
       }
 
       // Validations
       if (!basicHelper.isAddressValid(oThis.senderAddress) || !oThis.senderPassphrase) {
-        return Promise.resolve(responseHelper.error('s_t_t_e_1', 'Invalid sender details'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_t_t_e_1',
+          api_error_identifier: 'invalid_address',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
       if (!basicHelper.isAddressValid(oThis.recipientAddress)) {
-        return Promise.resolve(responseHelper.error('s_t_t_e_2', 'Invalid recipient details'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_t_t_e_2',
+          api_error_identifier: 'invalid_address',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
       if (!basicHelper.isNonZeroWeiValid(oThis.amountInWei)) {
-        return Promise.resolve(responseHelper.error('s_t_t_e_3', 'Invalid amount'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_t_t_e_3',
+          api_error_identifier: 'invalid_amount',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
 
       // Format wei
@@ -85,12 +100,17 @@ TransferEthKlass.prototype = {
       var etherInteractObj = new etherInteractKlass();
 
       return etherInteractObj.transfer(
-          oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei
-          , {tag: oThis.tag, returnType: oThis.returnType}
-        );
+        oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei
+        , {tag: oThis.tag, returnType: oThis.returnType}
+      );
 
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_t_t_e_4', 'Something went wrong. ' + err.message));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_t_t_e_4',
+        api_error_identifier: 'something_went_wrong',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      return Promise.resolve(errObj);
     }
 
   }

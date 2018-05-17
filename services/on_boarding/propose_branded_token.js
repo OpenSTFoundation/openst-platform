@@ -32,7 +32,7 @@ const senderName = 'staker'
  *
  * @constructor
  */
-const ProposeBrandedTokenKlass = function(params) {
+const ProposeBrandedTokenKlass = function (params) {
   const oThis = this
   ;
 
@@ -50,20 +50,38 @@ ProposeBrandedTokenKlass.prototype = {
    *
    * @return {promise<result>} - returns a promise which resolves to an object of kind Result
    */
-  perform: async function() {
+  perform: async function () {
     const oThis = this
     ;
 
     try {
       //validations
       if (!basicHelper.isBTNameValid(oThis.name)) {
-        return Promise.resolve(responseHelper.error('s_ob_pbt_1', 'Invalid branded token name'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_ob_pbt_1',
+          api_error_identifier: 'invalid_branded_token_name',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+
+        return Promise.resolve(errObj);
       }
       if (!basicHelper.isBTSymbolValid(oThis.symbol)) {
-        return Promise.resolve(responseHelper.error('s_ob_pbt_2', 'Invalid branded token symbol'));
-      }      
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_ob_pbt_2',
+          api_error_identifier: 'invalid_branded_token_symbol',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+
+        return Promise.resolve(errObj);
+      }
       if (!basicHelper.isBTConversionFactorValid(oThis.conversionFactor)) {
-        return responseHelper.error('s_ob_pbt_3', 'Conversion factor is invalid');
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_ob_pbt_3',
+          api_error_identifier: 'invalid_conversion_factor',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+
+        return Promise.resolve(errObj);
       }
 
       const conversionRateConversionResponse = basicHelper.convertConversionFactorToConversionRate(oThis.conversionFactor);
@@ -73,17 +91,27 @@ ProposeBrandedTokenKlass.prototype = {
         oThis.conversionRate = conversionRateConversionResponse.data.conversionRate;
         oThis.conversionRateDecimals = conversionRateConversionResponse.data.conversionRateDecimals;
 
-        const proposalTransactionHash = await openSTUtility.proposeBrandedToken(stakerAddr, stakerPassphrase, oThis.symbol,
-        oThis.name, oThis.conversionRate, oThis.conversionRateDecimals);
-        
-        return responseHelper.successWithData({transaction_uuid: uuid.v4(), transaction_hash: proposalTransactionHash});
-      
+        const proposalRsp = await openSTUtility.proposeBrandedToken(stakerAddr, stakerPassphrase, oThis.symbol,
+          oThis.name, oThis.conversionRate, oThis.conversionRateDecimals);
+
+        if (proposalRsp.isSuccess()) {
+          proposalRsp.data.transaction_uuid = uuid.v4();
+        }
+
+        return Promise.resolve(proposalRsp);
+
       } else {
-        return conversionRateConversionResponse; 
+        return Promise.resolve(conversionRateConversionResponse);
       }
-      
+
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_ob_pbt_4', 'Something went wrong. ' + err.message));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_ob_pbt_4',
+        api_error_identifier: 'something_went_wrong',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
   }
 };

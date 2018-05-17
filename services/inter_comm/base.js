@@ -34,8 +34,7 @@ IntercomBaseKlass.prototype = {
       , clearCacheOfExpr = /(openst-platform\/config\/)|(openst-platform\/lib\/)/
     ;
 
-    Object.keys(require.cache).forEach(function(key)
-    {
+    Object.keys(require.cache).forEach(function (key) {
       if (key.search(clearCacheOfExpr) !== -1) {
         delete require.cache[key];
       }
@@ -78,11 +77,11 @@ IntercomBaseKlass.prototype = {
       await oThis.processEventsArray(events);
 
       oThis.schedule();
-    } catch(err) {
+    } catch (err) {
       logger.info('Exception got:', err);
 
-      if(oThis.interruptSignalObtained){
-        console.log('Exiting Process....');
+      if (oThis.interruptSignalObtained) {
+        logger.info('Exiting Process....');
         process.exit(1);
       } else {
         oThis.reInit();
@@ -98,12 +97,12 @@ IntercomBaseKlass.prototype = {
   registerInterruptSignalHandlers: function () {
     const oThis = this;
 
-    process.on('SIGINT', function() {
-      console.log("Received SIGINT, cancelling block scaning");
+    process.on('SIGINT', function () {
+      logger.info("Received SIGINT, cancelling block scaning");
       oThis.interruptSignalObtained = true;
     });
-    process.on('SIGTERM', function() {
-      console.log("Received SIGTERM, cancelling block scaning");
+    process.on('SIGTERM', function () {
+      logger.info("Received SIGTERM, cancelling block scaning");
       oThis.interruptSignalObtained = true;
     });
   },
@@ -133,17 +132,27 @@ IntercomBaseKlass.prototype = {
 
       // await oThis.processEventObj(eventObj);
 
-      if(oThis.parallelProcessingAllowed()) {
-        promiseArray.push(new Promise(function(onResolve, onReject){
-          setTimeout(function() {oThis.processEventObj(eventObj).then(onResolve);},
-            (j*1000 + 100));
+      if (oThis.parallelProcessingAllowed()) {
+        promiseArray.push(new Promise(function (onResolve, onReject) {
+          setTimeout(function () {
+            oThis.processEventObj(eventObj)
+              .then(onResolve)
+              .catch(function (error) {
+                logger.error('##### inside catch block #####: ', error);
+                return onResolve();
+              });
+          }, (j * 1000 + 100));
         }));
       } else {
-        await oThis.processEventObj(eventObj);
+        await oThis.processEventObj(eventObj)
+          .catch(function (error) {
+            logger.error('inside catch block: ', error);
+            return Promise.resolve();
+          });
       }
     }
 
-    if(oThis.parallelProcessingAllowed()) {
+    if (oThis.parallelProcessingAllowed()) {
       await Promise.all(promiseArray);
     }
 
@@ -191,8 +200,8 @@ IntercomBaseKlass.prototype = {
       }
     );
 
-    if(oThis.interruptSignalObtained){
-      console.log('Exiting Process....');
+    if (oThis.interruptSignalObtained) {
+      logger.info('Exiting Process....');
       process.exit(1);
     }
   }

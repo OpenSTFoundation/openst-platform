@@ -7,7 +7,7 @@
  */
 
 const rootPrefix = '../..'
-  , web3UcRpcProvider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
+  , web3UcProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
   , getReceipt = require(rootPrefix + '/services/transaction/get_receipt')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
@@ -32,7 +32,7 @@ const openStUtilityContractAddr = coreAddresses.getAddressForContract('openSTUti
  *
  * @constructor
  */
-const GetRegistrationStatusKlass = function(params) {
+const GetRegistrationStatusKlass = function (params) {
   const oThis = this
   ;
 
@@ -47,14 +47,20 @@ GetRegistrationStatusKlass.prototype = {
    *
    * @return {promise<result>} - returns a promise which resolves to an object of kind Result
    */
-  perform: async function() {
+  perform: async function () {
     const oThis = this
     ;
 
     try {
       // validations
       if (!basicHelper.isTxHashValid(oThis.transactionHash)) {
-        return Promise.resolve(responseHelper.error('s_ob_grs_1', 'Invalid transaction hash'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_ob_grs_1',
+          api_error_identifier: 'invalid_transaction_hash',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+
+        return Promise.resolve(errObj);
       }
 
       // returns the registration status of the proposal
@@ -62,7 +68,7 @@ GetRegistrationStatusKlass.prototype = {
       ;
 
       // check if the proposal transaction is mined
-      const getReceiptObj = new getReceipt({transaction_hash: oThis.transactionHash, chain: web3UcRpcProvider.chainKind});
+      const getReceiptObj = new getReceipt({transaction_hash: oThis.transactionHash, chain: web3UcProvider.chainKind});
       const proposalTxReceiptResponse = await getReceiptObj.perform();
       // if error or transaction not yet mined or transaction failed, return. Else proceed and check for other things
       if (!proposalTxReceiptResponse.isSuccess() || !proposalTxReceiptResponse.data.formattedTransactionReceipt) {
@@ -79,7 +85,7 @@ GetRegistrationStatusKlass.prototype = {
       // now checking to confirm if registration on UC took place
       const registeredOnUCResponse = await openSTUtilityContractInteract.registeredToken(uuid);
 
-      if(!registeredOnUCResponse ||
+      if (!registeredOnUCResponse ||
         !registeredOnUCResponse.isSuccess() ||
         (registeredOnUCResponse.data.erc20Address == '0x0000000000000000000000000000000000000000')) {
         return registrationStatus.returnResultPromise();
@@ -91,7 +97,7 @@ GetRegistrationStatusKlass.prototype = {
       // now checking to confirm if registration on VC took place
       const registeredOnVCResponse = await openSTValueContractInteract.utilityTokens(uuid);
 
-      if(!registeredOnVCResponse ||
+      if (!registeredOnVCResponse ||
         !registeredOnVCResponse.isSuccess() ||
         (registeredOnVCResponse.data.symbol.length == 0)) {
         return registrationStatus.returnResultPromise();
@@ -100,7 +106,13 @@ GetRegistrationStatusKlass.prototype = {
 
       return registrationStatus.returnResultPromise();
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_ob_grs_3', 'Something went wrong. ' + err.message));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_ob_grs_3',
+        api_error_identifier: 'something_went_wrong',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
   }
 };

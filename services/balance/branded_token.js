@@ -22,7 +22,7 @@ const rootPrefix = '../..'
  *
  * @constructor
  */
-const BrandedTokenBalanceKlass = function(params) {
+const BrandedTokenBalanceKlass = function (params) {
   const oThis = this;
 
   params = params || {};
@@ -39,10 +39,22 @@ BrandedTokenBalanceKlass.prototype = {
     try {
       //Validations
       if (!basicHelper.isAddressValid(oThis.erc20Address)) {
-        return Promise.resolve(responseHelper.error('s_b_bt_1', 'Invalid ERC20 address'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_b_bt_1',
+          api_error_identifier: 'invalid_address',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+
+        return Promise.resolve(errObj);
       }
       if (!basicHelper.isAddressValid(oThis.address)) {
-        return Promise.resolve(responseHelper.error('s_b_bt_2', 'Invalid address'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_b_bt_2',
+          api_error_identifier: 'invalid_address',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+
+        return Promise.resolve(errObj);
       }
 
       var brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address});
@@ -53,7 +65,13 @@ BrandedTokenBalanceKlass.prototype = {
         return brandedToken.getBalanceOf(oThis.address);
       }
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_b_bt_3', 'Something went wrong. ' + err.message));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_b_bt_3',
+        api_error_identifier: 'something_went_wrong',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
 
   }

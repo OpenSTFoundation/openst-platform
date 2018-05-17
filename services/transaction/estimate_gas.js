@@ -4,7 +4,7 @@
  * Estimate gas for a transaction
  *
  * @module services/transaction/estimate_gas
-*/
+ */
 
 const rootPrefix = '../..'
   , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
@@ -13,7 +13,7 @@ const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
 ;
 
-  const UC_GAS_PRICE = coreConstants.OST_UTILITY_GAS_PRICE
+const UC_GAS_PRICE = coreConstants.OST_UTILITY_GAS_PRICE
   , UC_GAS_LIMIT = coreConstants.OST_UTILITY_GAS_LIMIT
   , VC_GAS_PRICE = coreConstants.OST_VALUE_GAS_PRICE
   , VC_GAS_LIMIT = coreConstants.OST_VALUE_GAS_LIMIT
@@ -32,7 +32,7 @@ const rootPrefix = '../..'
  *
  * @constructor
  */
-const EstimateGasKlass = function(params) {
+const EstimateGasKlass = function (params) {
   const oThis = this
   ;
 
@@ -52,13 +52,14 @@ EstimateGasKlass.prototype = {
    */
   perform: async function () {
     const oThis = this
-      , web3RpcProvider = web3ProviderFactory.getProvider(oThis.chain, 'rpc')
+      , web3Provider = web3ProviderFactory.getProvider(oThis.chain, 'ws')
       , abi = coreAddresses.getAbiForContract(oThis.contractName)
-      , contractObj = new web3RpcProvider.eth.Contract(abi)
+      , contractObj = new web3Provider.eth.Contract(abi)
+      , bufferGasLimit = 10000
     ;
 
     contractObj.options.address = oThis.contractAddress;
-    contractObj.setProvider(web3RpcProvider.currentProvider);
+    //contractObj.setProvider(web3Provider.currentProvider);
 
     const transactionOptions = {
       from: oThis.senderAddress,
@@ -70,7 +71,7 @@ EstimateGasKlass.prototype = {
       , gasToUse = await (scope[oThis.methodName].apply(scope,
       (oThis.methodArguments || []))).estimateGas(transactionOptions);
 
-    return responseHelper.successWithData({gas_to_use: gasToUse});
+    return responseHelper.successWithData({gas_to_use: gasToUse + bufferGasLimit});
   }
 };
 

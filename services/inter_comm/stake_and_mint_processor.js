@@ -33,18 +33,9 @@ const rootPrefix = '../..'
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
+  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
   , IntercomBaseKlass = require(rootPrefix + '/services/inter_comm/base')
 ;
-
-const notificationData = {
-  topics: ['event.stake_and_mint_processor'], // override later: with every stage
-  publisher: 'OST',
-  message: {
-    kind: '', // populate later: with every stage
-    payload: {
-    }
-  }
-};
 
 /**
  * is equal ignoring case
@@ -53,10 +44,10 @@ const notificationData = {
  *
  * @return {boolean} true when equal
  */
-String.prototype.equalsIgnoreCase = function ( compareWith ) {
+String.prototype.equalsIgnoreCase = function (compareWith) {
   const oThis = this
     , _self = this.toLowerCase()
-    , _compareWith = String( compareWith ).toLowerCase();
+    , _compareWith = String(compareWith).toLowerCase();
 
   return _self === _compareWith;
 };
@@ -95,7 +86,7 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
     ;
 
     oThis.completeContract = new web3WsProvider.eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
-    oThis.completeContract.setProvider(web3WsProvider.currentProvider);
+    //oThis.completeContract.setProvider(web3WsProvider.currentProvider);
   },
 
   /**
@@ -113,7 +104,7 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
    * Parallel processing allowed
    * @return bool
    */
-  parallelProcessingAllowed: function() {
+  parallelProcessingAllowed: function () {
     return true;
   },
 
@@ -145,16 +136,41 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
     }
 
     // Pick either ST Prime or BT contract
-    var utilityTokenInterfaceContract = null,
-      displayTokenType = '';
+    var utilityTokenInterfaceContract = null
+      , displayTokenType = ''
+      , tokenType = ''
+    ;
+
     if (uuid.equalsIgnoreCase(coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID)) {
       utilityTokenInterfaceContract = stPrime;
       displayTokenType = 'ST Prime';
+      tokenType = 'st_prime';
     } else {
       const registeredOnUCResult = await openSTUtilityContractInteract.registeredToken(uuid);
       utilityTokenInterfaceContract = new BrandedTokenKlass({ERC20: registeredOnUCResult.data.erc20Address});
       displayTokenType = 'Branded Token';
+      tokenType = 'bt';
     }
+
+    const notificationData = {
+      topics: [],
+      publisher: 'OST',
+      message: {
+        kind: '',
+        payload: {
+          status: '',
+          transaction_hash: '',
+          error_data: {},
+          staking_params: {
+            stakingIntentHash: stakingIntentHash,
+            staker: staker,
+            beneficiary: beneficiary,
+            uuid: uuid,
+            tokenType: tokenType
+          }
+        }
+      }
+    };
 
     /**
      * processStaking
@@ -162,11 +178,13 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
     // Fire notification event
     notificationData.topics = ['event.stake_and_mint_processor.process_staking_on_vc.start'];
     notificationData.message.kind = 'info';
+    notificationData.message.payload.status = 'process_staking_on_vc_start';
+    notificationData.message.payload.transaction_hash = '';
     openSTNotification.publishEvent.perform(notificationData);
 
     logger.step(stakingIntentHash, ' :: performing processStaking for ' + displayTokenType);
 
-    const vcStakeResponse =  await openSTValueContractInteract.processStaking(stakerAddress, stakerPassphrase, stakingIntentHash);
+    const vcStakeResponse = await openSTValueContractInteract.processStaking(stakerAddress, stakerPassphrase, stakingIntentHash);
 
     if (vcStakeResponse.isSuccess()) {
       const vcFormattedTransactionReceipt = vcStakeResponse.data.formattedTransactionReceipt
@@ -176,6 +194,7 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
       notificationData.topics = ['event.stake_and_mint_processor.process_staking_on_vc.done'];
       notificationData.message.kind = 'info';
       notificationData.message.payload.transaction_hash = vcFormattedTransactionReceipt.transactionHash;
+      notificationData.message.payload.status = 'process_staking_on_vc_done';
       openSTNotification.publishEvent.perform(notificationData);
 
       logger.win(stakingIntentHash, ':: performed processStaking on openSTValue contract for ' + displayTokenType, vcFormattedEvents);
@@ -184,12 +203,24 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
       // Fire notification event
       notificationData.message.kind = 'error';
       notificationData.message.payload.error_data = vcStakeResponse;
+      notificationData.message.payload.transaction_hash = '';
+      notificationData.message.payload.status = 'process_staking_on_vc_failed';
       openSTNotification.publishEvent.perform(notificationData);
 
-      var errMessage = stakingIntentHash + ' processStaking on openSTValue contract failed for ' + displayTokenType;
-      logger.notify('e_ic_samp_processor_1', errMessage);
+      // notify devs about the error
+      logger.notify(
+        'e_ic_samp_processor_1',
+        stakingIntentHash + ' processStaking on openSTValue contract failed for ' + displayTokenType
+      );
 
-      return Promise.resolve(responseHelper.error('e_ic_samp_1', errMessage));
+      // return error response.
+      let errObj = responseHelper.error({
+        internal_error_identifier: 'e_ic_samp_processor_1_' + stakingIntentHash,
+        api_error_identifier: 'process_staking_transaction_error',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
 
     /**
@@ -198,6 +229,8 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
     // Fire notification event
     notificationData.topics = ['event.stake_and_mint_processor.process_minting_on_uc.start'];
     notificationData.message.kind = 'info';
+    notificationData.message.payload.transaction_hash = '';
+    notificationData.message.payload.status = 'process_minting_on_uc_start';
     openSTNotification.publishEvent.perform(notificationData);
 
     logger.step(stakingIntentHash, ' :: performing processMinting for ' + displayTokenType);
@@ -212,6 +245,7 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
       notificationData.topics = ['event.stake_and_mint_processor.process_minting_on_uc.done'];
       notificationData.message.kind = 'info';
       notificationData.message.payload.transaction_hash = ucFormattedTransactionReceipt.transactionHash;
+      notificationData.message.payload.status = 'process_minting_on_uc_done';
       openSTNotification.publishEvent.perform(notificationData);
 
       logger.win(stakingIntentHash, ':: performed processMinting on openSTUtility contract for ' + displayTokenType, ucFormattedEvents);
@@ -220,12 +254,22 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
       // Fire notification event
       notificationData.message.kind = 'error';
       notificationData.message.payload.error_data = ucMintResponse;
+      notificationData.message.payload.transaction_hash = '';
+      notificationData.message.payload.status = 'process_minting_on_uc_failed';
       openSTNotification.publishEvent.perform(notificationData);
 
-      var errMessage = stakingIntentHash + ' processMinting on openSTUtility contract failed for ' + displayTokenType;
-      logger.notify('e_ic_samp_processor_2', errMessage);
+      logger.notify(
+        'e_ic_samp_processor_2',
+        stakingIntentHash + ' processMinting on openSTUtility contract failed for ' + displayTokenType
+      );
 
-      return Promise.resolve(responseHelper.error('e_ic_samp_2', errMessage));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 'e_ic_samp_2_' + stakingIntentHash,
+        api_error_identifier: 'process_minting_transaction_error',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
 
     /**
@@ -234,6 +278,8 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
     // Fire notification event
     notificationData.topics = ['event.stake_and_mint_processor.claim_token_on_uc.start'];
     notificationData.message.kind = 'info';
+    notificationData.message.payload.transaction_hash = '';
+    notificationData.message.payload.status = 'claim_token_on_uc_start';
     openSTNotification.publishEvent.perform(notificationData);
 
     logger.step(stakingIntentHash, ' :: performing claim for ' + displayTokenType);
@@ -245,9 +291,10 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
         , ucFormattedEvents = await web3EventsFormatter.perform(ucFormattedTransactionReceipt);
 
       // Fire notification event
-      notificationData.topics = ['event.stake_and_mint.claim_token_on_uc.done'];
+      notificationData.topics = ['event.stake_and_mint_processor.claim_token_on_uc.done'];
       notificationData.message.kind = 'info';
       notificationData.message.payload.transaction_hash = ucFormattedTransactionReceipt.transactionHash;
+      notificationData.message.payload.status = 'claim_token_on_uc_done';
       openSTNotification.publishEvent.perform(notificationData);
 
       logger.win(stakingIntentHash, ':: performed claim for ' + displayTokenType, ucFormattedEvents);
@@ -255,13 +302,23 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
 
       // Fire notification event
       notificationData.message.kind = 'error';
+      notificationData.message.payload.transaction_hash = '';
       notificationData.message.payload.error_data = ucClaimResponse;
+      notificationData.message.payload.status = 'claim_token_on_uc_failed';
       openSTNotification.publishEvent.perform(notificationData);
 
-      var errMessage = stakingIntentHash + ' claim failed for ' + displayTokenType;
-      logger.notify('e_ic_samp_processor_3', errMessage);
+      logger.notify(
+        'e_ic_samp_processor_3',
+        stakingIntentHash + ' claim failed for ' + displayTokenType
+      );
 
-      return Promise.resolve(responseHelper.error('e_ic_samp_3', errMessage));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 'e_ic_samp_3_' + stakingIntentHash,
+        api_error_identifier: 'claim_transaction_error',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
 
     return Promise.resolve(responseHelper.successWithData({}));

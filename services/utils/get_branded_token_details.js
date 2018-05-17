@@ -46,11 +46,16 @@ GetBrandedTokenDetailsKlass.prototype = {
 
     // validations
     if (!basicHelper.isUuidValid(oThis.uuid)) {
-      return Promise.resolve(responseHelper.error('s_u_gbtd_1', 'Invalid branded token uuid'));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_u_gbtd_1',
+        api_error_identifier: 'invalid_branded_token_uuid',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      return Promise.resolve(errObj);
     }
 
     var tokenDetails = await openSTValue.utilityTokens(oThis.uuid);
-    
+
     return tokenDetails;
   }
 };

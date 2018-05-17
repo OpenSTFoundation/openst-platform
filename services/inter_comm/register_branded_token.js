@@ -29,6 +29,7 @@ const rootPrefix = '../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , IntercomBaseKlass = require(rootPrefix + '/services/inter_comm/base')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
+  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
 const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
@@ -46,8 +47,7 @@ const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue
     publisher: 'OST',
     message: {
       kind: '', // populate later: with every stage
-      payload: {
-      }
+      payload: {}
     }
   }
 ;
@@ -81,7 +81,7 @@ const RegisterBrandedTokenInterCommSpecificPrototype = {
     ;
 
     oThis.completeContract = new web3WsProvider.eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
-    oThis.completeContract.setProvider(web3WsProvider.currentProvider);
+    //oThis.completeContract.setProvider(web3WsProvider.currentProvider);
   },
 
   /**
@@ -99,7 +99,7 @@ const RegisterBrandedTokenInterCommSpecificPrototype = {
    * Parallel processing allowed
    * @return bool
    */
-  parallelProcessingAllowed: function() {
+  parallelProcessingAllowed: function () {
     return true;
   },
 
@@ -168,7 +168,13 @@ const RegisterBrandedTokenInterCommSpecificPrototype = {
       var errMessage = uuid + ' registerBrandedToken of utilityRegistrar contract ERROR. Something went wrong!';
       logger.notify('e_ic_rbt_processor_1', errMessage);
 
-      return Promise.resolve(responseHelper.error('e_ic_rbt_1', errMessage));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 'e_ic_rbt_1_' + uuid,
+        api_error_identifier: 'register_branded_token_transaction_error',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
 
     // Fire notification event
@@ -212,7 +218,13 @@ const RegisterBrandedTokenInterCommSpecificPrototype = {
       var errMessage = uuid + ' registerUtilityToken of valueRegistrar contract ERROR. Something went wrong!';
       logger.notify('e_ic_rbt_processor_2', errMessage);
 
-      return Promise.resolve(responseHelper.error('e_ic_rbt_2', errMessage));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 'e_ic_rbt_2_' + uuid,
+        api_error_identifier: 'register_utility_token_transaction_error',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
     }
 
     return Promise.resolve(responseHelper.successWithData({}));

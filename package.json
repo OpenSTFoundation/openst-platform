@@ -1,6 +1,6 @@
 {
   "name": "@openstfoundation/openst-platform",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "description": "OpenST Platform provides a web3 interface to tokenise mainstream consumer applications with crypto-assets on Ethereum",
   "keywords": [
     "web3",
@@ -27,8 +27,9 @@
     "make-docs": "node_modules/.bin/jsdoc -c .jsdoc.json"
   },
   "dependencies": {
-    "@openstfoundation/openst-cache": "1.0.1",
-    "@openstfoundation/openst-notification": "1.0.0",
+    "@openstfoundation/openst-cache": "1.0.3",
+    "@openstfoundation/openst-base": "0.9.0",
+    "@openstfoundation/openst-notification": "1.0.1",
     "abi-decoder": "1.0.9",
     "bignumber.js": "4.1.0",
     "child_process": "1.0.2",
@@ -42,7 +43,7 @@
     "shelljs": "0.8.1",
     "shortid": "2.2.8",
     "uuid": "3.1.0",
-    "web3": "1.0.0-beta.26"
+    "web3": "1.0.0-beta.33"
   },
   "devDependencies": {
     "chai": "4.1.2",

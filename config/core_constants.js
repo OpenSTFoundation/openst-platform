@@ -23,7 +23,8 @@ function absolutePath(filePath) {
  *
  * @constructor
  */
-const CoreConstants = function() {};
+const CoreConstants = function () {
+};
 
 CoreConstants.prototype = {
 
@@ -137,7 +138,15 @@ CoreConstants.prototype = {
    * @constant {string}
    *
    */
-  CACHING_ENGINE: process.env.OST_CACHING_ENGINE
+  CACHING_ENGINE: process.env.OST_CACHING_ENGINE,
+
+  /**
+   * debug log level.
+   *
+   * @constant {string}
+   *
+   */
+  DEBUG_ENABLED: process.env.OST_DEBUG_ENABLED
 };
 
 module.exports = new CoreConstants();

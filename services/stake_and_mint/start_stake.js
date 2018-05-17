@@ -28,7 +28,7 @@ const openSTValueContractInteract = new OpenSTValueKlass()
  *
  * @constructor
  */
-const startStakeKlass = function(params) {
+const startStakeKlass = function (params) {
   const oThis = this
   ;
 
@@ -54,16 +54,36 @@ startStakeKlass.prototype = {
 
       // Validations
       if (!basicHelper.isAddressValid(stakerAddress) || !stakerPassphrase) {
-        return Promise.resolve(responseHelper.error('s_sam_ss_1', 'Invalid staker details'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_sam_ss_1',
+          api_error_identifier: 'invalid_staker_details',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
       if (!basicHelper.isAddressValid(oThis.beneficiary)) {
-        return Promise.resolve(responseHelper.error('s_sam_ss_2', 'Invalid beneficiary details'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_sam_ss_2',
+          api_error_identifier: 'invalid_beneficiary_details',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
       if (!basicHelper.isUuidValid(oThis.uuid)) {
-        return Promise.resolve(responseHelper.error('s_sam_ss_3', 'Invalid branded token uuid'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_sam_ss_3',
+          api_error_identifier: 'invalid_branded_token_uuid',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
       if (!basicHelper.isNonZeroWeiValid(oThis.toStakeAmount)) {
-        return Promise.resolve(responseHelper.error('s_sam_ss_4', 'Invalid amount'));
+        let errObj = responseHelper.error({
+          internal_error_identifier: 's_sam_ss_4',
+          api_error_identifier: 'invalid_amount',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+        return Promise.resolve(errObj);
       }
 
       // Format wei
@@ -72,10 +92,18 @@ startStakeKlass.prototype = {
       const stakeTransactionHash = await openSTValueContractInteract.stake(stakerAddress, stakerPassphrase, oThis.uuid,
         oThis.toStakeAmount, oThis.beneficiary, true);
 
-      return Promise.resolve(responseHelper.successWithData({transaction_uuid: uuid.v4(), transaction_hash: stakeTransactionHash}));
+      return Promise.resolve(responseHelper.successWithData({
+        transaction_uuid: uuid.v4(),
+        transaction_hash: stakeTransactionHash
+      }));
 
     } catch (err) {
-      return Promise.resolve(responseHelper.error('s_sam_ss_5', 'Something went wrong. ' + err.message));
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_sam_ss_5',
+        api_error_identifier: 'something_went_wrong',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      return Promise.resolve(errObj);
     }
   }
 };
