@@ -1,3 +1,16 @@
+## OpenST-platform v0.9.3
+Logger, response helper, promise context, promise queue manager and web3 from OpenST Base is now used in OpenST platform. OpenST Base repository was created and all the common functionality which different openst modules need were moved to it.
+
+Web socket connection to Geth is now being used and preferred over RPC connection in OpenST platform.
+
+Stake and mint processor inter chain communicator now publishes update notifications for each step completion.
+
+OpenST platform module has exposed core ABI files for all the contracts which can be used by users to deploy these contracts, listen events, etc.
+
+Log level support was introduced and non-important logs were moved to debug log level.
+
+Standardized error codes are now being used in OpenST platform.
+
 ## OpenST-platform v0.9.2
 
 In this release OpenST platform is published as a [node module](https://www.npmjs.com/package/@openstfoundation/openst-platform), now independent development can be supported using platform as the base layer.
