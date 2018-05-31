@@ -146,7 +146,15 @@ CoreConstants.prototype = {
    * @constant {string}
    *
    */
-  DEBUG_ENABLED: process.env.OST_DEBUG_ENABLED
+  DEBUG_ENABLED: process.env.OST_DEBUG_ENABLED,
+
+  /**
+   * stand alone mode on?
+   *
+   * @constant {number}
+   *
+   */
+  STANDALONE_MODE: process.env.OST_STANDALONE_MODE || 0
 };
 
 module.exports = new CoreConstants();

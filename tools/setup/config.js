@@ -149,6 +149,10 @@ const setupConfig = {
     st_prime_uuid: {
       env_var: 'OST_OPENSTUTILITY_ST_PRIME_UUID',
       value: ''
+    },
+    standalone_mode: {
+      env_var: 'OST_STANDALONE_MODE',
+      value: 1
     }
   },
 
