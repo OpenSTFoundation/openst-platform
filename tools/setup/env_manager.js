@@ -44,6 +44,9 @@ EnvManagerKlass.prototype = {
     // Create miscellaneous ENV variables
     oThis._miscellaneousVars();
 
+    // Create dynamodb ENV variables
+    oThis._dynamodbVars();
+
     // Create contract address ENV variables
     oThis._contractAddressVars();
 
@@ -99,6 +102,18 @@ EnvManagerKlass.prototype = {
     fileManager.append(setupConfig.env_vars_file, "\n# Miscellaneous");
 
     oThis._scanAndPopulateEnvVars(setupConfig.misc_deployment);
+  },
+
+  /**
+   * Populate all dynamodb env variables
+   */
+  _dynamodbVars: function () {
+    const oThis = this;
+
+    // Add comment to ENV
+    fileManager.append(setupConfig.env_vars_file, "\n# DynamoDB");
+
+    oThis._scanAndPopulateEnvVars(setupConfig.dynamodb);
   },
 
   /**
