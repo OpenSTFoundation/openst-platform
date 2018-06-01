@@ -35,4 +35,4 @@ DynamoDBInit.prototype = {
   }
 };
 
-new DynamoDBInit().perform();
+module.exports = new DynamoDBInit();

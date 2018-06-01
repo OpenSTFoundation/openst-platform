@@ -7,6 +7,7 @@
 
 const Path = require('path')
   , os = require('os')
+  , openSTStorage = require('@openstfoundation/openst-storage')
 ;
 
 const rootPrefix = '../../..'
@@ -15,6 +16,7 @@ const rootPrefix = '../../..'
   , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/get_registration_status')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , tokenHelper = require(rootPrefix + '/tools/setup/branded_token/helper')
+  , ddbServiceObj = require(rootPrefix + '/lib/dynamoDB_service')
 ;
 
 /**
@@ -87,6 +89,10 @@ RegisterBTKlass.prototype = {
     // Add branded token to config file
     logger.step("** Updating branded token config file");
     await oThis._updateBrandedTokenConfig();
+
+    // Allocating shard for storage of token balances
+    logger.step("** Allocating shard for storage of token balances");
+    await oThis._allocateShard();
 
     process.exit(0);
 
@@ -233,6 +239,22 @@ RegisterBTKlass.prototype = {
     logger.info("* Branded token config:", existingBrandedTokens[oThis.uuid]);
 
     return tokenHelper.addBrandedToken(existingBrandedTokens);
+  },
+
+  /**
+   * Allocate shard to branded token
+   *
+   * @return {promise<object>} -
+   * @private
+   */
+  _allocateShard: async function() {
+    const oThis = this
+    ;
+
+    await openSTStorage.TokenBalanceModel({
+      ddb_service: ddbServiceObj,
+      erc20_contract_address: oThis.erc20
+    }).allocate();
   },
 
   /**

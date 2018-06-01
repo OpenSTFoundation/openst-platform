@@ -75,10 +75,6 @@ openSTSetup.prototype = {
       logger.step("** Convert private keys to keystore files and move to required chains.");
       gethManager.importPostInitAddressesToChains(addresses);
 
-      // // generate all post init required addresses
-      // logger.step("** Generating all post init required account in respective chains");
-      // gethManager.generatePostInitAddresses((options || {}).pre_generated_addresses);
-
       // Write environment file
       logger.step("** Writing env variables file");
       envManager.generateEnvFile();
@@ -87,6 +83,9 @@ openSTSetup.prototype = {
       logger.step('** Funding required addresses');
       await runHelperService(rootPrefix + '/tools/setup/fund_users');
 
+      // Dynamo DB init
+      logger.step('** Dynamo DB init');
+      await runHelperService(rootPrefix + '/tools/setup/dynamo_db_init');
     }
 
     if (step == 'st_contract' || step == 'all') {

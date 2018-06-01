@@ -33,13 +33,13 @@ before_script:
   - unzip ./dynamodb/dynamodb_local_latest.zip
   - nohup java -Djava.library.path=./dynamodb/DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb &
   - sleep 30
-  - export OS_DYNAMODB_API_VERSION='2012-08-10'
-  - export OS_DYNAMODB_ACCESS_KEY_ID='x'
-  - export OS_DYNAMODB_SECRET_ACCESS_KEY='x'
-  - export OS_DYNAMODB_REGION='localhost'
-  - export OS_DYNAMODB_ENDPOINT='http://localhost:8000'
-  - export OST_CACHING_ENGINE='none'
-  - node tools/setup/dynamo_db_init.js
+#  - export OS_DYNAMODB_API_VERSION='2012-08-10'
+#  - export OS_DYNAMODB_ACCESS_KEY_ID='x'
+#  - export OS_DYNAMODB_SECRET_ACCESS_KEY='x'
+#  - export OS_DYNAMODB_REGION='localhost'
+#  - export OS_DYNAMODB_ENDPOINT='http://localhost:8000'
+#  - export OST_CACHING_ENGINE='none'
+#  - node tools/setup/dynamo_db_init.js
 script:
   - export OPENST_PLATFORM_PATH=$(pwd)
   - export OST_DEBUG_ENABLED=1
