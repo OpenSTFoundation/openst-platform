@@ -251,7 +251,7 @@ RegisterBTKlass.prototype = {
     const oThis = this
     ;
 
-    await openSTStorage.TokenBalanceModel({
+    await new openSTStorage.TokenBalanceModel({
       ddb_service: ddbServiceObj,
       erc20_contract_address: oThis.erc20
     }).allocate();
