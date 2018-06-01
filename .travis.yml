@@ -27,6 +27,10 @@ install:
   - npm install
   - npm install -g mocha
 before_script:
+  - mkdir -p dynamodb
+  - wget https://s3.ap-south-1.amazonaws.com/dynamodb-local-mumbai/dynamodb_local_latest.zip -O ./dynamodb/dynamodb_local_latest.zip
+  - unzip ./dynamodb/dynamodb_local_latest.zip
+  - nohup java -Djava.library.path=./dynamodb/DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb &
 script:
   - export OPENST_PLATFORM_PATH=$(pwd)
   - export OST_DEBUG_ENABLED=1
@@ -40,3 +44,5 @@ script:
   - mocha --timeout 120000 test/* --exit
 after_script:
   - kill $(ps aux | grep 'tools/setup/start_services.js' | awk '{print $2}')
+  - kill $(ps aux | grep 'DynamoDBLocal.jar' | awk '{print $2}')
+  - rm -rf dynamodb
