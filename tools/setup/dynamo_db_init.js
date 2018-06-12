@@ -10,7 +10,7 @@ const openSTStorage = require('@openstfoundation/openst-storage')
 const rootPrefix = '../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , ddbServiceObj = require(rootPrefix + '/lib/dynamoDB_service')
-  // , autoscalingServiceObj = require(rootPrefix + '/lib/auto_scaling_service')
+  , autoScalingServiceObj = require(rootPrefix + '/lib/auto_scaling_service')
 ;
 
 /**
@@ -30,7 +30,8 @@ DynamoDBInit.prototype = {
     // createAndRegisterShard
     logger.info('* Creating and registering shard for token balance model.');
     await new openSTStorage.TokenBalanceModel({
-      ddb_service: ddbServiceObj
+      ddb_service: ddbServiceObj,
+      auto_scaling: autoScalingServiceObj
     }).createAndRegisterShard('tokenBalancesShard1')
   }
 };

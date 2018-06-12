@@ -17,6 +17,7 @@ const rootPrefix = '../../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , tokenHelper = require(rootPrefix + '/tools/setup/branded_token/helper')
   , ddbServiceObj = require(rootPrefix + '/lib/dynamoDB_service')
+  , autoScalingServiceObj = require(rootPrefix + '/lib/auto_scaling_service')
 ;
 
 /**
@@ -253,6 +254,7 @@ RegisterBTKlass.prototype = {
 
     await new openSTStorage.TokenBalanceModel({
       ddb_service: ddbServiceObj,
+      auto_scaling: autoScalingServiceObj,
       erc20_contract_address: oThis.erc20
     }).allocate();
   },
