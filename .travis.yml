@@ -29,6 +29,7 @@ install:
   - npm install -g mocha
 before_script:
   - mkdir -p dynamodb
+  - export RUNNING_TESTS_IN='travis'
   - wget https://s3.ap-south-1.amazonaws.com/dynamodb-local-mumbai/dynamodb_local_latest.zip -O ./dynamodb/dynamodb_local_latest.zip
   - unzip ./dynamodb/dynamodb_local_latest.zip
   - nohup java -Djava.library.path=./dynamodb/DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb &
