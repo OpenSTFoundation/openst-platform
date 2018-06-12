@@ -6,6 +6,7 @@ branches:
   - master
   - develop
   - release-0.9
+  - balances_model_and_cache
 notifications:
   email:
     recipients:
@@ -27,6 +28,18 @@ install:
   - npm install
   - npm install -g mocha
 before_script:
+  - mkdir -p dynamodb
+  - wget https://s3.ap-south-1.amazonaws.com/dynamodb-local-mumbai/dynamodb_local_latest.zip -O ./dynamodb/dynamodb_local_latest.zip
+  - unzip ./dynamodb/dynamodb_local_latest.zip
+  - nohup java -Djava.library.path=./dynamodb/DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb &
+  - sleep 30
+#  - export OS_DYNAMODB_API_VERSION='2012-08-10'
+#  - export OS_DYNAMODB_ACCESS_KEY_ID='x'
+#  - export OS_DYNAMODB_SECRET_ACCESS_KEY='x'
+#  - export OS_DYNAMODB_REGION='localhost'
+#  - export OS_DYNAMODB_ENDPOINT='http://localhost:8000'
+#  - export OST_CACHING_ENGINE='none'
+#  - node tools/setup/dynamo_db_init.js
 script:
   - export OPENST_PLATFORM_PATH=$(pwd)
   - export OST_DEBUG_ENABLED=1
@@ -35,8 +48,10 @@ script:
   - nohup node tools/setup/start_services.js </dev/null >/dev/null 2>&1 &
   - sleep 120
   - source $HOME/openst-setup/openst_env_vars.sh
-  - node tools/setup/branded_token/register.js "ACME Coin" "ACME" 500000000000000000000
-  - node tools/setup/branded_token/mint.js "ACME" 500000000000000000000
+  - node tools/setup/branded_token/register.js "ACME Coin" "ACME" 10
+  - node tools/setup/branded_token/mint.js "ACME" 1000000000000000000000
   - mocha --timeout 120000 test/* --exit
 after_script:
   - kill $(ps aux | grep 'tools/setup/start_services.js' | awk '{print $2}')
+  - kill $(ps aux | grep 'DynamoDBLocal.jar' | awk '{print $2}')
+  - rm -rf dynamodb

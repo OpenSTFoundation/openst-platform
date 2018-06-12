@@ -149,6 +149,36 @@ const setupConfig = {
     st_prime_uuid: {
       env_var: 'OST_OPENSTUTILITY_ST_PRIME_UUID',
       value: ''
+    },
+    standalone_mode: {
+      env_var: 'OST_STANDALONE_MODE',
+      value: 1
+    }
+  },
+
+  /**
+   * Miscellaneous configurations
+   */
+  dynamodb: {
+    api_version: {
+      env_var: 'OS_DYNAMODB_API_VERSION',
+      value: '2012-08-10'
+    },
+    access_key_id: {
+      env_var: 'OS_DYNAMODB_ACCESS_KEY_ID',
+      value: 'x'
+    },
+    secret_access_key: {
+      env_var: 'OS_DYNAMODB_SECRET_ACCESS_KEY',
+      value: 'x'
+    },
+    region: {
+      env_var: 'OS_DYNAMODB_REGION',
+      value: 'localhost'
+    },
+    endpoint: {
+      env_var: 'OS_DYNAMODB_ENDPOINT',
+      value: 'http://localhost:8000'
     }
   },
 
