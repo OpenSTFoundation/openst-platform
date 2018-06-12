@@ -154,7 +154,9 @@ CoreConstants.prototype = {
    * @constant {number}
    *
    */
-  STANDALONE_MODE: process.env.OST_STANDALONE_MODE || 0
+  STANDALONE_MODE: process.env.OST_STANDALONE_MODE || 0,
+
+  RUNNING_TESTS_IN: process.env.RUNNING_TESTS_IN
 };
 
 module.exports = new CoreConstants();
