@@ -47,6 +47,9 @@ EnvManagerKlass.prototype = {
     // Create dynamodb ENV variables
     oThis._dynamodbVars();
 
+    // Create dynamodb auto scaling ENV variables
+    oThis._dynamodbAutoScalingVars();
+
     // Create contract address ENV variables
     oThis._contractAddressVars();
 
@@ -114,6 +117,18 @@ EnvManagerKlass.prototype = {
     fileManager.append(setupConfig.env_vars_file, "\n# DynamoDB");
 
     oThis._scanAndPopulateEnvVars(setupConfig.dynamodb);
+  },
+
+  /**
+   * Populate all dynamodb auto scaling env variables
+   */
+  _dynamodbAutoScalingVars: function () {
+    const oThis = this;
+
+    // Add comment to ENV
+    fileManager.append(setupConfig.env_vars_file, "\n# DynamoDB Auto scaling vars");
+
+    oThis._scanAndPopulateEnvVars(setupConfig.autoscaling);
   },
 
   /**
