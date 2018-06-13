@@ -1,6 +1,6 @@
 {
   "name": "@openstfoundation/openst-platform",
-  "version": "0.9.4-beta.10",
+  "version": "0.9.4-beta.11",
   "description": "OpenST Platform provides a web3 interface to tokenise mainstream consumer applications with crypto-assets on Ethereum",
   "keywords": [
     "web3",
