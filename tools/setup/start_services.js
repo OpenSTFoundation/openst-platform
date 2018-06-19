@@ -18,6 +18,7 @@ const rootPrefix = "../.."
   , setupHelper = require(rootPrefix + '/tools/setup/helper')
   , platformStatus = require(rootPrefix + '/services/utils/platform_status')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , StartDynamo = require(rootPrefix + '/lib/start_dynamo')
 ;
 
 /**
@@ -34,6 +35,15 @@ StartServicesKlass.prototype = {
   perform: async function () {
     const oThis = this
       , servicesList = [];
+
+    var cmd = "ps aux | grep dynamo | grep -v grep | tr -s ' ' | cut -d ' ' -f2";
+    let processId = shell.exec(cmd).stdout;
+
+    if (processId == '') {
+      // Start Dynamo DB in openST env
+      let startDynamo = new StartDynamo();
+      await startDynamo.perform();
+    }
 
     // Start Value Chain
     logger.step("** Start value chain");

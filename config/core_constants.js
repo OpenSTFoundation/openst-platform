@@ -156,7 +156,7 @@ CoreConstants.prototype = {
    */
   STANDALONE_MODE: process.env.OST_STANDALONE_MODE || 0,
 
-  RUNNING_TESTS_IN: process.env.RUNNING_TESTS_IN
+  AUTO_SCALE_DYNAMO: process.env.AUTO_SCALE_DYNAMO
 };
 
 module.exports = new CoreConstants();

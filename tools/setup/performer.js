@@ -6,6 +6,10 @@ const shellSource = require('shell-source')
   , Path = require('path')
 ;
 
+// load shelljs and disable output
+var shell = require('shelljs');
+shell.config.silent = true;
+
 const rootPrefix = "../.."
   , setupConfig = require(rootPrefix + '/tools/setup/config')
   , setupHelper = require(rootPrefix + '/tools/setup/helper')
@@ -15,6 +19,7 @@ const rootPrefix = "../.."
   , serviceManager = require(rootPrefix + '/tools/setup/service_manager')
   , envManager = require(rootPrefix + '/tools/setup/env_manager')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , StartDynamo = require(rootPrefix + '/lib/start_dynamo')
 ;
 
 const openSTSetup = function () {
@@ -83,9 +88,20 @@ openSTSetup.prototype = {
       logger.step('** Funding required addresses');
       await runHelperService(rootPrefix + '/tools/setup/fund_users');
 
+
+      let cmd = "ps aux | grep dynamo | grep -v grep | tr -s ' ' | cut -d ' ' -f2";
+      let processId = shell.exec(cmd).stdout;
+
+      if (processId == '') {
+        // Start Dynamo DB
+        let startDynamo = new StartDynamo();
+        await startDynamo.perform();
+      }
+
       // Dynamo DB init
       logger.step('** Dynamo DB init');
       await runHelperService(rootPrefix + '/tools/setup/dynamo_db_init');
+
     }
 
     if (step == 'st_contract' || step == 'all') {

@@ -153,6 +153,10 @@ const setupConfig = {
     standalone_mode: {
       env_var: 'OST_STANDALONE_MODE',
       value: 1
+    },
+    autoscale_dynamo: {
+      env_var: 'AUTO_SCALE_DYNAMO',
+      value: 0
     }
   },
 
