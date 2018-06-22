@@ -189,5 +189,45 @@
     "http_code": "422",
     "code": "UNPROCESSABLE_ENTITY",
     "message": "No new blocks on chain."
+  },
+  "exception": {
+    "http_code": "500",
+    "code": "INTERNAL_SERVER_ERROR",
+    "message": "Something went wrong exception."
+  },
+  "db_path_undefined": {
+    "http_code": "422",
+    "code": "REQUIRED_ARGUMENT_MISSING",
+    "message": "Required argument db path is missing"
+  },
+  "state_root_undefined": {
+    "http_code": "422",
+    "code": "REQUIRED_ARGUMENT_MISSING",
+    "message": "Required argument state root is missing"
+  },
+  "account_address_undefined": {
+    "http_code": "422",
+    "code": "REQUIRED_ARGUMENT_MISSING",
+    "message": "Required argument account address is missing"
+  },
+  "account_node_not_found": {
+    "http_code": "422",
+    "code": "ACCOUNT_NOT_FOUND",
+    "message": "Account not found"
+  },
+  "storage_node_not_found": {
+    "http_code": "422",
+    "code": "STORAGE_NOT_FOUND",
+    "message": "Storage node not found"
+  },
+  "storage_index_undefined": {
+    "http_code": "422",
+    "code": "REQUIRED_ARGUMENT_MISSING",
+    "message": "Required argument storage index is missing"
+  },
+  "tree_not_initialized": {
+    "http_code": "422",
+    "code": "TRIE_UNINITIALIZED",
+    "message": "Trie not initialized"
   }
 }

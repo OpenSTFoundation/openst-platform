@@ -24,7 +24,8 @@
   "scripts": {
     "start": "index.js",
     "setup": "node tools/setup/index.js",
-    "make-docs": "node_modules/.bin/jsdoc -c .jsdoc.json"
+    "make-docs": "node_modules/.bin/jsdoc -c .jsdoc.json",
+    "test": "mocha test test/*/*/ test/*/"
   },
   "dependencies": {
     "@openstfoundation/openst-cache": "1.0.3",
@@ -43,12 +44,18 @@
     "shelljs": "0.8.1",
     "shortid": "2.2.8",
     "uuid": "3.1.0",
-    "web3": "1.0.0-beta.33"
+    "web3": "1.0.0-beta.33",
+    "ethereumjs-util": "^5.2.0",
+    "leveldown": "^4.0.1",
+    "levelup": "^3.0.1",
+    "merkle-patricia-tree": "^2.3.1"
   },
   "devDependencies": {
     "chai": "4.1.2",
     "ink-docstrap": "1.3.2",
     "jsdoc": "3.5.5",
-    "mocha": "5.0.0"
+    "mocha": "5.0.0",
+    "mock-require": "^3.0.2",
+    "sinon": "^6.0.0"
   }
 }
