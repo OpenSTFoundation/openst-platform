@@ -146,7 +146,7 @@ CoreConstants.prototype = {
    * @constant {string}
    *
    */
-  DEBUG_ENABLED: process.env.OST_DEBUG_ENABLED
+  DEBUG_ENABLED: process.env.OST_DEBUG_ENABLED,
 
   /**
    * PROOF BATCH SIZE
