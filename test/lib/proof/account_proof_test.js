@@ -1,8 +1,10 @@
 const assert = require('assert')
-  , ethUtils = require('ethereumjs-util');
+  , ethUtils = require('ethereumjs-util')
+  , sinon = require('sinon')
+;
 
-const rootPrefix = "../.."
-  , proof = require(rootPrefix + '/test/proof/data/proof')
+const rootPrefix = "../../.."
+  , proof = require(rootPrefix + '/test/data/accountProof')
   , utils = require(rootPrefix + '/test/utils');
 
 function mockedTrie(proof, generateValidProof = true) {
@@ -17,10 +19,12 @@ function mockedTrie(proof, generateValidProof = true) {
 describe('account proof for single node', function () {
   let accountProofInstance, AccountProof,accountProof;
   before(async () => {
-    AccountProof = require(rootPrefix + '/services/proof/account_proof')
+    AccountProof = require(rootPrefix + '/lib/proof/account_proof')
 
+    let mockDB = sinon.mock();
     let mockTrie = mockedTrie(proof[0]);
-    accountProofInstance = new AccountProof('0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b');
+
+    accountProofInstance = new AccountProof('0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b', mockDB);
     accountProofInstance.trie = mockTrie;
     accountProof = await accountProofInstance.perform(proof[0].address).then(proof => {
       return proof;
@@ -42,21 +46,19 @@ describe('account proof for single node', function () {
     assert.equal(accountProof.value[3].equals(decodedAccountNode[3]), true);
 
   });
-
-
 });
-
 
 describe('account proof for multiple nodes(branch, leaf, extension)', function () {
 
   const accountAddress = proof[1].address;
-  let AccountProof;
+  let AccountProof, accountProofInstance;
 
   before(async () => {
 
-    AccountProof = require(rootPrefix + '/services/proof/account_proof')
+    AccountProof = require(rootPrefix + '/lib/proof/account_proof')
     let mockTrie = mockedTrie(proof[1]);
-    accountProofInstance = new AccountProof('0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b');
+    let mockDB = sinon.mock();
+    accountProofInstance = new AccountProof('0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b', mockDB);
     accountProofInstance.trie = mockTrie;
 
   });

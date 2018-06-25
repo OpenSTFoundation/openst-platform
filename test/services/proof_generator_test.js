@@ -1,6 +1,5 @@
 const assert = require('assert')
   , sinon = require('sinon')
-  , mock = require('mock-require')
   , rootPrefix = "../.."
   , utils = require(rootPrefix + '/test/utils');
 
@@ -37,6 +36,6 @@ describe('generate Proof', function () {
   });
 
   after(function () {
-    utils.unMockCustomRequireDependency();
+      utils.unMockCustomRequireDependency();
   });
 });

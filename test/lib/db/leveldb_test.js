@@ -14,7 +14,6 @@ describe('Level DB Factory', function () {
     mock('levelup', sinon.fake());
 
     levelDBFactory = require(rootPrefix + '/lib/db/leveldb');
-    console.log("levelDBFactory   ", levelDBFactory);
   });
   it('should create new instance of new db path', function () {
 

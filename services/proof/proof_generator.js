@@ -1,7 +1,7 @@
 const rootPrefix = "../.."
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , AccountProof = require(rootPrefix + '/services/proof/account_proof')
-  , StorageProof = require(rootPrefix + '/services/proof/storage_proof')
+  , AccountProof = require(rootPrefix + '/lib/proof/account_proof')
+  , StorageProof = require(rootPrefix + '/lib/proof/storage_proof')
   , dbFactory = require(rootPrefix + '/lib/db/leveldb');
 
 /**

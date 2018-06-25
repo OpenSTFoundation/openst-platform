@@ -4,12 +4,12 @@ const sinon = require('sinon')
   , rootPrefix = "../";
 
 module.exports.mockCustomRequireDependency = function (MockAccountProofBuild, MockStorageProofBuild) {
-  mock(rootPrefix + '/services/proof/account_proof', function MockAccountProof() {
+  mock(rootPrefix + '/lib/proof/account_proof', function MockAccountProof() {
     return {
       perform: MockAccountProofBuild
     }
   });
-  mock(rootPrefix + '/services/proof/storage_proof', function MockStorageProof() {
+  mock(rootPrefix + '/lib/proof/storage_proof', function MockStorageProof() {
     return {
       perform: MockStorageProofBuild
     };
@@ -21,8 +21,8 @@ module.exports.mockCustomRequireDependency = function (MockAccountProofBuild, Mo
 
 module.exports.unMockCustomRequireDependency = function () {
 
-  mock.stop(rootPrefix + '/services/proof/account_proof');
-  mock.stop(rootPrefix + '/services/proof/storage_proof');
+  mock.stop(rootPrefix + '/lib/proof/account_proof');
+  mock.stop(rootPrefix + '/lib/proof/storage_proof');
   mock.stop(rootPrefix + '/lib/db/leveldb');
 };
 
