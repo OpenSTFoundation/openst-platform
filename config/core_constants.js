@@ -147,6 +147,11 @@ CoreConstants.prototype = {
    *
    */
   DEBUG_ENABLED: process.env.OST_DEBUG_ENABLED
+
+  /**
+   * PROOF BATCH SIZE
+   */
+  PROOF_BATCH_SIZE: 10
 };
 
 module.exports = new CoreConstants();

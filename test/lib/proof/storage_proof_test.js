@@ -21,9 +21,9 @@ describe('should generate storage proof for  mapping type variable', function ()
   before(async () => {
     mock(rootPrefix + '/lib/proof/helper',
       {
-        fetchStorageTrie: () => Promise.resolve(mockedTrie(proof[1])),
         storagePath: () => Buffer.from(proof[1].path, 'hex')
       });
+
     StorageProof = require(rootPrefix + '/lib/proof/storage_proof');
 
     let mockDB = sinon.mock();
@@ -31,6 +31,7 @@ describe('should generate storage proof for  mapping type variable', function ()
     let contractAddress = 'A040086e3072EDe0cEC46780394DEe1211Cbb1d6';
 
     storageProofInstance = new StorageProof(stateRoot, contractAddress, mockDB);
+    storageProofInstance.trie = mockedTrie(proof[1]);
     storageProof = await storageProofInstance.perform(proof[1].storageIndex, proof[1].key).then(proof => {
       return proof;
     });
