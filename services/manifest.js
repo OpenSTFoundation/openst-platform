@@ -42,6 +42,9 @@ const rootPrefix = ".."
   , RegisterBrandedTokenInterComm = require(rootPrefix + '/services/inter_comm/register_branded_token')
   , StakeAndMintInterCommKlass = require(rootPrefix + '/services/inter_comm/stake_and_mint')
   , StakeAndMintProcessorInterCommKlass = require(rootPrefix + '/services/inter_comm/stake_and_mint_processor')
+
+  , ProofGenerator = require(rootPrefix + '/services/proof/proof_generator')
+
 ;
 
 /**
@@ -145,6 +148,13 @@ ServiceManifestKlass.prototype = {
     registerBrandedToken: RegisterBrandedTokenInterComm,
     stakeAndMint: StakeAndMintInterCommKlass,
     stakeAndMintProcessor: StakeAndMintProcessorInterCommKlass
+  },
+
+  /**
+   *  Merkel Patricia proof generation
+   */
+  proof: {
+    ProofGenerator: ProofGenerator
   }
 };
 
