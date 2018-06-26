@@ -27,6 +27,13 @@ describe('Level DB Factory', function () {
     let numberOfInstance = Object.keys(levelDBFactory.instanceMap).length;
     assert.equal(numberOfInstance, 1);
   });
+
+  it('should not create new instance of same db path but different case', function () {
+
+    levelDBFactory.getInstance(__dirname.toUpperCase());
+    let numberOfInstance = Object.keys(levelDBFactory.instanceMap).length;
+    assert.equal(numberOfInstance, 1);
+  });
   after(async () => {
     mock.stop('leveldown');
     mock.stop('levelup');
