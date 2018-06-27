@@ -1,5 +1,4 @@
-const assert = require('assert')
-  , ethUtils = require('ethereumjs-util');
+const assert = require('assert');
 
 const rootPrefix = '../../..'
   , proof = require(rootPrefix + '/lib/proof/proof')
@@ -26,18 +25,10 @@ describe(' Account Proof', function () {
     let path = '2456F6369a9FCB3FE80a89Cd1Dd74108D86FA875';
     let mockTrie = mockedAccountTrie(accountProofData[1]);
     let accountProof = await proof.accountProof(path, mockTrie);
+    accountProof = accountProof.toHash().data;
 
-
-    let decodedAccountNode = ethUtils.rlp.decode(accountProofData[1].nodes[1].rlpValue);
-    assert.equal(accountProof.parentNodes.length, 3);
-    assert.equal(accountProof.address, path);
-    assert.equal(accountProof.value.length, 4);
-
-    //assert accountNodeValue
-    assert.equal(accountProof.value[0].equals(decodedAccountNode[0]), true);
-    assert.equal(accountProof.value[1].equals(decodedAccountNode[1]), true);
-    assert.equal(accountProof.value[2].equals(decodedAccountNode[2]), true);
-    assert.equal(accountProof.value[3].equals(decodedAccountNode[3]), true);
+    assert.equal(accountProof.parentNodes, accountProofData[1].rlpParentNodes);
+    assert.equal(accountProof.value, accountProofData[1].nodes[1].rlpValue.slice(2));
 
   });
 
@@ -69,8 +60,9 @@ describe(' Storage Proof', function () {
     let mockTrie = mockedStorageTrie(storageProofData[1]);
     let storageProof = await proof.storageProof(path, mockTrie);
 
-    assert.equal(storageProof.value.equals(utils.decodeValue(storageProofData[1].value)), true);
-    assert.equal(storageProof.parentNodes.length, utils.decodeParentNodes(storageProofData[1].rlpParentNodes).length);
+    storageProof = storageProof.toHash().data;
+    assert.equal(storageProof.value, storageProofData[1].value);
+    assert.equal(storageProof.parentNodes, storageProofData[1].rlpParentNodes);
 
   });
 

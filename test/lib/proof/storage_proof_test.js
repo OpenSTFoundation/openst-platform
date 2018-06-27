@@ -38,9 +38,9 @@ describe('should generate storage proof for  mapping type variable', function ()
   });
 
   it('should generate storage proof for mapping type variable', function () {
-    assert.equal(storageProof.value.equals(utils.decodeValue(proof[1].value)), true);
-    assert.equal(storageProof.parentNodes.length, utils.decodeParentNodes(proof[1].rlpParentNodes).length);
-    //Todo- can think for logic to match each parent nodes
+    storageProof = storageProof.toHash().data;
+    assert.equal(storageProof.value, proof[1].value);
+    assert.equal(storageProof.parentNodes, proof[1].rlpParentNodes);
   });
 
   after(async () => {

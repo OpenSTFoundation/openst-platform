@@ -1,7 +1,10 @@
 const sinon = require('sinon')
   , mock = require('mock-require')
   , assert = require('assert')
-  , rootPrefix = "../../..";
+  , ethUtils = require('ethereumjs-util')
+  , rootPrefix = "../../.."
+  , responseHelper = require(rootPrefix + '/lib/formatter/response')
+;
 
 let helper;
 
@@ -12,7 +15,8 @@ describe('Proof helper', function () {
     }
 
     MockAccountProof.prototype.perform = async function () {
-      return Promise.resolve({value: [Buffer.from('1',), Buffer.from('2'), Buffer.from('3'), Buffer.from('4')]});
+      let rlpValue = ethUtils.rlp.encode([Buffer.from('1',), Buffer.from('2'), Buffer.from('3'), Buffer.from('4')]);
+      return Promise.resolve(responseHelper.successWithData({value: rlpValue.toString('hex')}));
     };
     mock(rootPrefix + '/lib/proof/account_proof', MockAccountProof);
     helper = require(rootPrefix + '/lib/proof/helper');

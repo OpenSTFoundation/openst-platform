@@ -33,29 +33,20 @@ describe('account proof for single node', function () {
   });
 
   it('should generate account proof for single node tree', function () {
-    let decodedAccountNode = ethUtils.rlp.decode(proof[0].nodes[0].rlpValue);
-
-    assert.equal(accountProof.parentNodes.length, 1);
+    accountProof = accountProof.toHash().data;
     assert.equal(accountProof.address, proof[0].address);
-    assert.equal(accountProof.value.length, 4);
-
-    //assert accountNodeValue
-    assert.equal(accountProof.value[0].equals(decodedAccountNode[0]), true);
-    assert.equal(accountProof.value[1].equals(decodedAccountNode[1]), true);
-    assert.equal(accountProof.value[2].equals(decodedAccountNode[2]), true);
-    assert.equal(accountProof.value[3].equals(decodedAccountNode[3]), true);
-
+    assert.equal(accountProof.parentNodes, proof[0].rlpParentNodes);
+    assert.equal(accountProof.value, proof[0].nodes[0].rlpValue.slice(2));
   });
 });
 
 describe('account proof for multiple nodes(branch, leaf, extension)', function () {
 
-  const accountAddress = proof[1].address;
   let AccountProof, accountProofInstance;
 
   before(async () => {
 
-    AccountProof = require(rootPrefix + '/lib/proof/account_proof')
+    AccountProof = require(rootPrefix + '/lib/proof/account_proof');
     let mockTrie = mockedTrie(proof[1]);
     let mockDB = sinon.mock();
     accountProofInstance = new AccountProof('0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b', mockDB);
@@ -68,22 +59,20 @@ describe('account proof for multiple nodes(branch, leaf, extension)', function (
     let accountProof = await accountProofInstance.perform(proof[1].address).then(accountProof => {
       return accountProof;
     });
-
-    let decodedAccountNode = ethUtils.rlp.decode(proof[1].nodes[1].rlpValue);
-    assert.equal(accountProof.parentNodes.length, 3);
-    assert.equal(accountProof.address, accountAddress);
-    assert.equal(accountProof.value.length, 4);
-
-    //assert accountNodeValue
-    assert.equal(accountProof.value[0].equals(decodedAccountNode[0]), true);
-    assert.equal(accountProof.value[1].equals(decodedAccountNode[1]), true);
-    assert.equal(accountProof.value[2].equals(decodedAccountNode[2]), true);
-    assert.equal(accountProof.value[3].equals(decodedAccountNode[3]), true);
+    accountProof = accountProof.toHash().data;
+    assert.equal(accountProof.address, proof[1].address);
+    assert.equal(accountProof.parentNodes, proof[1].rlpParentNodes);
+    assert.equal(accountProof.value, proof[1].nodes[1].rlpValue.slice(2));
   });
 
   it('Should fail if account address is not passed in generate proof', async function () {
-    let result = await accountProofInstance.perform();
-    assert.equal(result.params.api_error_identifier, 'account_address_undefined');
+
+    try {
+      await accountProofInstance.perform('1234abcdef3424');
+    } catch (error) {
+      assert.equal(error.params.api_error_identifier, 'account_address_undefined');
+    }
+
   });
   it('Should fail if wrong account address is  passed', async function () {
 
@@ -91,9 +80,11 @@ describe('account proof for multiple nodes(branch, leaf, extension)', function (
 
     let accountProofInstance = new AccountProof('0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b');
     accountProofInstance.trie = mockTrie;
-
-    let result = await accountProofInstance.perform('1234abcdef3424');
-    assert.equal(result.params.api_error_identifier, 'account_node_not_found');
+    try {
+      await accountProofInstance.perform('1234abcdef3424');
+    } catch (error) {
+      assert.equal(error.params.api_error_identifier, 'account_node_not_found');
+    }
   });
 
 });
