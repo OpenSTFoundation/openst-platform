@@ -189,5 +189,15 @@
     "http_code": "422",
     "code": "UNPROCESSABLE_ENTITY",
     "message": "No new blocks on chain."
+  },
+  "sync_source_undefined": {
+    "http_code": "422",
+    "code": "REQUIRED_ARGUMENT_MISSING",
+    "message": "Sync source is not defined."
+  },
+  "sync_destination_undefined": {
+    "http_code": "422",
+    "code": "REQUIRED_ARGUMENT_MISSING",
+    "message": "Sync destination is not defined."
   }
 }
