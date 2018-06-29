@@ -63,7 +63,7 @@ StakeAndMintSimpleTokenPrime.prototype = {
     logger.info('* Get approval status and keep doing so till success');
     const approveReceiptResponse =  await contractInteractHelper.waitAndGetTransactionReceipt(web3Provider, approveTransactionHash, {});
     if (!approveReceiptResponse.isSuccess()) {
-      logger.error('Approval receipt error ' + JSON.stringify(approveReceiptResponse));
+      logger.error('Approval receipt error ', approveReceiptResponse);
       process.exit(1);
     }
 
