@@ -25,7 +25,8 @@
     "start": "index.js",
     "setup": "node tools/setup/index.js",
     "make-docs": "node_modules/.bin/jsdoc -c .jsdoc.json",
-    "test": "mocha test test/*/*/ test/*/"
+    "unit_test": "mocha test test/unit/*/*",
+    "integration_test": "mocha test test/integration/*/* --timeout 120000 --exit"
   },
   "dependencies": {
     "@openstfoundation/openst-cache": "1.0.3",
