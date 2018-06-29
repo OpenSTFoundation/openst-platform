@@ -1,4 +1,4 @@
-## OpenST-platform v0.9.4-beta.2
+## OpenST-platform v0.9.4
 #####OpenST-storage and dynamoDB integration for token balances ([openst-platform#136](https://github.com/OpenSTFoundation/openst-platform/issues/136))
 Now the balances (settled and unsettled debits) are being stored in DynamoDB.
 Openst-Storage takes care of implementing the model class for DynamoDB tables and is integrated in OpenST-Platform in this release.
