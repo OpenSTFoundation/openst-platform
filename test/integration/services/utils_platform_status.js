@@ -3,7 +3,7 @@ const chai = require('chai')
   , assert = chai.assert;
 
 // Load cache service
-const rootPrefix = "../.."
+const rootPrefix = "../../.."
   , openstPlatform = require(rootPrefix + '/index')
   , platformServices = openstPlatform.services.utils
 ;

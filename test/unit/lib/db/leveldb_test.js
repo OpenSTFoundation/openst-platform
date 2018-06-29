@@ -2,7 +2,7 @@ const assert = require('assert')
   , sinon = require('sinon')
   , mock = require('mock-require');
 
-const rootPrefix = "../../..";
+const rootPrefix = "../../../..";
 
 let levelDBFactory;
 

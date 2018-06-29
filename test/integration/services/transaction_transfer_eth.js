@@ -6,7 +6,7 @@ const chai = require('chai')
 ;
 
 // Load cache service
-const rootPrefix = "../.."
+const rootPrefix = "../../.."
   , openstPlatform = require(rootPrefix + '/index')
   , platformServices = openstPlatform.services.transaction.transfer
   , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
@@ -14,69 +14,35 @@ const rootPrefix = "../.."
   , brandedTokenConfig = require(brandedTokenConfigPath)
 ;
 
-var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]]
-
 var testValidData = {
-  erc20_address: brandedTokenDetails['ERC20'],
-  sender_address: process.env.OST_UTILITY_CHAIN_OWNER_ADDR,
-  sender_passphrase: process.env.OST_UTILITY_CHAIN_OWNER_PASSPHRASE,
-  sender_name: 'utilityChainOwner',
-  recipient_address: process.env.OST_STAKER_ADDR,
-  recipient_name: 'staker',
-  amount_in_wei: 2,
+  sender_address: process.env.OST_FOUNDATION_ADDR,
+  sender_passphrase: process.env.OST_FOUNDATION_PASSPHRASE,
+  sender_name: 'foundation',
+  recipient_address: process.env.OST_UTILITY_CHAIN_OWNER_ADDR,
+  recipient_name: 'utilityChainOwner',
+  amount_in_wei: 2000,
   options: {
     returnType: 'txHash',
-    tag: 'ILoveOST'
+    tag: 'GasRefill'
   }
 };
 
-describe('services/transaction/transfer/branded_token', function () {
+describe('services/transaction/transfer/eth', function () {
 
   it('should return promise', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = ethObj.perform()
     ;
     assert.typeOf(response, 'Promise');
   });
 
-  // Prefil BT to sender
-
-  it('should pass prefil BT to sender promise', async function () {
-    // refill gas
-    var serviceObj = new openstPlatform.services.transaction.transfer.simpleTokenPrime(
-      {
-        sender_name: 'utilityChainOwner', recipient_address: brandedTokenDetails['Reserve'],
-        amount_in_wei: 1000000000000000000, options: {returnType: 'txReceipt', tag: 'GasRefill'}
-      });
-    await serviceObj.perform();
-
-    var dupData = JSON.parse(JSON.stringify(testValidData));
-    dupData.options.returnType = 'txReceipt';
-    dupData.sender_name = '';
-    dupData.sender_address = brandedTokenDetails['Reserve'];
-    dupData.sender_passphrase = brandedTokenDetails['ReservePassphrase'];
-    dupData.recipient_name = 'utilityChainOwner';
-    dupData.amount_in_wei = 100;
-
-
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
-    ;
-    assert.equal(response.isSuccess(), true);
-    assert.isNotNull(response.data.transaction_uuid);
-    assert.isNotNull(response.data.transaction_hash);
-    assert.isNumber(response.data.transaction_receipt.blockNumber);
-  });
-
-  // Params validations
-
   it('should fail when params is undefined', async function () {
     var dupData = undefined;
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -84,8 +50,8 @@ describe('services/transaction/transfer/branded_token', function () {
   it('should fail when params is a string', async function () {
     var dupData = 'abc';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -93,8 +59,8 @@ describe('services/transaction/transfer/branded_token', function () {
   it('should fail when params is empty object', async function () {
     var dupData = {};
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -102,8 +68,8 @@ describe('services/transaction/transfer/branded_token', function () {
   it('should fail when params is empty array', async function () {
     var dupData = [];
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -112,8 +78,8 @@ describe('services/transaction/transfer/branded_token', function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.options.tag = 'a@b';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -124,8 +90,8 @@ describe('services/transaction/transfer/branded_token', function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.sender_name = 'Google';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -135,8 +101,8 @@ describe('services/transaction/transfer/branded_token', function () {
     dupData.sender_name = ''; // has higher priority
     dupData.sender_address = 'abc';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -144,10 +110,10 @@ describe('services/transaction/transfer/branded_token', function () {
   it('should fail when sender address is valid, but has no balance', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.sender_name = ''; // has higher priority
-    dupData.sender_address = '0xb4d7bedf714e6c7cd1a641f705870fa19144a061';
+    dupData.sender_address = '0xb4d7bedf714e6c7cd1a641f705870fa19144a021';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -157,8 +123,8 @@ describe('services/transaction/transfer/branded_token', function () {
     dupData.sender_name = ''; // has higher priority
     dupData.sender_passphrase = 'abc';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -170,8 +136,8 @@ describe('services/transaction/transfer/branded_token', function () {
     dupData.recipient_name = ''; // has higher priority
     dupData.recipient_address = 'abc';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -180,8 +146,8 @@ describe('services/transaction/transfer/branded_token', function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.recipient_name = 'abc';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -192,8 +158,8 @@ describe('services/transaction/transfer/branded_token', function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = undefined;
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -202,8 +168,8 @@ describe('services/transaction/transfer/branded_token', function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = 'abc';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -212,8 +178,8 @@ describe('services/transaction/transfer/branded_token', function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = 100.2;
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -222,8 +188,8 @@ describe('services/transaction/transfer/branded_token', function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = 0.2;
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -232,8 +198,8 @@ describe('services/transaction/transfer/branded_token', function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = 0;
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -242,8 +208,8 @@ describe('services/transaction/transfer/branded_token', function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.amount_in_wei = -100;
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
@@ -253,8 +219,8 @@ describe('services/transaction/transfer/branded_token', function () {
   it('should pass when everything is valid', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
     assert.equal(response.isSuccess(), true);
     assert.isNotNull(response.data.transaction_uuid);
@@ -265,8 +231,8 @@ describe('services/transaction/transfer/branded_token', function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.options.returnType = 'myReturnType';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
 
     assert.equal(response.isSuccess(), true);
@@ -279,8 +245,8 @@ describe('services/transaction/transfer/branded_token', function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.options.returnType = 'uuid';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
 
     assert.equal(response.isSuccess(), true);
@@ -293,8 +259,8 @@ describe('services/transaction/transfer/branded_token', function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.options.returnType = 'txReceipt';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData)
-      , response = await brandedTokenObj.perform()
+    var ethObj = new platformServices.eth(dupData)
+      , response = await ethObj.perform()
     ;
 
     assert.equal(response.isSuccess(), true);
@@ -302,8 +268,5 @@ describe('services/transaction/transfer/branded_token', function () {
     assert.isNotNull(response.data.transaction_hash);
     assert.isNumber(response.data.transaction_receipt.blockNumber);
   });
-
-  //TODO: check balance in cache
-
 
 });

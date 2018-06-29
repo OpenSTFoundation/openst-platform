@@ -1,10 +1,10 @@
 const assert = require('assert');
 
-const rootPrefix = '../../..'
+const rootPrefix = '../../../..'
   , proof = require(rootPrefix + '/lib/proof/proof')
-  , utils = require(rootPrefix + '/test/utils')
-  , accountProofData = require(rootPrefix + '/test/data/accountProof')
-  , storageProofData = require(rootPrefix + '/test/data/storageProof')
+  , utils = require(rootPrefix + '/test/unit/utils')
+  , accountProofData = require(rootPrefix + '/test/unit/data/accountProof')
+  , storageProofData = require(rootPrefix + '/test/unit/data/storageProof')
 ;
 
 

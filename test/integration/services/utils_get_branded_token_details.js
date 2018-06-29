@@ -6,7 +6,7 @@ const chai = require('chai')
 ;
 
 // Load cache service
-const rootPrefix = "../.."
+const rootPrefix = "../../.."
   , openstPlatform = require(rootPrefix + '/index')
   , platformServices = openstPlatform.services.utils
   , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')

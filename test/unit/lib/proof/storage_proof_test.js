@@ -3,9 +3,9 @@ const assert = require('assert')
   , mock = require('mock-require')
 
 
-const rootPrefix = "../../.."
-  , proof = require(rootPrefix + '/test/data/storageProof')
-  , utils = require(rootPrefix + '/test/utils');
+const rootPrefix = "../../../.."
+  , proof = require(rootPrefix + '/test/unit/data/storageProof')
+  , utils = require(rootPrefix + '/test/unit/utils');
 
 function mockedTrie(proof, generateValidProof = true) {
   return {

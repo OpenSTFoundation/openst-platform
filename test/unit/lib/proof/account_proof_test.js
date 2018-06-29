@@ -1,11 +1,10 @@
 const assert = require('assert')
-  , ethUtils = require('ethereumjs-util')
   , sinon = require('sinon')
 ;
 
-const rootPrefix = "../../.."
-  , proof = require(rootPrefix + '/test/data/accountProof')
-  , utils = require(rootPrefix + '/test/utils');
+const rootPrefix = "../../../.."
+  , proof = require(rootPrefix + '/test/unit/data/accountProof')
+  , utils = require(rootPrefix + '/test/unit/utils');
 
 function mockedTrie(proof, generateValidProof = true) {
   return {

@@ -1,7 +1,8 @@
 const assert = require('assert')
   , sinon = require('sinon')
-  , rootPrefix = "../.."
-  , utils = require(rootPrefix + '/test/utils');
+  , rootPrefix = "../../.."
+;
+
 
 let MockAccountProofBuild = sinon.fake()
   , MockStorageProofBuild = sinon.fake();
@@ -11,8 +12,11 @@ describe('generate Proof', function () {
 
   let ProofGenerator, proofGeneratorInstance;
   let root = '0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b';
-
+  let utils;
   before(function () {
+
+    delete require.cache;
+    utils = require(rootPrefix + '/test/unit/utils');
     utils.mockCustomRequireDependency(MockAccountProofBuild, MockStorageProofBuild);
 
     ProofGenerator = require(rootPrefix + '/services/proof/proof_generator');

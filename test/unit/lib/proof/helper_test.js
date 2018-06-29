@@ -2,7 +2,7 @@ const sinon = require('sinon')
   , mock = require('mock-require')
   , assert = require('assert')
   , ethUtils = require('ethereumjs-util')
-  , rootPrefix = "../../.."
+  , rootPrefix = "../../../.."
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
 ;
 
@@ -19,6 +19,8 @@ describe('Proof helper', function () {
       return Promise.resolve(responseHelper.successWithData({value: rlpValue.toString('hex')}));
     };
     mock(rootPrefix + '/lib/proof/account_proof', MockAccountProof);
+    delete require.cache;
+
     helper = require(rootPrefix + '/lib/proof/helper');
   });
 
