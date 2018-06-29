@@ -44,6 +44,12 @@ this document for both kind of setups.
   > npm install
 ```
 
+## Make sure Dynamo DB is installed at below location
+
+```bash
+  > ~/dynamodb_local_latest/
+```
+
 * <b>Start the openST platform setup</b>
 
 ```bash
