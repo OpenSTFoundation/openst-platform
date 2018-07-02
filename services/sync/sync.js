@@ -7,20 +7,16 @@ const rootPrefix = "../.."
 ;
 
 /**
- *
- * @param source folder path of chainData
- * @param destination folder path of chainData
+ * For remote Sync specify user and host in sourceConfig/destinationConfig, for local sync dont add user and host key
+ * @param sourceConfig object {user:'source_user', host:'10.1.2.2', path:'~/temp'}
+ * @param destinationConfig object {user:'destination_user', host:'10.1.2.3', path:'~/temp'}
  * @constructor
  */
-function SyncKlass(source, destination) {
+function SyncKlass(sourceConfig, destinationConfig) {
   let oThis = this;
 
-  oThis.source = source;
-  oThis.destination = destination;
-  oThis.rsync = new Rsync()
-    .flags('az')
-    .source(oThis.source)
-    .destination(oThis.destination);
+  oThis.source = oThis._formatPath(sourceConfig);
+  oThis.destination = oThis._formatPath(destinationConfig);
 }
 
 SyncKlass.prototype = {
@@ -31,7 +27,6 @@ SyncKlass.prototype = {
   perform: function () {
     let oThis = this;
 
-    oThis._validate();
     return oThis._sync();
   },
   /**
@@ -39,8 +34,15 @@ SyncKlass.prototype = {
    * @return {Promise<result>}
    * @private
    */
-  _sync: function () {
+  _sync: async function () {
     let oThis = this;
+
+    await oThis._validate();
+
+    oThis.rsync = new Rsync()
+      .flags('az')
+      .source(oThis.source)
+      .destination(oThis.destination);
 
     return new Promise(function (resolve, reject) {
       oThis.rsync.execute(function (error, code, cmd) {
@@ -88,7 +90,24 @@ SyncKlass.prototype = {
       let errorResponse = responseHelper.error(errorConf);
       return Promise.reject(errorResponse);
     }
+  },
+
+  /**
+   * @param origin source/destination
+   * @return {string} formatted path of source/destination
+   * @private
+   */
+  _formatPath: function (origin) {
+
+    let user = origin.user;
+    let host = origin.host;
+    let path = origin.path;
+    if (!user || !host) {
+      return path;
+    }
+    return path ? `${user}@${host}:${path}` : path;
   }
+
 };
 
 module.exports = SyncKlass;
