@@ -10,9 +10,9 @@ let MockAccountProofBuild = sinon.fake()
 
 describe('generate Proof', function () {
 
-  let ProofGenerator, proofGeneratorInstance;
-  let root = '0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b';
-  let utils;
+  let ProofGenerator, proofGeneratorInstance
+    , root = '0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b'
+    , utils;
   before(function () {
 
     delete require.cache;
@@ -32,8 +32,8 @@ describe('generate Proof', function () {
 
   it('Should be able to generate storageProof', async function () {
 
-    let contractAddress = '0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b';
-    let storageIndex = '01';
+    let contractAddress = '0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b'
+      , storageIndex = '01';
     await proofGeneratorInstance.buildStorageProof(contractAddress, storageIndex);
     assert.equal(MockStorageProofBuild.called, true);
   });

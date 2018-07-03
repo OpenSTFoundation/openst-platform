@@ -20,8 +20,8 @@ describe('account proof for single node', function () {
   before(async () => {
     AccountProof = require(rootPrefix + '/lib/proof/account_proof')
 
-    let mockDB = sinon.mock();
-    let mockTrie = mockedTrie(proof[0]);
+    let mockDB = sinon.mock()
+      , mockTrie = mockedTrie(proof[0]);
 
     accountProofInstance = new AccountProof('0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b', mockDB);
     accountProofInstance.trie = mockTrie;
@@ -46,8 +46,8 @@ describe('account proof for multiple nodes(branch, leaf, extension)', function (
   before(async () => {
 
     AccountProof = require(rootPrefix + '/lib/proof/account_proof');
-    let mockTrie = mockedTrie(proof[1]);
-    let mockDB = sinon.mock();
+    let mockTrie = mockedTrie(proof[1])
+      , mockDB = sinon.mock();
     accountProofInstance = new AccountProof('0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b', mockDB);
     accountProofInstance.trie = mockTrie;
 
@@ -75,10 +75,9 @@ describe('account proof for multiple nodes(branch, leaf, extension)', function (
   });
   it('Should fail if wrong account address is  passed', async function () {
 
-    let mockTrie = mockedTrie(proof[1], false);
-
     let accountProofInstance = new AccountProof('0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b');
-    accountProofInstance.trie = mockTrie;
+
+    accountProofInstance.trie = mockedTrie(proof[1], false);
     try {
       await accountProofInstance.perform('1234abcdef3424');
     } catch (error) {

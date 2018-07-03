@@ -15,7 +15,7 @@ const rootPrefix = "../.."
  * @constructor
  */
 function ProofGenerator(stateRoot, chainDataPath) {
-  let oThis = this;
+  const oThis = this;
 
   oThis.db = dbFactory.getInstance(chainDataPath);
   oThis.stateRoot = stateRoot;
@@ -29,7 +29,7 @@ ProofGenerator.prototype = {
    * @return Promise<accountProof>
    */
   buildAccountProof: function (address) {
-    let oThis = this;
+    const oThis = this;
 
     let accountProof = new AccountProof(oThis.stateRoot, oThis.db);
     logger.info(`Building account proof for address the ${address}`);
@@ -56,15 +56,14 @@ ProofGenerator.prototype = {
  */
 
 buildStorageProof: async function (contractAddress, storageIndex, mappingKeys) {
-  let oThis = this;
+  const oThis = this;
   let proofPromises = [];
 
   await oThis._validate(mappingKeys);
 
   logger.info(`Building storage proof for address the ${contractAddress} and storage Index ${storageIndex}`);
-  let storageRoot = await helper.fetchStorageRoot(oThis.stateRoot, contractAddress, oThis.db);
-
-  let storageProof = new StorageProof(storageRoot, contractAddress, oThis.db);
+  let storageRoot = await helper.fetchStorageRoot(oThis.stateRoot, contractAddress, oThis.db)
+    , storageProof = new StorageProof(storageRoot, contractAddress, oThis.db);
 
   if (mappingKeys === undefined || mappingKeys.length === 0) {
     proofPromises.push(await storageProof.perform(storageIndex));

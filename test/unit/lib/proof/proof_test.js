@@ -22,9 +22,9 @@ describe(' Account Proof', function () {
 
 
   it('should generate account proof ', async function () {
-    let path = '2456F6369a9FCB3FE80a89Cd1Dd74108D86FA875';
-    let mockTrie = mockedAccountTrie(accountProofData[1]);
-    let accountProof = await proof.accountProof(path, mockTrie);
+    let path = '2456F6369a9FCB3FE80a89Cd1Dd74108D86FA875'
+      , mockTrie = mockedAccountTrie(accountProofData[1])
+      , accountProof = await proof.accountProof(path, mockTrie);
     accountProof = accountProof.toHash().data;
 
     assert.equal(accountProof.parentNodes, accountProofData[1].rlpParentNodes);
@@ -33,8 +33,8 @@ describe(' Account Proof', function () {
   });
 
   it('should fail if account info not found in tree', async function () {
-    let path = '2456F6369a9FCB3FE80a89Cd1Dd74108D86FA875';
-    let mockTrie = mockedAccountTrie(accountProofData[1], false);
+    let path = '2456F6369a9FCB3FE80a89Cd1Dd74108D86FA875'
+      , mockTrie = mockedAccountTrie(accountProofData[1], false);
     try {
       await proof.accountProof(path, mockTrie);
     } catch (error) {
@@ -56,9 +56,9 @@ describe(' Storage Proof', function () {
   }
 
   it('should generate storage proof ', async function () {
-    let path = '2456F6369a9FCB3FE80a89Cd1Dd74108D86FA875';
-    let mockTrie = mockedStorageTrie(storageProofData[1]);
-    let storageProof = await proof.storageProof(path, mockTrie);
+    let path = '2456F6369a9FCB3FE80a89Cd1Dd74108D86FA875'
+      , mockTrie = mockedStorageTrie(storageProofData[1])
+      , storageProof = await proof.storageProof(path, mockTrie);
 
     storageProof = storageProof.toHash().data;
     assert.equal(storageProof.value, storageProofData[1].value);
@@ -67,8 +67,8 @@ describe(' Storage Proof', function () {
   });
 
   it('should fail if storage node not found', async function () {
-    let path = '2456F6369a9FCB3FE80a89Cd1Dd74108D86FA875';
-    let mockTrie = mockedStorageTrie(storageProofData[1], false);
+    let path = '2456F6369a9FCB3FE80a89Cd1Dd74108D86FA875'
+      , mockTrie = mockedStorageTrie(storageProofData[1], false);
 
     try {
       await proof.storageProof(path, mockTrie);

@@ -26,9 +26,9 @@ describe('should generate storage proof for  mapping type variable', function ()
 
     StorageProof = require(rootPrefix + '/lib/proof/storage_proof');
 
-    let mockDB = sinon.mock();
-    let stateRoot = '0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b';
-    let contractAddress = 'A040086e3072EDe0cEC46780394DEe1211Cbb1d6';
+    let mockDB = sinon.mock()
+      , stateRoot = '0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b'
+      , contractAddress = 'A040086e3072EDe0cEC46780394DEe1211Cbb1d6';
 
     storageProofInstance = new StorageProof(stateRoot, contractAddress, mockDB);
     storageProofInstance.trie = mockedTrie(proof[1]);
