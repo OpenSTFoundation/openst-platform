@@ -149,6 +149,16 @@ CoreConstants.prototype = {
   DEBUG_ENABLED: process.env.OST_DEBUG_ENABLED,
 
   /**
+   * stand alone mode on?
+   *
+   * @constant {number}
+   *
+   */
+  STANDALONE_MODE: process.env.OST_STANDALONE_MODE || 0,
+
+  AUTO_SCALE_DYNAMO: process.env.AUTO_SCALE_DYNAMO,
+
+  /**
    * PROOF BATCH SIZE
    */
   PROOF_BATCH_SIZE: 10

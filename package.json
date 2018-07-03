@@ -1,6 +1,6 @@
 {
   "name": "@openstfoundation/openst-platform",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "OpenST Platform provides a web3 interface to tokenise mainstream consumer applications with crypto-assets on Ethereum",
   "keywords": [
     "web3",
@@ -29,9 +29,9 @@
     "integration_test": "mocha test test/integration/*/* --timeout 120000 --exit"
   },
   "dependencies": {
-    "@openstfoundation/openst-cache": "1.0.3",
-    "@openstfoundation/openst-base": "0.9.0",
-    "@openstfoundation/openst-notification": "1.0.1",
+    "@openstfoundation/openst-base": "0.9.1",
+    "@openstfoundation/openst-notification": "1.0.2",
+    "@openstfoundation/openst-storage": "1.0.0",
     "abi-decoder": "1.0.9",
     "bignumber.js": "4.1.0",
     "child_process": "1.0.2",
@@ -39,17 +39,17 @@
     "continuation-local-storage": "3.2.1",
     "debug": "2.2.0",
     "edit-json-file": "1.0.8",
+    "ethereumjs-util": "^5.2.0",
+    "leveldown": "^4.0.1",
+    "levelup": "^3.0.1",
+    "merkle-patricia-tree": "^2.3.1",
     "node-cmd": "3.0.0",
     "readline": "1.3.0",
     "shell-source": "1.1.0",
     "shelljs": "0.8.1",
     "shortid": "2.2.8",
     "uuid": "3.1.0",
-    "web3": "1.0.0-beta.33",
-    "ethereumjs-util": "^5.2.0",
-    "leveldown": "^4.0.1",
-    "levelup": "^3.0.1",
-    "merkle-patricia-tree": "^2.3.1"
+    "web3": "1.0.0-beta.33"
   },
   "devDependencies": {
     "chai": "4.1.2",

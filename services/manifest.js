@@ -18,6 +18,7 @@ const rootPrefix = ".."
   , transferEth = require(rootPrefix + '/services/transaction/transfer/eth')
 
   , getBrandedTokenBalance = require(rootPrefix + '/services/balance/branded_token')
+  , getBrandedTokenBalanceFromChain = require(rootPrefix + '/services/balance/branded_token_from_chain')
   , getSimpleTokenBalance = require(rootPrefix + '/services/balance/simple_token')
   , getSimpleTokenPrimeBalance = require(rootPrefix + '/services/balance/simple_token_prime')
   , getEthBalance = require(rootPrefix + '/services/balance/eth')
@@ -89,6 +90,7 @@ ServiceManifestKlass.prototype = {
    */
   balance: {
     brandedToken: getBrandedTokenBalance,
+    brandedTokenFromChain: getBrandedTokenBalanceFromChain,
     simpleToken: getSimpleTokenBalance,
     simpleTokenPrime: getSimpleTokenPrimeBalance,
     eth: getEthBalance
