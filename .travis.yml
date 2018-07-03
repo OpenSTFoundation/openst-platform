@@ -6,7 +6,7 @@ branches:
   - master
   - develop
   - release-0.9
-  -feature/proof
+  - feature/proof
 notifications:
   email:
     recipients:
