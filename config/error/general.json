@@ -199,5 +199,10 @@
     "http_code": "422",
     "code": "REQUIRED_ARGUMENT_MISSING",
     "message": "Sync destination is not defined."
+  },
+  "rsync_failed": {
+    "http_code": "422",
+    "code": "FAILED_DURING_RSYNC",
+    "message": "Rsync failed"
   }
 }
