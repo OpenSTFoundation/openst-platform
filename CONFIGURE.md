@@ -364,5 +364,53 @@ serviceObj.perform().then(function(response) {
   } 
 });
 ```
+* Merkel Patricia Proof generation service
+
+1. Account proof generation for an account 
+```
+const platform = require('@openstfoundation/openst-platform');
+let chainDataPath = '/path/to/geth/chain_data';
+let stateRoot = '0x3d8fc3231b82a6673ebb934925ce8e8eb2e7272d1528039832bb9c6e93d60533';
+let accountAddress = '2456F6369a9FCB3FE80a89Cd1Dd74108D86FA875';
+
+let proofGenerator = new platform.services.ProofGenerator(stateRoot, chainDataPath);
+
+proofGenerator.buildAccountProof(accountAddress).then(proof => {
+    //on success proof data is available in proof.toHash().data
+});
+```
+
+2. Storage proof generation for non mapping type variable 
+```
+const platform = require('@openstfoundation/openst-platform');
+chainDataPath = '/path/to/geth/chain_data';
+
+stateRoot = '0xbb08072c81423885fd2ce6dd49468485d7ca9d7aeeefe02f565aadd32f557c2c';
+let index = '0';
+proofGenerator = new platform.services.ProofGenerator(stateRoot, chainDataPath);
+let contractAddress = '9a260b9d36Ec17a90E46bEd85642aD4c5E999243';
+
+let buildStorageProof = proofGenerator.buildStorageProof(contractAddress, index);
+buildStorageProof.then((proof) => {
+  //on success proof data is available in proof.toHash().data
+});
+```
+3. Storage proof generation for mapping type variable 
+
+```
+const platform = require('@openstfoundation/openst-platform');
+chainDataPath = '/path/to/geth/chain_data';
+
+stateRoot = '0xbb08072c81423885fd2ce6dd49468485d7ca9d7aeeefe02f565aadd32f557c2c';
+let index = '1';
+let key = 'f774e312f848cbc30567a6aeafef6c605f3f4787a6c0581fbbef2992ecfa77ab';
+proofGenerator = new platform.services.ProofGenerator(stateRoot, chainDataPath);
+let contractAddress = '9a260b9d36Ec17a90E46bEd85642aD4c5E999243';
+
+let buildStorageProof = proofGenerator.buildStorageProof(contractAddress, index, [key1, key2, key3]);
+buildStorageProof.then((proof) => {
+  //on success proof data is available for key 1 in proof[key1].toHash().data
+});
+```
 
 For complete implementation details of OpenST Platform, please refer [API documentation](http://docs.openst.org/).
