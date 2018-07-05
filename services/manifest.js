@@ -152,9 +152,7 @@ ServiceManifestKlass.prototype = {
   /**
    * Service to sync chaindata level db folder of geth
    */
-  sync: {
-    SyncKlass: SyncKlass
-  }
+  Sync: SyncKlass
 
 };
 

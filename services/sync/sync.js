@@ -132,6 +132,7 @@ SyncKlass.prototype = {
     let host = origin.host;
     let path = origin.path;
     if (!user || !host) {
+      //return local directory path
       return path;
     }
     return path ? `${user}@${host}:${path}` : path;
