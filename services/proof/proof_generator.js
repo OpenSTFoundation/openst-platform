@@ -80,7 +80,6 @@ buildStorageProof: async function (contractAddress, storageIndex, mappingKeys) {
         return responseHelper.error(errorConf);
       }
     });
-
     return Promise.resolve(proof);
   }
   for (let i = 0; i < mappingKeys.length; i++) {
@@ -94,7 +93,8 @@ buildStorageProof: async function (contractAddress, storageIndex, mappingKeys) {
       }
     });
   }
-  return Promise.all(keyProofMap);
+
+  return keyProofMap;
 },
 
   /**

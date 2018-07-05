@@ -155,9 +155,8 @@ ServiceManifestKlass.prototype = {
   /**
    *  Merkel Patricia proof generation
    */
-  proof: {
-    ProofGenerator: ProofGenerator
-  }
+  ProofGenerator: ProofGenerator
+
 };
 
 module.exports = new ServiceManifestKlass();
