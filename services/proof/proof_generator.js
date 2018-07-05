@@ -25,7 +25,7 @@ ProofGenerator.prototype = {
 
   /**
    *Build account proof
-   * @param address
+   * @param address for which account proof is needed
    * @return Promise<accountProof>
    */
   buildAccountProof: function (address) {
@@ -52,13 +52,18 @@ ProofGenerator.prototype = {
  * @param storageIndex Position of variable in the contract
  * @param mappingKeys array of keys of mapping variable in the contract
  * @Optional param  key for mapping variable type
- * @return {*|Promise<list<proof>}
+ * @return {*|Promise<map<key,proof>} in batch mode and Promise<proof> in non batch mode i.e. single non-mapping type variable
  */
+
 
 buildStorageProof: async function (contractAddress, storageIndex, mappingKeys) {
   const oThis = this;
-  let proofPromises = [];
+  let keyProofMap = {};
 
+  let errorConf = {
+    api_error_identifier: 'exception',
+    error_config: basicHelper.fetchErrorConfig()
+  };
   await oThis._validate(mappingKeys);
 
   logger.info(`Building storage proof for address the ${contractAddress} and storage Index ${storageIndex}`);
@@ -66,31 +71,30 @@ buildStorageProof: async function (contractAddress, storageIndex, mappingKeys) {
     , storageProof = new StorageProof(storageRoot, contractAddress, oThis.db);
 
   if (mappingKeys === undefined || mappingKeys.length === 0) {
-    proofPromises.push(await storageProof.perform(storageIndex));
-    return Promise.resolve(proofPromises);
-  }
-  let proof;
-  for (let i = 0; i < mappingKeys.length; i++) {
-    proof = {
-      mappingKey: mappingKeys[i],
-      storageIndex: storageIndex,
-      proof: await storageProof.perform(storageIndex, mappingKeys[i]).catch(function (error) {
-        if (responseHelper.isCustomResult(error)) {
-          return error;
-        } else {
-          logger.error(error);
-          return responseHelper.error({
-            internal_error_identifier: 's_p_sp_validate_1',
-            api_error_identifier: 'exception',
-            error_config: basicHelper.fetchErrorConfig()
-          });
-        }
-      })
-    };
+    let proof = await storageProof.perform(storageIndex).catch(function (error) {
+      if (responseHelper.isCustomResult(error)) {
+        return error;
+      } else {
+        logger.error(error);
+        errorConf.internal_error_identifier = 's_p_sp_validate_1';
+        return responseHelper.error(errorConf);
+      }
+    });
 
-    proofPromises.push(proof);
+    return Promise.resolve(proof);
   }
-  return Promise.all(proofPromises);
+  for (let i = 0; i < mappingKeys.length; i++) {
+    keyProofMap[mappingKeys[i]] = await storageProof.perform(storageIndex, mappingKeys[i]).catch(function (error) {
+      if (responseHelper.isCustomResult(error)) {
+        return error;
+      } else {
+        logger.error(error);
+        errorConf.internal_error_identifier = 's_p_sp_validate_2';
+        return responseHelper.error(errorConf);
+      }
+    });
+  }
+  return Promise.all(keyProofMap);
 },
 
   /**
