@@ -17,20 +17,20 @@ function mockedTrie(proof, generateValidProof = true) {
 }
 
 describe('should generate storage proof for  mapping type variable', function () {
-  let storageProofInstance, StorageProof, storageProof;
+  let storageProofInstance, StorageProofKlass, storageProof;
   before(async () => {
     mock(rootPrefix + '/lib/proof/helper',
       {
         storagePath: () => Buffer.from(proof[1].path, 'hex')
       });
 
-    StorageProof = require(rootPrefix + '/lib/proof/storage_proof');
+      StorageProofKlass = require(rootPrefix + '/lib/proof/storage_proof');
 
     let mockDB = sinon.mock()
       , stateRoot = '0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b'
       , contractAddress = 'A040086e3072EDe0cEC46780394DEe1211Cbb1d6';
 
-    storageProofInstance = new StorageProof(stateRoot, contractAddress, mockDB);
+    storageProofInstance = new StorageProofKlass(stateRoot, contractAddress, mockDB);
     storageProofInstance.trie = mockedTrie(proof[1]);
     storageProof = await storageProofInstance.perform(proof[1].storageIndex, proof[1].key).then(proof => {
       return proof;
