@@ -16,14 +16,14 @@ function mockedTrie(proof, generateValidProof = true) {
 }
 
 describe('account proof for single node', function () {
-  let accountProofInstance, AccountProof,accountProof;
+  let accountProofInstance, AccountProofKlass,accountProof;
   before(async () => {
-    AccountProof = require(rootPrefix + '/lib/proof/account_proof')
+    AccountProofKlass = require(rootPrefix + '/lib/proof/account_proof')
 
     let mockDB = sinon.mock()
       , mockTrie = mockedTrie(proof[0]);
 
-    accountProofInstance = new AccountProof('0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b', mockDB);
+    accountProofInstance = new AccountProofKlass('0x47126c8821b7ce98c62dc6f392c91f37bf53f136580a4cb76041f96f1d6afb9b', mockDB);
     accountProofInstance.trie = mockTrie;
     accountProof = await accountProofInstance.perform(proof[0].address).then(proof => {
       return proof;
