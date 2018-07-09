@@ -6,7 +6,6 @@ branches:
   - master
   - develop
   - release-0.9
-  - balances_model_and_cache
 notifications:
   email:
     recipients:
