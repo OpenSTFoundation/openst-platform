@@ -9,7 +9,6 @@ const chai = require('chai')
 const rootPrefix = "../.."
   , openstPlatform = require(rootPrefix + '/index')
   , platformServices = openstPlatform.services.balance
-  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , brandedTokenConfigPath = os.homedir() + "/openst-setup/branded_tokens.json"
   , brandedTokenConfig = require(brandedTokenConfigPath)
 ;
