@@ -6,7 +6,6 @@ branches:
   - master
   - develop
   - release-0.9
-  - npm_vulnerabilities
 notifications:
   email:
     recipients:
