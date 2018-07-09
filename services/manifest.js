@@ -43,6 +43,8 @@ const rootPrefix = ".."
   , RegisterBrandedTokenInterComm = require(rootPrefix + '/services/inter_comm/register_branded_token')
   , StakeAndMintInterCommKlass = require(rootPrefix + '/services/inter_comm/stake_and_mint')
   , StakeAndMintProcessorInterCommKlass = require(rootPrefix + '/services/inter_comm/stake_and_mint_processor')
+
+  , SyncKlass = require(rootPrefix + '/services/sync/sync')
 ;
 
 /**
@@ -147,7 +149,13 @@ ServiceManifestKlass.prototype = {
     registerBrandedToken: RegisterBrandedTokenInterComm,
     stakeAndMint: StakeAndMintInterCommKlass,
     stakeAndMintProcessor: StakeAndMintProcessorInterCommKlass
-  }
+  },
+
+  /**
+   * Service to sync chaindata level db folder of geth
+   */
+  Sync: SyncKlass
+
 };
 
 module.exports = new ServiceManifestKlass();

@@ -365,4 +365,25 @@ serviceObj.perform().then(function(response) {
 });
 ```
 
+* Sync service 
+```
+const platform = require('@openstfoundation/openst-platform');
+let source = {
+  path: '~/source/',
+  user: 'user',
+  host: '172.16.0.201'
+};
+let destination = {
+  path: '~/destination'
+};
+let syncService = new platform.services.Sync(source, destination);
+
+syncService.perform().then((response) => {
+  console.log(response);
+});
+
+```
+Note: source and destination can be remote as well as local machines
+
+
 For complete implementation details of OpenST Platform, please refer [API documentation](http://docs.openst.org/).
