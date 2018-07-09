@@ -9,7 +9,6 @@
 const rootPrefix = '../..'
   , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
