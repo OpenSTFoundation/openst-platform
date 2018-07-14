@@ -4,13 +4,14 @@ Document has steps to configure OpenST platform for development and test environ
 For production environment, following steps are not recommended to avoid single point 
 failures and scalability issues caused because of single machine.
 
-You can test platform as standalone system or with Platform RESTful APIs. We have publish 
+You can test platform as standalone system or with Platform RESTful APIs. We have published 
 this document for both kind of setups.
 
-## Installation prerequisite 
+## Installation prerequisite
 
-* Install node version >= 7
-* Install geth version >= 1.7.2 
+* Install Node version >= 7
+* Install GETH version >= 1.7.2
+* Install DynamoDB at location ~/dynamodb_local_latest/
 
 ## Choose the platform flavour
      
@@ -42,12 +43,6 @@ this document for both kind of setups.
 
 ```bash
   > npm install
-```
-
-## Make sure Dynamo DB is installed at below location
-
-```bash
-  > ~/dynamodb_local_latest/
 ```
 
 * <b>Start the openST platform setup</b>

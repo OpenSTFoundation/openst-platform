@@ -32,7 +32,6 @@ const utilityDeployerName = 'utilityDeployer'
   , openStUtility = new OpenStUtilityKlass(openSTUtilityContractAddress)
 ;
 
-  var stPrimeTotalSupplyInWei = null;
 /**
  * Constructor for ST Prime related deployment steps
  *
@@ -48,6 +47,9 @@ STPrimeContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function () {
+    let web3Provider = web3ProviderFactory.getProvider('utility','ws')
+      , stPrimeTotalSupplyInWei = web3Provider.utils.toWei(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY, "ether");
+
     logger.step('** Getting UUID of ST prime contract from openSTUtility Contract');
     const stPrimeUUIDResponse = await openStUtility.getSimpleTokenPrimeUUID()
       , simpleTokenPrimeUUID = stPrimeUUIDResponse.data.simpleTokenPrimeUUID
