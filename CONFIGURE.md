@@ -11,7 +11,11 @@ this document for both kind of setups.
 
 * Install Node version >= 7
 * Install GETH version >= 1.7.2
-* Install DynamoDB at location ~/dynamodb_local_latest/
+* Install DynamoDB at location ~/dynamodb_local_latest/ and start the DynamoDB process using following command.
+```bash
+java -Djava.library.path=~/dynamodb_local_latest/DynamoDBLocal_lib/ -jar ~/dynamodb_local_latest/DynamoDBLocal.jar -sharedDb -dbPath ~/logs/
+```
+
 
 ## Choose the platform flavour
      

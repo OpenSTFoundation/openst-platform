@@ -78,8 +78,6 @@ PlatformStatusKlass.prototype = {
         if (chainTimer['retryCounter'] <= retryAttempts) {
           let blockNumber = await web3Provider.eth.getBlockNumber();
 
-          console.log('blockNumber', blockNumber);
-
           if (!(blockNumber > 0)) {
             logger.error("Geth Checker - " + chain + " fetch block number failed.", err);
             chainTimer['retryCounter']++;

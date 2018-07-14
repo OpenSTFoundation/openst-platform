@@ -72,7 +72,7 @@ STPrimeContractKlass.prototype = {
     }
 
     logger.step('** Initialize Transfer of ST Prime - all base tokens from initial ST Prime holder address to ST Prime contract address');
-    const initialSTPrimeHolderBalanceInWei = await web3provider.eth.getBalance(
+    const initialSTPrimeHolderBalanceInWei = await web3Provider.eth.getBalance(
       coreAddresses.getAddressForUser(utilityInitialSTPrimeHolder));
 
     if (initialSTPrimeHolderBalanceInWei != stPrimeTotalSupplyInWei) {
@@ -82,14 +82,14 @@ STPrimeContractKlass.prototype = {
 
     const stPrime = new StPrimeKlass(simpleTokenPrimeContractAddress);
     await stPrime.initialTransferToContract(utilityInitialSTPrimeHolder, {gasPrice: UC_GAS_PRICE, gas: UC_GAS_LIMIT});
-    const simpleTokenPrimeContractBalanceInWei = await web3provider.eth.getBalance(simpleTokenPrimeContractAddress);
+    const simpleTokenPrimeContractBalanceInWei = await web3Provider.eth.getBalance(simpleTokenPrimeContractAddress);
 
     if (simpleTokenPrimeContractBalanceInWei != stPrimeTotalSupplyInWei) {
       logger.error('simpleTokenPrimeContract: ' + simpleTokenPrimeContractAddress + ' doesn\'t have max total supply of ST Prime');
       process.exit(1);
     }
 
-    const initialSTPrimeHolderBalanceInWeiAfterTransfer = await web3provider.eth.getBalance(coreAddresses.getAddressForUser(utilityInitialSTPrimeHolder));
+    const initialSTPrimeHolderBalanceInWeiAfterTransfer = await web3Provider.eth.getBalance(coreAddresses.getAddressForUser(utilityInitialSTPrimeHolder));
     if (initialSTPrimeHolderBalanceInWeiAfterTransfer != 0) {
       logger.error('Initial ST Prime holder balance should be 0 after transfer');
       process.exit(1);
