@@ -19,7 +19,7 @@ const rootPrefix = '../..'
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , web3Provider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
+  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , deployHelper = require(rootPrefix + '/tools/deploy/helper')
   , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
@@ -98,7 +98,7 @@ DeployOpenSTUtilityContractKlass.prototype = {
     }
 
     const openSTUtiltiyContractDeployResponse = await deployHelper.perform(openSTUtilityContractName,
-      web3Provider, openSTUtilityContractAbi, openSTUtilityContractBin, utilityDeployerName,
+      web3ProviderFactory.getProvider('utility','rpc'), openSTUtilityContractAbi, openSTUtilityContractBin, utilityDeployerName,
       {gasPrice: UC_GAS_PRICE, gas: UC_GAS_LIMIT}, [VALUE_CHAIN_ID, UTILITY_CHAIN_ID, utilityRegistrarContractAddress]
     );
 

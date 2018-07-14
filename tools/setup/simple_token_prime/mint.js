@@ -15,7 +15,7 @@ const rootPrefix = '../../..'
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , approveService = require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract')
-  , web3Provider = require(rootPrefix + '/lib/web3/providers/value_ws')
+  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
   , startStakeService = require(rootPrefix + '/services/stake_and_mint/start_stake')
   , fundManager = require(rootPrefix + '/tools/setup/fund_manager')
@@ -61,7 +61,7 @@ StakeAndMintSimpleTokenPrime.prototype = {
     const approveTransactionHash = approveResponse.data.transaction_hash;
 
     logger.info('* Get approval status and keep doing so till success');
-    const approveReceiptResponse =  await contractInteractHelper.waitAndGetTransactionReceipt(web3Provider, approveTransactionHash, {});
+    const approveReceiptResponse =  await contractInteractHelper.waitAndGetTransactionReceipt(web3ProviderFactory.getProvider('value', 'ws'), approveTransactionHash, {});
     if (!approveReceiptResponse.isSuccess()) {
       logger.error('Approval receipt error ', approveReceiptResponse);
       process.exit(1);

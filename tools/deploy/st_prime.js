@@ -17,7 +17,7 @@ const rootPrefix = '../..'
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , web3Provider = require(rootPrefix + '/lib/web3/providers/utility_ws')
+  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , StPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
@@ -29,7 +29,6 @@ const utilityDeployerName = 'utilityDeployer'
   , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
   , UC_GAS_PRICE = coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT
   , UC_GAS_LIMIT = coreConstants.OST_UTILITY_GAS_LIMIT
-  , stPrimeTotalSupplyInWei = web3Provider.utils.toWei(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY, "ether")
   , openStUtility = new OpenStUtilityKlass(openSTUtilityContractAddress)
 ;
 
@@ -38,7 +37,8 @@ const utilityDeployerName = 'utilityDeployer'
  *
  * @constructor
  */
-const STPrimeContractKlass = function () {};
+const STPrimeContractKlass = function () {
+};
 
 STPrimeContractKlass.prototype = {
   /**
@@ -47,6 +47,9 @@ STPrimeContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function () {
+    let web3Provider = web3ProviderFactory.getProvider('utility','ws')
+      , stPrimeTotalSupplyInWei = web3Provider.utils.toWei(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY, "ether");
+
     logger.step('** Getting UUID of ST prime contract from openSTUtility Contract');
     const stPrimeUUIDResponse = await openStUtility.getSimpleTokenPrimeUUID()
       , simpleTokenPrimeUUID = stPrimeUUIDResponse.data.simpleTokenPrimeUUID
@@ -79,7 +82,6 @@ STPrimeContractKlass.prototype = {
 
     const stPrime = new StPrimeKlass(simpleTokenPrimeContractAddress);
     await stPrime.initialTransferToContract(utilityInitialSTPrimeHolder, {gasPrice: UC_GAS_PRICE, gas: UC_GAS_LIMIT});
-
     const simpleTokenPrimeContractBalanceInWei = await web3Provider.eth.getBalance(simpleTokenPrimeContractAddress);
 
     if (simpleTokenPrimeContractBalanceInWei != stPrimeTotalSupplyInWei) {

@@ -127,7 +127,7 @@ SetupHelperKlass.prototype = {
    *
    */
   intercomProcessIdentifiers: function() {
-    return ["redeem_and_unstake", "redeem_and_unstake_processor", "register_branded_token",
+    return ["register_branded_token",
       "stake_and_mint", "stake_and_mint_processor"];
   }
 

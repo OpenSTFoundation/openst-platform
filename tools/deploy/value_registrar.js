@@ -17,7 +17,7 @@ const readline = require('readline');
 const rootPrefix = '../..'
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , web3Provider = require(rootPrefix + '/lib/web3/providers/value_ws')
+  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , deployHelper = require(rootPrefix + '/tools/deploy/helper')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
@@ -40,7 +40,7 @@ const valueDeployerName = "valueDeployer"
  *
  * @param {string} compareWith - string to compare with
  *
- * @return {booelan} true when equal
+ * @return {boolean} true when equal
  */
 String.prototype.equalsIgnoreCase = function ( compareWith ) {
   const oThis = this
@@ -90,7 +90,7 @@ DeployValueRegistrarContractKlass.prototype = {
       prompts.close();
     }
 
-    const contractDeployTxReceipt = await deployHelper.perform(valueRegistrarContractName, web3Provider,
+    const contractDeployTxReceipt = await deployHelper.perform(valueRegistrarContractName, web3ProviderFactory.getProvider('value','ws'),
       valueRegistrarContractAbi, valueRegistrarContractBin, valueDeployerName, {gasPrice: VC_GAS_PRICE, gas: VC_GAS_LIMIT});
 
     const valueRegistrarContractAddr = contractDeployTxReceipt.contractAddress;

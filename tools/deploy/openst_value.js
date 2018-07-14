@@ -15,7 +15,7 @@
 const readline = require('readline');
 
 const rootPrefix = '../..'
-  , web3Provider = require(rootPrefix + '/lib/web3/providers/value_rpc')
+  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , deployHelper = require(rootPrefix + '/tools/deploy/helper')
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
@@ -98,7 +98,7 @@ DeployOpenSTValueContractKlass.prototype = {
       prompts.close();
     }
 
-    const contractDeployTxReceipt = await deployHelper.perform(openSTValueContractName, web3Provider, openSTValueContractAbi,
+    const contractDeployTxReceipt = await deployHelper.perform(openSTValueContractName, web3ProviderFactory.getProvider('value','rpc'), openSTValueContractAbi,
       openSTValueContractBin, valueDeployerName, {gasPrice: VC_GAS_PRICE, gas: VC_GAS_LIMIT},
       [VALUE_CHAIN_ID, simpleTokenContractAddress, valueRegistrarContractAddress]);
 

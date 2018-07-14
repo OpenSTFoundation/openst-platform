@@ -5,8 +5,7 @@
  * @module tools/setup/geth_checker
  */
 const rootPrefix = "../.."
-  , web3UtilityProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
-  , web3ValueProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
+  , web3FactoryProvider = require(rootPrefix + '/lib/web3/providers/factory')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , setupConfig = require(rootPrefix + '/tools/setup/config')
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
@@ -48,7 +47,7 @@ GethCheckerKlass.prototype = {
     const retryAttempts = 100
       , timerInterval = 5000
       , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
-      , provider = (chain == 'utility' ? web3UtilityProvider : web3ValueProvider)
+      , provider = (chain == 'utility' ? web3FactoryProvider.getProvider('utility','ws') : web3FactoryProvider.getProvider('value','ws'))
     ;
     return new Promise(function (onResolve, onReject) {
       chainTimer['timer'] = setInterval(function () {
