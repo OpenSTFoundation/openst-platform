@@ -77,7 +77,8 @@ const RegisterBrandedTokenInterCommSpecificPrototype = {
    */
   setContractObj: function () {
     const oThis = this
-      , web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
+      , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
+      , web3WsProvider = web3ProviderFactory.getProvider('utility','ws')
     ;
 
     oThis.completeContract = new web3WsProvider.eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
@@ -89,7 +90,8 @@ const RegisterBrandedTokenInterCommSpecificPrototype = {
    *
    */
   getChainHighestBlock: async function () {
-    const web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
+    const web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
+      , web3WsProvider = web3ProviderFactory.getProvider('utility','ws')
       , highestBlock = await web3WsProvider.eth.getBlockNumber()
     ;
     return highestBlock;

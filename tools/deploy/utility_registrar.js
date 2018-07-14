@@ -20,7 +20,7 @@ const rootPrefix = '../..'
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , web3Provider = require(rootPrefix + '/lib/web3/providers/utility_ws')
+  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , deployHelper = require(rootPrefix + '/tools/deploy/helper')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , UtilityRegistrarKlass = require(rootPrefix + '/lib/contract_interact/utility_registrar')
@@ -94,7 +94,7 @@ DeployUtilityRegistrarContractKlass.prototype = {
       prompts.close();
     }
 
-    const utilityRegistrarContractDeployResult = await deployHelper.perform(utilityRegistrarContractName, web3Provider,
+    const utilityRegistrarContractDeployResult = await deployHelper.perform(utilityRegistrarContractName, web3ProviderFactory.getProvider('utility','ws'),
       utilityRegistrarContractAbi, utilityRegistrarContractBin, utilityDeployerName,
       {gasPrice: UC_GAS_PRICE, gas: UC_GAS_LIMIT});
 

@@ -80,12 +80,12 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
    */
   setContractObj: function () {
     const oThis = this
-      , web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
+      , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
       , openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility')
       , openSTUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility')
     ;
 
-    oThis.completeContract = new web3WsProvider.eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
+    oThis.completeContract = new (web3ProviderFactory.getProvider('utility','ws')).eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
     //oThis.completeContract.setProvider(web3WsProvider.currentProvider);
   },
 
@@ -94,8 +94,8 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
    *
    */
   getChainHighestBlock: async function () {
-    const web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
-      , highestBlock = await web3WsProvider.eth.getBlockNumber()
+    const web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
+      , highestBlock = await (web3ProviderFactory.getProvider('utility','ws')).eth.getBlockNumber()
     ;
     return highestBlock;
   },

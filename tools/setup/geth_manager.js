@@ -17,8 +17,7 @@ const rootPrefix = "../.."
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
   , coreConstants = require(rootPrefix + '/config/core_constants')
   , Web3 = require('web3')
-  , web3UtilityProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
-  , web3ValueProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
+  , web3FactoryProvider = require(rootPrefix + '/lib/web3/providers/factory')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , generateRawKeyKlass = require(rootPrefix + '/services/utils/generate_raw_key')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
@@ -204,7 +203,7 @@ GethManagerKlass.prototype = {
     const retryAttempts = 10
       , timerInterval = 5000
       , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
-      , provider = (chain == 'utility' ? web3UtilityProvider : web3ValueProvider);
+      , provider = (chain == 'utility' ? web3FactoryProvider.getProvider('utility','ws') : web3FactoryProvider.getProvider('value', 'ws'));
     ;
     return new Promise(function (onResolve, onReject) {
       chainTimer['timer'] = setInterval(function () {
