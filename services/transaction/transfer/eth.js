@@ -7,11 +7,13 @@
  */
 
 const rootPrefix = '../../..'
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , etherInteractKlass = require(rootPrefix + '/lib/contract_interact/ether')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
+
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/contract_interact/ether');
 
 /**
  * Transfer ETH Service
@@ -54,6 +56,7 @@ TransferEthKlass.prototype = {
    */
   perform: function () {
     const oThis = this
+        , coreAddresses = oThis.ic.getCoreAddresses()
     ;
 
     try {
@@ -97,7 +100,9 @@ TransferEthKlass.prototype = {
       // Format wei
       oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
 
-      var etherInteractObj = new etherInteractKlass();
+      const EtherInteractKlass  = oThis.ic().getEtherInteractClass()
+        , etherInteractObj      = new EtherInteractKlass()
+      ;
 
       return etherInteractObj.transfer(
         oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei
@@ -116,5 +121,7 @@ TransferEthKlass.prototype = {
   }
 
 };
+
+InstanceComposer.registerShadowableClass(EtherKlass, "getTransferEthService");
 
 module.exports = TransferEthKlass;

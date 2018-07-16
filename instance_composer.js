@@ -3,6 +3,7 @@
 const InstanceComposer = function ( configStrategy ) {
   this.configStrategy = configStrategy || {};
   this.instanceMap = {};
+  this.shadowedClassMap = {};
 };
 
 
@@ -12,9 +13,10 @@ const InstanceComposer = function ( configStrategy ) {
 //Some static properties & methods.
 const composerMap = {};
 const instanceComposerMethodName = "ic";
+const shadowMap = {};
 
 InstanceComposer.register = function ( ClassConstructor, getterMethodName, mustRetainInstance, constructorParamsBuilderFunction ) {  
-  if ( composerMap.hasOwnProperty( getterMethodName ) ) {
+  if ( composerMap.hasOwnProperty( getterMethodName ) || shadowMap.hasOwnProperty( getterMethodName ) ) {
     throw "Duplicate Getter Method Name ";
   }
 
@@ -46,14 +48,30 @@ InstanceComposer.register = function ( ClassConstructor, getterMethodName, mustR
     
     return _instance;
   };
+};
 
+InstanceComposer.registerShadowableClass = function ( ClassConstructor, classGetterName ) {
+  if ( composerMap.hasOwnProperty( getterMethodName ) || shadowMap.hasOwnProperty( getterMethodName ) ) {
+    throw "Duplicate Getter Method Name ";
+  }
 
+  shadowMap[ classGetterName ] = ClassConstructor;
+  InstanceComposer.prototype[ classGetterName ] = function () {
+    const oThis = this; //this refers to instance of InstanceComposer.
+    let _shadowedClass;
+    _shadowedClass = oThis.shadowedClassMap[ classGetterName ];
+    if ( !_shadowedClass ) {
+      oThis.shadowedClassMap[ classGetterName ] = _shadowedClass = oThis.createShadowClass( ClassConstructor );
+    }
+    return _shadowedClass;
+  }
 
 };
 
 InstanceComposer.prototype = {
   configStrategy: null
   , instanceMap: null
+  , shadowedClassMap: null
   , createShadowClass : function ( ClassConstructor ) {
     const oThis = this;//this refers to instance of InstanceComposer.
 
