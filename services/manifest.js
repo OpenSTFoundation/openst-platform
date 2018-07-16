@@ -59,8 +59,8 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
   **/
 
   let transaction = this.transaction = {};
-  transaction.getReceipt = instanceComposer.createShadowClass( getReceipt );
-  transaction.estimateGas = instanceComposer.createShadowClass( estimateGas );
+  transaction.getReceipt = instanceComposer.getTransactionReceiptService();
+  transaction.estimateGas = instanceComposer.getEstimateGasService();
   let transfer = transaction.transfer = {};
   // transfer.brandedToken = instanceComposer.createShadowClass( transferBrandedToken );
   // transfer.simpleToken = instanceComposer.createShadowClass( transferSimpleToken );

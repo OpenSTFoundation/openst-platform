@@ -8,6 +8,7 @@
 
 const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
 
 require(rootPrefix + '/lib/web3/providers/factory');
@@ -70,5 +71,7 @@ EstimateGasKlass.prototype = {
     return responseHelper.successWithData({gas_to_use: gasToUse + bufferGasLimit});
   }
 };
+
+InstanceComposer.registerShadowableClass(EstimateGasKlass, "getEstimateGasService");
 
 module.exports = EstimateGasKlass;

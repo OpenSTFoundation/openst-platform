@@ -11,6 +11,7 @@
 const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
 
 require(rootPrefix + '/lib/web3/providers/factory');
@@ -89,5 +90,7 @@ GetReceiptKlass.prototype = {
     }
   }
 };
+
+InstanceComposer.registerShadowableClass(GetReceiptKlass, "getTransactionReceiptService");
 
 module.exports = GetReceiptKlass;
