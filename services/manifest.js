@@ -11,7 +11,7 @@ const rootPrefix = ".."
   
 
   , getReceipt = require(rootPrefix + '/services/transaction/get_receipt')
-  // , estimateGas = require(rootPrefix + '/services/transaction/estimate_gas')
+  , estimateGas = require(rootPrefix + '/services/transaction/estimate_gas')
   // , transferBrandedToken = require(rootPrefix + '/services/transaction/transfer/branded_token')
   // , transferSimpleToken = require(rootPrefix + '/services/transaction/transfer/simple_token')
   // , transferSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer/simple_token_prime')
@@ -60,7 +60,7 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
 
   let transaction = this.transaction = {};
   transaction.getReceipt = instanceComposer.createShadowClass( getReceipt );
-  // transaction.estimateGas = instanceComposer.createShadowClass( estimateGas );
+  transaction.estimateGas = instanceComposer.createShadowClass( estimateGas );
   // let transfer = transaction.transfer = {};
   // transfer.brandedToken = instanceComposer.createShadowClass( transferBrandedToken );
   // transfer.simpleToken = instanceComposer.createShadowClass( transferSimpleToken );
