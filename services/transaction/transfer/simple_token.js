@@ -7,11 +7,12 @@
  */
 
 const rootPrefix = '../../..'
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-  , simpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
 ;
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/contract_interact/simple_token');
 
 /**
  * Transfer Simple Token Service
@@ -54,6 +55,9 @@ TransferSimpleTokenKlass.prototype = {
    */
   perform: function () {
     const oThis = this
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , SimpleTokenKlass = oThis.ic().getSimpleTokenInteractClass()
+      , simpleToken   = new SimpleTokenKlass()
     ;
 
     try {
@@ -124,5 +128,7 @@ TransferSimpleTokenKlass.prototype = {
   }
 
 };
+
+InstanceComposer.registerShadowableClass(TransferSimpleTokenKlass, "getTransferSimpleTokenService");
 
 module.exports = TransferSimpleTokenKlass;
