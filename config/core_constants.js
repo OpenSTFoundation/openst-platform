@@ -27,26 +27,22 @@ function absolutePath(filePath) {
  */
 const CoreConstants = function ( configStrategy, instanceComposer) {
   const oThis = this;
-  if ( configStrategy && instanceComposer ) {
-    //TBD-CS: Remove this condition.
-    oThis.OST_VALUE_GAS_PRICE               = configStrategy.OST_VALUE_GAS_PRICE;
-    oThis.OST_UTILITY_GAS_PRICE             = configStrategy.OST_UTILITY_GAS_PRICE;
-    oThis.OST_OPENSTUTILITY_ST_PRIME_UUID   = configStrategy.OST_OPENSTUTILITY_ST_PRIME_UUID;
-    oThis.OST_VALUE_GETH_RPC_PROVIDER       = configStrategy.OST_VALUE_GETH_RPC_PROVIDER;
-    oThis.OST_VALUE_GETH_WS_PROVIDER        = configStrategy.OST_VALUE_GETH_WS_PROVIDER;
-    oThis.OST_VALUE_CHAIN_ID                = configStrategy.OST_VALUE_CHAIN_ID;
-    oThis.OST_UTILITY_GETH_RPC_PROVIDER     = configStrategy.OST_UTILITY_GETH_RPC_PROVIDER;
-    oThis.OST_UTILITY_GETH_WS_PROVIDER      = configStrategy.OST_UTILITY_GETH_WS_PROVIDER;
-    oThis.OST_UTILITY_CHAIN_ID              = configStrategy.OST_UTILITY_CHAIN_ID;
-    oThis.OST_CACHING_ENGINE                = configStrategy.OST_CACHING_ENGINE;
-    oThis.OST_DEBUG_ENABLED                 = configStrategy.OST_DEBUG_ENABLED || 0;
-    oThis.OST_STANDALONE_MODE               = configStrategy.OST_STANDALONE_MODE || 0;
-    oThis.AUTO_SCALE_DYNAMO                 = configStrategy.AUTO_SCALE_DYNAMO || 0;
-  }
+  oThis.OST_VALUE_GAS_PRICE               = configStrategy.OST_VALUE_GAS_PRICE;
+  oThis.OST_UTILITY_GAS_PRICE             = configStrategy.OST_UTILITY_GAS_PRICE;
+  oThis.OST_OPENSTUTILITY_ST_PRIME_UUID   = configStrategy.OST_OPENSTUTILITY_ST_PRIME_UUID;
+  oThis.OST_VALUE_GETH_RPC_PROVIDER       = configStrategy.OST_VALUE_GETH_RPC_PROVIDER;
+  oThis.OST_VALUE_GETH_WS_PROVIDER        = configStrategy.OST_VALUE_GETH_WS_PROVIDER;
+  oThis.OST_VALUE_CHAIN_ID                = configStrategy.OST_VALUE_CHAIN_ID;
+  oThis.OST_UTILITY_GETH_RPC_PROVIDER     = configStrategy.OST_UTILITY_GETH_RPC_PROVIDER;
+  oThis.OST_UTILITY_GETH_WS_PROVIDER      = configStrategy.OST_UTILITY_GETH_WS_PROVIDER;
+  oThis.OST_UTILITY_CHAIN_ID              = configStrategy.OST_UTILITY_CHAIN_ID;
+  oThis.OST_CACHING_ENGINE                = configStrategy.OST_CACHING_ENGINE;
+  oThis.OST_DEBUG_ENABLED                 = configStrategy.OST_DEBUG_ENABLED || 0;
+  oThis.OST_STANDALONE_MODE               = configStrategy.OST_STANDALONE_MODE || 0;
+  oThis.AUTO_SCALE_DYNAMO                 = configStrategy.AUTO_SCALE_DYNAMO || 0;
 };
 
 
-//TBD-CS: assign all properties to default values or null.
 CoreConstants.prototype = {
 
   /**
@@ -55,7 +51,7 @@ CoreConstants.prototype = {
    * @constant {number}
    *
    */
-  OST_VALUE_GAS_PRICE: process.env.OST_VALUE_GAS_PRICE,
+  OST_VALUE_GAS_PRICE: null,
 
   /**
    * Gas price for utility chain transactions.<br><br>
@@ -63,7 +59,7 @@ CoreConstants.prototype = {
    * @constant {number}
    *
    */
-  OST_UTILITY_GAS_PRICE: process.env.OST_UTILITY_GAS_PRICE,
+  OST_UTILITY_GAS_PRICE: null,
 
   /**
    * Zero gas constant to deploy on Utility Chain.<br><br>
@@ -87,7 +83,7 @@ CoreConstants.prototype = {
    * @constant {string}
    *
    */
-  OST_OPENSTUTILITY_ST_PRIME_UUID: process.env.OST_OPENSTUTILITY_ST_PRIME_UUID,
+  OST_OPENSTUTILITY_ST_PRIME_UUID: null,
 
   /**
    * Value Chain Geth RPC provider
@@ -95,7 +91,7 @@ CoreConstants.prototype = {
    * @constant {string}
    *
    */
-  OST_VALUE_GETH_RPC_PROVIDER: process.env.OST_VALUE_GETH_RPC_PROVIDER,
+  OST_VALUE_GETH_RPC_PROVIDER: null,
 
   /**
    * Value Chain Geth WS provider
@@ -103,7 +99,7 @@ CoreConstants.prototype = {
    * @constant {string}
    *
    */
-  OST_VALUE_GETH_WS_PROVIDER: process.env.OST_VALUE_GETH_WS_PROVIDER,
+  OST_VALUE_GETH_WS_PROVIDER: null,
 
   /**
    * Value Chain ID
@@ -111,7 +107,7 @@ CoreConstants.prototype = {
    * @constant {number}
    *
    */
-  OST_VALUE_CHAIN_ID: process.env.OST_VALUE_CHAIN_ID,
+  OST_VALUE_CHAIN_ID: null,
 
   /**
    * Utility Chain Geth RPC provider
@@ -119,7 +115,7 @@ CoreConstants.prototype = {
    * @constant {string}
    *
    */
-  OST_UTILITY_GETH_RPC_PROVIDER: process.env.OST_UTILITY_GETH_RPC_PROVIDER,
+  OST_UTILITY_GETH_RPC_PROVIDER: null,
 
   /**
    * Utility Chain Geth WS provider
@@ -127,7 +123,7 @@ CoreConstants.prototype = {
    * @constant {string}
    *
    */
-  OST_UTILITY_GETH_WS_PROVIDER: process.env.OST_UTILITY_GETH_WS_PROVIDER,
+  OST_UTILITY_GETH_WS_PROVIDER: null,
 
   /**
    * Utility Chain ID
@@ -135,7 +131,7 @@ CoreConstants.prototype = {
    * @constant {number}
    *
    */
-  OST_UTILITY_CHAIN_ID: process.env.OST_UTILITY_CHAIN_ID,
+  OST_UTILITY_CHAIN_ID: null,
 
   /**
    * Gas limit on value chain
@@ -159,7 +155,7 @@ CoreConstants.prototype = {
    * @constant {string}
    *
    */
-  CACHING_ENGINE: process.env.OST_CACHING_ENGINE,
+  CACHING_ENGINE: null,
 
   /**
    * debug log level.
@@ -167,7 +163,7 @@ CoreConstants.prototype = {
    * @constant {string}
    *
    */
-  DEBUG_ENABLED: process.env.OST_DEBUG_ENABLED,
+  DEBUG_ENABLED: null,
 
   /**
    * stand alone mode on?
@@ -175,11 +171,11 @@ CoreConstants.prototype = {
    * @constant {number}
    *
    */
-  STANDALONE_MODE: process.env.OST_STANDALONE_MODE || 0,
+  STANDALONE_MODE: 0,
 
-  AUTO_SCALE_DYNAMO: process.env.AUTO_SCALE_DYNAMO
+  AUTO_SCALE_DYNAMO: null
 };
 
 InstanceComposer.register(CoreConstants, "getCoreConstants", true);
 
-module.exports = new CoreConstants(); //TBD-CS: Expose the class only.
+module.exports = CoreConstants;
