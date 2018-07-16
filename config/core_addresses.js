@@ -8,9 +8,11 @@
  * @module config/core_addresses
  */
 
-const rootPrefix = ".."
+const rootPrefix = '..'
+  , InstanceComposer = require( rootPrefix + '/instance_composer')
   , coreAbis = require(rootPrefix + '/config/core_abis')
-  , coreBins = require(rootPrefix + '/config/core_bins');
+  , coreBins = require(rootPrefix + '/config/core_bins')
+;
 
 // Flag to do a mock deployment testing on MainNet
 // OpenST mockSimpleToken contract is used for deployment
@@ -26,233 +28,247 @@ if (process.env.USE_MOCK_SIMPLE_TOKEN != 1) {
   simpleTokenBin = coreBins.mockSimpleToken;
 }
 
-const allAddresses = {
-  users: {
-
-    /**
-     * foundation account details
-     * @constant {object}
-     */
-    foundation: {
-      address: process.env.OST_FOUNDATION_ADDR,
-      passphrase: process.env.OST_FOUNDATION_PASSPHRASE
-    },
-
-    /**
-     * utility chain owner account details
-     * @constant {object}
-     */
-    utilityChainOwner: {
-      address: process.env.OST_UTILITY_CHAIN_OWNER_ADDR,
-      passphrase: process.env.OST_UTILITY_CHAIN_OWNER_PASSPHRASE
-    },
-
-    /**
-     * utility initial ST' Holder account details
-     * @constant {object}
-     */
-    utilityInitialSTPrimeHolder: {
-      address: process.env.OST_UTILITY_INITIAL_ST_PRIME_HOLDER_ADDR,
-      passphrase: process.env.OST_UTILITY_INITIAL_ST_PRIME_HOLDER_PASSPHRASE
-    },
-
-    /**
-     * staker account details
-     * @constant {object}
-     */
-    staker: {
-      address: process.env.OST_STAKER_ADDR,
-      passphrase: process.env.OST_STAKER_PASSPHRASE
-    },
-
-    /**
-     * redeemer account details
-     * @constant {object}
-     */
-    redeemer: {
-      address: process.env.OST_REDEEMER_ADDR,
-      passphrase: process.env.OST_REDEEMER_PASSPHRASE
-    },
-
-    /**
-     * value registrar account details
-     * @constant {object}
-     */
-    valueRegistrar: {
-      address: process.env.OST_VALUE_REGISTRAR_ADDR,
-      passphrase: process.env.OST_VALUE_REGISTRAR_PASSPHRASE
-    },
-
-    /**
-     * utility registrar account details
-     * @constant {object}
-     */
-    utilityRegistrar: {
-      address: process.env.OST_UTILITY_REGISTRAR_ADDR,
-      passphrase: process.env.OST_UTILITY_REGISTRAR_PASSPHRASE
-    },
-
-    /**
-     * value deployer account details
-     * @constant {object}
-     */
-    valueDeployer: {
-      address: process.env.OST_VALUE_DEPLOYER_ADDR,
-      passphrase: process.env.OST_VALUE_DEPLOYER_PASSPHRASE
-    },
-
-    /**
-     * utility deployer account details
-     * @constant {object}
-     */
-    utilityDeployer: {
-      address: process.env.OST_UTILITY_DEPLOYER_ADDR,
-      passphrase: process.env.OST_UTILITY_DEPLOYER_PASSPHRASE
-    },
-
-    /**
-     * value ops account details
-     * @constant {object}
-     */
-    valueOps: {
-      address: process.env.OST_VALUE_OPS_ADDR,
-      passphrase: process.env.OST_VALUE_OPS_PASSPHRASE
-    },
-
-    /**
-     * utility ops account details
-     * @constant {object}
-     */
-    utilityOps: {
-      address: process.env.OST_UTILITY_OPS_ADDR,
-      passphrase: process.env.OST_UTILITY_OPS_PASSPHRASE
-    }
-
-  },
-
-  contracts: {
-
-    /**
-     * simple token contract details
-     * @constant {object}
-     */
-    simpleToken: {
-      address: simpleTokenAddr,
-      abi: simpleTokenAbi,
-      bin: simpleTokenBin
-    },
-
-    /**
-     * openst utility contract details
-     * @constant {object}
-     */
-    openSTUtility: {
-      address: process.env.OST_OPENSTUTILITY_CONTRACT_ADDR,
-      abi: coreAbis.openSTUtility,
-      bin: coreBins.openSTUtility
-    },
-
-    /**
-     * openst value contract details
-     * @constant {object}
-     */
-    openSTValue: {
-      address: process.env.OST_OPENSTVALUE_CONTRACT_ADDR,
-      abi: coreAbis.openSTValue,
-      bin: coreBins.openSTValue
-    },
-
-    /**
-     * ST' contract details
-     * @constant {object}
-     */
-    stPrime: {
-      address: process.env.OST_STPRIME_CONTRACT_ADDR,
-      abi: coreAbis.stPrime,
-      bin: coreBins.stPrime
-    },
-
-    /**
-     * value core contract details
-     * @constant {object}
-     */
-    valueCore: {
-      address: process.env.OST_VALUE_CORE_CONTRACT_ADDR,
-      abi: coreAbis.valueCore,
-      bin: coreBins.valueCore
-    },
-
-    /**
-     * value registrar contract details
-     * @constant {object}
-     */
-    valueRegistrar: {
-      address: process.env.OST_VALUE_REGISTRAR_CONTRACT_ADDR,
-      abi: coreAbis.valueRegistrar,
-      bin: coreBins.valueRegistrar
-    },
-
-    /**
-     * utility registrar contract details
-     * @constant {object}
-     */
-    utilityRegistrar: {
-      address: process.env.OST_UTILITY_REGISTRAR_CONTRACT_ADDR,
-      abi: coreAbis.utilityRegistrar,
-      bin: coreBins.utilityRegistrar
-    },
-
-    /**
-     * branded token contract details
-     * @constant {object}
-     */
-    brandedToken: {
-      address: null,
-      abi: coreAbis.brandedToken,
-      bin: coreBins.brandedToken
-    },
-
-    /**
-     * simple stake contract details
-     * @constant {object}
-     */
-    simpleStake: {
-      address: null,
-      abi: coreAbis.simpleStake,
-      bin: coreBins.simpleStake
-    },
-
-    airdrop: {
-      address: null,
-      abi: coreAbis.airdrop,
-      bin: coreBins.airdrop
-    }
-  }
-};
-
-// generate a contract address to name map for reverse lookup
-const addrToContractNameMap = {};
-for (var contractName in allAddresses.contracts) {
-  var addr = allAddresses.contracts[contractName].address;
-
-  if (Array.isArray(addr)) {
-    for (var i = 0; i < addr.length; i++) {
-      addrToContractNameMap[addr[i].toLowerCase()] = contractName;
-    }
-  } else if (addr !== null && typeof addr !== "undefined") {
-    addrToContractNameMap[addr.toLowerCase()] = contractName;
-  }
-}
 
 /**
  * Constructor to access different account and contract addresses and their respective details
  *
  * @constructor
  */
-const coreAddresses = function () {
+const CoreAddresses = function ( configStrategy, instanceComposer ) {
+  const oThis = this;
+  oThis._buildAllAddresses( configStrategy );
 };
 
-coreAddresses.prototype = {
+CoreAddresses.prototype = {
+
+  _buildAllAddresses : function ( configStrategy ) {
+    const oThis = this;
+    oThis.allAddresses = {
+      users: {
+
+        /**
+         * foundation account details
+         * @constant {object}
+         */
+        foundation: {
+          address: configStrategy.OST_FOUNDATION_ADDR,
+          passphrase: configStrategy.OST_FOUNDATION_PASSPHRASE
+        },
+
+        /**
+         * utility chain owner account details
+         * @constant {object}
+         */
+        utilityChainOwner: {
+          address: configStrategy.OST_UTILITY_CHAIN_OWNER_ADDR,
+          passphrase: configStrategy.OST_UTILITY_CHAIN_OWNER_PASSPHRASE
+        },
+
+        /**
+         * utility initial ST' Holder account details
+         * @constant {object}
+         */
+        utilityInitialSTPrimeHolder: {
+          address: configStrategy.OST_UTILITY_INITIAL_ST_PRIME_HOLDER_ADDR,
+          passphrase: configStrategy.OST_UTILITY_INITIAL_ST_PRIME_HOLDER_PASSPHRASE
+        },
+
+        /**
+         * staker account details
+         * @constant {object}
+         */
+        staker: {
+          address: configStrategy.OST_STAKER_ADDR,
+          passphrase: configStrategy.OST_STAKER_PASSPHRASE
+        },
+
+        /**
+         * redeemer account details
+         * @constant {object}
+         */
+        redeemer: {
+          address: configStrategy.OST_REDEEMER_ADDR,
+          passphrase: configStrategy.OST_REDEEMER_PASSPHRASE
+        },
+
+        /**
+         * value registrar account details
+         * @constant {object}
+         */
+        valueRegistrar: {
+          address: configStrategy.OST_VALUE_REGISTRAR_ADDR,
+          passphrase: configStrategy.OST_VALUE_REGISTRAR_PASSPHRASE
+        },
+
+        /**
+         * utility registrar account details
+         * @constant {object}
+         */
+        utilityRegistrar: {
+          address: configStrategy.OST_UTILITY_REGISTRAR_ADDR,
+          passphrase: configStrategy.OST_UTILITY_REGISTRAR_PASSPHRASE
+        },
+
+        /**
+         * value deployer account details
+         * @constant {object}
+         */
+        valueDeployer: {
+          address: configStrategy.OST_VALUE_DEPLOYER_ADDR,
+          passphrase: configStrategy.OST_VALUE_DEPLOYER_PASSPHRASE
+        },
+
+        /**
+         * utility deployer account details
+         * @constant {object}
+         */
+        utilityDeployer: {
+          address: configStrategy.OST_UTILITY_DEPLOYER_ADDR,
+          passphrase: configStrategy.OST_UTILITY_DEPLOYER_PASSPHRASE
+        },
+
+        /**
+         * value ops account details
+         * @constant {object}
+         */
+        valueOps: {
+          address: configStrategy.OST_VALUE_OPS_ADDR,
+          passphrase: configStrategy.OST_VALUE_OPS_PASSPHRASE
+        },
+
+        /**
+         * utility ops account details
+         * @constant {object}
+         */
+        utilityOps: {
+          address: configStrategy.OST_UTILITY_OPS_ADDR,
+          passphrase: configStrategy.OST_UTILITY_OPS_PASSPHRASE
+        }
+
+      },
+
+      contracts: {
+
+        /**
+         * simple token contract details
+         * @constant {object}
+         */
+        simpleToken: {
+          address: simpleTokenAddr,
+          abi: simpleTokenAbi,
+          bin: simpleTokenBin
+        },
+
+        /**
+         * openst utility contract details
+         * @constant {object}
+         */
+        openSTUtility: {
+          address: configStrategy.OST_OPENSTUTILITY_CONTRACT_ADDR,
+          abi: coreAbis.openSTUtility,
+          bin: coreBins.openSTUtility
+        },
+
+        /**
+         * openst value contract details
+         * @constant {object}
+         */
+        openSTValue: {
+          address: configStrategy.OST_OPENSTVALUE_CONTRACT_ADDR,
+          abi: coreAbis.openSTValue,
+          bin: coreBins.openSTValue
+        },
+
+        /**
+         * ST' contract details
+         * @constant {object}
+         */
+        stPrime: {
+          address: configStrategy.OST_STPRIME_CONTRACT_ADDR,
+          abi: coreAbis.stPrime,
+          bin: coreBins.stPrime
+        },
+
+        /**
+         * value core contract details
+         * @constant {object}
+         */
+        valueCore: {
+          address: configStrategy.OST_VALUE_CORE_CONTRACT_ADDR,
+          abi: coreAbis.valueCore,
+          bin: coreBins.valueCore
+        },
+
+        /**
+         * value registrar contract details
+         * @constant {object}
+         */
+        valueRegistrar: {
+          address: configStrategy.OST_VALUE_REGISTRAR_CONTRACT_ADDR,
+          abi: coreAbis.valueRegistrar,
+          bin: coreBins.valueRegistrar
+        },
+
+        /**
+         * utility registrar contract details
+         * @constant {object}
+         */
+        utilityRegistrar: {
+          address: configStrategy.OST_UTILITY_REGISTRAR_CONTRACT_ADDR,
+          abi: coreAbis.utilityRegistrar,
+          bin: coreBins.utilityRegistrar
+        },
+
+        /**
+         * branded token contract details
+         * @constant {object}
+         */
+        brandedToken: {
+          address: null,
+          abi: coreAbis.brandedToken,
+          bin: coreBins.brandedToken
+        },
+
+        /**
+         * simple stake contract details
+         * @constant {object}
+         */
+        simpleStake: {
+          address: null,
+          abi: coreAbis.simpleStake,
+          bin: coreBins.simpleStake
+        },
+
+        airdrop: {
+          address: null,
+          abi: coreAbis.airdrop,
+          bin: coreBins.airdrop
+        }
+      }
+    };
+  },
+
+  _addrToContractNameMap: null,
+  _getAddrToContractNameMap: function () {
+    const oThis = this;
+
+    if ( oThis._addrToContractNameMap ) {
+      return _addrToContractNameMap;
+    }
+    const addrToContractNameMap = oThis._addrToContractNameMap = {};
+    for (var contractName in this.allAddresses.contracts) {
+      var addr = this.allAddresses.contracts[contractName].address;
+
+      if (Array.isArray(addr)) {
+        for (var i = 0; i < addr.length; i++) {
+          addrToContractNameMap[addr[i].toLowerCase()] = contractName;
+        }
+      } else if (addr !== null && typeof addr !== "undefined") {
+        addrToContractNameMap[addr.toLowerCase()] = contractName;
+      }
+    }
+    return oThis._addrToContractNameMap;
+  },
 
   /**
    * Get address of specific account name
@@ -263,7 +279,7 @@ coreAddresses.prototype = {
    *
    */
   getAddressForUser: function (userName) {
-    return allAddresses.users[userName].address;
+    return this.allAddresses.users[userName].address;
   },
 
   /**
@@ -275,7 +291,7 @@ coreAddresses.prototype = {
    *
    */
   getPassphraseForUser: function (userName) {
-    return allAddresses.users[userName].passphrase;
+    return this.allAddresses.users[userName].passphrase;
   },
 
   /**
@@ -287,7 +303,7 @@ coreAddresses.prototype = {
    *
    */
   getAddressForContract: function (contractName) {
-    var contractAddress = allAddresses.contracts[contractName].address;
+    var contractAddress = this.allAddresses.contracts[contractName].address;
     if (Array.isArray(contractAddress)) {
       throw "Please pass valid contractName to get contract address for: " + contractName;
     }
@@ -303,7 +319,7 @@ coreAddresses.prototype = {
    *
    */
   getAddressesForContract: function (contractName) {
-    var contractAddresses = allAddresses.contracts[contractName].address;
+    var contractAddresses = this.allAddresses.contracts[contractName].address;
     if (!contractAddresses || !Array.isArray(contractAddresses) || contractAddresses.length === 0) {
       throw "Please pass valid contractName to get contract address for: " + contractName;
     }
@@ -319,6 +335,9 @@ coreAddresses.prototype = {
    *
    */
   getContractNameFor: function (contractAddr) {
+    const oThis = this
+        , addrToContractNameMap = oThis._getAddrToContractNameMap()
+    ;
     return addrToContractNameMap[(contractAddr || '').toLowerCase()];
   },
 
@@ -331,7 +350,7 @@ coreAddresses.prototype = {
    *
    */
   getAbiForContract: function (contractName) {
-    return (allAddresses.contracts[contractName] || {}).abi || '';
+    return (this.allAddresses.contracts[contractName] || {}).abi || '';
   },
 
   /**
@@ -343,9 +362,11 @@ coreAddresses.prototype = {
    *
    */
   getBinForContract: function (contractName) {
-    return (allAddresses.contracts[contractName] || {}).bin || '';
+    return (this.allAddresses.contracts[contractName] || {}).bin || '';
   }
 };
 
-module.exports = new coreAddresses();
+InstanceComposer.register(CoreAddresses, "getCoreAddresses", true);
+
+module.exports = CoreAddresses;
 
