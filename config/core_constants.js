@@ -13,12 +13,6 @@ const rootPrefix = ".."
     , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
 
-function absolutePath(filePath) {
-  if (!path.isAbsolute(filePath)) {
-    filePath = path.join(__dirname, '/' + rootPrefix + '/' + filePath);
-  }
-  return filePath;
-}
 
 /**
  * Constructor for core constants
