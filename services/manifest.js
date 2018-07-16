@@ -12,7 +12,7 @@ const rootPrefix = ".."
 
   , getReceipt = require(rootPrefix + '/services/transaction/get_receipt')
   , estimateGas = require(rootPrefix + '/services/transaction/estimate_gas')
-  // , transferBrandedToken = require(rootPrefix + '/services/transaction/transfer/branded_token')
+  , transferBrandedToken = require(rootPrefix + '/services/transaction/transfer/branded_token')
   // , transferSimpleToken = require(rootPrefix + '/services/transaction/transfer/simple_token')
   // , transferSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer/simple_token_prime')
   , transferEth = require(rootPrefix + '/services/transaction/transfer/eth')
@@ -54,15 +54,16 @@ const rootPrefix = ".."
  */
 const ServiceManifestKlass = function (configStrategy, instanceComposer) {
   const oThis = this;
+
   /**
    * Transactions related services
   **/
-
-  let transaction = this.transaction = {};
+  let transaction = oThis.transaction = {};
   transaction.getReceipt = instanceComposer.getTransactionReceiptService();
   transaction.estimateGas = instanceComposer.getEstimateGasService();
+
   let transfer = transaction.transfer = {};
-  // transfer.brandedToken = instanceComposer.createShadowClass( transferBrandedToken );
+  transfer.brandedToken = instanceComposer.getTransferBrandedTokenService();
   // transfer.simpleToken = instanceComposer.createShadowClass( transferSimpleToken );
   // transfer.simpleTokenPrime = instanceComposer.createShadowClass( transferSimpleTokenPrime );
   transfer.eth = instanceComposer.getTransferEthService();

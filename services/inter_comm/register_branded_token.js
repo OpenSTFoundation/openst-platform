@@ -157,7 +157,9 @@ const RegisterBrandedTokenInterCommSpecificPrototype = {
       notificationData.message.payload.transaction_hash = ucFormattedTransactionReceipt.transactionHash;
       openSTNotification.publishEvent.perform(notificationData);
 
-      logger.win(uuid, ':: performed registerBrandedToken of utilityRegistrar contract.', ucFormattedEvents);
+      logger.win(uuid, ':: performed registerBrandedToken of utilityRegistrar contract.\n, ' +
+        'Formatted events from the transaction receipt:\n',
+        ucFormattedEvents);
     } else {
 
       // Fire notification event

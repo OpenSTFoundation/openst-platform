@@ -81,6 +81,7 @@ GetReceiptKlass.prototype = {
       }
 
     } catch (err) {
+      console.error('err', err);
       let errObj = responseHelper.error({
         internal_error_identifier: 's_t_gr_4',
         api_error_identifier: 'something_went_wrong',

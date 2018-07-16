@@ -7,11 +7,13 @@
  */
 
 const rootPrefix = '../../..'
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
+
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/contract_interact/branded_token');
 
 /**
  * Transfer Branded Token Service
@@ -55,6 +57,8 @@ TransferBrandedTokenKlass.prototype = {
    */
   perform: function () {
     const oThis = this
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , BrandedTokenKlass  = oThis.ic().getBrandedTokenInteractClass()
     ;
 
     try {
@@ -129,5 +133,7 @@ TransferBrandedTokenKlass.prototype = {
     }
   }
 };
+
+InstanceComposer.registerShadowableClass(TransferBrandedTokenKlass, "getTransferBrandedTokenService");
 
 module.exports = TransferBrandedTokenKlass;

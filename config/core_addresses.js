@@ -253,7 +253,7 @@ CoreAddresses.prototype = {
     const oThis = this;
 
     if ( oThis._addrToContractNameMap ) {
-      return _addrToContractNameMap;
+      return oThis._addrToContractNameMap;
     }
     const addrToContractNameMap = oThis._addrToContractNameMap = {};
     for (var contractName in this.allAddresses.contracts) {
