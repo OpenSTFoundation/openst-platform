@@ -6,12 +6,15 @@
  * @module services/transaction/get_receipt
  */
 
+ //getWeb3ProviderFactory
+
 const rootPrefix = '../..'
-  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , web3EventsDecoder = require(rootPrefix + '/lib/web3/events/decoder')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
+
+require(rootPrefix + '/lib/web3/providers/factory');
 
 /**
  * Get Transaction Receipt Service
@@ -54,7 +57,8 @@ GetReceiptKlass.prototype = {
         });
         return Promise.resolve(errObj);
       }
-
+      
+      let web3ProviderFactory = oThis.ic().getWeb3ProviderFactory();
       const web3Provider = web3ProviderFactory.getProvider(oThis.chain, web3ProviderFactory.typeWS);
       if (!web3Provider) {
         let errObj = responseHelper.error({
