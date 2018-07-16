@@ -16,6 +16,21 @@ require(rootPrefix + '/config/core_addresses');
 require(rootPrefix + '/lib/contract_interact/ether');
 
 /**
+ * is equal ignoring case
+ *
+ * @param {string} compareWith - string to compare with
+ *
+ * @return {booelan} true when equal
+ */
+String.prototype.equalsIgnoreCase = String.prototype.equalsIgnoreCase || function (compareWith) {
+  const oThis = this
+    , _self = oThis.toLowerCase()
+    , _compareWith = String(compareWith).toLowerCase();
+
+  return _self === _compareWith;
+};
+
+/**
  * Transfer ETH Service
  *
  * @param {object} params -
@@ -56,7 +71,7 @@ TransferEthKlass.prototype = {
    */
   perform: function () {
     const oThis = this
-        , coreAddresses = oThis.ic.getCoreAddresses()
+        , coreAddresses = oThis.ic().getCoreAddresses()
     ;
 
     try {
@@ -122,6 +137,6 @@ TransferEthKlass.prototype = {
 
 };
 
-InstanceComposer.registerShadowableClass(EtherKlass, "getTransferEthService");
+InstanceComposer.registerShadowableClass(TransferEthKlass, "getTransferEthService");
 
 module.exports = TransferEthKlass;

@@ -51,7 +51,7 @@ InstanceComposer.register = function ( ClassConstructor, getterMethodName, mustR
 };
 
 InstanceComposer.registerShadowableClass = function ( ClassConstructor, classGetterName ) {
-  if ( composerMap.hasOwnProperty( getterMethodName ) || shadowMap.hasOwnProperty( getterMethodName ) ) {
+  if ( composerMap.hasOwnProperty( classGetterName ) || shadowMap.hasOwnProperty( classGetterName ) ) {
     throw "Duplicate Getter Method Name ";
   }
 
