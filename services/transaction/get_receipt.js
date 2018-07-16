@@ -9,12 +9,12 @@
  //getWeb3ProviderFactory
 
 const rootPrefix = '../..'
-  , web3EventsDecoder = require(rootPrefix + '/lib/web3/events/decoder')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
 require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/lib/web3/events/decoder');
 
 /**
  * Get Transaction Receipt Service
@@ -44,6 +44,7 @@ GetReceiptKlass.prototype = {
    */
   perform: async function () {
     const oThis = this
+      , web3EventsDecoder = oThis.ic().getWeb3EventsDecoder()
     ;
 
     try {
