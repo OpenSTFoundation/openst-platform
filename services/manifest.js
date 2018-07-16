@@ -63,13 +63,8 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
   transaction.estimateGas = instanceComposer.getEstimateGasService();
 
   let transfer = transaction.transfer = {};
-<<<<<<< HEAD
   transfer.brandedToken = instanceComposer.getTransferBrandedTokenService();
-  // transfer.simpleToken = instanceComposer.createShadowClass( transferSimpleToken );
-=======
-  // transfer.brandedToken = instanceComposer.createShadowClass( transferBrandedToken );
   transfer.simpleToken = instanceComposer.getTransferSimpleTokenService();
->>>>>>> transfer simpletoken service changes.
   // transfer.simpleTokenPrime = instanceComposer.createShadowClass( transferSimpleTokenPrime );
   transfer.eth = instanceComposer.getTransferEthService();
   
