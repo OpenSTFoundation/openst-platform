@@ -16,11 +16,13 @@ const rootPrefix = ".."
   require(rootPrefix + '/services/transaction/transfer/branded_token');
   require(rootPrefix + '/services/transaction/transfer/simple_token');
   require(rootPrefix + '/services/transaction/transfer/eth');
+
+  // Balance related services
+  require(rootPrefix + '/services/balance/branded_token');
 // , transferSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer/simple_token_prime')
 
   // , approveForBrandedToken = require(rootPrefix + '/services/approve/branded_token')
 
-  // , getBrandedTokenBalance = require(rootPrefix + '/services/balance/branded_token')
   // , getBrandedTokenBalanceFromChain = require(rootPrefix + '/services/balance/branded_token_from_chain')
   // , getSimpleTokenBalance = require(rootPrefix + '/services/balance/simple_token')
   // , getSimpleTokenPrimeBalance = require(rootPrefix + '/services/balance/simple_token_prime')
@@ -68,6 +70,9 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
   transfer.simpleToken = instanceComposer.getTransferSimpleTokenService();
   // transfer.simpleTokenPrime = instanceComposer.createShadowClass( transferSimpleTokenPrime );
   transfer.eth = instanceComposer.getTransferEthService();
+
+  let balance = oThis.balance = {};
+  balance.brandedToken = instanceComposer.getBrandedTokenBalanceService();
   
 };
 

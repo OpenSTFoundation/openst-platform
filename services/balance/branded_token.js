@@ -7,10 +7,12 @@
  */
 
 const rootPrefix = '../..'
-  , BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
+
+require(rootPrefix + '/lib/contract_interact/branded_token');
 
 /**
  * Branded Token balance
@@ -55,6 +57,8 @@ BrandedTokenBalanceKlass.prototype = {
         return Promise.resolve(errObj);
       }
 
+      let BrandedTokenKlass = oThis.ic().getBrandedTokenInteractClass();
+
       var brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address});
 
 
@@ -73,5 +77,7 @@ BrandedTokenBalanceKlass.prototype = {
   }
 
 };
+
+InstanceComposer.registerShadowableClass(BrandedTokenBalanceKlass, "getBrandedTokenBalanceService");
 
 module.exports = BrandedTokenBalanceKlass;
