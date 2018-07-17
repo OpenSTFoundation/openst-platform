@@ -8,14 +8,15 @@
 
 const rootPrefix = ".."
   , InstanceComposer = require( rootPrefix + "/instance_composer")
+;
   
 
-  , getReceipt = require(rootPrefix + '/services/transaction/get_receipt')
-  , estimateGas = require(rootPrefix + '/services/transaction/estimate_gas')
-  , transferBrandedToken = require(rootPrefix + '/services/transaction/transfer/branded_token')
-  , transferSimpleToken = require(rootPrefix + '/services/transaction/transfer/simple_token')
-  // , transferSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer/simple_token_prime')
-  , transferEth = require(rootPrefix + '/services/transaction/transfer/eth')
+  require(rootPrefix + '/services/transaction/get_receipt');
+  require(rootPrefix + '/services/transaction/estimate_gas');
+  require(rootPrefix + '/services/transaction/transfer/branded_token');
+  require(rootPrefix + '/services/transaction/transfer/simple_token');
+  require(rootPrefix + '/services/transaction/transfer/eth');
+// , transferSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer/simple_token_prime')
 
   // , approveForBrandedToken = require(rootPrefix + '/services/approve/branded_token')
 
