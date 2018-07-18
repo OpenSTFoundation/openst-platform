@@ -10,7 +10,11 @@ const rootPrefix = '../..'
   , etherInteractKlass = require(rootPrefix + '/lib/contract_interact/ether')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
+
+
+require(rootPrefix + '/lib/contract_interact/ether');
 
 /**
  * Eth balance
@@ -44,7 +48,8 @@ EthBalanceKlass.prototype = {
         return Promise.resolve(errObj);
       }
 
-      var etherInteractObj = new etherInteractKlass();
+      let etherInteractKlass = oThis.ic().getEtherInteractClass();
+      let etherInteractObj = new etherInteractKlass();
 
       return etherInteractObj.getBalanceOf(oThis.address);
     } catch (err) {
@@ -60,5 +65,7 @@ EthBalanceKlass.prototype = {
   }
 
 };
+
+InstanceComposer.registerShadowableClass(EthBalanceKlass, 'getEthBalanceService');
 
 module.exports = EthBalanceKlass;

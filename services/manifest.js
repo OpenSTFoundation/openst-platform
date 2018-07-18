@@ -26,13 +26,9 @@ const rootPrefix = ".."
   require(rootPrefix + '/services/balance/branded_token_from_chain');
   require(rootPrefix + '/services/balance/simple_token');
   require(rootPrefix + '/services/balance/simple_token_prime');
+  require(rootPrefix + '/services/balance/eth');
 
 // , transferSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer/simple_token_prime')
-
-  // , getBrandedTokenBalanceFromChain = require(rootPrefix + '/services/balance/branded_token_from_chain')
-  // , getSimpleTokenBalance = require(rootPrefix + '/services/balance/simple_token')
-  // , getSimpleTokenPrimeBalance = require(rootPrefix + '/services/balance/simple_token_prime')
-  // , getEthBalance = require(rootPrefix + '/services/balance/eth')
 
   // , proposeBrandedToken = require(rootPrefix + '/services/on_boarding/propose_branded_token')
   // , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/get_registration_status')
@@ -91,6 +87,7 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
   balance.brandedTokenFromChain = instanceComposer.getBtBalanceFromChainService();
   balance.simpleToken = instanceComposer.getSimpleTokenBalanceService();
   balance.simpleTokenPrime = instanceComposer.getSimpleTokenPrimeBalanceService();
+  balance.eth = instanceComposer.getEthBalanceService();
 
 };
 
