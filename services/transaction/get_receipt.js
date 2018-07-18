@@ -5,9 +5,6 @@
  *
  * @module services/transaction/get_receipt
  */
-
- //getWeb3ProviderFactory
-
 const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')

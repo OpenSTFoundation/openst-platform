@@ -9,9 +9,11 @@
 const rootPrefix = ".."
   , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
-  
 
-  // Transaction related require
+  // Approve related services
+  require(rootPrefix + '/services/approve/branded_token');
+
+  // Transaction related services
   require(rootPrefix + '/services/transaction/get_receipt');
   require(rootPrefix + '/services/transaction/estimate_gas');
   require(rootPrefix + '/services/transaction/transfer/branded_token');
@@ -24,8 +26,6 @@ const rootPrefix = ".."
   require(rootPrefix + '/services/balance/branded_token_from_chain');
 
 // , transferSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer/simple_token_prime')
-
-  // , approveForBrandedToken = require(rootPrefix + '/services/approve/branded_token')
 
   // , getBrandedTokenBalanceFromChain = require(rootPrefix + '/services/balance/branded_token_from_chain')
   // , getSimpleTokenBalance = require(rootPrefix + '/services/balance/simple_token')
@@ -63,6 +63,12 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
   const oThis = this;
 
   /**
+   * Approve services
+   **/
+  let approve = oThis.approve = {};
+  approve.brandedToken = instanceComposer.getApproveBrandedTokenService();
+
+  /**
    * Transactions related services
   **/
   let transaction = oThis.transaction = {};
@@ -75,6 +81,9 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
   transfer.simpleTokenPrime = instanceComposer.getTransferSimpleTokenPrimeService();
   transfer.eth = instanceComposer.getTransferEthService();
 
+  /**
+   * Balance related services
+   **/
   let balance = oThis.balance = {};
   balance.brandedToken = instanceComposer.getBrandedTokenBalanceService();
   balance.brandedTokenFromChain = instanceComposer.getBtBalanceFromChainService();

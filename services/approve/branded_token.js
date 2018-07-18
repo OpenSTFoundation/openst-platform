@@ -10,11 +10,13 @@ const BigNumber = require('bignumber.js')
 ;
 
 const rootPrefix = '../..'
-  , BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , InstanceComposer = require(rootPrefix + '/instance_composer')
 ;
+
+require(rootPrefix + '/lib/contract_interact/branded_token');
 
 /**
  * Approve for spending Branded Token
@@ -136,6 +138,8 @@ ApproveForBrandedTokenKlass.prototype = {
    */
   _approve: async function () {
     const oThis = this
+      , BrandedTokenKlass = oThis.ic().getBrandedTokenInteractClass()
+
       , brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address})
       , isTxHashOnlyNeeded = (oThis.returnType === 'txHash')
     ;
@@ -152,5 +156,7 @@ ApproveForBrandedTokenKlass.prototype = {
   }
 
 };
+
+InstanceComposer.registerShadowableClass(ApproveForBrandedTokenKlass, "getApproveBrandedTokenService");
 
 module.exports = ApproveForBrandedTokenKlass;
