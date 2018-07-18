@@ -7,10 +7,12 @@
  */
 
 const rootPrefix = '../..'
-  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
+
+require(rootPrefix + '/lib/web3/providers/factory');
 
 /**
  * Constructor to generate a new address
@@ -38,6 +40,7 @@ GenerateAddressKlass.prototype = {
    */
   perform: async function () {
     const oThis = this
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
     ;
 
     const web3Provider = web3ProviderFactory.getProvider(oThis.chain, web3ProviderFactory.typeWS);
@@ -57,5 +60,7 @@ GenerateAddressKlass.prototype = {
   }
 
 };
+
+InstanceComposer.registerShadowableClass(GenerateAddressKlass, "getGenerateAddressService");
 
 module.exports = GenerateAddressKlass;
