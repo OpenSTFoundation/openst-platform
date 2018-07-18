@@ -1,11 +1,13 @@
 "use strict";
 
 const rootPrefix = '../..'
-  , BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
+
+require(rootPrefix + '/lib/contract_interact/branded_token');
 
 /**
  * Branded Token balance from Chain
@@ -99,9 +101,12 @@ GetBtBalanceFromChain.prototype = {
     const oThis = this
     ;
 
+    let BrandedTokenKlass = oThis.ic().getBrandedTokenInteractClass();
     return  new BrandedTokenKlass({ERC20: oThis.erc20Address}).getBtBalanceFromChain(oThis.address);
   }
 
 };
+
+InstanceComposer.registerShadowableClass(GetBtBalanceFromChain, "getBtBalanceFromChainService");
 
 module.exports = GetBtBalanceFromChain;
