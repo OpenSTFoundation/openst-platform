@@ -7,15 +7,22 @@
  */
 
 const rootPrefix = '../../..'
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
+
+
+
+
   , StPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
+
+
+
+
+
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
-const stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
-  , stPrime = new StPrimeKlass(stPrimeContractAddress)
-;
+require(rootPrefix + '/config/core_addresses');
 
 /**
  * Transfer Simple Token Prime Service
@@ -56,6 +63,9 @@ TransferSimpleTokenPrimeKlass.prototype = {
    */
   perform: function () {
     const oThis = this
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
+      , stPrime = new StPrimeKlass(stPrimeContractAddress)
     ;
 
     try {
@@ -118,5 +128,7 @@ TransferSimpleTokenPrimeKlass.prototype = {
     }
   }
 };
+
+InstanceComposer.registerShadowableClass(TransferSimpleTokenPrimeKlass, "getTransferSimpleTokenPrimeService");
 
 module.exports = TransferSimpleTokenPrimeKlass;

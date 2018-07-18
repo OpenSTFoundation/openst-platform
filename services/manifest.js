@@ -11,11 +11,13 @@ const rootPrefix = ".."
 ;
   
 
+  // Transaction related require
   require(rootPrefix + '/services/transaction/get_receipt');
   require(rootPrefix + '/services/transaction/estimate_gas');
   require(rootPrefix + '/services/transaction/transfer/branded_token');
   require(rootPrefix + '/services/transaction/transfer/simple_token');
   require(rootPrefix + '/services/transaction/transfer/eth');
+  require(rootPrefix + '/services/transaction/transfer/simple_token_prime');
 
   // Balance related services
   require(rootPrefix + '/services/balance/branded_token');
@@ -68,7 +70,7 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
   let transfer = transaction.transfer = {};
   transfer.brandedToken = instanceComposer.getTransferBrandedTokenService();
   transfer.simpleToken = instanceComposer.getTransferSimpleTokenService();
-  // transfer.simpleTokenPrime = instanceComposer.createShadowClass( transferSimpleTokenPrime );
+  transfer.simpleTokenPrime = instanceComposer.getTransferSimpleTokenPrimeService();
   transfer.eth = instanceComposer.getTransferEthService();
 
   let balance = oThis.balance = {};
