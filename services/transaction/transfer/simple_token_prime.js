@@ -8,21 +8,12 @@
 
 const rootPrefix = '../../..'
   , InstanceComposer = require( rootPrefix + "/instance_composer")
-
-
-
-
-  , StPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
-
-
-
-
-
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
 require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/contract_interact/st_prime');
 
 /**
  * Transfer Simple Token Prime Service
@@ -65,6 +56,7 @@ TransferSimpleTokenPrimeKlass.prototype = {
     const oThis = this
       , coreAddresses = oThis.ic().getCoreAddresses()
       , stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
+      , StPrimeKlass = oThis.ic().getStPrimeInteractClass()
       , stPrime = new StPrimeKlass(stPrimeContractAddress)
     ;
 
