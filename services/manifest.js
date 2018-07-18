@@ -31,15 +31,9 @@ const rootPrefix = ".."
   // Utils services
   require(rootPrefix + '/services/utils/platform_status');
   require(rootPrefix + '/services/utils/generate_address');
+  require(rootPrefix + '/services/utils/get_branded_token_details')
   require(rootPrefix + '/services/utils/generate_raw_key');
   
-// , transferSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer/simple_token_prime')
-
-  // , getBrandedTokenBalanceFromChain = require(rootPrefix + '/services/balance/branded_token_from_chain')
-  // , getSimpleTokenBalance = require(rootPrefix + '/services/balance/simple_token')
-  // , getSimpleTokenPrimeBalance = require(rootPrefix + '/services/balance/simple_token_prime')
-  // , getEthBalance = require(rootPrefix + '/services/balance/eth')
-
   // , proposeBrandedToken = require(rootPrefix + '/services/on_boarding/propose_branded_token')
   // , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/get_registration_status')
 
@@ -51,11 +45,6 @@ const rootPrefix = ".."
   // , approveForRedeem = require(rootPrefix + '/services/redeem_and_unstake/approveOpenStUtilityContract')
   // , getApprovalStatusForRedeem = require(rootPrefix + '/services/redeem_and_unstake/getApprovalStatus')
   // , startRedeem = require(rootPrefix + '/services/redeem_and_unstake/startRedeem')
-
-  // , generateAddress = require(rootPrefix + '/services/utils/generate_address')
-  // , generateRawKey = require(rootPrefix + '/services/utils/generate_raw_key')
-  // , platformStatus = require(rootPrefix + '/services/utils/platform_status')
-  // , getBrandedTokenDetails = require(rootPrefix + '/services/utils/get_branded_token_details')
 
   // , RegisterBrandedTokenInterComm = require(rootPrefix + '/services/inter_comm/register_branded_token')
   // , StakeAndMintInterCommKlass = require(rootPrefix + '/services/inter_comm/stake_and_mint')
@@ -105,6 +94,7 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
   let utils = oThis.utils = {};
   utils.platform_status = instanceComposer.getPlatformStatusService();
   utils.generateAddress = instanceComposer.getGenerateAddressService();
+  utils.getBrandedTokenDetails = instanceComposer.getBrandedTokenDetailsService();
   utils.generateRawKey = instanceComposer.getGenerateRawKeyService();
   
 };

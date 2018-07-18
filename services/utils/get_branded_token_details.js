@@ -7,17 +7,14 @@
  */
 
 const rootPrefix = '../..'
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
 
-const openSTValueContractName = 'openSTValue'
-  , openSTValueContractAddr = coreAddresses.getAddressForContract(openSTValueContractName)
-  , openSTValue = new OpenSTValueKlass(openSTValueContractAddr)
-;
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/contract_interact/openst_value');
 
 /**
  * Constructor for get branded token details class
@@ -28,7 +25,8 @@ const openSTValueContractName = 'openSTValue'
  * @constructor
  */
 const GetBrandedTokenDetailsKlass = function (params) {
-  const oThis = this;
+  const oThis = this
+  ;
 
   params = params || {};
   oThis.uuid = params.uuid;
@@ -42,6 +40,11 @@ GetBrandedTokenDetailsKlass.prototype = {
    */
   perform: async function () {
     const oThis = this
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , openSTValueContractName = 'openSTValue'
+      , openSTValueContractAddr = coreAddresses.getAddressForContract(openSTValueContractName)
+      , OpenSTValueKlass = oThis.ic().getOpenSTValueInteractClass()
+      , openSTValue = new OpenSTValueKlass(openSTValueContractAddr)
     ;
 
     // validations
@@ -59,5 +62,7 @@ GetBrandedTokenDetailsKlass.prototype = {
     return tokenDetails;
   }
 };
+
+InstanceComposer.registerShadowableClass(GetBrandedTokenDetailsKlass, "getBrandedTokenDetailsService");
 
 module.exports = GetBrandedTokenDetailsKlass;
