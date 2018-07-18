@@ -7,15 +7,14 @@
  */
 
 const rootPrefix = '../..'
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , StPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
 
-const stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
-  , stPrime = new StPrimeKlass(stPrimeContractAddress)
-;
+
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/contract_interact/st_prime');
 
 /**
  * simple token prime balance
@@ -36,6 +35,12 @@ SimpleTokenPrimeBalanceKlass.prototype = {
 
   perform: function () {
     const oThis = this;
+
+    let coreAddresses = oThis.ic().getCoreAddresses()
+      , StPrimeKlass = oThis.ic().getStPrimeInteractClass()
+      , stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
+      , stPrime = new StPrimeKlass(stPrimeContractAddress)
+    ;
 
     try {
       //Validations
@@ -61,5 +66,7 @@ SimpleTokenPrimeBalanceKlass.prototype = {
     }
   }
 };
+
+InstanceComposer.registerShadowableClass(SimpleTokenPrimeBalanceKlass, 'getSimpleTokenPrimeBalanceService');
 
 module.exports = SimpleTokenPrimeBalanceKlass;

@@ -7,10 +7,13 @@
  */
 
 const rootPrefix = '../..'
-  , simpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
+
+
+require(rootPrefix + '/lib/contract_interact/simple_token');
 
 /**
  * simple token prime balance
@@ -44,8 +47,12 @@ SimpleTokenBalanceKlass.prototype = {
         return Promise.resolve(errObj);
       }
 
+      let SimpleTokenKlass = oThis.ic().getSimpleTokenInteractClass();
+      let simpleToken   = new SimpleTokenKlass();
+
       return simpleToken.balanceOf(oThis.address);
     } catch (err) {
+      console.log('---error', err);
       let errObj = responseHelper.error({
         internal_error_identifier: 's_b_st_2',
         api_error_identifier: 'something_went_wrong',
@@ -58,5 +65,7 @@ SimpleTokenBalanceKlass.prototype = {
   }
 
 };
+
+InstanceComposer.registerShadowableClass(SimpleTokenBalanceKlass, 'getSimpleTokenBalanceService');
 
 module.exports = SimpleTokenBalanceKlass;

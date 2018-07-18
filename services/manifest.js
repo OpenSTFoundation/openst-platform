@@ -24,6 +24,8 @@ const rootPrefix = ".."
   // Balance related services
   require(rootPrefix + '/services/balance/branded_token');
   require(rootPrefix + '/services/balance/branded_token_from_chain');
+  require(rootPrefix + '/services/balance/simple_token');
+  require(rootPrefix + '/services/balance/simple_token_prime');
 
 // , transferSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer/simple_token_prime')
 
@@ -87,7 +89,9 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
   let balance = oThis.balance = {};
   balance.brandedToken = instanceComposer.getBrandedTokenBalanceService();
   balance.brandedTokenFromChain = instanceComposer.getBtBalanceFromChainService();
-  
+  balance.simpleToken = instanceComposer.getSimpleTokenBalanceService();
+  balance.simpleTokenPrime = instanceComposer.getSimpleTokenPrimeBalanceService();
+
 };
 
 ServiceManifestKlass.prototype = {
