@@ -28,7 +28,8 @@ const rootPrefix = ".."
   require(rootPrefix + '/services/balance/simple_token_prime');
   require(rootPrefix + '/services/balance/eth');
 
-// , transferSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer/simple_token_prime')
+  // Utils services
+  require(rootPrefix + '/services/utils/platform_status');
 
   // , proposeBrandedToken = require(rootPrefix + '/services/on_boarding/propose_branded_token')
   // , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/get_registration_status')
@@ -88,6 +89,12 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
   balance.simpleToken = instanceComposer.getSimpleTokenBalanceService();
   balance.simpleTokenPrime = instanceComposer.getSimpleTokenPrimeBalanceService();
   balance.eth = instanceComposer.getEthBalanceService();
+
+  /**
+   * Utils services
+   */
+  let utils = oThis.utils = {};
+  utils.platform_status = instanceComposer.getplatformStatusService();
 
 };
 

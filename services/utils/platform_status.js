@@ -7,10 +7,12 @@
  */
 
 const rootPrefix = '../..'
-  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
+
+require(rootPrefix + '/lib/web3/providers/factory');
 
 /**
  * Constructor for platform service status
@@ -55,7 +57,8 @@ PlatformStatusKlass.prototype = {
    * @ignore
    */
   _gethStatus: function (chain) {
-    const web3Provider = web3ProviderFactory.getProvider(chain, web3ProviderFactory.typeWS)
+    const oThis = this
+      , web3Provider = oThis.ic().getWeb3ProviderFactory().getProvider(chain, 'ws')
       , retryAttempts = 100
       , timerInterval = 5000
       , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
@@ -101,5 +104,7 @@ PlatformStatusKlass.prototype = {
 
   }
 };
+
+InstanceComposer.registerShadowableClass(PlatformStatusKlass, 'getplatformStatusService');
 
 module.exports = PlatformStatusKlass;
