@@ -9,8 +9,7 @@
 const rootPrefix = '../..'
   , Web3 = require('web3')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
 
 /**
@@ -40,5 +39,7 @@ GenerateRawKeyKlass.prototype = {
   }
 
 };
+
+InstanceComposer.registerShadowableClass(GenerateRawKeyKlass, 'getGenerateRawKeyService');
 
 module.exports = GenerateRawKeyKlass;

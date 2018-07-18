@@ -31,6 +31,7 @@ const rootPrefix = ".."
   // Utils services
   require(rootPrefix + '/services/utils/platform_status');
   require(rootPrefix + '/services/utils/generate_address');
+  require(rootPrefix + '/services/utils/generate_raw_key');
   
 // , transferSimpleTokenPrime = require(rootPrefix + '/services/transaction/transfer/simple_token_prime')
 
@@ -102,8 +103,9 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
    * Utils services
    */
   let utils = oThis.utils = {};
-  utils.platform_status = instanceComposer.getplatformStatusService();
+  utils.platform_status = instanceComposer.getPlatformStatusService();
   utils.generateAddress = instanceComposer.getGenerateAddressService();
+  utils.generateRawKey = instanceComposer.getGenerateRawKeyService();
   
 };
 

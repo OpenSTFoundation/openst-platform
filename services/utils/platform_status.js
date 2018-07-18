@@ -105,6 +105,6 @@ PlatformStatusKlass.prototype = {
   }
 };
 
-InstanceComposer.registerShadowableClass(PlatformStatusKlass, 'getplatformStatusService');
+InstanceComposer.registerShadowableClass(PlatformStatusKlass, 'getPlatformStatusService');
 
 module.exports = PlatformStatusKlass;
