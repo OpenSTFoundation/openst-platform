@@ -12,23 +12,24 @@ const shell = require('shelljs')
 ;
 
 const rootPrefix = "../.."
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
   , setupConfig = require(rootPrefix + '/tools/setup/config')
   , setupHelper = require(rootPrefix + '/tools/setup/helper')
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
-  , coreConstants = require(rootPrefix + '/config/core_constants')
   , Web3 = require('web3')
-  , web3UtilityProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
-  , web3ValueProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , generateRawKeyKlass = require(rootPrefix + '/services/utils/generate_raw_key')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
+
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/services/utils/generate_raw_key');
 
 const tempGethFolder = 'tmp-geth'
   , keystoreFolder = 'keystore'
   , tempPasswordFile = 'tmp_password_file'
   , tempPrivateKeyFile = 'tmp_private_key_file'
-  , gasLimitOn = {utility: coreConstants.OST_UTILITY_GAS_LIMIT, value: coreConstants.OST_VALUE_GAS_LIMIT}
+  
   , hexStartsWith = '0x'
   , genesisTemplateLocation = Path.join(__dirname)
   , etherToWeiCinversion = new BigNumber(1000000000000000000)
@@ -36,11 +37,6 @@ const tempGethFolder = 'tmp-geth'
     'sealer'
   ]
 ;
-
-const allocBalancesOn = {
-  utility: (new BigNumber(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY)).mul(etherToWeiCinversion),
-  value: (new BigNumber('1000000')).mul(etherToWeiCinversion)
-};
 
 /**
  * Constructor for geth manager
@@ -201,11 +197,19 @@ GethManagerKlass.prototype = {
    * @return {promise}
    */
   isChainReady: function (chain) {
-    const retryAttempts = 10
+    const oThis = this
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , retryAttempts = 10
       , timerInterval = 5000
       , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
-      , provider = (chain == 'utility' ? web3UtilityProvider : web3ValueProvider);
     ;
+
+    if ( chain != "utility" ) {
+      chain = "value";
+    }
+
+    const provider = web3ProviderFactory.getProvider(chain, "ws");
+
     return new Promise(function (onResolve, onReject) {
       chainTimer['timer'] = setInterval(function () {
         if (chainTimer['retryCounter'] <= retryAttempts) {
@@ -240,6 +244,14 @@ GethManagerKlass.prototype = {
    * @private
    */
   _modifyGenesisFile: function (chain, chainGenesisLocation) {
+    const oThis = this
+      , coreConstants = oThis.ic().getCoreConstants()
+      , gasLimitOn = {utility: coreConstants.OST_UTILITY_GAS_LIMIT, value: coreConstants.OST_VALUE_GAS_LIMIT}
+      , allocBalancesOn = {
+        utility: (new BigNumber(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY)).mul(etherToWeiCinversion)
+        , value: (new BigNumber('1000000')).mul(etherToWeiCinversion)
+      }
+    ;
     const chainId = setupConfig.chains[chain].chain_id.value
       , allocBalanceToAddrName = setupConfig.chains[chain].alloc_balance_to_addr
       , allocAmountToAddress = setupConfig.addresses[allocBalanceToAddrName].address.value
@@ -322,6 +334,10 @@ GethManagerKlass.prototype = {
    * @private
    */
   _createAddresses: function (options) {
+    const oThis = this
+      , generateRawKeyKlass = oThis.ic().getGenerateRawKeyService()
+    ;
+
     var pre_generated_addresses = (options || {}).pre_generated_addresses
       , rawAddresses = {}
     ;
@@ -406,5 +422,7 @@ GethManagerKlass.prototype = {
     fileManager.rm(tmpPassphraseFilePath);
   }
 };
+
+InstanceComposer.register(GethManagerKlass, "getSetupGethManager", true );
 
 module.exports = new GethManagerKlass();

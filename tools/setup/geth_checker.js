@@ -5,19 +5,22 @@
  * @module tools/setup/geth_checker
  */
 const rootPrefix = "../.."
-  , web3UtilityProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
-  , web3ValueProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , setupConfig = require(rootPrefix + '/tools/setup/config')
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
 ;
+
+require(rootPrefix + '/lib/web3/providers/factory');
 
 /**
  * Constructor for geth checker
  *
  * @constructor
  */
-const GethCheckerKlass = function () {};
+const GethCheckerKlass = function (configStrategy, instanceComposer) {
+
+};
 
 GethCheckerKlass.prototype = {
   /**
@@ -27,14 +30,13 @@ GethCheckerKlass.prototype = {
    */
   perform: function () {
     const oThis = this
-      , promiseArray = [];
+      , promiseArray = []
+    ;
 
-    return new Promise(async function (onResolve, onReject) {
-      for (var chain in setupConfig.chains) {
-        promiseArray.push(oThis._isRunning(chain));
-      }
-      return Promise.all(promiseArray).then(onResolve);
-    });
+    for (var chain in setupConfig.chains) {
+      promiseArray.push(oThis._isRunning(chain));
+    }
+    return Promise.all(promiseArray);
   },
 
   /**
@@ -45,16 +47,27 @@ GethCheckerKlass.prototype = {
    * @return {promise}
    */
   _isRunning: function(chain) {
-    const retryAttempts = 100
-      , timerInterval = 5000
-      , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
-      , provider = (chain == 'utility' ? web3UtilityProvider : web3ValueProvider)
+
+    const oThis = this
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , retryAttempts       = 100
+      , timerInterval       = 5000
+      , chainTimer          = {timer: undefined, blockNumber: 0, retryCounter: 0}
     ;
+
+    chain = String( chain ).toLowerCase();
+    if ( chain !== 'utility' ) {
+      chain = 'value';
+    }
+
+    const provider = web3ProviderFactory.getProvider(chain, 'ws');
+
     return new Promise(function (onResolve, onReject) {
       chainTimer['timer'] = setInterval(function () {
         if (chainTimer['retryCounter'] <= retryAttempts) {
           provider.eth.getBlockNumber(function (err, blocknumber) {
             if (err) {
+              console.log("getBlockNumber err: ", err);
             } else {
               if (chainTimer['blockNumber']!=0 && chainTimer['blockNumber']!=blocknumber) {
                 logger.info("* Geth Checker - " + chain + " chain has new blocks.");
@@ -75,4 +88,6 @@ GethCheckerKlass.prototype = {
   }
 };
 
-module.exports = new GethCheckerKlass();
+InstanceComposer.register(GethCheckerKlass, "getSetupGethChecker", true);
+
+module.exports = GethCheckerKlass;
