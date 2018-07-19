@@ -24,6 +24,7 @@ require(rootPrefix + '/tools/setup/service_manager');
 require(rootPrefix + '/tools/setup/geth_manager');
 require(rootPrefix + '/tools/setup/geth_checker');
 require(rootPrefix + '/tools/setup/fund_users');
+require(rootPrefix + '/tools/setup/dynamo_db_init');
 
 const OpenSTSetup = function (configStrategy, instanceComposer) {
 
@@ -107,8 +108,7 @@ OpenSTSetup.prototype = {
 
       // Dynamo DB init
       logger.step('** Dynamo DB init');
-      await runHelperService(rootPrefix + '/tools/setup/dynamo_db_init');
-
+      await oThis.performHelperService( oThis.dynamoDbInit );
     }
 
     if (step == 'st_contract' || step == 'all') {
@@ -224,7 +224,8 @@ Object.defineProperties(OpenSTSetup.prototype, {
   "serviceManager"  : { get: function () { return this.ic().getSetupServiceManager(); }}
   , "gethManager"   : { get: function () { return this.ic().getSetupGethManager(); }}
   , "gethChecker"   : { get: function () { return this.ic().getSetupGethChecker(); }}
-  , "fundUsers"      : { get: function () { return this.ic().getSetupFundUsers(); }}
+  , "fundUsers"     : { get: function () { return this.ic().getSetupFundUsers(); }}
+  , "dynamoDbInit"  : { get: function () { return this.ic().getSetupDynamoDBInit(); }}
 });
 
 
