@@ -11,13 +11,16 @@ const shellAsyncCmd = require('node-cmd')
 ;
 
 const rootPrefix = "../.."
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
   , setupConfig = require(rootPrefix + '/tools/setup/config')
   , setupHelper = require(rootPrefix + '/tools/setup/helper')
-  , gethManager = require(rootPrefix + '/tools/setup/geth_manager')
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
-  , coreConstants = require(rootPrefix + '/config/core_constants')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
+
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/tools/setup/geth_manager');
+
 
 const sealerPassphraseFile = "sealer-passphrase"
 ;
@@ -183,6 +186,8 @@ ServiceManagerKlass.prototype = {
    */
   _startGethCommand: function(chain, purpose) {
     const oThis = this
+      , gethManager = oThis.ic().getSetupGethManager()
+      , coreConstants = oThis.ic().getCoreConstants()
       , chainDetails = setupConfig.chains[chain]
       , networkId = chainDetails['network_id'].value
       , chainPort = chainDetails['port'].value
@@ -214,4 +219,7 @@ ServiceManagerKlass.prototype = {
 
 };
 
-module.exports = new ServiceManagerKlass();
+//getSetupServiceManager
+InstanceComposer.register(ServiceManagerKlass, "getSetupServiceManager", true);
+
+module.exports = ServiceManagerKlass;

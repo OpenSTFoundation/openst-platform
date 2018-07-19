@@ -4,6 +4,7 @@
  *
  * @module tools/setup/env_manager
  */
+
 const rootPrefix = "../.."
   , setupConfig = require(rootPrefix + '/tools/setup/config')
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
@@ -29,6 +30,9 @@ EnvManagerKlass.prototype = {
     fileManager.append(setupConfig.env_vars_file, '#################');
     fileManager.append(setupConfig.env_vars_file, '# opentST Platform Environment file');
     fileManager.append(setupConfig.env_vars_file, '#################');
+
+    // Create empty OpenST Platform Config JSON file
+    fileManager.touch(setupConfig.openst_platform_config_file, '{}');
 
     logger.info('* writing env basic, geth, cache and addresses related env vars');
 
@@ -67,7 +71,7 @@ EnvManagerKlass.prototype = {
       // Add comment to ENV
       fileManager.append(setupConfig.env_vars_file, "\n# "+chain+" chain");
       // Add content
-      oThis._scanAndPopulateEnvVars(setupConfig.chains[chain],purpose);
+      oThis._scanAndPopulatePlatformVars(setupConfig.chains[chain],purpose);
     }
   },
 
@@ -80,7 +84,7 @@ EnvManagerKlass.prototype = {
     // Add comment to ENV
     fileManager.append(setupConfig.env_vars_file, "\n# Cache");
 
-    oThis._scanAndPopulateEnvVars(setupConfig.cache);
+    oThis._scanAndPopulatePlatformVars(setupConfig.cache);
   },
 
   /**
@@ -92,7 +96,7 @@ EnvManagerKlass.prototype = {
     // Add comment to ENV
     fileManager.append(setupConfig.env_vars_file, "\n# Notification");
 
-    oThis._scanAndPopulateEnvVars(setupConfig.notification);
+    oThis._scanAndPopulatePlatformVars(setupConfig.notification);
   },
 
   /**
@@ -104,7 +108,7 @@ EnvManagerKlass.prototype = {
     // Add comment to ENV
     fileManager.append(setupConfig.env_vars_file, "\n# Miscellaneous");
 
-    oThis._scanAndPopulateEnvVars(setupConfig.misc_deployment);
+    oThis._scanAndPopulatePlatformVars(setupConfig.misc_deployment);
   },
 
   /**
@@ -116,7 +120,7 @@ EnvManagerKlass.prototype = {
     // Add comment to ENV
     fileManager.append(setupConfig.env_vars_file, "\n# DynamoDB");
 
-    oThis._scanAndPopulateEnvVars(setupConfig.dynamodb);
+    oThis._scanAndPopulatePlatformVars(setupConfig.dynamodb);
   },
 
   /**
@@ -128,7 +132,7 @@ EnvManagerKlass.prototype = {
     // Add comment to ENV
     fileManager.append(setupConfig.env_vars_file, "\n# DynamoDB Auto scaling vars");
 
-    oThis._scanAndPopulateEnvVars(setupConfig.autoscaling);
+    oThis._scanAndPopulatePlatformVars(setupConfig.autoscaling);
   },
 
   /**
@@ -141,7 +145,7 @@ EnvManagerKlass.prototype = {
     fileManager.append(setupConfig.env_vars_file, "\n# Contracts");
 
     for (var address in setupConfig.contracts) {
-      oThis._scanAndPopulateEnvVars(setupConfig.contracts[address]);
+      oThis._scanAndPopulatePlatformVars(setupConfig.contracts[address]);
     }
   },
 
@@ -155,7 +159,7 @@ EnvManagerKlass.prototype = {
     fileManager.append(setupConfig.env_vars_file, "\n# Addresses");
 
     for (var account in setupConfig.addresses) {
-      oThis._scanAndPopulateEnvVars(setupConfig.addresses[account]);
+      oThis._scanAndPopulatePlatformVars(setupConfig.addresses[account]);
     }
   },
 
@@ -164,20 +168,26 @@ EnvManagerKlass.prototype = {
    *
    * @params {object} data - allowed level is hash of hash, with non-blank "env_var" key and "value" key
    */
-  _scanAndPopulateEnvVars: function (data, purpose) {
+  _scanAndPopulatePlatformVars: function (data, purpose) {
     const oThis = this;
 
+    let lData, dataKey, dataVal;
+
     for (var obj in data) {
-      var lData = data[obj];
+      lData = data[obj];
+      dataKey = lData.env_var;
+      dataVal = lData.value;
       if (typeof lData.env_var !== 'undefined' && lData.env_var.length > 0) {
-        var line = "export " + lData.env_var + "='" + lData.value + "'";
-        if (purpose == 'deployment' && lData.env_var == 'OST_UTILITY_GAS_PRICE') {
-          line = "export " + lData.env_var + "='" + '0x0' + "'";
+        if (purpose == 'deployment' && lData.env_var == 'OST_UTILITY_GAS_PRICE') { 
+          dataVal = "0x0";
         }
+        var line = "export " + dataKey + "='" + dataVal + "'";
         fileManager.append(setupConfig.env_vars_file, line);
+        fileManager.addPlatformConfig( dataKey, dataVal );
+        logger.log("Wrote ", dataKey, " : ", dataVal);
       }
     }
-  },
+  }
 
 };
 
