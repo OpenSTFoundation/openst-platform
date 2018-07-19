@@ -7,6 +7,7 @@
  */
 const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
   , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
@@ -36,11 +37,37 @@ const GetReceiptKlass = function (params) {
 
 GetReceiptKlass.prototype = {
   /**
-   * Perform<br><br>
+   * Perform
    *
-   * @return {promise<result>} - returns a promise which resolves to an object of kind Result
+   * @return {promise<result>}
    */
-  perform: async function () {
+  perform: function () {
+    const oThis = this
+    ;
+
+    return oThis.asyncPerform()
+      .catch(function (error) {
+        if (responseHelper.isCustomResult(error)) {
+          return error;
+        } else {
+          logger.error(`${__filename}::perform::catch`);
+          logger.error(error);
+          return responseHelper.error({
+            internal_error_identifier: 's_t_gr_1',
+            api_error_identifier: 'something_went_wrong',
+            debug_options: {}
+          });
+        }
+      });
+  },
+
+  /**
+   * Async Perform
+   *
+   * @return {promise<result>}
+   */
+  asyncPerform: async function() {
+
     const oThis = this
       , web3EventsDecoder = oThis.ic().getWeb3EventsDecoder()
     ;
@@ -50,7 +77,7 @@ GetReceiptKlass.prototype = {
       // validations
       if (!basicHelper.isTxHashValid(oThis.transactionHash)) {
         let errObj = responseHelper.error({
-          internal_error_identifier: 's_t_gr_1',
+          internal_error_identifier: 's_t_gr_2',
           api_error_identifier: 'invalid_transaction_hash',
           error_config: basicHelper.fetchErrorConfig()
         });
@@ -61,7 +88,7 @@ GetReceiptKlass.prototype = {
       const web3Provider = web3ProviderFactory.getProvider(oThis.chain, web3ProviderFactory.typeWS);
       if (!web3Provider) {
         let errObj = responseHelper.error({
-          internal_error_identifier: 's_t_gr_2',
+          internal_error_identifier: 's_t_gr_3',
           api_error_identifier: 'invalid_chain',
           error_config: basicHelper.fetchErrorConfig()
         });
