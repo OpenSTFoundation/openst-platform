@@ -7,23 +7,30 @@
  */
 
 const rootPrefix = '../..'
-  , coreConstants = require(rootPrefix + '/config/core_constants')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , InstanceComposer = require(rootPrefix + '/instance_composer')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
-  , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
 ;
 
-const gasPrice = coreConstants.OST_VALUE_GAS_PRICE
-  , gasLimit = coreConstants.OST_VALUE_GAS_LIMIT // this is taken by default if no value is passed from outside
-;
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/contract_interact/helper');
 
 /**
  * Constructor for Deploy helper class
  *
  * @constructor
  */
-const DeployHelperKlass = function () {};
+const DeployHelperKlass = function () {
+
+  const oThis = this
+    , coreConstants = oThis.ic().getCoreConstants()
+  ;
+
+  oThis.gasPrice = coreConstants.OST_VALUE_GAS_PRICE;
+  oThis.gasLimit = coreConstants.OST_VALUE_GAS_LIMIT; // this is taken by default if no value is passed from outside
+
+};
 
 DeployHelperKlass.prototype = {
   /**
@@ -41,14 +48,16 @@ DeployHelperKlass.prototype = {
    *
    */
   perform: async function (contractName, web3Provider, contractAbi, contractBin, deployerName, customOptions, constructorArgs) {
+
     const oThis = this
+      , coreAddresses = oThis.ic().getCoreAddresses()
       , deployerAddr = coreAddresses.getAddressForUser(deployerName)
       , deployerAddrPassphrase = coreAddresses.getPassphraseForUser(deployerName);
 
     const txParams = {
       from: deployerAddr,
-      gas: gasLimit,
-      gasPrice: gasPrice
+      gas: oThis.gasLimit,
+      gasPrice: oThis.gasPrice
     };
 
     Object.assign(txParams, customOptions);
@@ -92,6 +101,7 @@ DeployHelperKlass.prototype = {
     var deployFailedReason = null;
 
     const transactionReceipt = await deploy().then(function (transactionHash) {
+        const contractInteractHelper  = oThis.ic().getContractInteractHelper();
         return contractInteractHelper.waitAndGetTransactionReceipt(web3Provider, transactionHash, {});
       })
       .then(function(response){
@@ -156,4 +166,6 @@ DeployHelperKlass.prototype = {
 
 };
 
-module.exports = new DeployHelperKlass();
+InstanceComposer.register(DeployHelperKlass, "getDeployHelper", true);
+
+module.exports = DeployHelperKlass;
