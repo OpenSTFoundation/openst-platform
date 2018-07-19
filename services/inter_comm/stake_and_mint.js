@@ -19,11 +19,13 @@
  */
 
 const rootPrefix = '../..'
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , IntercomBaseKlass = require(rootPrefix + '/services/inter_comm/base')
 ;
+
+require(rootPrefix + '/config/core_addresses');
 
 /**
  * Inter comm process for the stake and mint.
@@ -53,6 +55,8 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
    */
   setContractObj: function () {
     const oThis = this
+      , coreAddresses = oThis.ic().getCoreAddresses()
+
       , web3WsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
       , openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
       , openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
@@ -86,7 +90,10 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
    * @param {object} eventObj - event object
    */
   processEventObj: async function (eventObj) {
-    const returnValues = eventObj.returnValues
+    const oThis = this
+      , coreAddresses = oThis.ic().getCoreAddresses()
+
+      , returnValues = eventObj.returnValues
       , uuid = returnValues._uuid
       , staker = returnValues._staker
       , stakerNonce = returnValues._stakerNonce
@@ -126,5 +133,7 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
 };
 
 Object.assign(StakeAndMintInterCommKlass.prototype, StakeAndMintInterCommKlassSpecificPrototype);
+
+InstanceComposer.registerShadowableClass(StakeAndMintInterCommKlass, "getStakeAndMintInterCommService");
 
 module.exports = StakeAndMintInterCommKlass;

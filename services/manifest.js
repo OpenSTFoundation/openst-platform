@@ -44,9 +44,10 @@ const rootPrefix = ".."
   require(rootPrefix + '/services/on_boarding/get_registration_status');
   require(rootPrefix + '/services/on_boarding/propose_branded_token');
 
-  // , RegisterBrandedTokenInterComm = require(rootPrefix + '/services/inter_comm/register_branded_token')
-  // , StakeAndMintInterCommKlass = require(rootPrefix + '/services/inter_comm/stake_and_mint')
-  // , StakeAndMintProcessorInterCommKlass = require(rootPrefix + '/services/inter_comm/stake_and_mint_processor')
+
+  // Intercomm related services
+  require(rootPrefix + '/services/inter_comm/register_branded_token');
+  require(rootPrefix + '/services/inter_comm/stake_and_mint');
 
 /**
  * Service Manifest Constructor
@@ -112,6 +113,10 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
   stake.getApprovalStatus = instanceComposer.getApprovalStatusService();
   stake.start = instanceComposer.getStartStakeService();
   stake.getStakedAmount = instanceComposer.getGetStakeAmountService();
+
+  let interComm = oThis.interComm = {};
+  interComm.registerBrandedToken = instanceComposer.getRegisterBrandedTokenInterCommService();
+  interComm.stakeAndMint = instanceComposer.getStakeAndMintInterCommService();
 
 };
 

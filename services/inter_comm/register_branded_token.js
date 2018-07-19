@@ -24,33 +24,16 @@ const openSTNotification = require('@openstfoundation/openst-notification')
 ;
 
 const rootPrefix = '../..'
-  , coreConstants = require(rootPrefix + '/config/core_constants')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , IntercomBaseKlass = require(rootPrefix + '/services/inter_comm/base')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , IntercomBaseKlass = require(rootPrefix + '/services/inter_comm/base')
 ;
 
-const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
-  , openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility')
-  , openSTUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility')
-  , valueRegistrarContractAddr = coreAddresses.getAddressForContract("valueRegistrar")
-  , utilityRegistrarContractAddr = coreAddresses.getAddressForContract("utilityRegistrar")
-  , utilityRegistrarAddr = coreAddresses.getAddressForUser('utilityRegistrar')
-  , utilityRegistrarPassphrase = coreAddresses.getPassphraseForUser('utilityRegistrar')
-  , valueRegistrarAddr = coreAddresses.getAddressForUser('valueRegistrar')
-  , valueRegistrarPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar')
-  , utilityChainId = coreConstants.OST_UTILITY_CHAIN_ID
-  , notificationData = {
-    topics: ['event.register_branded_token'], // override later: with every stage
-    publisher: 'OST',
-    message: {
-      kind: '', // populate later: with every stage
-      payload: {}
-    }
-  }
-;
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/web3/providers/factory');
 
 /**
  * Inter comm process to register branded token.
@@ -77,10 +60,13 @@ const RegisterBrandedTokenInterCommSpecificPrototype = {
    */
   setContractObj: function () {
     const oThis = this
-      , web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , web3WsProvider = web3ProviderFactory.getProvider('utility', 'ws')
     ;
 
-    oThis.completeContract = new web3WsProvider.eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
+    oThis.completeContract = new web3WsProvider.eth.Contract(coreAddresses.getAbiForContract('openSTUtility'),
+      coreAddresses.getAddressForContract('openSTUtility'));
     //oThis.completeContract.setProvider(web3WsProvider.currentProvider);
   },
 
@@ -89,7 +75,9 @@ const RegisterBrandedTokenInterCommSpecificPrototype = {
    *
    */
   getChainHighestBlock: async function () {
-    const web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
+    const oThis = this
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , web3WsProvider = web3ProviderFactory.getProvider('utility', 'ws')
       , highestBlock = await web3WsProvider.eth.getBlockNumber()
     ;
     return highestBlock;
@@ -108,17 +96,27 @@ const RegisterBrandedTokenInterCommSpecificPrototype = {
    * @param {object} eventObj - event object
    */
   processEventObj: async function (eventObj) {
-    const web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
-      , ValueRegistrarKlass = require(rootPrefix + '/lib/contract_interact/value_registrar')
-      , UtilityRegistrarKlass = require(rootPrefix + '/lib/contract_interact/utility_registrar')
-    ;
-
-    const valueRegistrarContractInteract = new ValueRegistrarKlass(valueRegistrarContractAddr)
-      , utilityRegistrarContractInteract = new UtilityRegistrarKlass(utilityRegistrarContractAddr)
-    ;
-
     const oThis = this
-      , returnValues = eventObj.returnValues
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , coreConstants = oThis.ic().getCoreConstants()
+      , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
+      , ValueRegistrarKlass = oThis.ic().getValueRegistrarKlass()
+      , UtilityRegistrarKlass = oThis.ic().getUtilityRegistrarClass()
+      , notificationData = {
+        topics: ['event.register_branded_token'], // override later: with every stage
+        publisher: 'OST',
+        message: {
+          kind: '', // populate later: with every stage
+          payload: {}
+        }
+      }
+    ;
+
+    const valueRegistrarContractInteract = new ValueRegistrarKlass(coreAddresses.getAddressForContract("valueRegistrar"))
+      , utilityRegistrarContractInteract = new UtilityRegistrarKlass(coreAddresses.getAddressForContract("utilityRegistrar"))
+    ;
+
+    const returnValues = eventObj.returnValues
       , symbol = returnValues._symbol
       , name = returnValues._name
       , conversionRate = returnValues._conversionRate
@@ -135,9 +133,9 @@ const RegisterBrandedTokenInterCommSpecificPrototype = {
     logger.step(uuid, ':: performing registerBrandedToken of utilityRegistrar contract.');
 
     const ucRegistrarResponse = await utilityRegistrarContractInteract.registerBrandedToken(
-      utilityRegistrarAddr,
-      utilityRegistrarPassphrase,
-      openSTUtilityContractAddr,
+      coreAddresses.getAddressForUser('utilityRegistrar'),
+      coreAddresses.getPassphraseForUser('utilityRegistrar'),
+      coreAddresses.getAddressForContract('openSTUtility'),
       symbol,
       name,
       conversionRate,
@@ -187,14 +185,14 @@ const RegisterBrandedTokenInterCommSpecificPrototype = {
     logger.step(uuid, ':: performing registerUtilityToken of valueRegistrar contract.');
 
     const vcRegistrarResponse = await valueRegistrarContractInteract.registerUtilityToken(
-      valueRegistrarAddr,
-      valueRegistrarPassphrase,
-      openSTValueContractAddr,
+      coreAddresses.getAddressForUser('valueRegistrar'),
+      coreAddresses.getPassphraseForUser('valueRegistrar'),
+      coreAddresses.getAddressForContract('openSTValue'),
       symbol,
       name,
       conversionRate,
       conversionRateDecimals,
-      utilityChainId,
+      coreConstants.OST_UTILITY_CHAIN_ID,
       requester,
       uuid
     );
@@ -234,5 +232,7 @@ const RegisterBrandedTokenInterCommSpecificPrototype = {
 };
 
 Object.assign(RegisterBrandedTokenInterComm.prototype, RegisterBrandedTokenInterCommSpecificPrototype);
+
+InstanceComposer.registerShadowableClass(RegisterBrandedTokenInterComm, "getRegisterBrandedTokenInterCommService");
 
 module.exports = RegisterBrandedTokenInterComm;

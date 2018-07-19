@@ -10,6 +10,7 @@
 const fs = require('fs');
 
 const rootPrefix = '../..'
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
@@ -124,7 +125,6 @@ IntercomBaseKlass.prototype = {
       return Promise.resolve();
     }
 
-    //TODO: last processed transaction index.
     for (var i = 0; i < events.length; i++) {
       const eventObj = events[i]
         , j = i
@@ -206,5 +206,7 @@ IntercomBaseKlass.prototype = {
     }
   }
 };
+
+InstanceComposer.registerShadowableClass(IntercomBaseKlass, "getIntercomBaseKlass");
 
 module.exports = IntercomBaseKlass;
