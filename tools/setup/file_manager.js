@@ -6,6 +6,7 @@
  */
 
 const shell = require('shelljs')
+  , fs = require('fs')
 ;
 
 const rootPrefix = "../.."
@@ -54,6 +55,10 @@ FileManagerKlass.prototype = {
     // Create empty ENV file
     logger.info("* Create empty ENV file");
     oThis.touch(setupConfig.env_vars_file, '#!/bin/sh');
+
+    // Create empty OpenST Platform JSON Config File.
+    logger.info("* Create empty ENV file");
+    oThis.touch(setupConfig.openst_platform_config_file, "{}");
   },
 
   /**
@@ -119,6 +124,45 @@ FileManagerKlass.prototype = {
    */
   exec: function(command) {
     return setupHelper.handleShellResponse(shell.exec(command));
+  },
+
+  /**
+   * Load OpenST Platform Config
+   *
+   * @param {string} configKey - Config Key
+   * @param {string} configValue - Config Value
+   */
+  getPlatformConfig: function ( configKey, configValue ) {
+    const filePath = setupHelper.setupFolderAbsolutePath() + '/' + setupConfig.openst_platform_config_file;
+
+    // Read Config
+    let content = fs.readFileSync( filePath )
+      , config = JSON.parse( content )
+    ;
+
+    return config;    
+  },
+
+  /**
+   * Add Configuration to OpenST Platform JSON Config File
+   *
+   * @param {string} configKey - Config Key
+   * @param {string} configValue - Config Value
+   */
+  addPlatformConfig: function ( configKey, configValue ) {
+    const filePath = setupHelper.setupFolderAbsolutePath() + '/' + setupConfig.openst_platform_config_file;
+
+    // Read Config
+    let content = fs.readFileSync( filePath )
+      , config = JSON.parse( content )
+    ;
+    
+    // Update the config.
+    config[ configKey ] = configValue;
+    content = JSON.stringify( config, null, 2 );
+
+    // Write Config
+    fs.writeFileSync( filePath, content );
   }
 
 };
