@@ -48,7 +48,8 @@ const rootPrefix = ".."
   // Intercomm related services
   require(rootPrefix + '/services/inter_comm/register_branded_token');
   require(rootPrefix + '/services/inter_comm/stake_and_mint');
-
+  require(rootPrefix + '/services/inter_comm/stake_and_mint_processor');
+  
 /**
  * Service Manifest Constructor
  *
@@ -113,11 +114,15 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
   stake.getApprovalStatus = instanceComposer.getApprovalStatusService();
   stake.start = instanceComposer.getStartStakeService();
   stake.getStakedAmount = instanceComposer.getGetStakeAmountService();
-
+  
+  /**
+   * intercomm related services
+   **/
   let interComm = oThis.interComm = {};
   interComm.registerBrandedToken = instanceComposer.getRegisterBrandedTokenInterCommService();
   interComm.stakeAndMint = instanceComposer.getStakeAndMintInterCommService();
-
+  interComm.stakeAndMintProcessor = instanceComposer.getStakeAndMintProcessorInterCommService();
+  
 };
 
 ServiceManifestKlass.prototype = {
