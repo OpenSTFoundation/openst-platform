@@ -28,14 +28,20 @@ const openSTNotification = require('@openstfoundation/openst-notification')
 ;
 
 const rootPrefix = '../..'
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , coreConstants = require(rootPrefix + '/config/core_constants')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
   , IntercomBaseKlass = require(rootPrefix + '/services/inter_comm/base')
 ;
+
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/lib/contract_interact/st_prime');
+require(rootPrefix + '/lib/contract_interact/openst_utility');
+require(rootPrefix + '/lib/contract_interact/branded_token');
 
 /**
  * is equal ignoring case
@@ -80,10 +86,13 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
    */
   setContractObj: function () {
     const oThis = this
-      , web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      
       , openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility')
       , openSTUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility')
     ;
+    const web3WsProvider = web3ProviderFactory.getProvider('utility', web3ProviderFactory.typeWS);
 
     oThis.completeContract = new web3WsProvider.eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
     //oThis.completeContract.setProvider(web3WsProvider.currentProvider);
@@ -94,10 +103,11 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
    *
    */
   getChainHighestBlock: async function () {
-    const web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
-      , highestBlock = await web3WsProvider.eth.getBlockNumber()
+    const oThis = this
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , web3WsProvider = web3ProviderFactory.getProvider('utility', web3ProviderFactory.typeWS)
     ;
-    return highestBlock;
+    return web3WsProvider.eth.getBlockNumber();
   },
 
   /**
@@ -113,20 +123,24 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
    * @param {object} eventObj - event object
    */
   processEventObj: async function (eventObj) {
-    const returnValues = eventObj.returnValues
+    const oThis = this
+      , coreConstants = oThis.ic().getCoreConstants()
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , StPrimeKlass = oThis.ic().getStPrimeInteractClass()
+      , OpenStUtilityKlass = oThis.ic().getOpenSTUtilityeInteractClass()
+      , BrandedTokenKlass = oThis.ic().getBrandedTokenInteractClass()
+      , OpenSTValueKlass = oThis.ic().getOpenSTValueInteractClass()
+      
+      , returnValues = eventObj.returnValues
       , stakingIntentHash = returnValues._stakingIntentHash
       , staker = returnValues._staker
       , beneficiary = returnValues._beneficiary
       , uuid = returnValues._uuid
       , stakerAddress = coreAddresses.getAddressForUser('staker')
       , stakerPassphrase = coreAddresses.getPassphraseForUser('staker')
-      , StPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
       , stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
       , stPrime = new StPrimeKlass(stPrimeContractAddress)
-      , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
       , openSTUtilityContractInteract = new OpenStUtilityKlass()
-      , BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
-      , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
       , openSTValueContractInteract = new OpenSTValueKlass()
     ;
 
@@ -326,5 +340,7 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
 };
 
 Object.assign(StakeAndMintProcessorInterCommKlass.prototype, StakeAndMintProcessorInterCommKlassSpecificPrototype);
+
+InstanceComposer.registerShadowableClass(StakeAndMintProcessorInterCommKlass, "getStakeAndMintProcessorInterCommService");
 
 module.exports = StakeAndMintProcessorInterCommKlass;
