@@ -33,9 +33,11 @@ const rootPrefix = ".."
   require(rootPrefix + '/services/utils/generate_address');
   require(rootPrefix + '/services/utils/get_branded_token_details')
   require(rootPrefix + '/services/utils/generate_raw_key');
-  
+
+  // on boarding related services
+  require(rootPrefix + '/services/on_boarding/get_registration_status');
+
   // , proposeBrandedToken = require(rootPrefix + '/services/on_boarding/propose_branded_token')
-  // , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/get_registration_status')
 
   // , approveForStake = require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract')
   // , getApprovalStatusForStake = require(rootPrefix + '/services/stake_and_mint/get_approval_status')
@@ -96,7 +98,13 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
   utils.generateAddress = instanceComposer.getGenerateAddressService();
   utils.getBrandedTokenDetails = instanceComposer.getBrandedTokenDetailsService();
   utils.generateRawKey = instanceComposer.getGenerateRawKeyService();
-  
+
+  /**
+   * onBoarding services
+   */
+  let onBoarding = oThis.onBoarding = {};
+  onBoarding.getRegistrationStatus = instanceComposer.getRegistrationStatusService();
+
 };
 
 ServiceManifestKlass.prototype = {
