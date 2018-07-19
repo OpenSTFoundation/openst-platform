@@ -9,14 +9,13 @@
 const uuid = require('uuid');
 
 const rootPrefix = '../..'
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
-const openSTValueContractInteract = new OpenSTValueKlass()
-;
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/contract_interact/openst_value');
 
 /**
  * Start Stake Service constructor
@@ -45,7 +44,9 @@ startStakeKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function () {
+
     const oThis = this
+      , coreAddresses = oThis.ic().getCoreAddresses()
     ;
 
     try {
@@ -89,6 +90,10 @@ startStakeKlass.prototype = {
       // Format wei
       oThis.toStakeAmount = basicHelper.formatWeiToString(oThis.toStakeAmount);
 
+      const OpenSTValueKlass = oThis.ic().getOpenSTValueInteractClass()
+        , openSTValueContractInteract = new OpenSTValueKlass()
+      ;
+
       const stakeTransactionHash = await openSTValueContractInteract.stake(stakerAddress, stakerPassphrase, oThis.uuid,
         oThis.toStakeAmount, oThis.beneficiary, true);
 
@@ -107,5 +112,7 @@ startStakeKlass.prototype = {
     }
   }
 };
+
+InstanceComposer.registerShadowableClass(startStakeKlass, "getStartStakeService");
 
 module.exports = startStakeKlass;

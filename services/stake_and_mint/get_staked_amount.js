@@ -7,11 +7,12 @@
  */
 
 const rootPrefix = '../..'
-  , SimpleStakeKlass = require(rootPrefix + '/lib/contract_interact/simple_stake')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
+
+require(rootPrefix + '/lib/contract_interact/simple_stake');
 
 /**
  * Constructor for get staked amount details class
@@ -51,12 +52,16 @@ GetStakeAmountKlass.prototype = {
       return Promise.resolve(errObj);
     }
 
-    const simpleStake = new SimpleStakeKlass({contractAddress: oThis.simpleStakeContractAddress})
+    const SimpleStakeInteractKlass = oThis.ic().getSimpleStakeInteractClass()
+      , simpleStake = new SimpleStakeInteractKlass({contractAddress: oThis.simpleStakeContractAddress})
+    ;
 
     return simpleStake.getAlltimeStakedAmount();
 
   }
 
 };
+
+InstanceComposer.registerShadowableClass(GetStakeAmountKlass, "getGetStakeAmountService");
 
 module.exports = GetStakeAmountKlass;

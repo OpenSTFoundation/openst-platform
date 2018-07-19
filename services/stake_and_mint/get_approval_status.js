@@ -8,9 +8,11 @@
  */
 
 const rootPrefix = '../..'
-  , getReceipt = require(rootPrefix + '/services/transaction/get_receipt')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
 ;
+
+require(rootPrefix + '/services/transaction/get_receipt');
 
 /**
  * Get approval status
@@ -40,7 +42,8 @@ GetApprovalStatusKlass.prototype = {
     ;
 
     try {
-      const getReceiptObj = new getReceipt({transaction_hash: oThis.transactionHash, chain: oThis.chain});
+      let TransactionReceiptServiceKlass = oThis.ic().getTransactionReceiptService();
+      const getReceiptObj = new TransactionReceiptServiceKlass({transaction_hash: oThis.transactionHash, chain: oThis.chain});
       const receiptResponse = await getReceiptObj.perform();
       return Promise.resolve(receiptResponse);
     } catch (err) {
@@ -53,5 +56,7 @@ GetApprovalStatusKlass.prototype = {
     }
   }
 };
+
+InstanceComposer.registerShadowableClass(GetApprovalStatusKlass, "getApprovalStatusService");
 
 module.exports = GetApprovalStatusKlass;

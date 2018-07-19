@@ -11,17 +11,13 @@ const BigNumber = require('bignumber.js')
 ;
 
 const rootPrefix = '../..'
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , simpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
-const openSTValueContractName = 'openSTValue'
-  , openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName)
-  , stakerAddress = coreAddresses.getAddressForUser('staker')
-  , stakerPassphrase = coreAddresses.getPassphraseForUser('staker')
-;
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/contract_interact/simple_token');
 
 /**
  * Approve OpenST Value Contract Service
@@ -33,8 +29,11 @@ const openSTValueContractName = 'openSTValue'
  * @constructor
  */
 const ApproveOpenstValueContractKlass = function (params) {
-
+  
   const oThis = this
+    , coreAddresses = oThis.ic().getCoreAddresses()
+    
+    , openSTValueContractName = 'openSTValue'
   ;
 
   params = params || {};
@@ -45,6 +44,10 @@ const ApproveOpenstValueContractKlass = function (params) {
   } else {
     oThis.runInAsync = true;
   }
+  
+  oThis.openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName);
+  oThis.stakerAddress = coreAddresses.getAddressForUser('staker');
+  oThis.stakerPassphrase = coreAddresses.getPassphraseForUser('staker');
 
 };
 
@@ -91,12 +94,14 @@ ApproveOpenstValueContractKlass.prototype = {
   _approve: async function (toApproveAmount) {
 
     const oThis = this
+      , SimpleTokenKlass = oThis.ic().getSimpleTokenInteractClass()
+      , simpleToken = new SimpleTokenKlass()
     ;
 
     const approveRsp = await simpleToken.approve(
-      stakerAddress,
-      stakerPassphrase,
-      openSTValueContractAddress,
+      oThis.stakerAddress,
+      oThis.stakerPassphrase,
+      oThis.openSTValueContractAddress,
       toApproveAmount,
       oThis.runInAsync
     );
@@ -113,7 +118,13 @@ ApproveOpenstValueContractKlass.prototype = {
    * @ignore
    */
   _getStakerSTBalance: function () {
-    return simpleToken.balanceOf(stakerAddress)
+    
+    const oThis = this
+      , SimpleTokenKlass = oThis.ic().getSimpleTokenInteractClass()
+      , simpleToken   = new SimpleTokenKlass()
+    ;
+    
+    return simpleToken.balanceOf(oThis.stakerAddress)
       .then(function (result) {
         const stBalance = result.data['balance'];
 
@@ -122,5 +133,7 @@ ApproveOpenstValueContractKlass.prototype = {
   },
 
 };
+
+InstanceComposer.registerShadowableClass(ApproveOpenstValueContractKlass, "getApproveOpenstValueContractService");
 
 module.exports = ApproveOpenstValueContractKlass;

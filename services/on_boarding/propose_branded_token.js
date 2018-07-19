@@ -8,18 +8,16 @@
 const uuid = require('uuid');
 
 const rootPrefix = '../..'
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/contract_interact/openst_utility');
+
 const senderName = 'staker'
   , openSTUtilityContractName = 'openSTUtility'
-  , stakerAddr = coreAddresses.getAddressForUser(senderName)
-  , stakerPassphrase = coreAddresses.getPassphraseForUser(senderName)
-  , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
-  , openSTUtility = new OpenStUtilityKlass(openSTUtilityContractAddress)
 ;
 
 /**
@@ -33,7 +31,9 @@ const senderName = 'staker'
  * @constructor
  */
 const ProposeBrandedTokenKlass = function (params) {
+
   const oThis = this
+    , coreAddresses = oThis.ic().getCoreAddresses()
   ;
 
   params = params || {};
@@ -42,6 +42,11 @@ const ProposeBrandedTokenKlass = function (params) {
   oThis.conversionFactor = params.conversion_factor;
   oThis.conversionRate = null;
   oThis.conversionRateDecimals = null;
+
+  oThis.stakerAddr = coreAddresses.getAddressForUser(senderName);
+  oThis.stakerPassphrase = coreAddresses.getPassphraseForUser(senderName);
+  oThis.openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName);
+
 };
 
 ProposeBrandedTokenKlass.prototype = {
@@ -91,8 +96,15 @@ ProposeBrandedTokenKlass.prototype = {
         oThis.conversionRate = conversionRateConversionResponse.data.conversionRate;
         oThis.conversionRateDecimals = conversionRateConversionResponse.data.conversionRateDecimals;
 
-        const proposalRsp = await openSTUtility.proposeBrandedToken(stakerAddr, stakerPassphrase, oThis.symbol,
-          oThis.name, oThis.conversionRate, oThis.conversionRateDecimals);
+        let OpenStUtilityContractInteractKlass = oThis.ic().getOpenSTUtilityeInteractClass()
+          , openSTUtilityContractInteract = new OpenStUtilityContractInteractKlass(oThis.openSTUtilityContractAddress)
+        ;
+
+        const proposalRsp = await openSTUtilityContractInteract.proposeBrandedToken(
+          oThis.stakerAddr,
+          oThis.stakerPassphrase, oThis.symbol,
+          oThis.name, oThis.conversionRate, oThis.conversionRateDecimals
+        );
 
         if (proposalRsp.isSuccess()) {
           proposalRsp.data.transaction_uuid = uuid.v4();
@@ -115,5 +127,7 @@ ProposeBrandedTokenKlass.prototype = {
     }
   }
 };
+
+InstanceComposer.registerShadowableClass(ProposeBrandedTokenKlass, "getProposeBrandedTokenKlassClass");
 
 module.exports = ProposeBrandedTokenKlass;

@@ -28,21 +28,21 @@ const rootPrefix = ".."
   require(rootPrefix + '/services/balance/simple_token_prime');
   require(rootPrefix + '/services/balance/eth');
 
+  //stake and mint related changes
+  require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract');
+  require(rootPrefix + '/services/stake_and_mint/get_staked_amount');
+  require(rootPrefix + '/services/stake_and_mint/start_stake');
+  require(rootPrefix + '/services/stake_and_mint/get_approval_status');
+
   // Utils services
   require(rootPrefix + '/services/utils/platform_status');
   require(rootPrefix + '/services/utils/generate_address');
-  require(rootPrefix + '/services/utils/get_branded_token_details')
+  require(rootPrefix + '/services/utils/get_branded_token_details');
   require(rootPrefix + '/services/utils/generate_raw_key');
 
   // on boarding related services
   require(rootPrefix + '/services/on_boarding/get_registration_status');
-
-  // , proposeBrandedToken = require(rootPrefix + '/services/on_boarding/propose_branded_token')
-
-  // , approveForStake = require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract')
-  // , getApprovalStatusForStake = require(rootPrefix + '/services/stake_and_mint/get_approval_status')
-  // , startStake = require(rootPrefix + '/services/stake_and_mint/start_stake')
-  // , getStakedAmount = require(rootPrefix + '/services/stake_and_mint/get_staked_amount')
+  require(rootPrefix + '/services/on_boarding/propose_branded_token');
 
   // , approveForRedeem = require(rootPrefix + '/services/redeem_and_unstake/approveOpenStUtilityContract')
   // , getApprovalStatusForRedeem = require(rootPrefix + '/services/redeem_and_unstake/getApprovalStatus')
@@ -74,6 +74,9 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
   transaction.getReceipt = instanceComposer.getTransactionReceiptService();
   transaction.estimateGas = instanceComposer.getEstimateGasService();
 
+  /**
+   * transfer related services
+   **/
   let transfer = transaction.transfer = {};
   transfer.brandedToken = instanceComposer.getTransferBrandedTokenService();
   transfer.simpleToken = instanceComposer.getTransferSimpleTokenService();
@@ -104,6 +107,16 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
    */
   let onBoarding = oThis.onBoarding = {};
   onBoarding.getRegistrationStatus = instanceComposer.getRegistrationStatusService();
+  onBoarding.proposeBrandedToken = instanceComposer.getProposeBrandedTokenKlassClass();
+
+  /**
+   * stake related services
+   **/
+  let stake = oThis.stake = {};
+  stake.approveForStake = instanceComposer.getApproveOpenstValueContractService();
+  stake.getStakedAmount = instanceComposer.getGetStakeAmountService();
+  stake.start = instanceComposer.getStartStakeService();
+  stake.getApprovalStatus = instanceComposer.getApprovalStatusService();
 
 };
 
