@@ -21,10 +21,10 @@ require(rootPrefix + '/lib/contract_interact/helper');
  *
  * @constructor
  */
-const DeployHelperKlass = function () {
+const DeployHelperKlass = function (configStrategy, instanceComposer) {
 
   const oThis = this
-    , coreConstants = oThis.ic().getCoreConstants()
+    , coreConstants = instanceComposer.getCoreConstants()
   ;
 
   oThis.gasPrice = coreConstants.OST_VALUE_GAS_PRICE;
