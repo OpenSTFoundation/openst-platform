@@ -25,6 +25,8 @@ require(rootPrefix + '/tools/setup/geth_manager');
 require(rootPrefix + '/tools/setup/geth_checker');
 require(rootPrefix + '/tools/setup/fund_users');
 require(rootPrefix + '/tools/setup/dynamo_db_init');
+require(rootPrefix + '/tools/setup/simple_token/deploy');
+require(rootPrefix + '/tools/setup/simple_token/finalize');
 
 const OpenSTSetup = function (configStrategy, instanceComposer) {
 
@@ -113,12 +115,12 @@ OpenSTSetup.prototype = {
 
     if (step == 'st_contract' || step == 'all') {
       // Deploy Simple Token Contract and update ENV
-      const stDeployResponse = await runHelperService(rootPrefix + '/tools/setup/simple_token/deploy');
+      const stDeployResponse = await oThis.performHelperService( oThis.simpleTokenDeploy );
       setupConfig.contracts['simpleToken'].address.value = stDeployResponse.data.address;
       envManager.generateEnvFile();
 
       // Finalize Simple Token Contract
-      await runHelperService(rootPrefix + '/tools/setup/simple_token/finalize');
+      await oThis.performHelperService( oThis.finalizeSimpleToken );
     }
 
     if (step == 'fund_users_with_st' || step == 'all') {
@@ -221,11 +223,13 @@ OpenSTSetup.prototype = {
 };
 
 Object.defineProperties(OpenSTSetup.prototype, {
-  "serviceManager"  : { get: function () { return this.ic().getSetupServiceManager(); }}
-  , "gethManager"   : { get: function () { return this.ic().getSetupGethManager(); }}
-  , "gethChecker"   : { get: function () { return this.ic().getSetupGethChecker(); }}
-  , "fundUsers"     : { get: function () { return this.ic().getSetupFundUsers(); }}
-  , "dynamoDbInit"  : { get: function () { return this.ic().getSetupDynamoDBInit(); }}
+  "serviceManager"        : { get: function () { return this.ic().getSetupServiceManager(); }}
+  , "gethManager"         : { get: function () { return this.ic().getSetupGethManager(); }}
+  , "gethChecker"         : { get: function () { return this.ic().getSetupGethChecker(); }}
+  , "fundUsers"           : { get: function () { return this.ic().getSetupFundUsers(); }}
+  , "dynamoDbInit"        : { get: function () { return this.ic().getSetupDynamoDBInit(); }}
+  , "simpleTokenDeploy"   : { get: function () { return this.ic().getSimpleTokenContract(); }}
+  , "finalizeSimpleToken" : { get: function () { return this.ic().getSimpleTokenFinalizeInstance(); }}
 });
 
 

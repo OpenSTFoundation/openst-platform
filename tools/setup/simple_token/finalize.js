@@ -7,14 +7,14 @@
  */
 
 const rootPrefix = "../../.."
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , SimpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
 
-const valueRegistrarAddr = coreAddresses.getAddressForUser('valueRegistrar')
-  , valueRegistrarPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar')
-;
+
+require(rootPrefix + '/config/core_addresses');
+
 
 /**
  * is equal ignoring case
@@ -37,6 +37,7 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
  * @constructor
  */
 const FinalizeSimpleTokenContractKlass = function () {
+
 };
 
 FinalizeSimpleTokenContractKlass.prototype = {
@@ -47,6 +48,12 @@ FinalizeSimpleTokenContractKlass.prototype = {
    * @return {promise}
    */
   perform: async function () {
+    const oThis = this
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , valueRegistrarAddr = coreAddresses.getAddressForUser('valueRegistrar')
+      , valueRegistrarPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar')
+    ;
+
     logger.step("** Setting Admin Address of Simple Token Contract to value Registrar");
 
     await SimpleToken.setAdminAddress('foundation', valueRegistrarAddr, {});
@@ -66,4 +73,6 @@ FinalizeSimpleTokenContractKlass.prototype = {
   }
 };
 
-module.exports = new FinalizeSimpleTokenContractKlass();
+InstanceComposer.register(FinalizeSimpleTokenContractKlass, 'getSimpleTokenFinalizeInstance', false);
+
+module.exports = FinalizeSimpleTokenContractKlass;
