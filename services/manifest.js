@@ -44,14 +44,9 @@ const rootPrefix = ".."
   require(rootPrefix + '/services/on_boarding/get_registration_status');
   require(rootPrefix + '/services/on_boarding/propose_branded_token');
 
-  // , approveForRedeem = require(rootPrefix + '/services/redeem_and_unstake/approveOpenStUtilityContract')
-  // , getApprovalStatusForRedeem = require(rootPrefix + '/services/redeem_and_unstake/getApprovalStatus')
-  // , startRedeem = require(rootPrefix + '/services/redeem_and_unstake/startRedeem')
-
   // , RegisterBrandedTokenInterComm = require(rootPrefix + '/services/inter_comm/register_branded_token')
   // , StakeAndMintInterCommKlass = require(rootPrefix + '/services/inter_comm/stake_and_mint')
-  // , StakeAndMintProcessorInterCommKlass = require(rootPrefix + '/services/inter_comm/stake_and_mint_processor')  
-;
+  // , StakeAndMintProcessorInterCommKlass = require(rootPrefix + '/services/inter_comm/stake_and_mint_processor')
 
 /**
  * Service Manifest Constructor
@@ -114,9 +109,9 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
    **/
   let stake = oThis.stake = {};
   stake.approveForStake = instanceComposer.getApproveOpenstValueContractService();
-  stake.getStakedAmount = instanceComposer.getGetStakeAmountService();
-  stake.start = instanceComposer.getStartStakeService();
   stake.getApprovalStatus = instanceComposer.getApprovalStatusService();
+  stake.start = instanceComposer.getStartStakeService();
+  stake.getStakedAmount = instanceComposer.getGetStakeAmountService();
 
 };
 
