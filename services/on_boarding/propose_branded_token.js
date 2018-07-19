@@ -120,7 +120,8 @@ ProposeBrandedTokenKlass.prototype = {
       let errObj = responseHelper.error({
         internal_error_identifier: 's_ob_pbt_4',
         api_error_identifier: 'something_went_wrong',
-        error_config: basicHelper.fetchErrorConfig()
+        error_config: basicHelper.fetchErrorConfig(),
+        debug_options: {err: err}
       });
 
       return Promise.resolve(errObj);
