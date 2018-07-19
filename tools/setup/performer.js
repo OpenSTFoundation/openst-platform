@@ -11,34 +11,42 @@ var shell = require('shelljs');
 shell.config.silent = true;
 
 const rootPrefix = "../.."
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
   , setupConfig = require(rootPrefix + '/tools/setup/config')
   , setupHelper = require(rootPrefix + '/tools/setup/helper')
-  , spinnerHelper = require(rootPrefix + '/tools/setup/spinner')
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
-  , gethManager = require(rootPrefix + '/tools/setup/geth_manager')
-  , serviceManager = require(rootPrefix + '/tools/setup/service_manager')
   , envManager = require(rootPrefix + '/tools/setup/env_manager')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , StartDynamo = require(rootPrefix + '/lib/start_dynamo')
 ;
 
-const openSTSetup = function () {
+require(rootPrefix + '/tools/setup/service_manager');
+require(rootPrefix + '/tools/setup/geth_manager');
+require(rootPrefix + '/tools/setup/geth_checker');
+require(rootPrefix + '/tools/setup/fund_users');
+
+const OpenSTSetup = function (configStrategy, instanceComposer) {
+
 };
 
-openSTSetup.prototype = {
+OpenSTSetup.prototype = {
 
   perform: async function (step, options) {
 
-    var validSteps = ['all', 'setup', 'init', 'st_contract', 'registrar', 'stake_n_mint', 'st_prime_mint', 'end'];
+    const oThis = this
+      , validSteps = ['all', 'setup', 'init', 'st_contract', 'registrar', 'stake_n_mint', 'st_prime_mint', 'end']
+    ;
+
     if (validSteps.indexOf(step) == -1) {
       logger.error('\n!!! Invalid step !!!\n Step should be one of the following: [', validSteps.join(', '), ']\n');
       return;
     }
 
     if (step == 'setup' || step == 'all') {
+      
       // Stop running services
       logger.step("** Stopping openST services");
-      serviceManager.stopServices();
+      oThis.serviceManager.stopServices();
 
       // Cleanup old step
       logger.step("** Starting fresh setup by cleaning up old step");
@@ -48,25 +56,25 @@ openSTSetup.prototype = {
     if (step == 'init' || step == 'all') {
       // generate all pre init required addresses
       logger.step("** Generating all pre init required account keystore files at temp location");
-      gethManager.generatePreInitAddresses();
+      oThis.gethManager.generatePreInitAddresses();
 
       // generate all required addresses
       logger.step("** Generating all required accounts.");
-      var addresses = gethManager.generateAddresses(options);
+      var addresses = oThis.gethManager.generateAddresses(options);
 
       // Modify genesis files and init chains
       for (var chain in setupConfig.chains) {
         logger.step("** Initiating " + chain + " chain and generating/modifying genesis files");
-        gethManager.initChain(chain);
+        oThis.gethManager.initChain(chain);
       }
 
       // Copy addresses to required chains
       logger.step("** Copying keystore files from temp location to required chains");
-      gethManager.copyPreInitAddressesToChains();
+      oThis.gethManager.copyPreInitAddressesToChains();
 
       // Start services for deployment
       logger.step("** Starting openST services for deployment");
-      serviceManager.startServices('deployment');
+      oThis.serviceManager.startServices('deployment');
 
       // Write environment file
       logger.step("** Writing env variables file");
@@ -74,11 +82,11 @@ openSTSetup.prototype = {
 
       // Chains have started mining
       logger.step("** Checking if chains have started generating blocks");
-      await runHelperService(rootPrefix + '/tools/setup/geth_checker');
-
+      await oThis.performHelperService( oThis.gethChecker );
+      
       // Copy addresses to required chains
       logger.step("** Convert private keys to keystore files and move to required chains.");
-      gethManager.importPostInitAddressesToChains(addresses);
+      oThis.gethManager.importPostInitAddressesToChains(addresses);
 
       // Write environment file
       logger.step("** Writing env variables file");
@@ -86,8 +94,7 @@ openSTSetup.prototype = {
 
       // Fund required addresses
       logger.step('** Funding required addresses');
-      await runHelperService(rootPrefix + '/tools/setup/fund_users');
-
+      await oThis.performHelperService( oThis.fundUsers );
 
       let cmd = "ps aux | grep dynamo | grep -v grep | tr -s ' ' | cut -d ' ' -f2";
       let processId = shell.exec(cmd).stdout;
@@ -160,7 +167,7 @@ openSTSetup.prototype = {
       // Starting stake and mint intercomm
       logger.step("** Starting stake and mint intercomm");
       var intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/logs/stake_and_mint.data';
-      await serviceManager.startExecutable('executables/inter_comm/stake_and_mint.js ' + intercomProcessDataFile);
+      await oThis.serviceManager.startExecutable('executables/inter_comm/stake_and_mint.js ' + intercomProcessDataFile);
     }
 
     if (step == 'stake_and_mint_processor' || step == 'all') {
@@ -168,7 +175,7 @@ openSTSetup.prototype = {
       // Starting stake and mint processor intercomm
       logger.step("** Starting stake and mint processor intercomm");
       var intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/logs/stake_and_mint_processor.data';
-      await serviceManager.startExecutable('executables/inter_comm/stake_and_mint_processor.js ' + intercomProcessDataFile);
+      await oThis.serviceManager.startExecutable('executables/inter_comm/stake_and_mint_processor.js ' + intercomProcessDataFile);
     }
 
     if (step == 'st_prime_mint' || step == 'all') {
@@ -183,22 +190,56 @@ openSTSetup.prototype = {
     if (step == 'end' || step == 'all') {
       // Cleanup build files
       logger.step("** Cleaning temporary build files");
-      gethManager.buildCleanup();
+      oThis.gethManager.buildCleanup();
 
       // Stop running services
       logger.step("** Stopping openST services");
-      serviceManager.stopServices();
+      oThis.serviceManager.stopServices();
 
       // Print all the helpful scripts post setup
       logger.step("** OpenST Platform created following executables for further usages:");
       logger.info(Array(30).join("="));
-      serviceManager.postSetupSteps();
+      oThis.serviceManager.postSetupSteps();
     }
 
     return Promise.resolve(setupConfig);
   }
+  , performHelperService: function ( service ) {
+    const oThis = this;
+
+    let coreConststants1 = oThis.ic().getCoreConstants();
+
+    //1. Reload the config.
+    oThis.ic().configStrategy = fileManager.getPlatformConfig();
+    //2. Clear all retained instances.
+    oThis.ic().instanceMap = {};
+
+    let coreConststants2 = oThis.ic().getCoreConstants();
+    return service.perform();
+  }
 
 };
+
+Object.defineProperties(OpenSTSetup.prototype, {
+  "serviceManager"  : { get: function () { return this.ic().getSetupServiceManager(); }}
+  , "gethManager"   : { get: function () { return this.ic().getSetupGethManager(); }}
+  , "gethChecker"   : { get: function () { return this.ic().getSetupGethChecker(); }}
+  , "fundUsers"      : { get: function () { return this.ic().getSetupFundUsers(); }}
+});
+
+
+/*
+  const oThis = this;
+
+  //1. Reload the config.
+  oThis.ic().configStrategy = fileManager.getPlatformConfig();
+
+
+  const setupHelper = require(deployPath);
+  return setupHelper.perform();
+
+*/
+
 
 /**
  * Run the deployer helper service
@@ -235,4 +276,6 @@ logger.error(Array(30).join("="));
 logger.error("Note: For scalability and security reasons, setup tools should only be used in " + setupHelper.allowedEnvironment().join(' and ') + ' environments.');
 logger.error(Array(30).join("="));
 
-module.exports = new openSTSetup();
+InstanceComposer.register(OpenSTSetup, "getOpenSTSetup", true);
+
+module.exports = OpenSTSetup;
