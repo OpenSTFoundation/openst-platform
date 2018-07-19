@@ -33,34 +33,55 @@ const EthBalanceKlass = function (params) {
 
 EthBalanceKlass.prototype = {
 
+  /**
+   * Perform
+   *
+   * @return {promise<result>}
+   */
   perform: function () {
     const oThis = this;
 
-    try {
-      //Validations
-      if (!basicHelper.isAddressValid(oThis.address)) {
-        let errObj = responseHelper.error({
-          internal_error_identifier: 's_b_e_1',
-          api_error_identifier: 'invalid_address',
-          error_config: basicHelper.fetchErrorConfig()
-        });
+    return oThis.asyncPerform()
+      .catch(function (error) {
+        logger.error('openst-platform::services/balance/eth.js::perform::catch');
+        logger.error(error);
 
-        return Promise.resolve(errObj);
-      }
+        if (responseHelper.isCustomResult(error)) {
+          return error;
+        } else {
+          return responseHelper.error({
+            internal_error_identifier: 's_b_e_2',
+            api_error_identifier: 'something_went_wrong',
+            error_config: basicHelper.fetchErrorConfig()
+          });
 
-      let etherInteractKlass = oThis.ic().getEtherInteractClass();
-      let etherInteractObj = new etherInteractKlass();
+        }
+      });
+  },
 
-      return etherInteractObj.getBalanceOf(oThis.address);
-    } catch (err) {
+  /**
+   * Async Perform
+   *
+   * @return {promise<result>}
+   */
+  asyncPerform: async function () {
+    const oThis = this;
+
+    //Validations
+    if (!basicHelper.isAddressValid(oThis.address)) {
       let errObj = responseHelper.error({
-        internal_error_identifier: 's_b_e_2',
-        api_error_identifier: 'something_went_wrong',
+        internal_error_identifier: 's_b_e_1',
+        api_error_identifier: 'invalid_address',
         error_config: basicHelper.fetchErrorConfig()
       });
 
       return Promise.resolve(errObj);
     }
+
+    let etherInteractKlass = oThis.ic().getEtherInteractClass();
+    let etherInteractObj = new etherInteractKlass();
+
+    return etherInteractObj.getBalanceOf(oThis.address);
 
   }
 

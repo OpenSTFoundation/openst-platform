@@ -32,35 +32,55 @@ const SimpleTokenBalanceKlass = function (params) {
 
 SimpleTokenBalanceKlass.prototype = {
 
+  /**
+   * Perform
+   *
+   * @return {promise<result>}
+   */
   perform: function () {
     const oThis = this;
 
-    try {
-      //Validations
-      if (!basicHelper.isAddressValid(oThis.address)) {
-        let errObj = responseHelper.error({
-          internal_error_identifier: 's_b_st_1',
-          api_error_identifier: 'invalid_address',
-          error_config: basicHelper.fetchErrorConfig()
-        });
+    return oThis.asyncPerform()
+      .catch(function (error) {
+        logger.error('openst-platform::services/balance/simple_token.js::perform::catch');
+        logger.error(error);
 
-        return Promise.resolve(errObj);
-      }
+        if (responseHelper.isCustomResult(error)) {
+          return error;
+        } else {
+          return responseHelper.error({
+            internal_error_identifier: 's_b_st_2',
+            api_error_identifier: 'something_went_wrong',
+            error_config: basicHelper.fetchErrorConfig()
+          });
 
-      let SimpleTokenKlass = oThis.ic().getSimpleTokenInteractClass();
-      let simpleToken   = new SimpleTokenKlass();
+        }
+      });
+  },
 
-      return simpleToken.balanceOf(oThis.address);
-    } catch (err) {
-      console.log('---error', err);
+  /**
+   * Async Perform
+   *
+   * @return {promise<result>}
+   */
+  asyncPerform: async function () {
+    const oThis = this;
+
+    //Validations
+    if (!basicHelper.isAddressValid(oThis.address)) {
       let errObj = responseHelper.error({
-        internal_error_identifier: 's_b_st_2',
-        api_error_identifier: 'something_went_wrong',
+        internal_error_identifier: 's_b_st_1',
+        api_error_identifier: 'invalid_address',
         error_config: basicHelper.fetchErrorConfig()
       });
 
       return Promise.resolve(errObj);
     }
+
+    let SimpleTokenKlass = oThis.ic().getSimpleTokenInteractClass();
+    let simpleToken   = new SimpleTokenKlass();
+
+    return simpleToken.balanceOf(oThis.address);
 
   }
 

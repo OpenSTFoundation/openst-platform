@@ -33,46 +33,66 @@ const BrandedTokenBalanceKlass = function (params) {
 
 BrandedTokenBalanceKlass.prototype = {
 
+  /**
+   * Perform
+   *
+   * @return {promise<result>}
+   */
   perform: function () {
     const oThis = this;
 
-    try {
-      //Validations
-      if (!basicHelper.isAddressValid(oThis.erc20Address)) {
-        let errObj = responseHelper.error({
-          internal_error_identifier: 's_b_bt_1',
-          api_error_identifier: 'invalid_address',
-          error_config: basicHelper.fetchErrorConfig()
-        });
+    return oThis.asyncPerform()
+      .catch(function (error) {
+        logger.error('openst-platform::services/balance/branded_token.js::perform::catch');
+        logger.error(error);
 
-        return Promise.resolve(errObj);
-      }
-      if (!basicHelper.isAddressValid(oThis.address)) {
-        let errObj = responseHelper.error({
-          internal_error_identifier: 's_b_bt_2',
-          api_error_identifier: 'invalid_address',
-          error_config: basicHelper.fetchErrorConfig()
-        });
+        if (responseHelper.isCustomResult(error)) {
+          return error;
+        } else {
+          return responseHelper.error({
+            internal_error_identifier: 's_b_bt_3',
+            api_error_identifier: 'something_went_wrong',
+            error_config: basicHelper.fetchErrorConfig()
+          });
 
-        return Promise.resolve(errObj);
-      }
+        }
+      });
+  },
 
-      let BrandedTokenKlass = oThis.ic().getBrandedTokenInteractClass();
+  /**
+   * Async Perform
+   *
+   * @return {promise<result>}
+   */
+  asyncPerform: async function () {
+    const oThis = this;
 
-      var brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address});
-
-
-      return brandedToken.getBalanceOf(oThis.address);
-
-    } catch (err) {
+    //Validations
+    if (!basicHelper.isAddressValid(oThis.erc20Address)) {
       let errObj = responseHelper.error({
-        internal_error_identifier: 's_b_bt_3',
-        api_error_identifier: 'something_went_wrong',
+        internal_error_identifier: 's_b_bt_1',
+        api_error_identifier: 'invalid_address',
         error_config: basicHelper.fetchErrorConfig()
       });
 
       return Promise.resolve(errObj);
     }
+    if (!basicHelper.isAddressValid(oThis.address)) {
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_b_bt_2',
+        api_error_identifier: 'invalid_address',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
+    }
+
+    let BrandedTokenKlass = oThis.ic().getBrandedTokenInteractClass();
+
+    var brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address});
+
+
+    return brandedToken.getBalanceOf(oThis.address);
 
   }
 

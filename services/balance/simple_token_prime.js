@@ -33,7 +33,37 @@ const SimpleTokenPrimeBalanceKlass = function (params) {
 
 SimpleTokenPrimeBalanceKlass.prototype = {
 
+  /**
+   * Perform
+   *
+   * @return {promise<result>}
+   */
   perform: function () {
+    const oThis = this;
+
+    return oThis.asyncPerform()
+      .catch(function (error) {
+        logger.error('openst-platform::services/balance/simple_token_prime.js::perform::catch');
+        logger.error(error);
+
+        if (responseHelper.isCustomResult(error)) {
+          return error;
+        } else {
+          return responseHelper.error({
+            internal_error_identifier: 's_b_stp_2',
+            api_error_identifier: 'something_went_wrong',
+            error_config: basicHelper.fetchErrorConfig()
+          });
+        }
+      });
+  },
+
+  /**
+   * Async Perform
+   *
+   * @return {promise<result>}
+   */
+  asyncPerform: async function () {
     const oThis = this;
 
     let coreAddresses = oThis.ic().getCoreAddresses()
@@ -42,7 +72,6 @@ SimpleTokenPrimeBalanceKlass.prototype = {
       , stPrime = new StPrimeKlass(stPrimeContractAddress)
     ;
 
-    try {
       //Validations
       if (!basicHelper.isAddressValid(oThis.address)) {
         let errObj = responseHelper.error({
@@ -55,15 +84,7 @@ SimpleTokenPrimeBalanceKlass.prototype = {
       }
 
       return stPrime.getBalanceOf(oThis.address);
-    } catch (err) {
-      let errObj = responseHelper.error({
-        internal_error_identifier: 's_b_stp_2',
-        api_error_identifier: 'something_went_wrong',
-        error_config: basicHelper.fetchErrorConfig()
-      });
 
-      return Promise.resolve(errObj);
-    }
   }
 };
 
