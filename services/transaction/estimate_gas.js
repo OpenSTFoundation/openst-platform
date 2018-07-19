@@ -9,6 +9,7 @@
 const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
 require(rootPrefix + '/lib/web3/providers/factory');
@@ -42,11 +43,36 @@ const EstimateGasKlass = function (params) {
 
 EstimateGasKlass.prototype = {
   /**
-   * Perform<br><br>
+   * Perform
    *
-   * @return {promise<result>} - returns a promise which resolves to an object of kind Result
+   * @return {promise<result>}
    */
-  perform: async function () {
+  perform: function () {
+    const oThis = this
+    ;
+
+    return oThis.asyncPerform()
+      .catch(function (error) {
+        if (responseHelper.isCustomResult(error)) {
+          return error;
+        } else {
+          logger.error(`${__filename}::perform::catch`);
+          logger.error(error);
+          return responseHelper.error({
+            internal_error_identifier: 's_t_eg_1',
+            api_error_identifier: 'something_went_wrong',
+            debug_options: {}
+          });
+        }
+      });
+  },
+
+  /**
+   * Async Perform
+   *
+   * @return {promise<result>}
+   */
+  asyncPerform: async function() {
     const oThis = this
       , web3Provider = oThis.ic().getWeb3ProviderFactory().getProvider(oThis.chain, 'ws')
       , abi = oThis.ic().getCoreAddresses().getAbiForContract(oThis.contractName)
