@@ -80,11 +80,6 @@ StartServicesKlass.prototype = {
     servicesList.push(cmd);
     oThis._asyncCommand(cmd);
 
-    logger.step("** Start redeem and unstake inter-communication process");
-    var cmd = "sh " + setupHelper.binFolderAbsolutePath() + "/run-redeem_and_unstake.sh";
-    servicesList.push(cmd);
-    oThis._asyncCommand(cmd);
-
     logger.step("** Start register branded token inter-communication process");
     var cmd = "sh " + setupHelper.binFolderAbsolutePath() + "/run-register_branded_token.sh";
     servicesList.push(cmd);
@@ -93,11 +88,6 @@ StartServicesKlass.prototype = {
     // Start intercom processes in OST env
     logger.step("** Start stake and mint processor");
     var cmd = "sh " + setupHelper.binFolderAbsolutePath() + "/run-stake_and_mint_processor.sh";
-    servicesList.push(cmd);
-    oThis._asyncCommand(cmd);
-
-    logger.step("** Start redeem and unstake processor");
-    var cmd = "sh " + setupHelper.binFolderAbsolutePath() + "/run-redeem_and_unstake_processor.sh";
     servicesList.push(cmd);
     oThis._asyncCommand(cmd);
 
