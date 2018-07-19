@@ -4,6 +4,7 @@ const setupConfig = {
 
   // Platform environment variables filename
   env_vars_file: process.env.OST_SETUP_ENV_FILE || "openst_env_vars.sh", //Editable
+  openst_platform_config_file: process.env.OST_PLATFROM_CONFIG_JSON || "openst_platform_config.json", //Editable
   setup_path: process.env.OST_SETUP_PATH || os.homedir(),
 
   /**
