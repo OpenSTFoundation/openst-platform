@@ -8,28 +8,14 @@ const BigNumber = require('bignumber.js')
 ;
 
 const rootPrefix = "../.."
-  , coreConstants = require(rootPrefix + '/config/core_constants')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
-
-/**
- * is equal ignoring case
- *
- * @param {string} compareWith - string to compare with
- *
- * @return {booelan} true when equal
- */
-String.prototype.equalsIgnoreCase = function ( compareWith ) {
-  const oThis = this
-    , _self = this.toLowerCase()
-    , _compareWith = String( compareWith ).toLowerCase();
-
-  return _self === _compareWith;
-};
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/web3/providers/factory');
 
 /**
  * Constructor for fund manager
@@ -37,7 +23,9 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
  * @constructor
  *
  */
-const FundManagerKlass = function () {};
+const FundManagerKlass = function (configStrategy, instanceComposer) { 
+
+};
 
 FundManagerKlass.prototype = {
   /**
@@ -54,6 +42,8 @@ FundManagerKlass.prototype = {
   transferEth: async function(senderAddr, senderPassphrase, recipient, amountInWei) {
     // TODO: should we have isAsync with UUID (unlock account will take time) and also tag, publish events?
     const oThis = this
+      , coreConstants = oThis.ic().getCoreConstants()
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
       , web3Provider = web3ProviderFactory.getProvider('value', 'ws')
       , gasPrice = coreConstants.OST_VALUE_GAS_PRICE
       , gas = coreConstants.OST_VALUE_GAS_LIMIT
@@ -188,7 +178,9 @@ FundManagerKlass.prototype = {
    *
    */
   transferSTP: async function(senderAddr, senderPassphrase, recipient, amountInWei) {
-    const stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
+    const oThis = this
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
       , StPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
       , stPrime = new StPrimeKlass(stPrimeContractAddress)
     ;
@@ -205,7 +197,9 @@ FundManagerKlass.prototype = {
    *
    */
   getEthBalanceOf: function (owner) {
-    const web3Provider = web3ProviderFactory.getProvider('value', 'ws')
+    const oThis = this
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , web3Provider = web3ProviderFactory.getProvider('value', 'ws')
     ;
 
     // Validate addresses
@@ -242,7 +236,9 @@ FundManagerKlass.prototype = {
    *
    */
   getSTPrimeBalanceOf: function (owner) {
-    const web3Provider = web3ProviderFactory.getProvider('utility', 'ws')
+    const oThis = this
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , web3Provider = web3ProviderFactory.getProvider('utility', 'ws')
     ;
 
     // Validate addresses
@@ -345,4 +341,6 @@ FundManagerKlass.prototype = {
   },
 };
 
-module.exports = new FundManagerKlass();
+InstanceComposer.register(FundManagerKlass, "getSetupFundManager", false);
+
+module.exports = FundManagerKlass;

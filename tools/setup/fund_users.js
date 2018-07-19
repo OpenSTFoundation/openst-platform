@@ -10,27 +10,19 @@ const BigNumber = require('bignumber.js')
 ;
 
 const rootPrefix = "../.."
-  , setupFundManager = require(rootPrefix + '/tools/setup/fund_manager')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/tools/setup/fund_manager');
 
-const foundationAddr = coreAddresses.getAddressForUser('foundation')
-  , foundationPassphrase = coreAddresses.getPassphraseForUser('foundation')
-  , valueRegistrarAddr = coreAddresses.getAddressForUser('valueRegistrar')
-  , valueDeployerAddr = coreAddresses.getAddressForUser('valueDeployer')
-  , valueOpsAddr = coreAddresses.getAddressForUser('valueOps')
-  , stakerAddr = coreAddresses.getAddressForUser('staker')
-  , utilityChainOwnerAddr = coreAddresses.getAddressForUser('utilityChainOwner')
-  , MIN_FUND = (new BigNumber(10)).toPower(18)
-;
 
 /**
  * Fund the required users for deployment - Constructor
  *
  * @constructor
  */
-const FundUsersKlass = function () {
+const FundUsersKlass = function (configStrategy, instanceComposer) {
 };
 
 FundUsersKlass.prototype = {
@@ -40,6 +32,19 @@ FundUsersKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function () {
+    const oThis = this
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , setupFundManager = oThis.ic().getSetupFundManager()
+      , foundationAddr = coreAddresses.getAddressForUser('foundation')
+      , foundationPassphrase = coreAddresses.getPassphraseForUser('foundation')
+      , valueRegistrarAddr = coreAddresses.getAddressForUser('valueRegistrar')
+      , valueDeployerAddr = coreAddresses.getAddressForUser('valueDeployer')
+      , valueOpsAddr = coreAddresses.getAddressForUser('valueOps')
+      , stakerAddr = coreAddresses.getAddressForUser('staker')
+      , utilityChainOwnerAddr = coreAddresses.getAddressForUser('utilityChainOwner')
+      , MIN_FUND = (new BigNumber(10)).toPower(18)
+    ;
+
     logger.info('* Foundation funding ETH on value chain to valueRegistrar');
     await setupFundManager.transferEth(foundationAddr, foundationPassphrase, valueRegistrarAddr, MIN_FUND.toString(10));
 
@@ -59,4 +64,6 @@ FundUsersKlass.prototype = {
   }
 };
 
-module.exports = new FundUsersKlass();
+InstanceComposer.register(FundUsersKlass, "getSetupFundUsers", false);
+
+module.exports = FundUsersKlass;
