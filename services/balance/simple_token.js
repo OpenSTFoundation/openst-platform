@@ -10,6 +10,7 @@ const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
   , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
 
