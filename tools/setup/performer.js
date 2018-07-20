@@ -209,14 +209,15 @@ OpenSTSetup.prototype = {
   , performHelperService: function ( service ) {
     const oThis = this;
 
-    let coreConststants1 = oThis.ic().getCoreConstants();
-
     //1. Reload the config.
     oThis.ic().configStrategy = fileManager.getPlatformConfig();
     //2. Clear all retained instances.
     oThis.ic().instanceMap = {};
 
-    let coreConststants2 = oThis.ic().getCoreConstants();
+    //3. Pre-warm constants & addresses.
+    oThis.ic().getCoreConstants();
+    oThis.ic().getCoreAddresses();
+
     return service.perform();
   }
 
