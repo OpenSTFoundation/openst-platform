@@ -23,6 +23,7 @@ require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract');
 require(rootPrefix + '/lib/contract_interact/helper');
 require(rootPrefix + '/services/stake_and_mint/start_stake');
 require(rootPrefix + '/tools/setup/fund_manager');
+require(rootPrefix + '/lib/contract_interact/branded_token');
 
 /**
  * Constructor for Mint Branded Token
@@ -157,7 +158,8 @@ MintBrandedToken.prototype = {
     return new Promise(async function(onResolve, onReject) {
 
       // NOTE: NOT Relying on CACHE - this is because for in process memory, this goes into infinite loop
-      const BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
+      const oThis = this
+        , BrandedTokenKlass  = oThis.ic().getBrandedTokenInteractClass()
         , brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address});
 
       const beforeBalanceResponse = await brandedToken._callMethod('balanceOf', [oThis.reserveAddr]);

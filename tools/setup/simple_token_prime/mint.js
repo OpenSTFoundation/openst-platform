@@ -48,6 +48,7 @@ StakeAndMintSimpleTokenPrime.prototype = {
       , contractInteractHelper = oThis.ic().getContractInteractHelper()
       , startStakeService = oThis.ic().getStartStakeService()
       , fundManager = oThis.ic().getSetupFundManager()
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
       , stakerAddr = coreAddresses.getAddressForUser('staker')
       , utilityChainOwnerAddr = coreAddresses.getAddressForUser('utilityChainOwner')
       , utilityChainOwnerPassphrase = coreAddresses.getPassphraseForUser('utilityChainOwner')
@@ -99,7 +100,10 @@ StakeAndMintSimpleTokenPrime.prototype = {
    */
   _waitForSTPrimeMint: function() {
     
-    const oThis = this;
+    const oThis = this
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , utilityChainOwnerAddr = coreAddresses.getAddressForUser('utilityChainOwner')
+    ;
     
     return new Promise(function(onResolve, onReject) {
 

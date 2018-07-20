@@ -16,6 +16,9 @@ const rootPrefix = "../.."
 require(rootPrefix + '/config/core_constants');
 require(rootPrefix + '/config/core_addresses');
 require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/lib/contract_interact/branded_token');
+require(rootPrefix + '/lib/contract_interact/simple_token');
+require(rootPrefix + '/lib/contract_interact/st_prime');
 
 /**
  * Constructor for fund manager
@@ -136,7 +139,8 @@ FundManagerKlass.prototype = {
    */
   transferBrandedToken: function(erc20Address, senderAddr, senderPassphrase, recipient, amountInWei) {
 
-    const BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
+    const  oThis = this
+      , BrandedTokenKlass = oThis.ic().getBrandedTokenInteractClass()
       , brandedToken = new BrandedTokenKlass({ERC20: erc20Address})
     ;
 
@@ -159,7 +163,10 @@ FundManagerKlass.prototype = {
    *
    */
   transferST: async function(senderAddr, senderPassphrase, recipient, amountInWei, options) {
-    const simpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
+
+    const oThis = this
+      , SimpleToken = oThis.ic().getSimpleTokenInteractClass()
+      , simpleToken = new SimpleToken()
     ;
 
     return simpleToken.transfer(senderAddr, senderPassphrase, recipient, amountInWei, options);
@@ -178,10 +185,11 @@ FundManagerKlass.prototype = {
    *
    */
   transferSTP: async function(senderAddr, senderPassphrase, recipient, amountInWei) {
+
     const oThis = this
       , coreAddresses = oThis.ic().getCoreAddresses()
+      , StPrimeKlass = oThis.ic().getStPrimeInteractClass()
       , stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
-      , StPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
       , stPrime = new StPrimeKlass(stPrimeContractAddress)
     ;
 

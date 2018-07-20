@@ -26,9 +26,10 @@ const program = require('commander');
 
 program
   .description("Setup OpenST-Platfomr")
-  .option("-s, --step <step>", "Step to be performed. (all|setup|init|st_contract|registrar|stake_n_mint|st_prime_mint|end)" , /^(all|setup|init|st_contract|registrar|stake_n_mint|st_prime_mint|end)$/i , "all")
+  .option("-s, --step <step>", "Step to be performed. (all|setup|init|st_contract|registrar|stake_n_mint|st_prime_mint|end)" , /^(all|setup|init|st_contract|fund_users_with_st|deploy_platform_contracts|registrar|stake_n_mint|st_prime_mint|end)$/i , "all")
   .option("-c, --config <path>", "Json Config file path.")
 ;
+
 
 program.parse( process.argv );
 
