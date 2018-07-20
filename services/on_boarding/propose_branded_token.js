@@ -11,6 +11,7 @@ const rootPrefix = '../..'
   , InstanceComposer = require(rootPrefix + "/instance_composer")
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
 require(rootPrefix + '/config/core_addresses');
@@ -50,82 +51,97 @@ const ProposeBrandedTokenKlass = function (params) {
 };
 
 ProposeBrandedTokenKlass.prototype = {
+
   /**
-   * Perform<br><br>
+   * Perform
    *
-   * @return {promise<result>} - returns a promise which resolves to an object of kind Result
+   * @return {promise<result>}
    */
-  perform: async function () {
+  perform: function () {
+    const oThis = this;
+
+    return oThis.asyncPerform()
+      .catch(function (error) {
+        logger.error('openst-platform::services/on_boarding/propose_branded_token.js::perform::catch');
+        logger.error(error);
+
+        if (responseHelper.isCustomResult(error)) {
+          return error;
+        } else {
+          return responseHelper.error({
+            internal_error_identifier: 's_ob_pbt_4',
+            api_error_identifier: 'something_went_wrong',
+            error_config: basicHelper.fetchErrorConfig(),
+            debug_options: {err: error}
+          });
+        }
+      });
+  },
+
+  /**
+   * Async Perform
+   *
+   * @return {promise<result>}
+   */
+  asyncPerform: async function () {
     const oThis = this
     ;
 
-    try {
-      //validations
-      if (!basicHelper.isBTNameValid(oThis.name)) {
-        let errObj = responseHelper.error({
-          internal_error_identifier: 's_ob_pbt_1',
-          api_error_identifier: 'invalid_branded_token_name',
-          error_config: basicHelper.fetchErrorConfig()
-        });
-
-        return Promise.resolve(errObj);
-      }
-      if (!basicHelper.isBTSymbolValid(oThis.symbol)) {
-        let errObj = responseHelper.error({
-          internal_error_identifier: 's_ob_pbt_2',
-          api_error_identifier: 'invalid_branded_token_symbol',
-          error_config: basicHelper.fetchErrorConfig()
-        });
-
-        return Promise.resolve(errObj);
-      }
-      if (!basicHelper.isBTConversionFactorValid(oThis.conversionFactor)) {
-        let errObj = responseHelper.error({
-          internal_error_identifier: 's_ob_pbt_3',
-          api_error_identifier: 'invalid_conversion_factor',
-          error_config: basicHelper.fetchErrorConfig()
-        });
-
-        return Promise.resolve(errObj);
-      }
-
-      const conversionRateConversionResponse = basicHelper.convertConversionFactorToConversionRate(oThis.conversionFactor);
-
-      if (conversionRateConversionResponse.isSuccess()) {
-
-        oThis.conversionRate = conversionRateConversionResponse.data.conversionRate;
-        oThis.conversionRateDecimals = conversionRateConversionResponse.data.conversionRateDecimals;
-
-        let OpenStUtilityContractInteractKlass = oThis.ic().getOpenSTUtilityeInteractClass()
-          , openSTUtilityContractInteract = new OpenStUtilityContractInteractKlass(oThis.openSTUtilityContractAddress)
-        ;
-
-        const proposalRsp = await openSTUtilityContractInteract.proposeBrandedToken(
-          oThis.stakerAddr,
-          oThis.stakerPassphrase, oThis.symbol,
-          oThis.name, oThis.conversionRate, oThis.conversionRateDecimals
-        );
-
-        if (proposalRsp.isSuccess()) {
-          proposalRsp.data.transaction_uuid = uuid.v4();
-        }
-
-        return Promise.resolve(proposalRsp);
-
-      } else {
-        return Promise.resolve(conversionRateConversionResponse);
-      }
-
-    } catch (err) {
+    //validations
+    if (!basicHelper.isBTNameValid(oThis.name)) {
       let errObj = responseHelper.error({
-        internal_error_identifier: 's_ob_pbt_4',
-        api_error_identifier: 'something_went_wrong',
-        error_config: basicHelper.fetchErrorConfig(),
-        debug_options: {err: err}
+        internal_error_identifier: 's_ob_pbt_1',
+        api_error_identifier: 'invalid_branded_token_name',
+        error_config: basicHelper.fetchErrorConfig()
       });
 
       return Promise.resolve(errObj);
     }
+    if (!basicHelper.isBTSymbolValid(oThis.symbol)) {
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_ob_pbt_2',
+        api_error_identifier: 'invalid_branded_token_symbol',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
+    }
+    if (!basicHelper.isBTConversionFactorValid(oThis.conversionFactor)) {
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_ob_pbt_3',
+        api_error_identifier: 'invalid_conversion_factor',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
+    }
+
+    const conversionRateConversionResponse = basicHelper.convertConversionFactorToConversionRate(oThis.conversionFactor);
+    if (conversionRateConversionResponse.isSuccess()) {
+
+      oThis.conversionRate = conversionRateConversionResponse.data.conversionRate;
+      oThis.conversionRateDecimals = conversionRateConversionResponse.data.conversionRateDecimals;
+
+      let OpenStUtilityContractInteractKlass = oThis.ic().getOpenSTUtilityeInteractClass()
+        , openSTUtilityContractInteract = new OpenStUtilityContractInteractKlass(oThis.openSTUtilityContractAddress)
+      ;
+
+      const proposalRsp = await openSTUtilityContractInteract.proposeBrandedToken(
+        oThis.stakerAddr,
+        oThis.stakerPassphrase, oThis.symbol,
+        oThis.name, oThis.conversionRate, oThis.conversionRateDecimals
+      );
+
+      if (proposalRsp.isSuccess()) {
+        proposalRsp.data.transaction_uuid = uuid.v4();
+      }
+
+      return Promise.resolve(proposalRsp);
+
+    } else {
+      return Promise.resolve(conversionRateConversionResponse);
+    }
+
   }
 };
 
