@@ -8,6 +8,7 @@
 
 const rootPrefix = '../../..'
   , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
@@ -48,76 +49,93 @@ const TransferSimpleTokenPrimeKlass = function (params) {
 
 TransferSimpleTokenPrimeKlass.prototype = {
   /**
-   * Perform<br><br>
+   * Perform
+   *
+   * @return {Promise}
+   */
+  perform: function () {
+    const oThis = this
+    ;
+    
+    return oThis.asyncPerform()
+      .catch(function (error) {
+        if (responseHelper.isCustomResult(error)) {
+          return error;
+        } else {
+          logger.error('openst-platform::services/transaction/transfer/simple_token_prime.js::perform::catch');
+          logger.error(error);
+          return responseHelper.error({
+            internal_error_identifier: 's_t_t_stp_5',
+            api_error_identifier: 'something_went_wrong',
+            debug_options: {}
+          });
+        }
+      });
+  },
+  
+  /**
+   * asyncPerform
    *
    * @return {promise<result>} - returns a promise which resolves to an object of kind Result
    */
-  perform: function () {
+  asyncPerform: async function() {
     const oThis = this
       , coreAddresses = oThis.ic().getCoreAddresses()
       , stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
       , StPrimeKlass = oThis.ic().getStPrimeInteractClass()
       , stPrime = new StPrimeKlass(stPrimeContractAddress)
     ;
-
-    try {
-      // Get sender details by name
-      if (oThis.senderName) {
-        oThis.senderAddress = coreAddresses.getAddressForUser(oThis.senderName);
-        oThis.senderPassphrase = coreAddresses.getPassphraseForUser(oThis.senderName);
-      }
-      // Get recipient details by name
-      if (oThis.recipientName) {
-        oThis.recipientAddress = coreAddresses.getAddressForUser(oThis.recipientName);
-      }
-
-      // Validations
-      if (!basicHelper.isAddressValid(oThis.senderAddress) || !oThis.senderPassphrase) {
-        let errObj = responseHelper.error({
-          internal_error_identifier: 's_t_t_stp_1',
-          api_error_identifier: 'invalid_address',
-          error_config: basicHelper.fetchErrorConfig()
-        });
-        return Promise.resolve(errObj);
-      }
-      if (!basicHelper.isAddressValid(oThis.recipientAddress)) {
-        let errObj = responseHelper.error({
-          internal_error_identifier: 's_t_t_stp_2',
-          api_error_identifier: 'invalid_address',
-          error_config: basicHelper.fetchErrorConfig()
-        });
-        return Promise.resolve(errObj);
-      }
-      if (!basicHelper.isNonZeroWeiValid(oThis.amountInWei)) {
-        let errObj = responseHelper.error({
-          internal_error_identifier: 's_t_t_stp_3',
-          api_error_identifier: 'invalid_amount',
-          error_config: basicHelper.fetchErrorConfig()
-        });
-        return Promise.resolve(errObj);
-      }
-      if (!basicHelper.isTagValid(oThis.tag)) {
-        let errObj = responseHelper.error({
-          internal_error_identifier: 's_t_t_stp_4',
-          api_error_identifier: 'invalid_transaction_tag',
-          error_config: basicHelper.fetchErrorConfig()
-        });
-        return Promise.resolve(errObj);
-      }
-
-      // Format wei
-      oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
-
-      return stPrime.transfer(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei,
-        {tag: oThis.tag, returnType: oThis.returnType});
-    } catch (err) {
+  
+    // Get sender details by name
+    if (oThis.senderName) {
+      oThis.senderAddress = coreAddresses.getAddressForUser(oThis.senderName);
+      oThis.senderPassphrase = coreAddresses.getPassphraseForUser(oThis.senderName);
+    }
+    // Get recipient details by name
+    if (oThis.recipientName) {
+      oThis.recipientAddress = coreAddresses.getAddressForUser(oThis.recipientName);
+    }
+    
+    // Validations
+    if (!basicHelper.isAddressValid(oThis.senderAddress) || !oThis.senderPassphrase) {
       let errObj = responseHelper.error({
-        internal_error_identifier: 's_t_t_stp_5',
-        api_error_identifier: 'something_went_wrong',
+        internal_error_identifier: 's_t_t_stp_1',
+        api_error_identifier: 'invalid_address',
         error_config: basicHelper.fetchErrorConfig()
       });
       return Promise.resolve(errObj);
     }
+    if (!basicHelper.isAddressValid(oThis.recipientAddress)) {
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_t_t_stp_2',
+        api_error_identifier: 'invalid_address',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      return Promise.resolve(errObj);
+    }
+    if (!basicHelper.isNonZeroWeiValid(oThis.amountInWei)) {
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_t_t_stp_3',
+        api_error_identifier: 'invalid_amount',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      return Promise.resolve(errObj);
+    }
+    if (!basicHelper.isTagValid(oThis.tag)) {
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_t_t_stp_4',
+        api_error_identifier: 'invalid_transaction_tag',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      return Promise.resolve(errObj);
+    }
+  
+    // Format wei
+    oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
+  
+    return stPrime.transfer(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei,
+      {tag: oThis.tag, returnType: oThis.returnType});
+    
   }
 };
 

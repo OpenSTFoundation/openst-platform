@@ -10,6 +10,7 @@ const rootPrefix = '../..'
   , InstanceComposer = require( rootPrefix + "/instance_composer")
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
 require(rootPrefix + '/lib/contract_interact/simple_stake');
@@ -42,10 +43,37 @@ GetStakeAmountKlass.prototype = {
 
     const oThis = this;
 
+    return oThis.asyncPerform()
+      .catch(function (error) {
+        if (responseHelper.isCustomResult(error)) {
+          return error;
+        } else {
+          logger.error('openst-platform::services/stake_and_mint/get_staked_amount.js::perform::catch');
+          logger.error(error);
+
+          return responseHelper.error({
+            internal_error_identifier: 's_sam_gsa_1',
+            api_error_identifier: 'something_went_wrong',
+            error_config: basicHelper.fetchErrorConfig(),
+            debug_options: {err: error}
+          });
+        }
+      });
+  },
+
+  /**
+   * asyncPerform
+   *
+   * @return {promise<result>}
+   */
+  asyncPerform: function () {
+
+    const oThis = this;
+
     // validations
     if (!basicHelper.isAddressValid(oThis.simpleStakeContractAddress)) {
       let errObj = responseHelper.error({
-        internal_error_identifier: 's_s_m_gsak_1',
+        internal_error_identifier: 's_sam_gsa_2',
         api_error_identifier: 'invalid_address',
         error_config: basicHelper.fetchErrorConfig()
       });
