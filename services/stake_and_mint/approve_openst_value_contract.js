@@ -14,6 +14,7 @@ const rootPrefix = '../..'
   , InstanceComposer = require(rootPrefix + "/instance_composer")
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
 require(rootPrefix + '/config/core_addresses');
