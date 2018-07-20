@@ -14,20 +14,6 @@ const rootPrefix = '..'
   , coreBins = require(rootPrefix + '/config/core_bins')
 ;
 
-// Flag to do a mock deployment testing on MainNet
-// OpenST mockSimpleToken contract is used for deployment
-// and services
-var simpleTokenAbi, simpleTokenBin, simpleTokenAddr;
-if (process.env.USE_MOCK_SIMPLE_TOKEN != 1) {
-  simpleTokenAddr = process.env.OST_SIMPLE_TOKEN_CONTRACT_ADDR;
-  simpleTokenAbi = coreAbis.simpleToken;
-  simpleTokenBin = coreBins.simpleToken;
-} else {
-  simpleTokenAddr = process.env.OST_SIMPLE_TOKEN_CONTRACT_ADDR;
-  simpleTokenAbi = coreAbis.mockSimpleToken;
-  simpleTokenBin = coreBins.mockSimpleToken;
-}
-
 
 /**
  * Constructor to access different account and contract addresses and their respective details
@@ -42,6 +28,19 @@ const CoreAddresses = function ( configStrategy, instanceComposer ) {
 CoreAddresses.prototype = {
 
   _buildAllAddresses : function ( configStrategy ) {
+    // Flag to do a mock deployment testing on MainNet
+    // OpenST mockSimpleToken contract is used for deployment
+    // and services
+    var simpleTokenAbi, simpleTokenBin, simpleTokenAddr;
+    if (process.env.USE_MOCK_SIMPLE_TOKEN != 1) {
+      simpleTokenAddr = configStrategy.OST_SIMPLE_TOKEN_CONTRACT_ADDR;
+      simpleTokenAbi = coreAbis.simpleToken;
+      simpleTokenBin = coreBins.simpleToken;
+    } else {
+      simpleTokenAddr = configStrategy.OST_SIMPLE_TOKEN_CONTRACT_ADDR;
+      simpleTokenAbi = coreAbis.mockSimpleToken;
+      simpleTokenBin = coreBins.mockSimpleToken;
+    }
     const oThis = this;
     oThis.allAddresses = {
       users: {

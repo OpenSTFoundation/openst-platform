@@ -32,7 +32,7 @@ const CoreConstants = function ( configStrategy, instanceComposer) {
   oThis.OST_UTILITY_CHAIN_ID              = configStrategy.OST_UTILITY_CHAIN_ID;
   oThis.OST_CACHING_ENGINE                = configStrategy.OST_CACHING_ENGINE;
   oThis.OST_DEBUG_ENABLED                 = configStrategy.OST_DEBUG_ENABLED || 0;
-  oThis.STANDALONE_MODE                   = configStrategy.STANDALONE_MODE || 0;
+  oThis.OST_STANDALONE_MODE               = configStrategy.OST_STANDALONE_MODE || 0;
   oThis.AUTO_SCALE_DYNAMO                 = configStrategy.AUTO_SCALE_DYNAMO || 0;
 };
 
@@ -165,7 +165,7 @@ CoreConstants.prototype = {
    * @constant {number}
    *
    */
-  STANDALONE_MODE: 0,
+  OST_STANDALONE_MODE: 0,
 
   AUTO_SCALE_DYNAMO: null
 };

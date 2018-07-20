@@ -8,11 +8,10 @@
 
 const rootPrefix = "../../.."
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , SimpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
   , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
 
-
+require(rootPrefix + '/lib/contract_interact/simple_token');
 require(rootPrefix + '/config/core_addresses');
 
 
@@ -52,12 +51,14 @@ FinalizeSimpleTokenContractKlass.prototype = {
       , coreAddresses = oThis.ic().getCoreAddresses()
       , valueRegistrarAddr = coreAddresses.getAddressForUser('valueRegistrar')
       , valueRegistrarPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar')
+      , SimpleToken = oThis.ic().getSimpleTokenInteractClass()
+      , simpleTokenObj = new SimpleToken()
     ;
 
     logger.step("** Setting Admin Address of Simple Token Contract to value Registrar");
 
-    await SimpleToken.setAdminAddress('foundation', valueRegistrarAddr, {});
-    const simpleTokenAdminAddressResponse = await SimpleToken.getAdminAddress()
+    await simpleTokenObj.setAdminAddress('foundation', valueRegistrarAddr, {});
+    const simpleTokenAdminAddressResponse = await simpleTokenObj.getAdminAddress()
       , simpleTokenAdminAddress = simpleTokenAdminAddressResponse.data.address;
 
     // check if the admin address is correctly set.
@@ -67,7 +68,7 @@ FinalizeSimpleTokenContractKlass.prototype = {
 
     logger.step("** Finalize Simple Token Contract");
     // finalize the simple token contract
-    await SimpleToken.finalize(valueRegistrarAddr, valueRegistrarPassphrase);
+    await simpleTokenObj.finalize(valueRegistrarAddr, valueRegistrarPassphrase);
 
     return Promise.resolve();
   }

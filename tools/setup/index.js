@@ -34,6 +34,7 @@ program
 program.parse( process.argv );
 
 const step = program.step;
+console.log("step", step);
 const config = {};
 run( (step||'all'), config);
 
