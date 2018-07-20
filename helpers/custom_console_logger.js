@@ -16,11 +16,10 @@ const getNamespace = require('continuation-local-storage').getNamespace
 
 const rootPrefix = ".."
   , packageFile = require(rootPrefix + '/package.json')
-  , coreConstants = require(rootPrefix + '/config/core_constants')
 ;
 
 const Logger = OSTBase.Logger
-  , loggerLevel = (coreConstants.DEBUG_ENABLED == '1' ? Logger.LOG_LEVELS.TRACE : Logger.LOG_LEVELS.INFO)
+  , loggerLevel = (process.env.OST_DEBUG_ENABLED == '1' ? Logger.LOG_LEVELS.TRACE : Logger.LOG_LEVELS.INFO)
   , packageName = packageFile.name
 ;
 
@@ -79,7 +78,7 @@ Logger.prototype.notify = function (code, msg, data, backtrace) {
       message: {
         kind: "email",
         payload: {
-          subject: packageName + " :: UC " + coreConstants.OST_UTILITY_CHAIN_ID + "::" + code,
+          subject: packageName + " ::" + code,
           body: " Message: " + msg + " \n\n Data: " + bodyData + " \n\n backtrace: " + backtrace
         }
       }
