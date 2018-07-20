@@ -58,7 +58,33 @@ ApproveOpenstValueContractKlass.prototype = {
    *
    * @return {promise<result>}
    */
-  perform: async function () {
+  perform: function () {
+    const oThis = this;
+
+    return oThis.asyncPerform()
+      .catch(function (error) {
+        if (responseHelper.isCustomResult(error)) {
+          return error;
+        } else {
+          logger.error('openst-platform::services/on_boarding/get_registration_status.js::perform::catch');
+          logger.error(error);
+
+          return responseHelper.error({
+            internal_error_identifier: 's_ob_grs_3',
+            api_error_identifier: 'something_went_wrong',
+            error_config: basicHelper.fetchErrorConfig(),
+            debug_options: {err: error}
+          });
+        }
+      });
+  },
+
+  /**
+   * Async Perform
+   *
+   * @return {promise<result>}
+   */
+  asyncPerform: async function () {
     const oThis = this
     ;
 
