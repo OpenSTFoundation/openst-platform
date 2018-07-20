@@ -9,7 +9,8 @@
 const rootPrefix = '../..'
   , Web3 = require('web3')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
+  , InstanceComposer = require( rootPrefix + '/instance_composer')
 ;
 
 /**
@@ -23,12 +24,40 @@ const GenerateRawKeyKlass = function () {
 };
 
 GenerateRawKeyKlass.prototype = {
+  
   /**
-   * Perform<br><br>
+   *
+   * Perform
+   *
+   * @return {Promise}
+   *
+   */
+  perform: function () {
+    const oThis = this
+    ;
+    
+    return oThis.asyncPerform()
+      .catch(function (error) {
+        if (responseHelper.isCustomResult(error)) {
+          return error;
+        } else {
+          logger.error('openst-platform::services/utils/generate_raw_key.js::perform::catch');
+          logger.error(error);
+          return responseHelper.error({
+            internal_error_identifier: 's_u_grk_1',
+            api_error_identifier: 'something_went_wrong',
+            debug_options: {}
+          });
+        }
+      });
+  },
+  
+  /**
+   * asyncPerform
    *
    * @return {result}
    */
-  perform: function () {
+  asyncPerform: async function() {
     const oThis = this
     ;
 

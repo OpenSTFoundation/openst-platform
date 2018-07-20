@@ -8,8 +8,9 @@
 
 const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require( rootPrefix + '/instance_composer')
 ;
 
 require(rootPrefix + '/lib/web3/providers/factory');
@@ -33,12 +34,38 @@ const GenerateAddressKlass = function (params) {
 };
 
 GenerateAddressKlass.prototype = {
+  
   /**
-   * Perform<br><br>
+   * Perform
+   *
+   * @return {Promise}
+   */
+  perform: function () {
+    const oThis = this
+    ;
+    
+    return oThis.asyncPerform()
+      .catch(function (error) {
+        if (responseHelper.isCustomResult(error)) {
+          return error;
+        } else {
+          logger.error('openst-platform::services/utils/generate_address.js::perform::catch');
+          logger.error(error);
+          return responseHelper.error({
+            internal_error_identifier: 's_u_ga_2',
+            api_error_identifier: 'something_went_wrong',
+            debug_options: {}
+          });
+        }
+      });
+  },
+  
+  /**
+   * asyncPerform
    *
    * @return {promise<result>}
    */
-  perform: async function () {
+  asyncPerform: async function() {
     const oThis = this
       , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
     ;

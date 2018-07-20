@@ -10,7 +10,7 @@ const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require( rootPrefix + '/instance_composer')
 ;
 
 require(rootPrefix + '/config/core_addresses');
@@ -34,11 +34,38 @@ const GetBrandedTokenDetailsKlass = function (params) {
 
 GetBrandedTokenDetailsKlass.prototype = {
   /**
+   *
    * Perform
+   *
+   * @return {Promise}
+   *
+   */
+  perform: function () {
+    const oThis = this
+    ;
+    
+    return oThis.asyncPerform()
+      .catch(function (error) {
+        if (responseHelper.isCustomResult(error)) {
+          return error;
+        } else {
+          logger.error('openst-platform::services/utils/get_branded_token_details.js::perform::catch');
+          logger.error(error);
+          return responseHelper.error({
+            internal_error_identifier: 's_u_gbtd_1',
+            api_error_identifier: 'something_went_wrong',
+            debug_options: {}
+          });
+        }
+      });
+  },
+  
+  /**
+   * asyncPerform
    *
    * @return {promise<result>}
    */
-  perform: async function () {
+  asyncPerform: async function() {
     const oThis = this
       , coreAddresses = oThis.ic().getCoreAddresses()
       , openSTValueContractName = 'openSTValue'
@@ -50,7 +77,7 @@ GetBrandedTokenDetailsKlass.prototype = {
     // validations
     if (!basicHelper.isUuidValid(oThis.uuid)) {
       let errObj = responseHelper.error({
-        internal_error_identifier: 's_u_gbtd_1',
+        internal_error_identifier: 's_u_gbtd_2',
         api_error_identifier: 'invalid_branded_token_uuid',
         error_config: basicHelper.fetchErrorConfig()
       });

@@ -9,7 +9,7 @@
 const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require( rootPrefix + '/instance_composer')
 ;
 
 require(rootPrefix + '/lib/web3/providers/factory');
@@ -23,12 +23,40 @@ const PlatformStatusKlass = function () {
 };
 
 PlatformStatusKlass.prototype = {
+
   /**
-   * Check status of all services
    *
-   * @return {promise<result>}
+   * Perform
+   *
+   * @return {Promise}
+   *
    */
-  perform: async function () {
+  perform: function () {
+    const oThis = this
+    ;
+    
+    return oThis.asyncPerform()
+      .catch(function (error) {
+        if (responseHelper.isCustomResult(error)) {
+          return error;
+        } else {
+          logger.error('openst-platform::services/utils/platform_status.js::perform::catch');
+          logger.error(error);
+          return responseHelper.error({
+            internal_error_identifier: 's_u_ps_3',
+            api_error_identifier: 'something_went_wrong',
+            debug_options: {}
+          });
+        }
+      });
+  },
+  
+  /**
+   * asyncPerform
+   *
+   * @return {Promise}
+   */
+  asyncPerform: async function() {
 
     const oThis = this
       , statusResponse = {chain: {value: false, utility: false}};
