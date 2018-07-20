@@ -43,7 +43,8 @@ const tempGethFolder = 'tmp-geth'
  *
  * @constructor
  */
-const GethManagerKlass = function () {
+const GethManagerKlass = function ( configStrategy, instanceComposer) {
+
 };
 
 GethManagerKlass.prototype = {
@@ -425,4 +426,4 @@ GethManagerKlass.prototype = {
 
 InstanceComposer.register(GethManagerKlass, "getSetupGethManager", true );
 
-module.exports = new GethManagerKlass();
+module.exports = GethManagerKlass;

@@ -27,6 +27,16 @@ require(rootPrefix + '/tools/setup/fund_users');
 require(rootPrefix + '/tools/setup/dynamo_db_init');
 require(rootPrefix + '/tools/setup/simple_token/deploy');
 require(rootPrefix + '/tools/setup/simple_token/finalize');
+require(rootPrefix + '/tools/setup/fund_users_with_st');
+require(rootPrefix + '/tools/deploy/register_st_prime');
+require(rootPrefix + '/tools/deploy/value_registrar');
+require(rootPrefix + '/tools/deploy/openst_value');
+require(rootPrefix + '/tools/deploy/utility_registrar');
+require(rootPrefix + '/tools/deploy/openst_utility');
+require(rootPrefix + '/tools/deploy/value_core');
+require(rootPrefix + '/tools/deploy/st_prime');
+require(rootPrefix + '/tools/setup/simple_token_prime/mint');
+require(rootPrefix + '/tools/setup/fund_users_with_st_prime');
 
 const OpenSTSetup = function (configStrategy, instanceComposer) {
 
@@ -126,43 +136,44 @@ OpenSTSetup.prototype = {
     if (step == 'fund_users_with_st' || step == 'all') {
       // Fund required addresses
       logger.step('** Funding required addresses with ST');
-      await runHelperService(rootPrefix + '/tools/setup/fund_users_with_st');
+      await oThis.performHelperService( oThis.fundUsersWithST );
     }
 
     if (step == 'deploy_platform_contracts' || step == 'all') {
       // Deploy Value Registrar Contract and update ENV
-      const valueRegistrarDeployResponse = await runHelperService(rootPrefix + '/tools/deploy/value_registrar');
+      const valueRegistrarDeployResponse = await oThis.performHelperService( oThis.deployValueRegistrarContract );
       setupConfig.contracts['valueRegistrar'].address.value = valueRegistrarDeployResponse.data.address;
       envManager.generateEnvFile();
 
       // Deploy OpenST Value Contract and update ENV
-      const openSTValueDeployResponse = await runHelperService(rootPrefix + '/tools/deploy/openst_value');
+      const openSTValueDeployResponse = await oThis.performHelperService( oThis.openStValueDeployer );
       setupConfig.contracts['openSTValue'].address.value = openSTValueDeployResponse.data.address;
       envManager.generateEnvFile();
 
       // Deploy Utility Registrar Contract and update ENV
-      const utilityRegistrarDeployResponse = await runHelperService(rootPrefix + '/tools/deploy/utility_registrar');
+      const utilityRegistrarDeployResponse = await oThis.performHelperService( oThis.utilityRegistrarDeployer );
       setupConfig.contracts['utilityRegistrar'].address.value = utilityRegistrarDeployResponse.data.address;
       envManager.generateEnvFile();
 
       // Deploy OpenST Utility Contract and update ENV
-      const openSTUtilityDeployResponse = await runHelperService(rootPrefix + '/tools/deploy/openst_utility');
+      const openSTUtilityDeployResponse =  await oThis.performHelperService( oThis.openStUtilityDeployer );
       setupConfig.contracts['openSTUtility'].address.value = openSTUtilityDeployResponse.data.address;
       envManager.generateEnvFile();
 
       // Deploy Value Core Contract and update ENV
-      const valueCoreDeployResponse = await runHelperService(rootPrefix + '/tools/deploy/value_core');
+      const valueCoreDeployResponse = await oThis.performHelperService( oThis.valueCoreDeployer );
       setupConfig.contracts['valueCore'].address.value = valueCoreDeployResponse.data.address;
       envManager.generateEnvFile();
 
       // Deploy OpenST Utility Contract and update ENV
-      const stPrimeDeploymentStepsResponse = await runHelperService(rootPrefix + '/tools/deploy/st_prime');
+      const stPrimeDeploymentStepsResponse = await oThis.performHelperService( oThis.stPrimeDeployer );
       setupConfig.contracts['stPrime'].address.value = stPrimeDeploymentStepsResponse.data.address;
       setupConfig.misc_deployment.st_prime_uuid.value = stPrimeDeploymentStepsResponse.data.uuid;
       envManager.generateEnvFile();
 
-      // Deploy Value Core Contract and update ENV
-      await runHelperService(rootPrefix + '/tools/deploy/register_st_prime');
+      // Register ST Prime and update ENV
+      await oThis.performHelperService( oThis.registerStPrime );
+
     }
 
     if (step == 'stake_n_mint' || step == 'all') {
@@ -182,11 +193,11 @@ OpenSTSetup.prototype = {
 
     if (step == 'st_prime_mint' || step == 'all') {
       // Stake and mint simple token prime
-      await runHelperService(rootPrefix + '/tools/setup/simple_token_prime/mint');
+      await oThis.performHelperService( oThis.stPrimeMinter );
 
       // Fund required addresses
       logger.step('** Funding required addresses with ST Prime');
-      await runHelperService(rootPrefix + '/tools/setup/fund_users_with_st_prime');
+      await oThis.performHelperService( oThis.fundUsersWithSTPrime );
     }
 
     if (step == 'end' || step == 'all') {
@@ -224,15 +235,24 @@ OpenSTSetup.prototype = {
 };
 
 Object.defineProperties(OpenSTSetup.prototype, {
-  "serviceManager"        : { get: function () { return this.ic().getSetupServiceManager(); }}
-  , "gethManager"         : { get: function () { return this.ic().getSetupGethManager(); }}
-  , "gethChecker"         : { get: function () { return this.ic().getSetupGethChecker(); }}
-  , "fundUsers"           : { get: function () { return this.ic().getSetupFundUsers(); }}
-  , "dynamoDbInit"        : { get: function () { return this.ic().getSetupDynamoDBInit(); }}
-  , "simpleTokenDeploy"   : { get: function () { return this.ic().getSimpleTokenContract(); }}
-  , "finalizeSimpleToken" : { get: function () { return this.ic().getSimpleTokenFinalizeInstance(); }}
+  "serviceManager"                  : { get: function () { return this.ic().getSetupServiceManager(); }}
+  , "gethManager"                   : { get: function () { return this.ic().getSetupGethManager(); }}
+  , "gethChecker"                   : { get: function () { return this.ic().getSetupGethChecker(); }}
+  , "fundUsers"                     : { get: function () { return this.ic().getSetupFundUsers(); }}
+  , "dynamoDbInit"                  : { get: function () { return this.ic().getSetupDynamoDBInit(); }}
+  , "simpleTokenDeploy"             : { get: function () { return this.ic().getSimpleTokenDeployer(); }}
+  , "finalizeSimpleToken"           : { get: function () { return this.ic().getSimpleTokenFinalizar(); }}
+  , "fundUsersWithST"               : { get: function () { return this.ic().getSetupFundUsersWithST(); }}
+  , "fundUsersWithSTPrime"          : { get: function () { return this.ic().getSetupFundUsersWithSTPrime(); }}
+  , "registerStPrime"               : { get: function () { return this.ic().getSetupRegisterSTPrime(); }}
+  , "deployValueRegistrarContract"  : { get: function () { return this.ic().getDeployValueRegistrarContract(); }}
+  , "openStValueDeployer"           : { get: function () { return this.ic().getOpenStValueDeployer(); }}
+  , "utilityRegistrarDeployer"      : { get: function () { return this.ic().getUtilityRegistrarDeployer(); }}
+  , "openStUtilityDeployer"         : { get: function () { return this.ic().getOpenStUtilityDeployer(); }}
+  , "valueCoreDeployer"             : { get: function () { return this.ic().getValueCoreDeployer(); }}
+  , "stPrimeDeployer"               : { get: function () { return this.ic().getSTPrimeDeployer(); }}
+  , "stPrimeMinter"                 : { get: function () { return this.ic().getStakeAndMintSTPrimeMinter(); }}
 });
-
 
 /*
   const oThis = this;

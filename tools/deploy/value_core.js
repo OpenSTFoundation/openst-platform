@@ -16,35 +16,17 @@ const readline = require('readline')
 ;
 
 const rootPrefix = '../..'
-  , coreConstants = require(rootPrefix + '/config/core_constants')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , InstanceComposer = require(rootPrefix + '/instance_composer')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , web3Provider = require(rootPrefix + '/lib/web3/providers/value_ws')
-  , deployHelper = require(rootPrefix + '/tools/deploy/helper')
-  , ValueRegistrarKlass = require(rootPrefix + '/lib/contract_interact/value_registrar')
-;
-
-const valueDeployerName = 'valueDeployer'
-  , valueOpsName = 'valueOps'
-  , openSTValueContractName = 'openSTValue'
-  , openSTUtilityContractName = 'openSTUtility'
-  , valueRegistrarContractName = 'valueRegistrar'
-  , valueCoreContractName = 'valueCore'
-  , VALUE_GAS_PRICE = coreConstants.OST_VALUE_GAS_PRICE
-  , VALUE_GAS_LIMIT = coreConstants.OST_VALUE_GAS_LIMIT
-  , VALUE_CHAIN_ID = coreConstants.OST_VALUE_CHAIN_ID
-  , UTILITY_CHAIN_ID = coreConstants.OST_UTILITY_CHAIN_ID
-  , valueOpsAddress = coreAddresses.getAddressForUser(valueOpsName)
-  , valueDeployerAddress = coreAddresses.getAddressForUser(valueDeployerName)
-  , valueRegistrarContractAddress = coreAddresses.getAddressForContract(valueRegistrarContractName)
-  , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
-  , openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName)
-  , valueCoreContractAbi = coreAddresses.getAbiForContract(valueCoreContractName)
-  , valueCoreContractBin = coreAddresses.getBinForContract(valueCoreContractName)
-  , valueRegistrar = new ValueRegistrarKlass(valueRegistrarContractAddress)
   , prompts = readline.createInterface(process.stdin, process.stdout)
 ;
+
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/tools/deploy/helper');
+require(rootPrefix + '/lib/contract_interact/value_registrar');
 
 /**
  * is equal ignoring case
@@ -66,7 +48,9 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
  *
  * @constructor
  */
-const DeployValueCoreContractKlass = function () {};
+const DeployValueCoreContractKlass = function ( configStrategy, instanceComposer) {
+
+};
 
 DeployValueCoreContractKlass.prototype = {
   /**
@@ -77,6 +61,34 @@ DeployValueCoreContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function (showPrompts) {
+    
+    const oThis = this
+      , coreConstants = oThis.ic().getCoreConstants()
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , ValueRegistrarKlass = oThis.ic().getValueRegistrarInteractClass()
+      , deployHelper = oThis.ic().getDeployHelper()
+      , valueDeployerName = 'valueDeployer'
+      , valueOpsName = 'valueOps'
+      , openSTValueContractName = 'openSTValue'
+      , openSTUtilityContractName = 'openSTUtility'
+      , valueRegistrarContractName = 'valueRegistrar'
+      , valueCoreContractName = 'valueCore'
+      , VALUE_GAS_PRICE = coreConstants.OST_VALUE_GAS_PRICE
+      , VALUE_GAS_LIMIT = coreConstants.OST_VALUE_GAS_LIMIT
+      , VALUE_CHAIN_ID = coreConstants.OST_VALUE_CHAIN_ID
+      , UTILITY_CHAIN_ID = coreConstants.OST_UTILITY_CHAIN_ID
+      , valueOpsAddress = coreAddresses.getAddressForUser(valueOpsName)
+      , valueDeployerAddress = coreAddresses.getAddressForUser(valueDeployerName)
+      , valueRegistrarContractAddress = coreAddresses.getAddressForContract(valueRegistrarContractName)
+      , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
+      , openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName)
+      , valueCoreContractAbi = coreAddresses.getAbiForContract(valueCoreContractName)
+      , valueCoreContractBin = coreAddresses.getBinForContract(valueCoreContractName)
+      , valueRegistrar = new ValueRegistrarKlass(valueRegistrarContractAddress)
+      , web3Provider = web3ProviderFactory.getProvider('value', web3ProviderFactory.typeWS)
+    ;
+    
     logger.step('** Deploying valueCore Contract');
     if (showPrompts) {
       // confirming the important addresses
@@ -118,4 +130,6 @@ DeployValueCoreContractKlass.prototype = {
   }
 };
 
-module.exports = new DeployValueCoreContractKlass();
+InstanceComposer.register(DeployValueCoreContractKlass, "getValueCoreDeployer", true);
+
+module.exports = DeployValueCoreContractKlass;

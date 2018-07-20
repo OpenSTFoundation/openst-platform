@@ -11,23 +11,18 @@ const BigNumber = require('bignumber.js')
 
 const rootPrefix = '../../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , coreConstants = require(rootPrefix + '/config/core_constants')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
-  , approveService = require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract')
-  , web3Provider = require(rootPrefix + '/lib/web3/providers/value_ws')
-  , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
-  , startStakeService = require(rootPrefix + '/services/stake_and_mint/start_stake')
-  , fundManager = require(rootPrefix + '/tools/setup/fund_manager')
   , tokenHelper = require(rootPrefix + '/tools/setup/branded_token/helper')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
-const stakerAddr = coreAddresses.getAddressForUser('staker')
-  , foundationAddr = coreAddresses.getAddressForUser('foundation')
-  , foundationPassphrase = coreAddresses.getPassphraseForUser('foundation')
-;
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract');
+require(rootPrefix + '/lib/contract_interact/helper');
+require(rootPrefix + '/services/stake_and_mint/start_stake');
+require(rootPrefix + '/tools/setup/fund_manager');
 
 /**
  * Constructor for Mint Branded Token
@@ -35,6 +30,7 @@ const stakerAddr = coreAddresses.getAddressForUser('staker')
  * @constructor
  */
 const MintBrandedToken = function (params) {
+  
   const oThis = this
   ;
 
@@ -43,6 +39,7 @@ const MintBrandedToken = function (params) {
   oThis.reserveAddr = params.reserve_address;
   oThis.reservePassphrase = params.reserve_passphrase;
   oThis.erc20Address = params.erc20_address;
+  
 };
 
 MintBrandedToken.prototype = {
@@ -52,7 +49,10 @@ MintBrandedToken.prototype = {
    * @return {promise<result>}
    */
   perform: async function () {
+    
     const oThis = this
+      , coreConstants = oThis.ic().getCoreConstants()
+      , coreAddresses = oThis.ic().getCoreAddresses()
     ;
 
     // validations
@@ -84,11 +84,20 @@ MintBrandedToken.prototype = {
     // NOTE: In real case, Member Company transfers ST to staker and then approve is called. To simulate this, foundation
     // is transfering ST to staker.
     logger.info('* Foundation transfers ST to BT Reserve');
+  
+    const stakerAddr = coreAddresses.getAddressForUser('staker')
+      , foundationAddr = coreAddresses.getAddressForUser('foundation')
+      , foundationPassphrase = coreAddresses.getPassphraseForUser('foundation')
+      , fundManager = oThis.ic().getSetupFundManager()
+    ;
+    
     await fundManager.transferST(
         foundationAddr, foundationPassphrase, stakerAddr, oThis.amountToStakeInWeis,
         {tag: 'transferSTToBTReserve', returnType: 'txReceipt'}
     );
 
+    const approveService = oThis.ic().getApproveOpenstValueContractService();
+    
     logger.info('* Staker approves openSTValue contract');
     const approveResponse = await (new approveService()).perform();
     if (approveResponse.isFailure()) {
@@ -98,12 +107,20 @@ MintBrandedToken.prototype = {
     const approveTransactionHash = approveResponse.data.transaction_hash;
 
     logger.info('* Get approval status and keep doing so till success');
+
+    const web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , web3Provider = web3ProviderFactory.getProvider('value', 'ws')
+      , contractInteractHelper = oThis.ic().getContractInteractHelper()
+    ;
+    
     const approveReceiptResponse =  await contractInteractHelper.waitAndGetTransactionReceipt(web3Provider, approveTransactionHash, {});
     if (!approveReceiptResponse.isSuccess()) {
       logger.error('Approval receipt error ', approveReceiptResponse);
       process.exit(1);
     }
 
+    const startStakeService = oThis.ic().getStartStakeService();
+    
     logger.info('* Start stake for Branded Token');
     await (new startStakeService({
       beneficiary: oThis.reserveAddr,
@@ -172,7 +189,9 @@ MintBrandedToken.prototype = {
    * @private
    */
   _waitForSimpleTokenPrimeMint: function() {
+    
     const oThis = this
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
       , web3UcProvider = web3ProviderFactory.getProvider('utility', 'ws')
     ;
 

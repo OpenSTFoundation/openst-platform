@@ -20,11 +20,10 @@ const run = async function( step, config ){
   console.log("step", step);
   await performer.perform(step);
   process.exit(0);
-}
-
-var args = process.argv.slice(2);
+};
 
 const program = require('commander');
+
 program
   .description("Setup OpenST-Platfomr")
   .option("-s, --step <step>", "Step to be performed. (all|setup|init|st_contract|registrar|stake_n_mint|st_prime_mint|end)" , /^(all|setup|init|st_contract|registrar|stake_n_mint|st_prime_mint|end)$/i , "all")
@@ -35,7 +34,5 @@ program.parse( process.argv );
 
 const step = program.step;
 console.log("step", step);
-const config = {};
+const config =  program.path ? require(program.path) : {};
 run( (step||'all'), config);
-
-

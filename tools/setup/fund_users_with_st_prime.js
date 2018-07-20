@@ -10,27 +10,20 @@ const BigNumber = require('bignumber.js')
 ;
 
 const rootPrefix = "../.."
-  , setupFundManager = require(rootPrefix + '/tools/setup/fund_manager')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
-const utilityChainOwnerAddr = coreAddresses.getAddressForUser('utilityChainOwner')
-  , utilityChainOwnerPassphrase = coreAddresses.getPassphraseForUser('utilityChainOwner')
-  , stakerAddr = coreAddresses.getAddressForUser('staker')
-  , redeemerAddr = coreAddresses.getAddressForUser('redeemer')
-  , utilityRegistrarAddr = coreAddresses.getAddressForUser('utilityRegistrar')
-  , utilityOpsAddr = coreAddresses.getAddressForUser('utilityOps')
-  , utilityDeployerAddr = coreAddresses.getAddressForUser('utilityDeployer')
-  , MIN_FUND = (new BigNumber(10)).toPower(18)
-;
+require(rootPrefix + '/tools/setup/fund_manager');
+require(rootPrefix + '/config/core_addresses');
 
 /**
  * Fund the required users for deployment with ST prime - constructor
  *
  * @constructor
  */
-const FundUsersWithSTPrimeKlass = function () {
+const FundUsersWithSTPrimeKlass = function ( configStrategy, instanceComposer) {
+
 };
 
 FundUsersWithSTPrimeKlass.prototype = {
@@ -40,6 +33,20 @@ FundUsersWithSTPrimeKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function () {
+    
+    const oThis = this
+      , setupFundManager = oThis.ic().getSetupFundManager()
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , utilityChainOwnerAddr = coreAddresses.getAddressForUser('utilityChainOwner')
+      , utilityChainOwnerPassphrase = coreAddresses.getPassphraseForUser('utilityChainOwner')
+      , stakerAddr = coreAddresses.getAddressForUser('staker')
+      , redeemerAddr = coreAddresses.getAddressForUser('redeemer')
+      , utilityRegistrarAddr = coreAddresses.getAddressForUser('utilityRegistrar')
+      , utilityOpsAddr = coreAddresses.getAddressForUser('utilityOps')
+      , utilityDeployerAddr = coreAddresses.getAddressForUser('utilityDeployer')
+      , MIN_FUND = (new BigNumber(10)).toPower(18)
+    ;
+    
     logger.info('* Funding required users with ST\'');
     logger.info('* Utility Chain Owner funding ST\' on utility chain to staker');
     await setupFundManager.transferSTP(utilityChainOwnerAddr, utilityChainOwnerPassphrase, stakerAddr,
@@ -62,7 +69,11 @@ FundUsersWithSTPrimeKlass.prototype = {
       MIN_FUND.mul(100).toString(10));
 
     return Promise.resolve();
+    
   }
+  
 };
 
-module.exports = new FundUsersWithSTPrimeKlass();
+InstanceComposer.register(FundUsersWithSTPrimeKlass, "getSetupFundUsersWithSTPrime", false);
+
+module.exports = FundUsersWithSTPrimeKlass;

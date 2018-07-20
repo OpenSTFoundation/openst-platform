@@ -17,26 +17,17 @@ const readline = require('readline')
 ;
 
 const rootPrefix = '../..'
-  , coreConstants = require(rootPrefix + '/config/core_constants')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , InstanceComposer = require(rootPrefix + '/instance_composer')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , web3Provider = require(rootPrefix + '/lib/web3/providers/utility_ws')
-  , deployHelper = require(rootPrefix + '/tools/deploy/helper')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , UtilityRegistrarKlass = require(rootPrefix + '/lib/contract_interact/utility_registrar')
-;
-
-const utilityDeployerName = 'utilityDeployer'
-  , utilityRegistrarContractName = 'utilityRegistrar'
-  , utilityDeployerAddress = coreAddresses.getAddressForUser(utilityDeployerName)
-  , utilityRegistrarAddress = coreAddresses.getAddressForUser('utilityRegistrar')
-  , foundationAddress = coreAddresses.getAddressForUser("foundation")
-  , utilityRegistrarContractAbi = coreAddresses.getAbiForContract(utilityRegistrarContractName)
-  , utilityRegistrarContractBin = coreAddresses.getBinForContract(utilityRegistrarContractName)
-  , UC_GAS_PRICE = coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT
-  , UC_GAS_LIMIT = coreConstants.OST_UTILITY_GAS_LIMIT
   , prompts = readline.createInterface(process.stdin, process.stdout)
 ;
+
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/tools/deploy/helper');
+require(rootPrefix + '/lib/contract_interact/utility_registrar');
 
 /**
  * is equal ignoring case
@@ -58,7 +49,9 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
  *
  * @constructor
  */
-const DeployUtilityRegistrarContractKlass = function () {};
+const DeployUtilityRegistrarContractKlass = function ( configStrategy, instanceComposer) {
+
+};
 
 DeployUtilityRegistrarContractKlass.prototype = {
   /**
@@ -69,7 +62,25 @@ DeployUtilityRegistrarContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function (showPrompts) {
-
+  
+    const oThis = this
+      , coreConstants = oThis.ic().getCoreConstants()
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , UtilityRegistrarKlass = oThis.ic().getUtilityRegistrarClass()
+      , deployHelper = oThis.ic().getDeployHelper()
+      , utilityDeployerName = 'utilityDeployer'
+      , utilityRegistrarContractName = 'utilityRegistrar'
+      , utilityDeployerAddress = coreAddresses.getAddressForUser(utilityDeployerName)
+      , utilityRegistrarAddress = coreAddresses.getAddressForUser('utilityRegistrar')
+      , foundationAddress = coreAddresses.getAddressForUser("foundation")
+      , utilityRegistrarContractAbi = coreAddresses.getAbiForContract(utilityRegistrarContractName)
+      , utilityRegistrarContractBin = coreAddresses.getBinForContract(utilityRegistrarContractName)
+      , UC_GAS_PRICE = coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT
+      , UC_GAS_LIMIT = coreConstants.OST_UTILITY_GAS_LIMIT
+      , web3Provider = web3ProviderFactory.getProvider('utility', web3ProviderFactory.typeWS)
+    ;
+    
     logger.step('** Deploying utilityRegistrar Contract');
     if (showPrompts) {
       logger.info("Utility Chain Deployer Address: " + utilityDeployerAddress);
@@ -128,4 +139,6 @@ DeployUtilityRegistrarContractKlass.prototype = {
   }
 };
 
-module.exports = new DeployUtilityRegistrarContractKlass();
+InstanceComposer.register(DeployUtilityRegistrarContractKlass, "getUtilityRegistrarDeployer", true);
+
+module.exports = DeployUtilityRegistrarContractKlass;

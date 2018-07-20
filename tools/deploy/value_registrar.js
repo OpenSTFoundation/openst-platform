@@ -15,25 +15,17 @@
 const readline = require('readline');
 
 const rootPrefix = '../..'
-  , coreConstants = require(rootPrefix + '/config/core_constants')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , web3Provider = require(rootPrefix + '/lib/web3/providers/value_ws')
+  , InstanceComposer = require(rootPrefix + '/instance_composer')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , deployHelper = require(rootPrefix + '/tools/deploy/helper')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , ValueRegistrarKlass = require(rootPrefix + '/lib/contract_interact/value_registrar')
-;
-
-const valueDeployerName = "valueDeployer"
-  , valueRegistrarContractName = 'valueRegistrar'
-  , VC_GAS_PRICE = coreConstants.OST_VALUE_GAS_PRICE
-  , VC_GAS_LIMIT = coreConstants.OST_VALUE_GAS_LIMIT
-  , deployerAddress = coreAddresses.getAddressForUser(valueDeployerName)
-  , valueOpsAddress = coreAddresses.getAddressForUser("valueOps")
-  , valueRegistrarContractAbi = coreAddresses.getAbiForContract(valueRegistrarContractName)
-  , valueRegistrarContractBin = coreAddresses.getBinForContract(valueRegistrarContractName)
   , prompts = readline.createInterface(process.stdin, process.stdout)
 ;
+
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/tools/deploy/helper');
+require(rootPrefix + '/lib/contract_interact/value_registrar');
 
 /**
  * is equal ignoring case
@@ -55,9 +47,12 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
  *
  * @constructor
  */
-const DeployValueRegistrarContractKlass = function () {};
+const DeployValueRegistrarContractKlass = function ( configStrategy, instanceComposer) {
+
+};
 
 DeployValueRegistrarContractKlass.prototype = {
+  
   /**
    * Perform
    *
@@ -66,6 +61,24 @@ DeployValueRegistrarContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function (showPrompts) {
+  
+    const oThis = this
+      , coreConstants = oThis.ic().getCoreConstants()
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , ValueRegistrarKlass = oThis.ic().getValueRegistrarInteractClass()
+      , deployHelper = oThis.ic().getDeployHelper()
+      , valueDeployerName = "valueDeployer"
+      , valueRegistrarContractName = 'valueRegistrar'
+      , VC_GAS_PRICE = coreConstants.OST_VALUE_GAS_PRICE
+      , VC_GAS_LIMIT = coreConstants.OST_VALUE_GAS_LIMIT
+      , deployerAddress = coreAddresses.getAddressForUser(valueDeployerName)
+      , valueOpsAddress = coreAddresses.getAddressForUser("valueOps")
+      , valueRegistrarContractAbi = coreAddresses.getAbiForContract(valueRegistrarContractName)
+      , valueRegistrarContractBin = coreAddresses.getBinForContract(valueRegistrarContractName)
+      , web3Provider = web3ProviderFactory.getProvider('value', web3ProviderFactory.typeWS)
+    ;
+    
     logger.step('** Deploying Value Registrar Contract');
     if (showPrompts) {
       // confirming the important addresses
@@ -111,4 +124,6 @@ DeployValueRegistrarContractKlass.prototype = {
   }
 };
 
-module.exports = new DeployValueRegistrarContractKlass();
+InstanceComposer.register(DeployValueRegistrarContractKlass, "getDeployValueRegistrarContract", true);
+
+module.exports = DeployValueRegistrarContractKlass;

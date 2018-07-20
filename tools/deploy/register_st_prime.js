@@ -18,57 +18,25 @@ const readline = require('readline')
 ;
 
 const rootPrefix = '../..'
-  , coreConstants = require(rootPrefix + '/config/core_constants')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
-  , ValueRegistrarKlass = require(rootPrefix + '/lib/contract_interact/value_registrar')
-;
-
-const valueDeployerName = 'valueDeployer'
-  , valueOpsName = 'valueOps'
-  , valueRegistrarUserName = 'valueRegistrar'
-  , foundationName = 'foundation'
-  , openSTValueContractName = 'openSTValue'
-  , openSTUtilityContractName = 'openSTUtility'
-  , valueRegistrarContractName = 'valueRegistrar'
-  , valueCoreContractName = 'valueCore'
-  , UTILITY_CHAIN_ID = coreConstants.OST_UTILITY_CHAIN_ID
-  , stPrimeUUID = coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID
-  , valueRegistrarUser = coreAddresses.getAddressForUser(valueRegistrarUserName)
-  , foundationAddress = coreAddresses.getAddressForUser(foundationName)
-  , valueOpsAddress = coreAddresses.getAddressForUser(valueOpsName)
-  , valueOpsPassphrase = coreAddresses.getPassphraseForUser(valueOpsName)
-  , valueDeployerAddress = coreAddresses.getAddressForUser(valueDeployerName)
-  , valueRegistrarContractAddress = coreAddresses.getAddressForContract(valueRegistrarContractName)
-  , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
-  , openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName)
-  , valueRegistrar = new ValueRegistrarKlass(valueRegistrarContractAddress)
-  , openStUtility = new OpenStUtilityKlass(openSTUtilityContractAddress)
   , prompts = readline.createInterface(process.stdin, process.stdout)
+  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
 
-/**
- * is equal ignoring case
- *
- * @param {string} compareWith - string to compare with
- *
- * @return {booelan} true when equal
- */
-String.prototype.equalsIgnoreCase = function ( compareWith ) {
-  const oThis = this
-    , _self = this.toLowerCase()
-    , _compareWith = String( compareWith ).toLowerCase();
-
-  return _self === _compareWith;
-};
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/contract_interact/openst_utility');
+require(rootPrefix + '/lib/contract_interact/value_registrar');
 
 /**
  * Constructor for Deploy Value Core contract
  *
  * @constructor
  */
-const RegisterStPrimeKlass = function () {};
+const RegisterStPrimeKlass = function ( configStrategy, instanceComposer) {
+
+};
 
 RegisterStPrimeKlass.prototype = {
   /**
@@ -79,6 +47,33 @@ RegisterStPrimeKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function (showPrompts) {
+  
+    const oThis = this
+      , coreConstants = oThis.ic().getCoreConstants()
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , OpenStUtilityKlass = oThis.ic().getOpenSTUtilityeInteractClass()
+      , ValueRegistrarKlass = oThis.ic().getValueRegistrarInteractClass()
+      , valueDeployerName = 'valueDeployer'
+      , valueOpsName = 'valueOps'
+      , valueRegistrarUserName = 'valueRegistrar'
+      , foundationName = 'foundation'
+      , openSTValueContractName = 'openSTValue'
+      , openSTUtilityContractName = 'openSTUtility'
+      , valueRegistrarContractName = 'valueRegistrar'
+      , UTILITY_CHAIN_ID = coreConstants.OST_UTILITY_CHAIN_ID
+      , stPrimeUUID = coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID
+      , valueRegistrarUser = coreAddresses.getAddressForUser(valueRegistrarUserName)
+      , foundationAddress = coreAddresses.getAddressForUser(foundationName)
+      , valueOpsAddress = coreAddresses.getAddressForUser(valueOpsName)
+      , valueOpsPassphrase = coreAddresses.getPassphraseForUser(valueOpsName)
+      , valueDeployerAddress = coreAddresses.getAddressForUser(valueDeployerName)
+      , valueRegistrarContractAddress = coreAddresses.getAddressForContract(valueRegistrarContractName)
+      , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
+      , openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName)
+      , valueRegistrar = new ValueRegistrarKlass(valueRegistrarContractAddress)
+      , openStUtility = new OpenStUtilityKlass(openSTUtilityContractAddress)
+    ;
+    
     logger.step('** Deploying valueCore Contract');
     if (showPrompts) {
       // confirming the important addresses
@@ -153,4 +148,6 @@ RegisterStPrimeKlass.prototype = {
   }
 };
 
-module.exports = new RegisterStPrimeKlass();
+InstanceComposer.register(RegisterStPrimeKlass, "getSetupRegisterSTPrime", true);
+
+module.exports = RegisterStPrimeKlass;

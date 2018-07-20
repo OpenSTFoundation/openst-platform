@@ -34,7 +34,7 @@ const GenerateAddressKlass = function (params) {
 };
 
 GenerateAddressKlass.prototype = {
-  
+
   /**
    * Perform
    *
@@ -43,7 +43,7 @@ GenerateAddressKlass.prototype = {
   perform: function () {
     const oThis = this
     ;
-    
+
     return oThis.asyncPerform()
       .catch(function (error) {
         if (responseHelper.isCustomResult(error)) {
@@ -59,11 +59,11 @@ GenerateAddressKlass.prototype = {
         }
       });
   },
-  
+
   /**
    * asyncPerform
    *
-   * @return {promise<result>}
+   * @return {Promise}
    */
   asyncPerform: async function() {
     const oThis = this
@@ -73,7 +73,7 @@ GenerateAddressKlass.prototype = {
     const web3Provider = web3ProviderFactory.getProvider(oThis.chain, web3ProviderFactory.typeWS);
     if (!web3Provider) {
       let errObj = responseHelper.error({
-        internal_error_identifier: 's_u_ga_1',
+        internal_error_identifier: 's_u_ga_2',
         api_error_identifier: 'invalid_chain',
         error_config: basicHelper.fetchErrorConfig()
       });

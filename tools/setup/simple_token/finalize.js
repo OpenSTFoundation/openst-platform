@@ -74,6 +74,6 @@ FinalizeSimpleTokenContractKlass.prototype = {
   }
 };
 
-InstanceComposer.register(FinalizeSimpleTokenContractKlass, 'getSimpleTokenFinalizeInstance', false);
+InstanceComposer.register(FinalizeSimpleTokenContractKlass, 'getSimpleTokenFinalizar', false);
 
 module.exports = FinalizeSimpleTokenContractKlass;

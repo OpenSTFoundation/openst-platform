@@ -15,30 +15,17 @@
 const readline = require('readline');
 
 const rootPrefix = '../..'
-  , web3Provider = require(rootPrefix + '/lib/web3/providers/value_rpc')
-  , deployHelper = require(rootPrefix + '/tools/deploy/helper')
-  , coreConstants = require(rootPrefix + '/config/core_constants')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , InstanceComposer = require(rootPrefix + '/instance_composer')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
-;
-
-// Different addresses used for deployment
-const valueDeployerName = "valueDeployer"
-  , openSTValueContractName = 'openSTValue'
-  , VALUE_CHAIN_ID = coreConstants.OST_VALUE_CHAIN_ID
-  , VC_GAS_PRICE = coreConstants.OST_VALUE_GAS_PRICE
-  , VC_GAS_LIMIT = coreConstants.OST_VALUE_GAS_LIMIT
-  , deployerAddress = coreAddresses.getAddressForUser(valueDeployerName)
-  , foundationAddress = coreAddresses.getAddressForUser("foundation")
-  , valueOpsAddress = coreAddresses.getAddressForUser("valueOps")
-  , simpleTokenContractAddress = coreAddresses.getAddressForContract("simpleToken")
-  , valueRegistrarContractAddress = coreAddresses.getAddressForContract("valueRegistrar")
-  , openSTValueContractAbi = coreAddresses.getAbiForContract(openSTValueContractName)
-  , openSTValueContractBin = coreAddresses.getBinForContract(openSTValueContractName)
   , prompts = readline.createInterface(process.stdin, process.stdout)
 ;
+
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/tools/deploy/helper');
+require(rootPrefix + '/lib/contract_interact/openst_value');
 
 /**
  * is equal ignoring case
@@ -60,7 +47,9 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
  *
  * @constructor
  */
-const DeployOpenSTValueContractKlass = function () {};
+const DeployOpenSTValueContractKlass = function ( configStrategy, instanceComposer) {
+
+};
 
 DeployOpenSTValueContractKlass.prototype = {
   /**
@@ -71,6 +60,29 @@ DeployOpenSTValueContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function (showPrompts) {
+
+    // Different addresses used for deployment
+    const oThis = this
+      , coreConstants = oThis.ic().getCoreConstants()
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , OpenSTValueKlass = oThis.ic().getOpenSTValueInteractClass()
+      , deployHelper = oThis.ic().getDeployHelper()
+      , valueDeployerName = "valueDeployer"
+      , openSTValueContractName = 'openSTValue'
+      , VALUE_CHAIN_ID = coreConstants.OST_VALUE_CHAIN_ID
+      , VC_GAS_PRICE = coreConstants.OST_VALUE_GAS_PRICE
+      , VC_GAS_LIMIT = coreConstants.OST_VALUE_GAS_LIMIT
+      , deployerAddress = coreAddresses.getAddressForUser(valueDeployerName)
+      , foundationAddress = coreAddresses.getAddressForUser("foundation")
+      , valueOpsAddress = coreAddresses.getAddressForUser("valueOps")
+      , simpleTokenContractAddress = coreAddresses.getAddressForContract("simpleToken")
+      , valueRegistrarContractAddress = coreAddresses.getAddressForContract("valueRegistrar")
+      , openSTValueContractAbi = coreAddresses.getAbiForContract(openSTValueContractName)
+      , openSTValueContractBin = coreAddresses.getBinForContract(openSTValueContractName)
+      , web3Provider = web3ProviderFactory.getProvider('value', web3ProviderFactory.typeRPC)
+    ;
+    
     logger.step('** Deploying openSTValue Contract');
     if (showPrompts) {
       // confirming the important addresses
@@ -121,4 +133,6 @@ DeployOpenSTValueContractKlass.prototype = {
   }
 };
 
-module.exports = new DeployOpenSTValueContractKlass();
+InstanceComposer.register(DeployOpenSTValueContractKlass, "getOpenStValueDeployer", true);
+
+module.exports = DeployOpenSTValueContractKlass;

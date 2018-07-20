@@ -8,7 +8,6 @@ const rootPrefix = "../.."
   , InstanceComposer = require( rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , setupConfig = require(rootPrefix + '/tools/setup/config')
-  , fileManager = require(rootPrefix + '/tools/setup/file_manager')
 ;
 
 require(rootPrefix + '/lib/web3/providers/factory');

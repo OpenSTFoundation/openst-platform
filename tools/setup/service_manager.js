@@ -30,7 +30,9 @@ const sealerPassphraseFile = "sealer-passphrase"
  *
  * @constructor
  */
-const ServiceManagerKlass = function () {};
+const ServiceManagerKlass = function ( configStrategy, instanceComposer) {
+
+};
 
 ServiceManagerKlass.prototype = {
   /**

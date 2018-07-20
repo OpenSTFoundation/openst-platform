@@ -16,29 +16,17 @@ const readline = require('readline')
 ;
 
 const rootPrefix = '../..'
-  , coreConstants = require(rootPrefix + '/config/core_constants')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , InstanceComposer = require(rootPrefix + '/instance_composer')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , web3Provider = require(rootPrefix + '/lib/web3/providers/utility_rpc')
-  , deployHelper = require(rootPrefix + '/tools/deploy/helper')
-  , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-;
-
-const utilityDeployerName = 'utilityDeployer'
-  , utilityRegistrarContractName = 'utilityRegistrar'
-  , openSTUtilityContractName = 'openSTUtility'
-  , openSTUtilityContractAbi = coreAddresses.getAbiForContract(openSTUtilityContractName)
-  , openSTUtilityContractBin = coreAddresses.getBinForContract(openSTUtilityContractName)
-  , utilityDeployerAddress = coreAddresses.getAddressForUser(utilityDeployerName)
-  , foundationAddress = coreAddresses.getAddressForUser("foundation")
-  , utilityRegistrarContractAddress = coreAddresses.getAddressForContract(utilityRegistrarContractName)
-  , UC_GAS_PRICE = coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT
-  , UC_GAS_LIMIT = coreConstants.OST_UTILITY_GAS_LIMIT
-  , VALUE_CHAIN_ID = coreConstants.OST_VALUE_CHAIN_ID
-  , UTILITY_CHAIN_ID = coreConstants.OST_UTILITY_CHAIN_ID
   , prompts = readline.createInterface(process.stdin, process.stdout)
 ;
+
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/tools/deploy/helper');
+require(rootPrefix + '/lib/contract_interact/openst_utility');
 
 /**
  * is equal ignoring case
@@ -60,9 +48,12 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
  *
  * @constructor
  */
-const DeployOpenSTUtilityContractKlass = function () {};
+const DeployOpenSTUtilityContractKlass = function ( configStrategy, instanceComposer) {
+
+};
 
 DeployOpenSTUtilityContractKlass.prototype = {
+  
   /**
    * Perform
    *
@@ -71,6 +62,29 @@ DeployOpenSTUtilityContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function (showPrompts) {
+  
+    const oThis = this
+      , coreConstants = oThis.ic().getCoreConstants()
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , deployHelper = oThis.ic().getDeployHelper()
+      , OpenStUtilityKlass = oThis.ic().getOpenSTUtilityeInteractClass()
+    ;
+    
+    const utilityDeployerName = 'utilityDeployer'
+      , utilityRegistrarContractName = 'utilityRegistrar'
+      , openSTUtilityContractName = 'openSTUtility'
+      , openSTUtilityContractAbi = coreAddresses.getAbiForContract(openSTUtilityContractName)
+      , openSTUtilityContractBin = coreAddresses.getBinForContract(openSTUtilityContractName)
+      , utilityDeployerAddress = coreAddresses.getAddressForUser(utilityDeployerName)
+      , foundationAddress = coreAddresses.getAddressForUser("foundation")
+      , utilityRegistrarContractAddress = coreAddresses.getAddressForContract(utilityRegistrarContractName)
+      , UC_GAS_PRICE = coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT
+      , UC_GAS_LIMIT = coreConstants.OST_UTILITY_GAS_LIMIT
+      , VALUE_CHAIN_ID = coreConstants.OST_VALUE_CHAIN_ID
+      , UTILITY_CHAIN_ID = coreConstants.OST_UTILITY_CHAIN_ID
+      , web3Provider = web3ProviderFactory.getProvider('utility', web3ProviderFactory.typeRPC)
+    ;
 
     logger.step('** Deploying OpenST Utility Contract');
     if (showPrompts) {
@@ -122,4 +136,6 @@ DeployOpenSTUtilityContractKlass.prototype = {
   }
 };
 
-module.exports = new DeployOpenSTUtilityContractKlass();
+InstanceComposer.register(DeployOpenSTUtilityContractKlass, "getOpenStUtilityDeployer", true);
+
+module.exports = DeployOpenSTUtilityContractKlass;

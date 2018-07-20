@@ -11,14 +11,14 @@ const Path = require('path')
 ;
 
 const rootPrefix = '../../..'
-  , generateAddress = require(rootPrefix + '/services/utils/generate_address')
-  , proposeBrandedToken = require(rootPrefix + '/services/on_boarding/propose_branded_token')
-  , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/get_registration_status')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , tokenHelper = require(rootPrefix + '/tools/setup/branded_token/helper')
-  , ddbServiceObj = require(rootPrefix + '/lib/dynamoDB_service')
-  , autoScalingServiceObj = require(rootPrefix + '/lib/auto_scaling_service')
 ;
+
+require(rootPrefix + '/services/utils/generate_address');
+require(rootPrefix + '/services/on_boarding/propose_branded_token');
+require(rootPrefix + '/services/on_boarding/get_registration_status');
+require(rootPrefix + '/lib/dynamoDB_service');
 
 /**
  * is equal ignoring case
@@ -106,8 +106,11 @@ RegisterBTKlass.prototype = {
    * @private
    */
   _generateAddress: async function() {
+    
     const oThis = this
+      , generateAddress = oThis.ic().getGenerateAddressService()
     ;
+    
     const addressObj = new generateAddress({chain: 'utility', passphrase: oThis.reservePassphrase})
       , addressResponse = await addressObj.perform();
     if (addressResponse.isFailure()) {
@@ -124,8 +127,11 @@ RegisterBTKlass.prototype = {
    * @private
    */
   _propose: async function() {
+    
     const oThis = this
+      , proposeBrandedToken = oThis.ic().getProposeBrandedTokenKlassClass()
     ;
+    
     logger.step("** Starting BT proposal");
     logger.info("* Name:", oThis.btName, "Symbol:", oThis.btSymbol, "Conversion Factor:", oThis.btConversionFactor);
     const proposeBTObj = new proposeBrandedToken(
@@ -148,7 +154,9 @@ RegisterBTKlass.prototype = {
    *
    */
   _checkProposeStatus: function(transaction_hash) {
+    
     const oThis = this
+      , getRegistrationStatus = oThis.ic().getRegistrationStatusService()
       , timeInterval = 5000
       , proposeSteps = {is_proposal_done: 0, is_registered_on_uc: 0, is_registered_on_vc: 0}
     ;
@@ -249,14 +257,17 @@ RegisterBTKlass.prototype = {
    * @private
    */
   _allocateShard: async function() {
+    
     const oThis = this
+      , ddbServiceObj = oThis.ic().getDynamoDb()
     ;
 
     await new openSTStorage.TokenBalanceModel({
       ddb_service: ddbServiceObj,
-      auto_scaling: autoScalingServiceObj,
+      auto_scaling: ddbServiceObj.autoScalingServiceObj,
       erc20_contract_address: oThis.erc20
     }).allocate();
+    
   },
 
   /**

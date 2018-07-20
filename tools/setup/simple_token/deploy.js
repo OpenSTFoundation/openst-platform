@@ -55,6 +55,6 @@ DeploySimpleTokenContractKlass.prototype = {
   }
 };
 
-InstanceComposer.register(DeploySimpleTokenContractKlass, 'getSimpleTokenContract', false);
+InstanceComposer.register(DeploySimpleTokenContractKlass, 'getSimpleTokenDeployer', false);
 
 module.exports = DeploySimpleTokenContractKlass;

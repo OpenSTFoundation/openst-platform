@@ -10,41 +10,52 @@ const BigNumber = require('bignumber.js')
 ;
 
 const rootPrefix = '../../..'
+  , InstanceComposer = require(rootPrefix + '/instance_composer')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , coreConstants = require(rootPrefix + '/config/core_constants')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , approveService = require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract')
-  , web3Provider = require(rootPrefix + '/lib/web3/providers/value_ws')
-  , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
-  , startStakeService = require(rootPrefix + '/services/stake_and_mint/start_stake')
-  , fundManager = require(rootPrefix + '/tools/setup/fund_manager')
 ;
 
-const stakerAddr = coreAddresses.getAddressForUser('staker')
-  , utilityChainOwnerAddr = coreAddresses.getAddressForUser('utilityChainOwner')
-  , utilityChainOwnerPassphrase = coreAddresses.getPassphraseForUser('utilityChainOwner')
-;
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/lib/contract_interact/helper');
+require(rootPrefix + '/services/stake_and_mint/approve_openst_value_contract');
+require(rootPrefix + '/services/stake_and_mint/start_stake');
+require(rootPrefix + '/tools/setup/fund_manager');
 
 /**
  * Constructor for Stake and mInt Simple Token Prime
  *
  * @constructor
  */
-const StakeAndMintSimpleTokenPrime = function () {
+const StakeAndMintSimpleTokenPrime = function ( configStrategy, instanceComposer) {
+
 };
 
 StakeAndMintSimpleTokenPrime.prototype = {
+  
   /**
    * Perform
    *
    * @return {promise<result>}
    */
   perform: async function () {
-    logger.step("** Starting stake mint for st prime for beneficiary utilityChainOwner");
+  
     const oThis = this
+      , coreConstants = oThis.ic().getCoreConstants()
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , approveService = oThis.ic().getApproveOpenstValueContractService()
+      , contractInteractHelper = oThis.ic().getContractInteractHelper()
+      , startStakeService = oThis.ic().getStartStakeService()
+      , fundManager = oThis.ic().getSetupFundManager()
+      , stakerAddr = coreAddresses.getAddressForUser('staker')
+      , utilityChainOwnerAddr = coreAddresses.getAddressForUser('utilityChainOwner')
+      , utilityChainOwnerPassphrase = coreAddresses.getPassphraseForUser('utilityChainOwner')
       , toStakeAmount = (new BigNumber(10000)).mul(new BigNumber(10).toPower(18))
+      , web3Provider = web3ProviderFactory.getProvider('value', web3ProviderFactory.typeWS)
     ;
+    
+    logger.step("** Starting stake mint for st prime for beneficiary utilityChainOwner");
 
     logger.info('* Utility Chain Owner transfers ST to staker');
     await fundManager.transferST(
@@ -87,10 +98,15 @@ StakeAndMintSimpleTokenPrime.prototype = {
    * @private
    */
   _waitForSTPrimeMint: function() {
+    
+    const oThis = this;
+    
     return new Promise(function(onResolve, onReject) {
 
       const getBalance = async function(){
 
+        let fundManager = oThis.ic().getSetupFundManager();
+        
         const getSTPBalanceResponse = await fundManager.getSTPrimeBalanceOf(utilityChainOwnerAddr);
 
         if(getSTPBalanceResponse.isSuccess() && (new BigNumber(getSTPBalanceResponse.data.balance)).greaterThan(0)){
@@ -103,8 +119,13 @@ StakeAndMintSimpleTokenPrime.prototype = {
       };
 
       getBalance();
+      
     });
+    
   }
+  
 };
 
-module.exports = new StakeAndMintSimpleTokenPrime();
+InstanceComposer.register(StakeAndMintSimpleTokenPrime, "getStakeAndMintSTPrimeMinter", true);
+
+module.exports = StakeAndMintSimpleTokenPrime;

@@ -21,7 +21,7 @@ require(rootPrefix + '/lib/contract_interact/helper');
  *
  * @constructor
  */
-const DeployHelperKlass = function (configStrategy, instanceComposer) {
+const DeployHelperKlass = function ( configStrategy, instanceComposer) {
 
   const oThis = this
     , coreConstants = instanceComposer.getCoreConstants()
