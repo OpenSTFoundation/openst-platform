@@ -7,12 +7,15 @@
  */
 
 const rootPrefix = "../../.."
-  , deployHelper = require(rootPrefix + '/tools/deploy/helper')
-  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
 ;
+
+require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/tools/deploy/helper');
+
 
 /**
  * Constructor for Deploy simple token contract
@@ -29,23 +32,29 @@ DeploySimpleTokenContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function () {
-    const simpleTokenContractName = 'simpleToken'
+    const oThis = this
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , simpleTokenContractName = 'simpleToken'
       , simpleTokenContractAbi = coreAddresses.getAbiForContract(simpleTokenContractName)
       , simpleTokenContractBin = coreAddresses.getBinForContract(simpleTokenContractName)
+      , web3ValueProvider = oThis.ic().getWeb3ProviderFactory()
+      , deployHelper = oThis.ic().getDeployHelper()
     ;
-
+    
     logger.step('** Deploying Simple Token Contract');
     const deploymentResult = await deployHelper.perform(
       simpleTokenContractName,
-      web3ProviderFactory.getProvider('value','ws'),
+      web3ValueProvider.getProvider('value', 'ws'),
       simpleTokenContractAbi,
       simpleTokenContractBin,
       'foundation');
-
-
+    
+    
     return Promise.resolve(responseHelper.successWithData(
       {contract: 'simpleToken', address: deploymentResult.contractAddress}));
   }
 };
 
-module.exports = new DeploySimpleTokenContractKlass();
+InstanceComposer.register(DeploySimpleTokenContractKlass, 'getSimpleTokenDeployer', false);
+
+module.exports = DeploySimpleTokenContractKlass;

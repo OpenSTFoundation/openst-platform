@@ -8,9 +8,12 @@
  */
 
 const rootPrefix = '../..'
-  , getReceipt = require(rootPrefix + '/services/transaction/get_receipt')
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
+  , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
+
+require(rootPrefix + '/services/transaction/get_receipt');
 
 /**
  * Get approval status
@@ -23,7 +26,7 @@ const rootPrefix = '../..'
 const GetApprovalStatusKlass = function (params) {
   const oThis = this
   ;
-
+  
   params = params || {};
   oThis.transactionHash = params.transaction_hash;
   oThis.chain = 'value';
@@ -35,23 +38,47 @@ GetApprovalStatusKlass.prototype = {
    *
    * @return {promise<result>}
    */
-  perform: async function () {
+  perform: function () {
+    const oThis = this;
+    
+    return oThis.asyncPerform()
+      .catch(function (error) {
+        if (responseHelper.isCustomResult(error)) {
+          return error;
+        } else {
+          logger.error('openst-platform::services/stake_and_mint/get_approval_status.js::perform::catch');
+          logger.error(error);
+          
+          return responseHelper.error({
+            internal_error_identifier: 's_sam_gas_1',
+            api_error_identifier: 'something_went_wrong',
+            error_config: basicHelper.fetchErrorConfig(),
+            debug_options: {err: error}
+          });
+        }
+      });
+  },
+  
+  /**
+   * Async Perform
+   *
+   * @return {promise<result>}
+   */
+  asyncPerform: async function () {
     const oThis = this
     ;
-
-    try {
-      const getReceiptObj = new getReceipt({transaction_hash: oThis.transactionHash, chain: oThis.chain});
-      const receiptResponse = await getReceiptObj.perform();
-      return Promise.resolve(receiptResponse);
-    } catch (err) {
-      let errObj = responseHelper.error({
-        internal_error_identifier: 's_sam_gas_1',
-        api_error_identifier: 'something_went_wrong',
-        error_config: basicHelper.fetchErrorConfig()
-      });
-      return Promise.resolve(errObj);
-    }
+    
+    let TransactionReceiptServiceKlass = oThis.ic().getTransactionReceiptService();
+    const getReceiptObj = new TransactionReceiptServiceKlass({
+      transaction_hash: oThis.transactionHash,
+      chain: oThis.chain
+    });
+    const receiptResponse = await getReceiptObj.perform();
+    return Promise.resolve(receiptResponse);
+    
   }
 };
+
+InstanceComposer.registerShadowableClass(GetApprovalStatusKlass, "getApprovalStatusService");
 
 module.exports = GetApprovalStatusKlass;

@@ -1,25 +1,32 @@
 "use strict";
 
 const rootPrefix = '..'
-    , coreConstants = require(rootPrefix + '/config/core_constants');
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
+;
 
-// Dynamo DB connection config details
-var autoScalingConfig = {
-  'apiVersion': process.env.OS_AUTOSCALING_API_VERSION,
-  'accessKeyId': process.env.OS_AUTOSCALING_ACCESS_KEY_ID,
-  'secretAccessKey': process.env.OS_AUTOSCALING_SECRET_ACCESS_KEY,
-  'region': process.env.OS_AUTOSCALING_REGION,
-  'endpoint': process.env.OS_AUTOSCALING_ENDPOINT
-}
 
-if (process.env.OS_AUTOSCALING_SSL_ENABLED == 1) {
-  autoScalingConfig['sslEnabled'] = true;
-} else {
-  autoScalingConfig['sslEnabled'] = false;
-}
+const AutoScalingConfig = function (configStrategy, instanceComposer) {
+  const oThis = this
+  ;
+  
+  oThis.apiVersion = configStrategy.OS_AUTOSCALING_API_VERSION;
+  oThis.accessKeyId = configStrategy.OS_AUTOSCALING_ACCESS_KEY_ID;
+  oThis.secretAccessKey = configStrategy.OS_AUTOSCALING_SECRET_ACCESS_KEY;
+  oThis.region = configStrategy.OS_AUTOSCALING_REGION;
+  oThis.endpoint = configStrategy.OS_AUTOSCALING_ENDPOINT;
+  
+  if (configStrategy.OS_AUTOSCALING_SSL_ENABLED == 1) {
+    oThis.sslEnabled = true;
+  } else {
+    oThis.sslEnabled = false;
+  }
+  
+  if (configStrategy.OS_AUTOSCALING_LOGGING_ENABLED == 1) {
+    oThis.logger = console;
+  }
+  
+};
 
-if (process.env.OS_AUTOSCALING_LOGGING_ENABLED == 1) {
-  autoScalingConfig['logger'] = console;
-}
+InstanceComposer.register(AutoScalingConfig, 'getAutoScalingConfig', true);
 
-module.exports = autoScalingConfig;
+module.exports = AutoScalingConfig;

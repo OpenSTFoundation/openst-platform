@@ -1,11 +1,12 @@
 const os = require('os');
 
 const setupConfig = {
-
+  
   // Platform environment variables filename
   env_vars_file: process.env.OST_SETUP_ENV_FILE || "openst_env_vars.sh", //Editable
+  openst_platform_config_file: process.env.OST_PLATFROM_CONFIG_JSON || "openst_platform_config.json", //Editable
   setup_path: process.env.OST_SETUP_PATH || os.homedir(),
-
+  
   /**
    * Chain configurations
    */
@@ -39,7 +40,7 @@ const setupConfig = {
         value: 'http://127.0.0.1:8545' //Editable
       }
     },
-
+    
     // Utility Chain
     utility: {
       folder_name: "openst-geth-utility", //Editable
@@ -70,7 +71,7 @@ const setupConfig = {
       }
     }
   },
-
+  
   /**
    * Cache configurations
    */
@@ -107,7 +108,7 @@ const setupConfig = {
       value: '0' //Editable (0/1)
     }
   },
-
+  
   /**
    * Notification configurations
    */
@@ -137,7 +138,7 @@ const setupConfig = {
       value: '' //Editable
     }
   },
-
+  
   /**
    * Miscellaneous configurations
    */
@@ -159,7 +160,7 @@ const setupConfig = {
       value: 0
     }
   },
-
+  
   /**
    * Miscellaneous configurations
    */
@@ -185,7 +186,7 @@ const setupConfig = {
       value: 'http://localhost:8000'
     }
   },
-
+  
   autoscaling: {
     api_version: {
       env_var: 'OS_AUTOSCALING_API_VERSION',
@@ -216,12 +217,12 @@ const setupConfig = {
       value: '0'
     }
   },
-
+  
   /**
    * Address configurations
    */
   addresses: {
-
+    
     // foundation
     foundation: {
       address: {
@@ -238,7 +239,7 @@ const setupConfig = {
         }
       }
     },
-
+    
     // Value registrar address
     valueRegistrar: {
       owner: {
@@ -259,7 +260,7 @@ const setupConfig = {
         }
       }
     },
-
+    
     // Utility registrar address
     utilityRegistrar: {
       address: {
@@ -276,7 +277,7 @@ const setupConfig = {
         }
       }
     },
-
+    
     // Sealer address
     sealer: {
       address: {
@@ -296,7 +297,7 @@ const setupConfig = {
         }
       }
     },
-
+    
     // utility chain owner
     utilityChainOwner: {
       address: {
@@ -316,7 +317,7 @@ const setupConfig = {
         }
       }
     },
-
+    
     // initial ST Prime holder
     utilityInitialSTPrimeHolder: {
       address: {
@@ -333,7 +334,7 @@ const setupConfig = {
         }
       }
     },
-
+    
     // Staker address
     staker: {
       address: {
@@ -353,7 +354,7 @@ const setupConfig = {
         }
       }
     },
-
+    
     // Redeemer address
     redeemer: {
       address: {
@@ -373,7 +374,7 @@ const setupConfig = {
         }
       }
     },
-
+    
     // Value Deployer Address
     valueDeployer: {
       address: {
@@ -390,7 +391,7 @@ const setupConfig = {
         }
       }
     },
-
+    
     // Utility Deployer Address
     utilityDeployer: {
       address: {
@@ -407,7 +408,7 @@ const setupConfig = {
         }
       }
     },
-
+    
     // Value Ops Address
     valueOps: {
       address: {
@@ -424,7 +425,7 @@ const setupConfig = {
         }
       }
     },
-
+    
     // Utility Ops Address
     utilityOps: {
       address: {
@@ -441,14 +442,14 @@ const setupConfig = {
         }
       }
     }
-
+    
   },
-
+  
   /**
    * Contract addresses configurations
    */
   contracts: {
-
+    
     // Simple Token EIP20
     simpleToken: {
       address: {
@@ -456,7 +457,7 @@ const setupConfig = {
         value: ''
       }
     },
-
+    
     // openST Utility
     openSTUtility: {
       address: {
@@ -464,7 +465,7 @@ const setupConfig = {
         value: ''
       }
     },
-
+    
     // openST Value
     openSTValue: {
       address: {
@@ -472,7 +473,7 @@ const setupConfig = {
         value: ''
       }
     },
-
+    
     // ST' EIP20
     stPrime: {
       address: {
@@ -480,7 +481,7 @@ const setupConfig = {
         value: ''
       }
     },
-
+    
     // Value Registrar
     valueRegistrar: {
       address: {
@@ -488,7 +489,7 @@ const setupConfig = {
         value: ''
       }
     },
-
+    
     // Utility Registrar
     utilityRegistrar: {
       address: {
@@ -496,7 +497,7 @@ const setupConfig = {
         value: ''
       }
     },
-
+    
     // Value Core
     valueCore: {
       address: {
@@ -504,9 +505,9 @@ const setupConfig = {
         value: ''
       }
     },
-
+    
   }
-
+  
 };
 
 module.exports = setupConfig;

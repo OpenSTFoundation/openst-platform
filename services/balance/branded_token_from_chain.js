@@ -1,11 +1,13 @@
 "use strict";
 
 const rootPrefix = '../..'
-  , BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
 ;
+
+require(rootPrefix + '/lib/contract_interact/branded_token');
 
 /**
  * Branded Token balance from Chain
@@ -17,9 +19,9 @@ const rootPrefix = '../..'
  * @constructor
  */
 
-const GetBtBalanceFromChain = function(params) {
+const GetBtBalanceFromChain = function (params) {
   const oThis = this;
-
+  
   params = params || {};
   oThis.erc20Address = params.erc20_address;
   oThis.address = params.address;
@@ -36,7 +38,7 @@ GetBtBalanceFromChain.prototype = {
   perform: function () {
     const oThis = this
     ;
-
+    
     return oThis.asyncPerform()
       .catch(function (error) {
         if (responseHelper.isCustomResult(error)) {
@@ -52,29 +54,29 @@ GetBtBalanceFromChain.prototype = {
         }
       });
   },
-
+  
   /**
    * asyncPerform
    *
    * @return {Promise}
    */
-  asyncPerform: async function() {
+  asyncPerform: async function () {
     const oThis = this
     ;
-
+    
     await oThis.validateAndSanitize();
-
+    
     return oThis.getBalance();
   },
-
+  
   /**
    * validateAndSanitize
-   * 
+   *
    */
   validateAndSanitize: async function () {
     const oThis = this
     ;
-
+    
     if (!basicHelper.isAddressValid(oThis.erc20Address)) {
       return Promise.reject(responseHelper.error({
         internal_error_identifier: 's_b_btfc_2',
@@ -83,7 +85,7 @@ GetBtBalanceFromChain.prototype = {
         debug_options: {}
       }));
     }
-
+    
     if (!basicHelper.isAddressValid(oThis.address)) {
       return Promise.reject(responseHelper.error({
         internal_error_identifier: 's_b_btfc_3',
@@ -92,16 +94,19 @@ GetBtBalanceFromChain.prototype = {
         debug_options: {}
       }));
     }
-
+    
   },
-
-  getBalance: async function() {
+  
+  getBalance: async function () {
     const oThis = this
     ;
-
-    return  new BrandedTokenKlass({ERC20: oThis.erc20Address}).getBtBalanceFromChain(oThis.address);
+    
+    let BrandedTokenKlass = oThis.ic().getBrandedTokenInteractClass();
+    return new BrandedTokenKlass({ERC20: oThis.erc20Address}).getBtBalanceFromChain(oThis.address);
   }
-
+  
 };
+
+InstanceComposer.registerShadowableClass(GetBtBalanceFromChain, "getBtBalanceFromChainService");
 
 module.exports = GetBtBalanceFromChain;

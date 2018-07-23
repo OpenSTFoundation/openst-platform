@@ -12,22 +12,24 @@ const shell = require('shelljs')
 ;
 
 const rootPrefix = "../.."
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , setupConfig = require(rootPrefix + '/tools/setup/config')
   , setupHelper = require(rootPrefix + '/tools/setup/helper')
   , fileManager = require(rootPrefix + '/tools/setup/file_manager')
-  , coreConstants = require(rootPrefix + '/config/core_constants')
   , Web3 = require('web3')
-  , web3FactoryProvider = require(rootPrefix + '/lib/web3/providers/factory')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , generateRawKeyKlass = require(rootPrefix + '/services/utils/generate_raw_key')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
 ;
+
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/services/utils/generate_raw_key');
 
 const tempGethFolder = 'tmp-geth'
   , keystoreFolder = 'keystore'
   , tempPasswordFile = 'tmp_password_file'
   , tempPrivateKeyFile = 'tmp_private_key_file'
-  , gasLimitOn = {utility: coreConstants.OST_UTILITY_GAS_LIMIT, value: coreConstants.OST_VALUE_GAS_LIMIT}
+  
   , hexStartsWith = '0x'
   , genesisTemplateLocation = Path.join(__dirname)
   , etherToWeiCinversion = new BigNumber(1000000000000000000)
@@ -36,32 +38,28 @@ const tempGethFolder = 'tmp-geth'
   ]
 ;
 
-const allocBalancesOn = {
-  utility: (new BigNumber(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY)).mul(etherToWeiCinversion),
-  value: (new BigNumber('1000000')).mul(etherToWeiCinversion)
-};
-
 /**
  * Constructor for geth manager
  *
  * @constructor
  */
-const GethManagerKlass = function () {
+const GethManagerKlass = function (configStrategy, instanceComposer) {
+
 };
 
 GethManagerKlass.prototype = {
-
-
+  
+  
   /**
    * Do the build clean up
    */
   buildCleanup: function () {
     const oThis = this;
-
+    
     // remove tmp geth
     fileManager.rm(tempGethFolder);
   },
-
+  
   /**
    * Get chain data dir absolute path
    *
@@ -71,7 +69,7 @@ GethManagerKlass.prototype = {
     const oThis = this;
     return setupHelper.setupFolderAbsolutePath() + '/' + oThis.getChainDataFolder(chain);
   },
-
+  
   /**
    * Get chain data folder name
    *
@@ -80,7 +78,7 @@ GethManagerKlass.prototype = {
   getChainDataFolder: function (chain) {
     return setupConfig.chains[chain].folder_name;
   },
-
+  
   /**
    * Generate all required addresses.
    *
@@ -89,19 +87,19 @@ GethManagerKlass.prototype = {
    */
   generateAddresses: function (options) {
     const oThis = this;
-
+    
     return oThis._createAddresses(options);
   },
-
+  
   /**
    * Generate all required pre init addresses in temp geth data dir
    */
   generatePreInitAddresses: function () {
     const oThis = this;
-
+    
     // create temp geth folder
     fileManager.mkdir(tempGethFolder);
-
+    
     // create all required addresses in tmp geth data dir
     for (var i = 0; i < preInitAddressName.length; i++) {
       var name = preInitAddressName[i]
@@ -109,9 +107,9 @@ GethManagerKlass.prototype = {
       logger.info("* " + name + " address: ");
       nameDetails.address.value = oThis._generatePreInitAddresses(tempGethFolder, nameDetails.passphrase.value);
     }
-
+    
   },
-
+  
   /**
    * Initialize chain
    *
@@ -124,24 +122,24 @@ GethManagerKlass.prototype = {
       , chainGenesisTemplateLocation = genesisTemplateLocation + '/genesis-' + chain + '.json'
       , chainGenesisLocation = chainDataDir + '/genesis-' + chain + '.json'
     ;
-
+    
     // create chain folder
     logger.info("* Creating " + chain + " folder");
     fileManager.mkdir(chainFolder);
-
+    
     // copy genesis template file in chain folder
     logger.info("* Copying " + chain + " genesis template file");
     fileManager.exec('cp ' + chainGenesisTemplateLocation + ' ' + chainGenesisLocation);
-
+    
     // Alloc balance in genesis files
     logger.info("* Modifying " + chain + " genesis file");
     oThis._modifyGenesisFile(chain, chainGenesisLocation);
-
+    
     // Alloc balance in genesis files
     logger.info("* Init " + chain + " chain");
     oThis._initChain(chain, chainDataDir, chainGenesisLocation);
   },
-
+  
   /**
    * Move keystore files from temp geth to required geth instances
    *
@@ -149,7 +147,7 @@ GethManagerKlass.prototype = {
    */
   copyPreInitAddressesToChains: function () {
     const oThis = this;
-
+    
     // copy all keystore files from temp location to required location
     for (var i = 0; i < preInitAddressName.length; i++) {
       var name = preInitAddressName[i]
@@ -166,7 +164,7 @@ GethManagerKlass.prototype = {
       }
     }
   },
-
+  
   /**
    * Copy all addresses and import respective keystore files to required geth instances
    *
@@ -174,7 +172,7 @@ GethManagerKlass.prototype = {
    */
   importPostInitAddressesToChains: function (addresses) {
     const oThis = this;
-
+    
     for (var name in setupConfig.addresses) {
       var nameDetails = setupConfig.addresses[name]
         , privateKey = addresses[nameDetails.address.value]
@@ -182,7 +180,7 @@ GethManagerKlass.prototype = {
       if (preInitAddressName.includes(name)) {
         continue;
       }
-
+      
       var chainsToImport = Object.keys(nameDetails.chains);
       for (var i = 0; i < chainsToImport.length; i++) {
         var chain = chainsToImport[i];
@@ -191,7 +189,7 @@ GethManagerKlass.prototype = {
       }
     }
   },
-
+  
   /**
    * Check if chains started mining and are ready
    *
@@ -200,11 +198,19 @@ GethManagerKlass.prototype = {
    * @return {promise}
    */
   isChainReady: function (chain) {
-    const retryAttempts = 10
+    const oThis = this
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , retryAttempts = 10
       , timerInterval = 5000
       , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
-      , provider = (chain == 'utility' ? web3FactoryProvider.getProvider('utility','ws') : web3FactoryProvider.getProvider('value', 'ws'));
     ;
+    
+    if (chain != "utility") {
+      chain = "value";
+    }
+    
+    const provider = web3ProviderFactory.getProvider(chain, "ws");
+    
     return new Promise(function (onResolve, onReject) {
       chainTimer['timer'] = setInterval(function () {
         if (chainTimer['retryCounter'] <= retryAttempts) {
@@ -228,7 +234,7 @@ GethManagerKlass.prototype = {
       }, timerInterval);
     });
   },
-
+  
   /**
    * Modify genesis file
    *
@@ -239,6 +245,14 @@ GethManagerKlass.prototype = {
    * @private
    */
   _modifyGenesisFile: function (chain, chainGenesisLocation) {
+    const oThis = this
+      , coreConstants = oThis.ic().getCoreConstants()
+      , gasLimitOn = {utility: coreConstants.OST_UTILITY_GAS_LIMIT, value: coreConstants.OST_VALUE_GAS_LIMIT}
+      , allocBalancesOn = {
+        utility: (new BigNumber(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY)).mul(etherToWeiCinversion)
+        , value: (new BigNumber('1000000')).mul(etherToWeiCinversion)
+      }
+    ;
     const chainId = setupConfig.chains[chain].chain_id.value
       , allocBalanceToAddrName = setupConfig.chains[chain].alloc_balance_to_addr
       , allocAmountToAddress = setupConfig.addresses[allocBalanceToAddrName].address.value
@@ -248,29 +262,29 @@ GethManagerKlass.prototype = {
       ,
       extraData = "0x0000000000000000000000000000000000000000000000000000000000000000" + sealerAddress.replace(hexStartsWith, '') + "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
     ;
-
+    
     // If the file doesn't exist, the content will be an empty object by default.
     const file = editJsonFile(chainGenesisLocation);
-
+    
     // Alloc balance to required address
     file.set("alloc." + allocAmountToAddress + ".balance", allocAmount);
-
+    
     // set chain id
     file.set("config.chainId", chainId);
-
+    
     // set gas limit
     file.set("gasLimit", gasLimit);
-
+    
     // add extra data
     if (chain == 'utility') {
       file.set("extraData", extraData);
     }
-
+    
     file.save();
-
+    
     return true;
   },
-
+  
   /**
    * Modify genesis file
    *
@@ -284,7 +298,7 @@ GethManagerKlass.prototype = {
   _initChain: function (chain, chainDataDir, chainGenesisLocation) {
     fileManager.exec('geth --datadir "' + chainDataDir + '" init ' + chainGenesisLocation);
   },
-
+  
   /**
    * Generate keystore in required data dir
    *
@@ -297,22 +311,22 @@ GethManagerKlass.prototype = {
   _generatePreInitAddresses: function (relativeDataDir, passphrase) {
     const tmpPasswordFilePath = relativeDataDir + '/' + tempPasswordFile
       , absoluteDirPath = setupHelper.setupFolderAbsolutePath() + '/' + relativeDataDir;
-
+    
     // creating password file in a temp location
     fileManager.touch(tmpPasswordFilePath, passphrase);
-
+    
     // generate keystore file and address
     const cmd = 'geth --datadir "' + absoluteDirPath + '" account new --password ' +
       setupHelper.setupFolderAbsolutePath() + '/' + tmpPasswordFilePath;
     var addressGerationResponse = fileManager.exec(cmd);
-
+    
     // remove password
     fileManager.rm(tmpPasswordFilePath);
-
+    
     // parsing the response to get address
     return addressGerationResponse.stdout.replace("Address: {", hexStartsWith).replace("}", "").trim();
   },
-
+  
   /**
    * Create required Addresses for set up.
    *
@@ -321,23 +335,27 @@ GethManagerKlass.prototype = {
    * @private
    */
   _createAddresses: function (options) {
+    const oThis = this
+      , generateRawKeyKlass = oThis.ic().getGenerateRawKeyService()
+    ;
+    
     var pre_generated_addresses = (options || {}).pre_generated_addresses
       , rawAddresses = {}
     ;
-
+    
     for (var name in setupConfig.addresses) {
       var nameDetails = setupConfig.addresses[name]
         , privateKey = ''
       ;
-
+      
       if (preInitAddressName.includes(name)) {
         continue;
       }
-
+      
       // Check if pre generated address details are provided and can be overwritten
       if (Array.isArray(pre_generated_addresses) && pre_generated_addresses.length > 0) {
         var pre_generated_address = pre_generated_addresses.pop();
-
+        
         // retrieve details from private key
         try {
           if (pre_generated_address.privateKey) {
@@ -355,27 +373,27 @@ GethManagerKlass.prototype = {
           nameDetails.address.value = '';
         }
       }
-
+      
       if (nameDetails.address.value === '') {
         // Generate New address
         const response = new generateRawKeyKlass().perform();
-
+        
         if (response.isFailure()) {
           logger.error(response);
           process.exit(1);
         }
-
+        
         nameDetails.address.value = response.data.address;
-
+        
         privateKey = response.data.privateKey;
       }
       rawAddresses[nameDetails.address.value] = privateKey;
       logger.info("* " + name + " address: {" + nameDetails.address.value + "}");
     }
-
+    
     return rawAddresses;
   },
-
+  
   /**
    * Import keystore file to respective chain directory.
    *
@@ -389,21 +407,23 @@ GethManagerKlass.prototype = {
       , tmpPasswordFilePath = relativeDataDir + '/' + tempPasswordFile
       , tmpPassphraseFilePath = relativeDataDir + '/' + tempPrivateKeyFile
       , absoluteDirPath = setupHelper.setupFolderAbsolutePath() + '/' + relativeDataDir;
-
+    
     // creating password and passphrase file in a temp location
     fileManager.touch(tmpPasswordFilePath, nameDetails.passphrase.value);
     fileManager.touch(tmpPassphraseFilePath, privateKey.replace(hexStartsWith, ''));
-
+    
     // generate keystore file and address
     var cmd = 'geth --datadir "' + absoluteDirPath + '" account import --password ' +
       setupHelper.setupFolderAbsolutePath() + '/' + tmpPasswordFilePath + ' ' +
       setupHelper.setupFolderAbsolutePath() + '/' + tmpPassphraseFilePath;
     var addressGerationResponse = fileManager.exec(cmd);
-
+    
     // remove password and passphrase file
     fileManager.rm(tmpPasswordFilePath);
     fileManager.rm(tmpPassphraseFilePath);
   }
 };
 
-module.exports = new GethManagerKlass();
+InstanceComposer.register(GethManagerKlass, "getSetupGethManager", true);
+
+module.exports = GethManagerKlass;

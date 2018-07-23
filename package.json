@@ -1,6 +1,6 @@
 {
   "name": "@openstfoundation/openst-platform",
-  "version": "0.9.5-beta.3",
+  "version": "0.9.5-beta.5",
   "description": "OpenST Platform provides a web3 interface to tokenise mainstream consumer applications with crypto-assets on Ethereum",
   "keywords": [
     "web3",
@@ -34,6 +34,7 @@
     "bignumber.js": "4.1.0",
     "child_process": "1.0.2",
     "cli-spinner": "0.2.7",
+    "commander": "2.16.0",
     "continuation-local-storage": "3.2.1",
     "debug": "2.2.0",
     "edit-json-file": "1.0.8",

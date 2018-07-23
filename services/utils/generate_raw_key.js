@@ -9,8 +9,7 @@
 const rootPrefix = '../..'
   , Web3 = require('web3')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
 ;
 
 /**
@@ -32,13 +31,15 @@ GenerateRawKeyKlass.prototype = {
   perform: function () {
     const oThis = this
     ;
-
+    
     const web3Object = new Web3();
     var newAddress = web3Object.eth.accounts.create(web3Object.utils.randomHex(32));
-
+    
     return responseHelper.successWithData({address: newAddress.address, privateKey: newAddress.privateKey});
   }
-
+  
 };
+
+InstanceComposer.registerShadowableClass(GenerateRawKeyKlass, 'getGenerateRawKeyService');
 
 module.exports = GenerateRawKeyKlass;

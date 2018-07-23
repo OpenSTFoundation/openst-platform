@@ -51,7 +51,7 @@ String.prototype.equalsIgnoreCase = function (compareWith) {
   const oThis = this
     , _self = this.toLowerCase()
     , _compareWith = String(compareWith).toLowerCase();
-
+  
   return _self === _compareWith;
 };
 
@@ -65,18 +65,18 @@ const RedeemAndUnstakeProcessorInterComm = function () {
 };
 
 RedeemAndUnstakeProcessorInterComm.prototype = {
-
+  
   /**
    * Starts the process of the script with initializing processor
    *
    */
   init: function () {
     var oThis = this;
-
+    
     eventQueueManager.setProcessor(oThis.processor);
     oThis.bindEvents();
   },
-
+  
   /**
    *
    * Bind to start listening the desired event
@@ -85,16 +85,16 @@ RedeemAndUnstakeProcessorInterComm.prototype = {
   bindEvents: function () {
     var oThis = this;
     logger.log("bindEvents binding RedemptionIntentConfirmed");
-
+    
     oThis.listenToDesiredEvent(
       oThis.onEventSubscriptionError,
       oThis.onEvent,
       oThis.onEvent
     );
-
+    
     logger.log("bindEvents done");
   },
-
+  
   /**
    * Listening RedemptionIntentConfirmed event emitted by confirmRedemptionIntent method of openSTValue contract.
    *
@@ -104,15 +104,15 @@ RedeemAndUnstakeProcessorInterComm.prototype = {
    *
    */
   listenToDesiredEvent: function (onError, onData, onChange) {
-    var completeContract = new (web3ProviderFactory.getProvider('value','ws')).eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
+    var completeContract = new (web3ProviderFactory.getProvider('value', 'ws')).eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
     //completeContract.setProvider(web3WsProvider.currentProvider);
-
+    
     completeContract.events.RedemptionIntentConfirmed({})
       .on('error', onError)
       .on('data', onData)
       .on('changed', onChange);
   },
-
+  
   /**
    * Processing of RedemptionIntentConfirmed event is delayed for n block confirmation by enqueueing to
    * {@link module:lib/web3/events/queue_manager|queue manager}.
@@ -124,7 +124,7 @@ RedeemAndUnstakeProcessorInterComm.prototype = {
     // TODO: Publish (event received) to notify others
     eventQueueManager.addEditEventInQueue(eventObj);
   },
-
+  
   /**
    * Generic Method to log event subscription error
    *
@@ -136,7 +136,7 @@ RedeemAndUnstakeProcessorInterComm.prototype = {
     logger.log("onEventSubscriptionError triggered");
     logger.error(error);
   },
-
+  
   /**
    * Processor gets executed from {@link module:lib/web3/events/queue_manager|queue manager} for
    * every RedemptionIntentConfirmed event after waiting for n block confirmation.
@@ -153,10 +153,10 @@ RedeemAndUnstakeProcessorInterComm.prototype = {
       , beneficiary = returnValues._beneficiary
       , uuid = returnValues._uuid
     ;
-
+    
     const redeemerAddress = coreAddresses.getAddressForUser('redeemer')
       , redeemerPassphrase = coreAddresses.getPassphraseForUser('redeemer');
-
+    
     // do not perform any action if the redeem was not done using the internal address.
     if (!redeemerAddress.equalsIgnoreCase(redeemer)) {
       let errObj = responseHelper.error({
@@ -164,32 +164,32 @@ RedeemAndUnstakeProcessorInterComm.prototype = {
         api_error_identifier: 'invalid_redeemer_account',
         error_config: basicHelper.fetchErrorConfig()
       });
-
+      
       return Promise.resolve(errObj);
     }
-
+    
     logger.step(redemptionIntentHash, ' :: performing processRedeeming');
-
+    
     await openSTUtilityContractInteract.processRedeeming(
       redeemerAddress,
       redeemerPassphrase,
       redemptionIntentHash
     );
-
+    
     logger.win(redemptionIntentHash, ' :: performed processRedeeming');
     logger.step(redemptionIntentHash, ' :: performing processUnstaking');
-
+    
     await openSTValueContractInteract.processUnstaking(
       redeemerAddress,
       redeemerPassphrase,
       redemptionIntentHash
     );
-
+    
     logger.win(redemptionIntentHash, ' :: performed processUnstaking');
-
+    
     return Promise.resolve(responseHelper.successWithData({redemption_intent_hash: redemptionIntentHash}));
   }
-
+  
 };
 
 new RedeemAndUnstakeProcessorInterComm().init();

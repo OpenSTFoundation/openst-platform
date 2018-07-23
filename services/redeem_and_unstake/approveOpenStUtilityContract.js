@@ -32,20 +32,20 @@ const getBTBalance = function (brandedToken, address) {
     'for BT ERC20 contract: ',
     brandedToken._getBTAddress()
   );
-
+  
   return brandedToken.getBalanceOf(address).then(
     function (result) {
       if (result.isSuccess()) {
         const btBalance = result.data.balance;
-
+        
         logger.win(
           'BT Balance of account: ',
           address,
           ' obtained.'
         );
-
+        
         return new BigNumber(btBalance);
-
+        
       } else {
         return Promise.reject('Unable to get balance of the redeemer.')
       }
@@ -82,11 +82,11 @@ const approve = function (brandedToken, redeemerAddress, redeemerPassphrase, toA
  * @return {Promise}
  */
 const approveOpenStUtilityContract = function (erc20Address) {
-
+  
   const brandedToken = new BrandedTokenKlass({ERC20: erc20Address})
     , redeemerAddress = coreAddresses.getAddressForUser('redeemer')
     , redeemerPassphrase = coreAddresses.getPassphraseForUser('redeemer');
-
+  
   return getBTBalance(brandedToken, redeemerAddress)
     .then(function (bigBTBalance) {
       return approve(

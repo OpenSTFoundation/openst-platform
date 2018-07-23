@@ -215,7 +215,13 @@ Example: For 500 OST, reserve address will get:
 
 * Generate new address on utility chain
 ```bash
-var platformServices = require('./index');
+
+let rootPrefix = '.';
+let OpenstPlatform = require(rootPrefix + '/index');
+let setupHelper = require(rootPrefix + '/tools/setup/helper');
+let configStrategy = require( setupHelper.configStrategyFilePath() );
+let platformServices = new OpenstPlatform( configStrategy );
+
 var serviceObj = new platformServices.services.utils.generateAddress({passphrase: 'my-secret-pass', chain: 'utility'});
 serviceObj.perform().then(function(response) { 
   if (response.isSuccess()){
@@ -231,7 +237,12 @@ serviceObj.perform().then(function(response) {
 var os = require('os');
 var brandedTokenConfig = require(os.homedir() + "/openst-setup/branded_tokens.json");
 var uuid = Object.keys(brandedTokenConfig)[0];
-var platformServices = require('./index');
+
+let OpenstPlatform = require(rootPrefix + '/index');
+let setupHelper = require(rootPrefix + '/tools/setup/helper');
+let configStrategy = require( setupHelper.configStrategyFilePath() );
+let platformServices = new OpenstPlatform( configStrategy );
+
 var serviceObj = new platformServices.services.utils.getBrandedTokenDetails({uuid: uuid});
 serviceObj.perform().then(function(response) { 
   if (response.isSuccess()){
@@ -258,7 +269,12 @@ var data = {
     tag: 'ILoveOST'
   }
 };
-var platformServices = require('./index');
+
+let OpenstPlatform = require(rootPrefix + '/index');
+let setupHelper = require(rootPrefix + '/tools/setup/helper');
+let configStrategy = require( setupHelper.configStrategyFilePath() );
+let platformServices = new OpenstPlatform( configStrategy );
+
 var serviceObj = new platformServices.services.transaction.transfer.brandedToken(data);
 serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
@@ -271,7 +287,11 @@ serviceObj.perform().then(function(response) {
 
 * Transfer OST on value chain
 ```bash
-var platformServices = require('./index');
+let OpenstPlatform = require(rootPrefix + '/index');
+let setupHelper = require(rootPrefix + '/tools/setup/helper');
+let configStrategy = require( setupHelper.configStrategyFilePath() );
+let platformServices = new OpenstPlatform( configStrategy );
+
 var serviceObj = new platformServices.services.transaction.transfer.simpleToken({sender_name: 'foundation', recipient_name: 'utilityChainOwner', amount_in_wei: 10, options: {returnType: 'txHash', tag: 'Grant'}});
 serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
@@ -284,7 +304,11 @@ serviceObj.perform().then(function(response) {
 
 * Transfer Ether on value chain
 ```bash
-var platformServices = require('./index');
+let OpenstPlatform = require(rootPrefix + '/index');
+let setupHelper = require(rootPrefix + '/tools/setup/helper');
+let configStrategy = require( setupHelper.configStrategyFilePath() );
+let platformServices = new OpenstPlatform( configStrategy );
+
 var serviceObj = new platformServices.services.transaction.transfer.eth({sender_name: 'foundation', recipient_name: 'utilityChainOwner', amount_in_wei: 10000, options: {returnType: 'txHash', tag: 'GasRefill'}});
 serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
@@ -297,7 +321,11 @@ serviceObj.perform().then(function(response) {
 
 * Transfer ST' (gas) on utility chain
 ```bash
-var platformServices = require('./index');
+let OpenstPlatform = require(rootPrefix + '/index');
+let setupHelper = require(rootPrefix + '/tools/setup/helper');
+let configStrategy = require( setupHelper.configStrategyFilePath() );
+let platformServices = new OpenstPlatform( configStrategy );
+
 var serviceObj = new platformServices.services.transaction.transfer.simpleTokenPrime({sender_name: 'utilityChainOwner', recipient_name: 'foundation', amount_in_wei: 10, options: {returnType: 'txHash', tag: 'GasRefill'}});
 serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
@@ -310,8 +338,12 @@ serviceObj.perform().then(function(response) {
 
 * Get transaction receipt
 ```bash
-var platformServices = require('./index');
-var serviceObj = new platformServices.services.transaction.getReceipt({chain: 'utility', transaction_hash: '0xe4945b1c90d291074b74c9ed211c6fbae2702d1bd33e7b53c3f55a6b3c62c270'});
+let OpenstPlatform = require(rootPrefix + '/index');
+let setupHelper = require(rootPrefix + '/tools/setup/helper');
+let configStrategy = require( setupHelper.configStrategyFilePath() );
+let platformServices = new OpenstPlatform( configStrategy );
+
+var serviceObj = new platformServices.services.transaction.getReceipt({chain: 'utility', transaction_hash: '0x9b0097ea39ba88d73a33f25ff8fde202ec0d96cc5bb1ad0755763ac68d96fcd4'});
 serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
     console.log(response.data);
@@ -327,7 +359,12 @@ var os = require('os');
 var brandedTokenConfig = require(os.homedir() + "/openst-setup/branded_tokens.json");
 var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]];
 var data = {address: brandedTokenDetails['Reserve'], erc20_address: brandedTokenDetails['ERC20']};
-var platformServices = require('./index');
+
+let OpenstPlatform = require(rootPrefix + '/index');
+let setupHelper = require(rootPrefix + '/tools/setup/helper');
+let configStrategy = require( setupHelper.configStrategyFilePath() );
+let platformServices = new OpenstPlatform( configStrategy );
+
 var serviceObj = new platformServices.services.balance.brandedToken(data);
 serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
@@ -340,8 +377,13 @@ serviceObj.perform().then(function(response) {
 
 * Get OST balance
 ```bash
-var platformServices = require('./index');
-var serviceObj = new platformServices.services.balance.simpleToken({address: process.env.OST_FOUNDATION_ADDR});
+
+let OpenstPlatform = require(rootPrefix + '/index');
+let setupHelper = require(rootPrefix + '/tools/setup/helper');
+let configStrategy = require( setupHelper.configStrategyFilePath() );
+let platformServices = new OpenstPlatform( configStrategy );
+
+var serviceObj = new platformServices.services.balance.simpleToken({address: configStrategy.OST_FOUNDATION_ADDR});
 serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
     console.log(response.data);
@@ -353,8 +395,13 @@ serviceObj.perform().then(function(response) {
 
 * Get ST' (gas) balance
 ```bash
-var platformServices = require('./index');
-var serviceObj = new platformServices.services.balance.simpleTokenPrime({address: process.env.OST_UTILITY_CHAIN_OWNER_ADDR});
+
+let OpenstPlatform = require(rootPrefix + '/index');
+let setupHelper = require(rootPrefix + '/tools/setup/helper');
+let configStrategy = require( setupHelper.configStrategyFilePath() );
+let platformServices = new OpenstPlatform( configStrategy );
+
+var serviceObj = new platformServices.services.balance.simpleTokenPrime({address: configStrategy.OST_UTILITY_CHAIN_OWNER_ADDR});
 serviceObj.perform().then(function(response) {
   if (response.isSuccess()){
     console.log(response.data);

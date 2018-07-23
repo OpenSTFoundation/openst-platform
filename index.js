@@ -4,20 +4,30 @@
  * Load openST Platform module
  */
 
+
 const rootPrefix = "."
-  , serviceManifest = require(rootPrefix + '/services/manifest')
   , version = require(rootPrefix + '/package.json').version
   , coreAbis = require(rootPrefix + '/config/core_abis')
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
 ;
+require(rootPrefix + '/services/manifest')
 
-const OpenSTPlatform = function () {
+const OpenSTPlatform = function (configStrategy) {
   const oThis = this;
-
+  
+  if (!configStrategy) {
+    throw "Mandatory argument configStrategy missing";
+  }
+  
+  const instanceComposer = oThis.ic = new InstanceComposer(configStrategy);
+  
   oThis.version = version;
-
-  oThis.services = serviceManifest;
-
+  
+  oThis.services = instanceComposer.getServiceManifest();
+  
   oThis.abis = coreAbis;
+  
+  
 };
 
-module.exports = new OpenSTPlatform();
+module.exports = OpenSTPlatform;
