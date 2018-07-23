@@ -17,8 +17,8 @@ const shadowMap = {};
 
 InstanceComposer.register = function ( ClassConstructor, getterMethodName, mustRetainInstance, constructorParamsBuilderFunction ) {  
   if ( composerMap.hasOwnProperty( getterMethodName ) || shadowMap.hasOwnProperty( getterMethodName ) ) {
-    console.trace("Duplicate Getter Method name", getterMethodName);
-    throw "Duplicate Getter Method Name ";
+    console.trace("Duplicate register Getter Method name", getterMethodName);
+    throw `Duplicate register Getter Method Name ${getterMethodName}`;
   }
 
 
@@ -53,8 +53,8 @@ InstanceComposer.register = function ( ClassConstructor, getterMethodName, mustR
 
 InstanceComposer.registerShadowableClass = function ( ClassConstructor, classGetterName ) {
   if ( composerMap.hasOwnProperty( classGetterName ) || shadowMap.hasOwnProperty( classGetterName ) ) {
-    console.trace("Duplicate Getter Method name", classGetterName);
-    throw "Duplicate Getter Method Name.";
+    console.trace("Duplicate registerShadowableClass Getter Method name", classGetterName);
+    throw `Duplicate registerShadowableClass Getter Method Name. ${classGetterName}`;
   }
 
   shadowMap[ classGetterName ] = ClassConstructor;
