@@ -34,6 +34,8 @@ const rootPrefix = '../..'
 require(rootPrefix + '/config/core_constants');
 require(rootPrefix + '/config/core_addresses');
 require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/lib/contract_interact/value_registrar');
+require(rootPrefix + '/lib/contract_interact/utility_registrar');
 
 /**
  * Inter comm process to register branded token.
@@ -100,7 +102,7 @@ const RegisterBrandedTokenInterCommSpecificPrototype = {
       , coreAddresses = oThis.ic().getCoreAddresses()
       , coreConstants = oThis.ic().getCoreConstants()
       , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
-      , ValueRegistrarKlass = oThis.ic().getValueRegistrarKlass()
+      , ValueRegistrarKlass = oThis.ic().getValueRegistrarInteractClass()
       , UtilityRegistrarKlass = oThis.ic().getUtilityRegistrarClass()
       , notificationData = {
         topics: ['event.register_branded_token'], // override later: with every stage

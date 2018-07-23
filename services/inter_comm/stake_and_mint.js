@@ -27,6 +27,7 @@ const rootPrefix = '../..'
 
 require(rootPrefix + '/config/core_addresses');
 require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/lib/contract_interact/utility_registrar');
 
 /**
  * Inter comm process for the stake and mint.
@@ -99,8 +100,10 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
    */
   processEventObj: async function (eventObj) {
 
+    console.log('eventObj', eventObj);
     const oThis = this
       , coreAddresses = oThis.ic().getCoreAddresses()
+      , UtilityRegistrarKlass = oThis.ic().getUtilityRegistrarClass()
 
       , returnValues = eventObj.returnValues
       , uuid = returnValues._uuid
@@ -112,7 +115,6 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
       , stakingIntentHash = returnValues._stakingIntentHash
       , beneficiary = returnValues._beneficiary
       , chainIdUtility = returnValues._chainIdUtility
-      , UtilityRegistrarKlass = require(rootPrefix + '/lib/contract_interact/utility_registrar')
       , utilityRegistrarContractAddress = coreAddresses.getAddressForContract("utilityRegistrar")
       , openSTUtilityCurrContractAddr = coreAddresses.getAddressForContract('openSTUtility')
       , utilityRegistrarAddr = coreAddresses.getAddressForUser('utilityRegistrar')

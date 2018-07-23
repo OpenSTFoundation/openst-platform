@@ -31,15 +31,13 @@ IntercomBaseKlass.prototype = {
    *
    */
   init: function () {
+
     const oThis = this
-      , clearCacheOfExpr = /(openst-platform\/config\/)|(openst-platform\/lib\/)/
     ;
 
-    Object.keys(require.cache).forEach(function (key) {
-      if (key.search(clearCacheOfExpr) !== -1) {
-        delete require.cache[key];
-      }
-    });
+    // let go of all instances
+    oThis.ic().instanceMap = {};
+
     oThis.setContractObj();
 
     // Read this from a file
@@ -72,7 +70,7 @@ IntercomBaseKlass.prototype = {
         {fromBlock: oThis.fromBlock, toBlock: oThis.toBlock},
         function (error, logs) {
           if (error) logger.error('getPastEvents error:', error);
-          logger.log('getPastEvents done from block:', oThis.fromBlock, 'to block:', oThis.toBlock);
+          logger.info('getPastEvents done from block:', oThis.fromBlock, 'to block:', oThis.toBlock);
         }
       );
       await oThis.processEventsArray(events);
