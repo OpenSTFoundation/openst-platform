@@ -16,9 +16,20 @@ shell.config.silent = true;
 
 const rootPrefix = "../.."
   , setupHelper = require(rootPrefix + '/tools/setup/helper')
-  , platformStatus = require(rootPrefix + '/services/utils/platform_status')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , StartDynamo = require(rootPrefix + '/lib/start_dynamo')
+;
+
+const args = process.argv
+  , configStrategyFilePath = args[2]
+;
+
+require(rootPrefix + '/services/utils/platform_status');
+
+const configStrategy = configStrategyFilePath ? require(configStrategyFilePath) : require(setupHelper.configStrategyFilePath())
+  , instanceComposer = new InstanceComposer(configStrategy)
+  , PlatformStatusKlass = instanceComposer.getPlatformStatusService()
 ;
 
 /**
@@ -65,7 +76,7 @@ StartServicesKlass.prototype = {
 
     // Check geths are up and running
     logger.step("** Check chains are up and responding");
-    const statusObj = new platformStatus()
+    const statusObj = new PlatformStatusKlass()
       , servicesResponse = await statusObj.perform();
     if (servicesResponse.isFailure()) {
       logger.error("* Error ", servicesResponse);
