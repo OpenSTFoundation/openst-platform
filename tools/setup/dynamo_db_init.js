@@ -8,7 +8,7 @@ const openSTStorage = require('@openstfoundation/openst-storage')
 ;
 
 const rootPrefix = '../..'
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 require(rootPrefix + '/lib/dynamoDB_service');
@@ -31,7 +31,7 @@ DynamoDBInit.prototype = {
     logger.info('* Running DynamoDB initial migrations for shard management.');
     let shardMgmtObj = ddbServiceObj.shardManagement();
     await shardMgmtObj.runShardMigration(ddbServiceObj, null);
-
+    
     // createAndRegisterShard
     logger.info('* Creating and registering shard for token balance model.');
     await new openSTStorage.TokenBalanceModel({

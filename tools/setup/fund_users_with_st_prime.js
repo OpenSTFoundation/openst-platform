@@ -10,7 +10,7 @@ const BigNumber = require('bignumber.js')
 ;
 
 const rootPrefix = "../.."
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
@@ -22,7 +22,7 @@ require(rootPrefix + '/config/core_addresses');
  *
  * @constructor
  */
-const FundUsersWithSTPrimeKlass = function ( configStrategy, instanceComposer) {
+const FundUsersWithSTPrimeKlass = function (configStrategy, instanceComposer) {
 
 };
 
@@ -51,23 +51,23 @@ FundUsersWithSTPrimeKlass.prototype = {
     logger.info('* Utility Chain Owner funding ST\' on utility chain to staker');
     await setupFundManager.transferSTP(utilityChainOwnerAddr, utilityChainOwnerPassphrase, stakerAddr,
       MIN_FUND.mul(100).toString(10));
-
+    
     logger.info('* Utility Chain Owner funding ST\' on utility chain to redeemer');
     await setupFundManager.transferSTP(utilityChainOwnerAddr, utilityChainOwnerPassphrase, redeemerAddr,
       MIN_FUND.mul(100).toString(10));
-
+    
     logger.info('* Utility Chain Owner funding ST\' on utility chain to utilityRegistrar');
     await setupFundManager.transferSTP(utilityChainOwnerAddr, utilityChainOwnerPassphrase, utilityRegistrarAddr,
       MIN_FUND.mul(100).toString(10));
-
+    
     logger.info('* Utility Chain Owner funding ST\' on utility chain to utilityOps');
     await setupFundManager.transferSTP(utilityChainOwnerAddr, utilityChainOwnerPassphrase, utilityOpsAddr,
       MIN_FUND.mul(100).toString(10));
-
+    
     logger.info('* Utility Chain Owner funding ST\' on utility chain to utilityDeployer');
     await setupFundManager.transferSTP(utilityChainOwnerAddr, utilityChainOwnerPassphrase, utilityDeployerAddr,
       MIN_FUND.mul(100).toString(10));
-
+    
     return Promise.resolve();
     
   }

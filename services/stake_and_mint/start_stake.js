@@ -9,7 +9,7 @@
 const uuid = require('uuid');
 
 const rootPrefix = '../..'
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
@@ -31,7 +31,7 @@ require(rootPrefix + '/lib/contract_interact/openst_value');
 const startStakeKlass = function (params) {
   const oThis = this
   ;
-
+  
   params = params || {};
   oThis.beneficiary = params.beneficiary;
   oThis.toStakeAmount = params.to_stake_amount;
@@ -39,16 +39,16 @@ const startStakeKlass = function (params) {
 };
 
 startStakeKlass.prototype = {
-
+  
   /**
    * Perform
    *
    * @return {promise<result>}
    */
   perform: function () {
-
+    
     const oThis = this;
-
+    
     return oThis.asyncPerform()
       .catch(function (error) {
         if (responseHelper.isCustomResult(error)) {
@@ -56,7 +56,7 @@ startStakeKlass.prototype = {
         } else {
           logger.error('openst-platform::services/stake_and_mint/start_stake.js::perform::catch');
           logger.error(error);
-
+          
           console.trace('-----Check');
           return responseHelper.error({
             internal_error_identifier: 's_sam_ss_0',
@@ -66,25 +66,25 @@ startStakeKlass.prototype = {
           });
         }
       });
-
+    
   },
-
-
+  
+  
   /**
    * asyncPerform
    *
    * @return {promise<result>}
    */
   asyncPerform: async function () {
-
+    
     const oThis = this
       , coreAddresses = oThis.ic().getCoreAddresses()
     ;
-
+    
     const stakerAddress = coreAddresses.getAddressForUser('staker')
       , stakerPassphrase = coreAddresses.getPassphraseForUser('staker');
-
-
+    
+    
     // Validations
     if (!basicHelper.isAddressValid(stakerAddress) || !stakerPassphrase) {
       let errObj = responseHelper.error({
@@ -118,24 +118,24 @@ startStakeKlass.prototype = {
       });
       return Promise.resolve(errObj);
     }
-
+    
     // Format wei
     oThis.toStakeAmount = basicHelper.formatWeiToString(oThis.toStakeAmount);
-
+    
     const OpenSTValueKlass = oThis.ic().getOpenSTValueInteractClass();
-
+    
     let openSTValueContractInteract = new OpenSTValueKlass()
     ;
-
-
+    
+    
     const stakeTransactionHash = await openSTValueContractInteract.stake(stakerAddress, stakerPassphrase, oThis.uuid,
       oThis.toStakeAmount, oThis.beneficiary, true);
-
+    
     return Promise.resolve(responseHelper.successWithData({
       transaction_uuid: uuid.v4(),
       transaction_hash: stakeTransactionHash
     }));
-
+    
   }
 };
 

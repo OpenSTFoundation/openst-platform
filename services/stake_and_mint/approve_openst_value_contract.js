@@ -36,10 +36,10 @@ const ApproveOpenstValueContractKlass = function (params) {
     
     , openSTValueContractName = 'openSTValue'
   ;
-
+  
   params = params || {};
   params.options = params.options || {};
-
+  
   if (params.options.returnType === 'txReceipt') {
     oThis.runInAsync = false;
   } else {
@@ -49,11 +49,11 @@ const ApproveOpenstValueContractKlass = function (params) {
   oThis.openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName);
   oThis.stakerAddress = coreAddresses.getAddressForUser('staker');
   oThis.stakerPassphrase = coreAddresses.getPassphraseForUser('staker');
-
+  
 };
 
 ApproveOpenstValueContractKlass.prototype = {
-
+  
   /**
    * Perform
    *
@@ -61,7 +61,7 @@ ApproveOpenstValueContractKlass.prototype = {
    */
   perform: function () {
     const oThis = this;
-
+    
     return oThis.asyncPerform()
       .catch(function (error) {
         if (responseHelper.isCustomResult(error)) {
@@ -69,7 +69,7 @@ ApproveOpenstValueContractKlass.prototype = {
         } else {
           logger.error('openst-platform::services/on_boarding/get_registration_status.js::perform::catch');
           logger.error(error);
-
+          
           return responseHelper.error({
             internal_error_identifier: 's_ob_grs_3',
             api_error_identifier: 'something_went_wrong',
@@ -79,7 +79,7 @@ ApproveOpenstValueContractKlass.prototype = {
         }
       });
   },
-
+  
   /**
    * Async Perform
    *
@@ -88,27 +88,27 @@ ApproveOpenstValueContractKlass.prototype = {
   asyncPerform: async function () {
     const oThis = this
     ;
-
+    
     try {
-
+      
       const bigBalance = await oThis._getStakerSTBalance();
-
+      
       var approveRsp = await oThis._approve(bigBalance);
       approveRsp.transaction_uuid = uuid.v4();
-
+      
       return Promise.resolve(approveRsp);
-
+      
     } catch (err) {
       let errObj = responseHelper.error({
         internal_error_identifier: 's_sam_aovc_1',
         api_error_identifier: 'something_went_wrong',
         error_config: basicHelper.fetchErrorConfig()
       });
-
+      
       return Promise.resolve(errObj);
     }
   },
-
+  
   /**
    * Approve OpenSTValue contract for starting the stake and mint process.
    *
@@ -119,12 +119,12 @@ ApproveOpenstValueContractKlass.prototype = {
    * @ignore
    */
   _approve: async function (toApproveAmount) {
-
+    
     const oThis = this
       , SimpleTokenKlass = oThis.ic().getSimpleTokenInteractClass()
       , simpleToken = new SimpleTokenKlass()
     ;
-
+    
     const approveRsp = await simpleToken.approve(
       oThis.stakerAddress,
       oThis.stakerPassphrase,
@@ -132,11 +132,11 @@ ApproveOpenstValueContractKlass.prototype = {
       toApproveAmount,
       oThis.runInAsync
     );
-
+    
     return Promise.resolve(approveRsp);
-
+    
   },
-
+  
   /**
    * Get ST balance of staker
    *
@@ -148,17 +148,17 @@ ApproveOpenstValueContractKlass.prototype = {
     
     const oThis = this
       , SimpleTokenKlass = oThis.ic().getSimpleTokenInteractClass()
-      , simpleToken   = new SimpleTokenKlass()
+      , simpleToken = new SimpleTokenKlass()
     ;
     
     return simpleToken.balanceOf(oThis.stakerAddress)
       .then(function (result) {
         const stBalance = result.data['balance'];
-
+        
         return new BigNumber(stBalance);
       })
   },
-
+  
 };
 
 InstanceComposer.registerShadowableClass(ApproveOpenstValueContractKlass, "getApproveOpenstValueContractService");

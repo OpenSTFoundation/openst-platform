@@ -9,8 +9,8 @@ const chai = require('chai')
 const rootPrefix = "../.."
   , OpenstPlatform = require(rootPrefix + '/index')
   , setupHelper = require(rootPrefix + '/tools/setup/helper')
-  , configStrategy = require( setupHelper.configStrategyFilePath() )
-  , openstPlatform = new OpenstPlatform( configStrategy )
+  , configStrategy = require(setupHelper.configStrategyFilePath())
+  , openstPlatform = new OpenstPlatform(configStrategy)
   , platformServices = openstPlatform.services.transaction
 ;
 
@@ -20,93 +20,93 @@ var testValidData = {
 };
 
 describe('services/transaction/get_receipt', function () {
-
+  
   it('should return promise', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
-
+    
     var getReceiptObj = new platformServices.getReceipt(dupData)
       , response = getReceiptObj.perform()
     ;
     assert.typeOf(response, 'Promise');
   });
-
+  
   it('should fail when params is undefined', async function () {
     var dupData = undefined;
-
+    
     var getReceiptObj = new platformServices.getReceipt(dupData)
       , response = await getReceiptObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
-
+  
   it('should fail when params is a string', async function () {
     var dupData = 'abc';
-
+    
     var getReceiptObj = new platformServices.getReceipt(dupData)
       , response = await getReceiptObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
-
+  
   it('should fail when params is empty object', async function () {
     var dupData = {};
-
+    
     var getReceiptObj = new platformServices.getReceipt(dupData)
       , response = await getReceiptObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
-
+  
   it('should fail when params is empty array', async function () {
     var dupData = [];
-
+    
     var getReceiptObj = new platformServices.getReceipt(dupData)
       , response = await getReceiptObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
-
+  
   it('should fail when chain is invalid and transaction_hash is invalid', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.transaction_hash = 'my-tx';
     dupData.chain = 'my-chain';
-
+    
     var getReceiptObj = new platformServices.getReceipt(dupData)
       , response = await getReceiptObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
-
+  
   it('should fail when chain is valid and transaction_hash is invalid', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.transaction_hash = 'my-tx';
-
+    
     var getReceiptObj = new platformServices.getReceipt(dupData)
       , response = await getReceiptObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
-
+  
   it('should fail when chain is invalid and transaction_hash is valid', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.chain = 'my-chain';
-
+    
     var getReceiptObj = new platformServices.getReceipt(dupData)
       , response = await getReceiptObj.perform()
     ;
     assert.equal(response.isSuccess(), false);
   });
-
+  
   it('should fail when chain is valid and transaction_hash is valid but not mined', async function () {
     var dupData = JSON.parse(JSON.stringify(testValidData));
-
+    
     var getReceiptObj = new platformServices.getReceipt(dupData)
       , response = await getReceiptObj.perform()
     ;
     assert.equal(response.isSuccess(), true);
     assert.deepEqual(response.data, {});
   });
-
+  
   it('should pass when chain is valid and transaction_hash is valid and mined', async function () {
     // // Generate a trnsaction hash
     // var senderName = 'utilityChainOwner'
@@ -126,5 +126,5 @@ describe('services/transaction/get_receipt', function () {
     // ;
     // assert.equal(response.isSuccess(), false);
   });
-
+  
 });

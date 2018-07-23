@@ -1,25 +1,25 @@
 "use strict";
 
 const rootPrefix = '..'
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
 ;
 
 const DynamoDbConfig = function (configStrategy, instanceComposer) {
   const oThis = this;
-   oThis.apiVersion       = configStrategy.OS_DYNAMODB_API_VERSION;
-   oThis.accessKeyId      = configStrategy.OS_DYNAMODB_ACCESS_KEY_ID;
-   oThis.secretAccessKey  = configStrategy.OS_DYNAMODB_SECRET_ACCESS_KEY;
-   oThis.region           = configStrategy.OS_DYNAMODB_REGION;
-   oThis.endpoint         = configStrategy.OS_DYNAMODB_ENDPOINT;
-
+  oThis.apiVersion = configStrategy.OS_DYNAMODB_API_VERSION;
+  oThis.accessKeyId = configStrategy.OS_DYNAMODB_ACCESS_KEY_ID;
+  oThis.secretAccessKey = configStrategy.OS_DYNAMODB_SECRET_ACCESS_KEY;
+  oThis.region = configStrategy.OS_DYNAMODB_REGION;
+  oThis.endpoint = configStrategy.OS_DYNAMODB_ENDPOINT;
+  
   if (configStrategy.OS_DYNAMODB_SSL_ENABLED == 1) {
-   oThis.sslEnabled = true;
+    oThis.sslEnabled = true;
   } else {
-   oThis.sslEnabled = false;
+    oThis.sslEnabled = false;
   }
-
+  
   if (configStrategy.OS_DYNAMODB_LOGGING_ENABLED == 1) {
-   oThis.logger = console;
+    oThis.logger = console;
   }
 };
 

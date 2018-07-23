@@ -45,7 +45,7 @@ String.prototype.equalsIgnoreCase = function (compareWith) {
   const oThis = this
     , _self = this.toLowerCase()
     , _compareWith = String(compareWith).toLowerCase();
-
+  
   return _self === _compareWith;
 };
 /**
@@ -59,18 +59,18 @@ String.prototype.equalsIgnoreCase = function (compareWith) {
  *
  */
 const startRedeem = async function (beneficiary, toRedeemAmount, uuid) {
-
+  
   toRedeemAmount = new BigNumber(toRedeemAmount);
-
+  
   const redeemerAddress = coreAddresses.getAddressForUser('redeemer')
     , redeemerPassphrase = coreAddresses.getPassphraseForUser('redeemer');
-
+  
   const redeemerNonceResponse = await getNonceForRedeeming(redeemerAddress);
   if (redeemerNonceResponse.isFailure()) {
     throw "Get next nounce failed";
   }
   const redeemerNonce = redeemerNonceResponse.data.nextNounce;
-
+  
   if (uuid.equalsIgnoreCase(coreConstants.OST_OPENSTUTILITY_ST_PRIME_UUID)) {
     return openSTUtilityContractInteract.redeemSTPrime(
       redeemerAddress,

@@ -9,7 +9,7 @@
 const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
@@ -27,13 +27,13 @@ require(rootPrefix + '/lib/contract_interact/st_prime');
  */
 const SimpleTokenPrimeBalanceKlass = function (params) {
   const oThis = this;
-
+  
   params = params || {};
   oThis.address = params.address;
 };
 
 SimpleTokenPrimeBalanceKlass.prototype = {
-
+  
   /**
    * Perform
    *
@@ -41,12 +41,12 @@ SimpleTokenPrimeBalanceKlass.prototype = {
    */
   perform: function () {
     const oThis = this;
-
+    
     return oThis.asyncPerform()
       .catch(function (error) {
         logger.error('openst-platform::services/balance/simple_token_prime.js::perform::catch');
         logger.error(error);
-
+        
         if (responseHelper.isCustomResult(error)) {
           return error;
         } else {
@@ -58,7 +58,7 @@ SimpleTokenPrimeBalanceKlass.prototype = {
         }
       });
   },
-
+  
   /**
    * Async Perform
    *
@@ -66,26 +66,26 @@ SimpleTokenPrimeBalanceKlass.prototype = {
    */
   asyncPerform: async function () {
     const oThis = this;
-
+    
     let coreAddresses = oThis.ic().getCoreAddresses()
       , StPrimeKlass = oThis.ic().getStPrimeInteractClass()
       , stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
       , stPrime = new StPrimeKlass(stPrimeContractAddress)
     ;
-
-      //Validations
-      if (!basicHelper.isAddressValid(oThis.address)) {
-        let errObj = responseHelper.error({
-          internal_error_identifier: 's_b_stp_1',
-          api_error_identifier: 'invalid_address',
-          error_config: basicHelper.fetchErrorConfig()
-        });
-
-        return Promise.resolve(errObj);
-      }
-
-      return stPrime.getBalanceOf(oThis.address);
-
+    
+    //Validations
+    if (!basicHelper.isAddressValid(oThis.address)) {
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_b_stp_1',
+        api_error_identifier: 'invalid_address',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      
+      return Promise.resolve(errObj);
+    }
+    
+    return stPrime.getBalanceOf(oThis.address);
+    
   }
 };
 

@@ -10,14 +10,14 @@
 const fs = require('fs');
 
 const rootPrefix = '../..'
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
 const IntercomBaseKlass = function (params) {
   const oThis = this
   ;
-
+  
   oThis.filePath = params.file_path;
   oThis.fromBlock = 0;
   oThis.toBlock = 0;
@@ -31,21 +31,21 @@ IntercomBaseKlass.prototype = {
    *
    */
   init: function () {
-
+    
     const oThis = this
     ;
-
+    
     // let go of all instances
     oThis.ic().instanceMap = {};
-
+    
     oThis.setContractObj();
-
+    
     // Read this from a file
     oThis.snmData = JSON.parse(fs.readFileSync(oThis.filePath).toString());
-
+    
     oThis.checkForFurtherEvents();
   },
-
+  
   /**
    * Check for further events
    *
@@ -53,18 +53,18 @@ IntercomBaseKlass.prototype = {
   checkForFurtherEvents: async function () {
     const oThis = this
     ;
-
+    
     try {
       const highestBlock = await this.getChainHighestBlock();
-
+      
       // return if nothing more to do.
       if (highestBlock - 6 <= oThis.lastProcessedBlock) return oThis.schedule();
-
+      
       // consider case in which last block was not processed completely
-
+      
       oThis.fromBlock = oThis.snmData.lastProcessedBlock + 1;
       oThis.toBlock = highestBlock - 6;
-
+      
       const events = await oThis.completeContract.getPastEvents(
         oThis.EVENT_NAME,
         {fromBlock: oThis.fromBlock, toBlock: oThis.toBlock},
@@ -74,28 +74,28 @@ IntercomBaseKlass.prototype = {
         }
       );
       await oThis.processEventsArray(events);
-
+      
       oThis.schedule();
     } catch (err) {
       logger.info('Exception got:', err);
-
+      
       if (oThis.interruptSignalObtained) {
         logger.info('Exiting Process....');
         process.exit(1);
       } else {
         oThis.reInit();
       }
-
+      
     }
   },
-
+  
   /**
    * Register interrup signal handlers
    *
    */
   registerInterruptSignalHandlers: function () {
     const oThis = this;
-
+    
     process.on('SIGINT', function () {
       logger.info("Received SIGINT, cancelling block scaning");
       oThis.interruptSignalObtained = true;
@@ -105,7 +105,7 @@ IntercomBaseKlass.prototype = {
       oThis.interruptSignalObtained = true;
     });
   },
-
+  
   /**
    * Process events array
    *
@@ -116,20 +116,20 @@ IntercomBaseKlass.prototype = {
     const oThis = this
       , promiseArray = []
     ;
-
+    
     // nothing to do
     if (!events || events.length === 0) {
       oThis.updateIntercomDataFile();
       return Promise.resolve();
     }
-
+    
     for (var i = 0; i < events.length; i++) {
       const eventObj = events[i]
         , j = i
       ;
-
+      
       // await oThis.processEventObj(eventObj);
-
+      
       if (oThis.parallelProcessingAllowed()) {
         promiseArray.push(new Promise(function (onResolve, onReject) {
           setTimeout(function () {
@@ -149,15 +149,15 @@ IntercomBaseKlass.prototype = {
           });
       }
     }
-
+    
     if (oThis.parallelProcessingAllowed()) {
       await Promise.all(promiseArray);
     }
-
+    
     oThis.updateIntercomDataFile();
     return Promise.resolve();
   },
-
+  
   /**
    * Schedule
    */
@@ -168,7 +168,7 @@ IntercomBaseKlass.prototype = {
       oThis.checkForFurtherEvents();
     }, 5000);
   },
-
+  
   /**
    * Re init
    */
@@ -179,16 +179,16 @@ IntercomBaseKlass.prototype = {
       oThis.init();
     }, 5000);
   },
-
+  
   /**
    * Update intercom data file
    */
   updateIntercomDataFile: function () {
     const oThis = this
     ;
-
+    
     oThis.snmData.lastProcessedBlock = oThis.toBlock;
-
+    
     fs.writeFileSync(
       oThis.filePath,
       JSON.stringify(oThis.snmData),
@@ -197,7 +197,7 @@ IntercomBaseKlass.prototype = {
           logger.error(err);
       }
     );
-
+    
     if (oThis.interruptSignalObtained) {
       logger.info('Exiting Process....');
       process.exit(1);

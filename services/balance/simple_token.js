@@ -9,7 +9,7 @@
 const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
@@ -26,13 +26,13 @@ require(rootPrefix + '/lib/contract_interact/simple_token');
  */
 const SimpleTokenBalanceKlass = function (params) {
   const oThis = this;
-
+  
   params = params || {};
   oThis.address = params.address;
 };
 
 SimpleTokenBalanceKlass.prototype = {
-
+  
   /**
    * Perform
    *
@@ -40,12 +40,12 @@ SimpleTokenBalanceKlass.prototype = {
    */
   perform: function () {
     const oThis = this;
-
+    
     return oThis.asyncPerform()
       .catch(function (error) {
         logger.error('openst-platform::services/balance/simple_token.js::perform::catch');
         logger.error(error);
-
+        
         if (responseHelper.isCustomResult(error)) {
           return error;
         } else {
@@ -54,11 +54,11 @@ SimpleTokenBalanceKlass.prototype = {
             api_error_identifier: 'something_went_wrong',
             error_config: basicHelper.fetchErrorConfig()
           });
-
+          
         }
       });
   },
-
+  
   /**
    * Async Perform
    *
@@ -66,7 +66,7 @@ SimpleTokenBalanceKlass.prototype = {
    */
   asyncPerform: async function () {
     const oThis = this;
-
+    
     //Validations
     if (!basicHelper.isAddressValid(oThis.address)) {
       let errObj = responseHelper.error({
@@ -74,17 +74,17 @@ SimpleTokenBalanceKlass.prototype = {
         api_error_identifier: 'invalid_address',
         error_config: basicHelper.fetchErrorConfig()
       });
-
+      
       return Promise.resolve(errObj);
     }
-
+    
     let SimpleTokenKlass = oThis.ic().getSimpleTokenInteractClass();
-    let simpleToken   = new SimpleTokenKlass();
-
+    let simpleToken = new SimpleTokenKlass();
+    
     return simpleToken.balanceOf(oThis.address);
-
+    
   }
-
+  
 };
 
 InstanceComposer.registerShadowableClass(SimpleTokenBalanceKlass, 'getSimpleTokenBalanceService');

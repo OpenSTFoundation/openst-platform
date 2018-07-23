@@ -10,7 +10,7 @@ const BigNumber = require('bignumber.js')
 ;
 
 const rootPrefix = "../.."
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 require(rootPrefix + '/config/core_addresses');
@@ -44,22 +44,22 @@ FundUsersKlass.prototype = {
       , utilityChainOwnerAddr = coreAddresses.getAddressForUser('utilityChainOwner')
       , MIN_FUND = (new BigNumber(10)).toPower(18)
     ;
-
+    
     logger.info('* Foundation funding ETH on value chain to valueRegistrar');
     await setupFundManager.transferEth(foundationAddr, foundationPassphrase, valueRegistrarAddr, MIN_FUND.toString(10));
-
+    
     logger.info('* Foundation funding ETH on value chain to valueDeployer');
     await setupFundManager.transferEth(foundationAddr, foundationPassphrase, valueDeployerAddr, MIN_FUND.toString(10));
-
+    
     logger.info('* Foundation funding ETH on value chain to valueOps');
     await setupFundManager.transferEth(foundationAddr, foundationPassphrase, valueOpsAddr, MIN_FUND.toString(10));
-
+    
     logger.info('* Foundation funding ETH on value chain to utility chain owner');
     await setupFundManager.transferEth(foundationAddr, foundationPassphrase, utilityChainOwnerAddr, MIN_FUND.mul(100000).toString(10));
-
+    
     logger.info('* Foundation funding ETH on value chain to staker');
     await setupFundManager.transferEth(foundationAddr, foundationPassphrase, stakerAddr, MIN_FUND.mul(100000).toString(10));
-
+    
     return Promise.resolve();
   }
 };

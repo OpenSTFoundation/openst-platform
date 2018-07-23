@@ -32,26 +32,26 @@ const senderName = 'staker'
  * @constructor
  */
 const ProposeBrandedTokenKlass = function (params) {
-
+  
   const oThis = this
     , coreAddresses = oThis.ic().getCoreAddresses()
   ;
-
+  
   params = params || {};
   oThis.name = params.name;
   oThis.symbol = params.symbol;
   oThis.conversionFactor = params.conversion_factor;
   oThis.conversionRate = null;
   oThis.conversionRateDecimals = null;
-
+  
   oThis.stakerAddr = coreAddresses.getAddressForUser(senderName);
   oThis.stakerPassphrase = coreAddresses.getPassphraseForUser(senderName);
   oThis.openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName);
-
+  
 };
 
 ProposeBrandedTokenKlass.prototype = {
-
+  
   /**
    * Perform
    *
@@ -59,12 +59,12 @@ ProposeBrandedTokenKlass.prototype = {
    */
   perform: function () {
     const oThis = this;
-
+    
     return oThis.asyncPerform()
       .catch(function (error) {
         logger.error('openst-platform::services/on_boarding/propose_branded_token.js::perform::catch');
         logger.error(error);
-
+        
         if (responseHelper.isCustomResult(error)) {
           return error;
         } else {
@@ -77,7 +77,7 @@ ProposeBrandedTokenKlass.prototype = {
         }
       });
   },
-
+  
   /**
    * Async Perform
    *
@@ -86,7 +86,7 @@ ProposeBrandedTokenKlass.prototype = {
   asyncPerform: async function () {
     const oThis = this
     ;
-
+    
     //validations
     if (!basicHelper.isBTNameValid(oThis.name)) {
       let errObj = responseHelper.error({
@@ -94,7 +94,7 @@ ProposeBrandedTokenKlass.prototype = {
         api_error_identifier: 'invalid_branded_token_name',
         error_config: basicHelper.fetchErrorConfig()
       });
-
+      
       return Promise.resolve(errObj);
     }
     if (!basicHelper.isBTSymbolValid(oThis.symbol)) {
@@ -103,7 +103,7 @@ ProposeBrandedTokenKlass.prototype = {
         api_error_identifier: 'invalid_branded_token_symbol',
         error_config: basicHelper.fetchErrorConfig()
       });
-
+      
       return Promise.resolve(errObj);
     }
     if (!basicHelper.isBTConversionFactorValid(oThis.conversionFactor)) {
@@ -112,36 +112,36 @@ ProposeBrandedTokenKlass.prototype = {
         api_error_identifier: 'invalid_conversion_factor',
         error_config: basicHelper.fetchErrorConfig()
       });
-
+      
       return Promise.resolve(errObj);
     }
-
+    
     const conversionRateConversionResponse = basicHelper.convertConversionFactorToConversionRate(oThis.conversionFactor);
     if (conversionRateConversionResponse.isSuccess()) {
-
+      
       oThis.conversionRate = conversionRateConversionResponse.data.conversionRate;
       oThis.conversionRateDecimals = conversionRateConversionResponse.data.conversionRateDecimals;
-
+      
       let OpenStUtilityContractInteractKlass = oThis.ic().getOpenSTUtilityInteractClass()
         , openSTUtilityContractInteract = new OpenStUtilityContractInteractKlass(oThis.openSTUtilityContractAddress)
       ;
-
+      
       const proposalRsp = await openSTUtilityContractInteract.proposeBrandedToken(
         oThis.stakerAddr,
         oThis.stakerPassphrase, oThis.symbol,
         oThis.name, oThis.conversionRate, oThis.conversionRateDecimals
       );
-
+      
       if (proposalRsp.isSuccess()) {
         proposalRsp.data.transaction_uuid = uuid.v4();
       }
-
+      
       return Promise.resolve(proposalRsp);
-
+      
     } else {
       return Promise.resolve(conversionRateConversionResponse);
     }
-
+    
   }
 };
 

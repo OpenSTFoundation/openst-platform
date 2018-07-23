@@ -9,7 +9,7 @@
 const rootPrefix = "../../.."
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
 ;
 
 require(rootPrefix + '/lib/web3/providers/factory');
@@ -40,16 +40,16 @@ DeploySimpleTokenContractKlass.prototype = {
       , web3ValueProvider = oThis.ic().getWeb3ProviderFactory()
       , deployHelper = oThis.ic().getDeployHelper()
     ;
-
+    
     logger.step('** Deploying Simple Token Contract');
     const deploymentResult = await deployHelper.perform(
       simpleTokenContractName,
-      web3ValueProvider.getProvider('value','ws'),
+      web3ValueProvider.getProvider('value', 'ws'),
       simpleTokenContractAbi,
       simpleTokenContractBin,
       'foundation');
-
-
+    
+    
     return Promise.resolve(responseHelper.successWithData(
       {contract: 'simpleToken', address: deploymentResult.contractAddress}));
   }

@@ -61,16 +61,16 @@ Logger.prototype.notify = function (code, msg, data, backtrace) {
   args = args.concat(Array.prototype.slice.call(arguments));
   args.push(this.CONSOLE_RESET);
   console.log.apply(console, args);
-
+  
   var bodyData = null
   ;
-
+  
   try {
     bodyData = JSON.stringify(data);
   } catch (err) {
     bodyData = data;
   }
-
+  
   openSTNotification.publishEvent.perform(
     {
       topics: ["email_error." + packageName],

@@ -7,7 +7,7 @@
  */
 
 const rootPrefix = '../../..'
-  , InstanceComposer = require( rootPrefix + '/instance_composer')
+  , InstanceComposer = require(rootPrefix + '/instance_composer')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
@@ -37,7 +37,7 @@ require(rootPrefix + '/lib/contract_interact/branded_token');
 const TransferBrandedTokenKlass = function (params) {
   const oThis = this
   ;
-
+  
   params = params || {};
   oThis.erc20Address = params.erc20_address;
   oThis.senderAddress = params.sender_address;
@@ -57,7 +57,7 @@ TransferBrandedTokenKlass.prototype = {
    * @return {Promise}
    */
   perform: function () {
-
+    
     const oThis = this
     ;
     
@@ -82,23 +82,23 @@ TransferBrandedTokenKlass.prototype = {
    *
    * @return {promise<result>} - returns a promise which resolves to an object of kind Result
    */
-  asyncPerform: async function() {
+  asyncPerform: async function () {
     const oThis = this
       , coreAddresses = oThis.ic().getCoreAddresses()
-      , BrandedTokenKlass  = oThis.ic().getBrandedTokenInteractClass()
+      , BrandedTokenKlass = oThis.ic().getBrandedTokenInteractClass()
     ;
-  
+    
     // Get sender details by name
     if (oThis.senderName) {
       oThis.senderAddress = coreAddresses.getAddressForUser(oThis.senderName);
       oThis.senderPassphrase = coreAddresses.getPassphraseForUser(oThis.senderName);
     }
-  
+    
     // Get recipient details by name
     if (oThis.recipientName) {
       oThis.recipientAddress = coreAddresses.getAddressForUser(oThis.recipientName);
     }
-  
+    
     // Validations
     if (!basicHelper.isAddressValid(oThis.erc20Address)) {
       let errObj = responseHelper.error({
@@ -140,12 +140,12 @@ TransferBrandedTokenKlass.prototype = {
       });
       return Promise.resolve(errObj);
     }
-  
+    
     // Format wei
     oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
-  
+    
     var brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address});
-  
+    
     return brandedToken.transfer(oThis.senderAddress, oThis.senderPassphrase,
       oThis.recipientAddress, oThis.amountInWei, {tag: oThis.tag, returnType: oThis.returnType});
     

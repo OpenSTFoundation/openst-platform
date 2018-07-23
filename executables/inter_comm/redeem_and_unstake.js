@@ -47,18 +47,18 @@ const RedeemAndUnstakeInterComm = function () {
 };
 
 RedeemAndUnstakeInterComm.prototype = {
-
+  
   /**
    * Starts the process of the script with initializing processor
    *
    */
   init: function () {
     var oThis = this;
-
+    
     eventQueueManager.setProcessor(oThis.processor);
     oThis.bindEvents();
   },
-
+  
   /**
    * Bind to start listening the desired event
    *
@@ -66,16 +66,16 @@ RedeemAndUnstakeInterComm.prototype = {
   bindEvents: function () {
     var oThis = this;
     logger.log("bindEvents binding RedemptionIntentDeclared");
-
+    
     oThis.listenToDesiredEvent(
       oThis.onEventSubscriptionError,
       oThis.onEvent,
       oThis.onEvent
     );
-
+    
     logger.win("Started listening RedemptionIntentDeclared event emitted by redeem method of openSTUtility contract.");
   },
-
+  
   /**
    * Listening RedemptionIntentDeclared event emitted by redeem method of openSTUtility contract.
    *
@@ -85,15 +85,15 @@ RedeemAndUnstakeInterComm.prototype = {
    *
    */
   listenToDesiredEvent: function (onError, onData, onChange) {
-    var completeContract = new (web3ProviderFactory.getProvider('utility','ws')).eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
-
-
+    var completeContract = new (web3ProviderFactory.getProvider('utility', 'ws')).eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
+    
+    
     completeContract.events.RedemptionIntentDeclared({})
       .on('error', onError)
       .on('data', onData)
       .on('changed', onChange);
   },
-
+  
   /**
    * Processing of RedemptionIntentDeclared event is delayed for n block confirmation by enqueueing to
    * {@link module:lib/web3/events/queue_manager|queue manager}.
@@ -105,7 +105,7 @@ RedeemAndUnstakeInterComm.prototype = {
     // TODO: Publish (event received) to notify others
     eventQueueManager.addEditEventInQueue(eventObj);
   },
-
+  
   /**
    * Generic Method to log event subscription error
    *
@@ -117,7 +117,7 @@ RedeemAndUnstakeInterComm.prototype = {
     logger.log("onEventSubscriptionError triggered");
     logger.error(error);
   },
-
+  
   /**
    * Processor gets executed from {@link module:lib/web3/events/queue_manager|queue manager} for
    * every RedemptionIntentDeclared event after waiting for n block confirmation.
@@ -135,7 +135,7 @@ RedeemAndUnstakeInterComm.prototype = {
       , amountUT = returnValues._amount
       , unlockHeight = returnValues._unlockHeight
     ;
-
+    
     return valueRegistrarContractInteract.confirmRedemptionIntent(
       valueRegistrarAddr,
       valueRegistrarPassphrase,
@@ -148,7 +148,7 @@ RedeemAndUnstakeInterComm.prototype = {
       redemptionIntentHash
     );
   }
-
+  
 };
 
 new RedeemAndUnstakeInterComm().init();

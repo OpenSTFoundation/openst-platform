@@ -10,7 +10,7 @@ const BigNumber = require('bignumber.js')
 ;
 
 const rootPrefix = "../.."
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
@@ -22,7 +22,7 @@ require(rootPrefix + '/config/core_addresses');
  *
  * @constructor
  */
-const FundUsersWithStKlass = function ( configStrategy, instanceComposer) {
+const FundUsersWithStKlass = function (configStrategy, instanceComposer) {
 
 };
 
@@ -45,10 +45,10 @@ FundUsersWithStKlass.prototype = {
     
     logger.info('* Foundation funding ST on value chain to utilityChainOwner');
     await setupFundManager.transferST(
-        foundationAddr, foundationPassphrase, utilityChainOwnerAddr, MIN_FUND.mul(100000000).toString(10),
-        {tag: 'transferSTToUCOwner', returnType: 'txReceipt'}
+      foundationAddr, foundationPassphrase, utilityChainOwnerAddr, MIN_FUND.mul(100000000).toString(10),
+      {tag: 'transferSTToUCOwner', returnType: 'txReceipt'}
     );
-
+    
     return Promise.resolve();
   }
 };

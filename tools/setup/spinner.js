@@ -16,7 +16,8 @@ spinner.setSpinnerString("|/-\\\\");
  *
  * @constructor
  */
-const SpinnerKlass = function () {};
+const SpinnerKlass = function () {
+};
 
 SpinnerKlass.prototype = {
   /**
@@ -25,7 +26,7 @@ SpinnerKlass.prototype = {
   start: function () {
     spinner.start();
   },
-
+  
   /**
    * Stop spinner
    */

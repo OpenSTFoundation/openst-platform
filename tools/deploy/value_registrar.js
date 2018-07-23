@@ -34,11 +34,11 @@ require(rootPrefix + '/lib/contract_interact/value_registrar');
  *
  * @return {boolean} true when equal
  */
-String.prototype.equalsIgnoreCase = function ( compareWith ) {
+String.prototype.equalsIgnoreCase = function (compareWith) {
   const oThis = this
     , _self = this.toLowerCase()
-    , _compareWith = String( compareWith ).toLowerCase();
-
+    , _compareWith = String(compareWith).toLowerCase();
+  
   return _self === _compareWith;
 };
 
@@ -47,12 +47,12 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
  *
  * @constructor
  */
-const DeployValueRegistrarContractKlass = function ( configStrategy, instanceComposer) {
+const DeployValueRegistrarContractKlass = function (configStrategy, instanceComposer) {
 
 };
 
 DeployValueRegistrarContractKlass.prototype = {
-
+  
   /**
    * Perform
    *
@@ -61,7 +61,7 @@ DeployValueRegistrarContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function (showPrompts) {
-
+    
     const oThis = this
       , coreConstants = oThis.ic().getCoreConstants()
       , coreAddresses = oThis.ic().getCoreAddresses()
@@ -78,13 +78,13 @@ DeployValueRegistrarContractKlass.prototype = {
       , valueRegistrarContractBin = coreAddresses.getBinForContract(valueRegistrarContractName)
       , web3Provider = web3ProviderFactory.getProvider('value', web3ProviderFactory.typeWS)
     ;
-
+    
     logger.step('** Deploying Value Registrar Contract');
     if (showPrompts) {
       // confirming the important addresses
       logger.info("Deployer Address: " + deployerAddress);
       logger.info("Value Ops Address: " + valueOpsAddress);
-
+      
       await new Promise(
         function (onResolve, onReject) {
           prompts.question("Please verify all above details. Do you want to proceed? [Y/N]", function (intent) {
@@ -102,23 +102,26 @@ DeployValueRegistrarContractKlass.prototype = {
     } else {
       prompts.close();
     }
-
+    
     const contractDeployTxReceipt = await deployHelper.perform(valueRegistrarContractName, web3Provider,
-      valueRegistrarContractAbi, valueRegistrarContractBin, valueDeployerName, {gasPrice: VC_GAS_PRICE, gas: VC_GAS_LIMIT});
-
+      valueRegistrarContractAbi, valueRegistrarContractBin, valueDeployerName, {
+        gasPrice: VC_GAS_PRICE,
+        gas: VC_GAS_LIMIT
+      });
+    
     const valueRegistrarContractAddr = contractDeployTxReceipt.contractAddress;
-
+    
     logger.step('** Setting Ops Address of Value Registrar contract to valueOps address and verifying it');
     const valueRegistrar = new ValueRegistrarKlass(valueRegistrarContractAddr);
     await valueRegistrar.setOpsAddress(valueDeployerName, valueOpsAddress);
-
+    
     const getOpsAddressResponse = await valueRegistrar.getOpsAddress();
-
+    
     if (!valueOpsAddress.equalsIgnoreCase(getOpsAddressResponse.data.address)) {
       logger.error('Exiting the deployment as opsAddress which was set just before does not match.');
       process.exit(1);
     }
-
+    
     return Promise.resolve(responseHelper.successWithData(
       {contract: 'valueRegistrar', address: valueRegistrarContractAddr}));
   }

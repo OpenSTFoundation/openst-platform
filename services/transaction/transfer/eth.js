@@ -7,7 +7,7 @@
  */
 
 const rootPrefix = '../../..'
-  , InstanceComposer = require( rootPrefix + '/instance_composer')
+  , InstanceComposer = require(rootPrefix + '/instance_composer')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
@@ -27,7 +27,7 @@ String.prototype.equalsIgnoreCase = String.prototype.equalsIgnoreCase || functio
   const oThis = this
     , _self = oThis.toLowerCase()
     , _compareWith = String(compareWith).toLowerCase();
-
+  
   return _self === _compareWith;
 };
 
@@ -48,10 +48,10 @@ String.prototype.equalsIgnoreCase = String.prototype.equalsIgnoreCase || functio
  * @constructor
  */
 const TransferEthKlass = function (params) {
-
+  
   const oThis = this
   ;
-
+  
   params = params || {};
   oThis.senderAddress = params.sender_address;
   oThis.senderPassphrase = params.sender_passphrase;
@@ -61,7 +61,7 @@ const TransferEthKlass = function (params) {
   oThis.amountInWei = params.amount_in_wei;
   oThis.tag = (params.options || {}).tag;
   oThis.returnType = (params.options || {}).returnType || 'txHash';
-
+  
 };
 
 TransferEthKlass.prototype = {
@@ -95,21 +95,21 @@ TransferEthKlass.prototype = {
    *
    * @return {promise<result>} - returns a promise which resolves to an object of kind Result
    */
-  asyncPerform: async function() {
+  asyncPerform: async function () {
     const oThis = this
-        , coreAddresses = oThis.ic().getCoreAddresses()
+      , coreAddresses = oThis.ic().getCoreAddresses()
     ;
     // Get sender details by name
     if (oThis.senderName) {
       oThis.senderAddress = coreAddresses.getAddressForUser(oThis.senderName);
       oThis.senderPassphrase = coreAddresses.getPassphraseForUser(oThis.senderName);
     }
-  
+    
     // Get recipient details by name
     if (oThis.recipientName) {
       oThis.recipientAddress = coreAddresses.getAddressForUser(oThis.recipientName);
     }
-  
+    
     // Validations
     if (!basicHelper.isAddressValid(oThis.senderAddress) || !oThis.senderPassphrase) {
       let errObj = responseHelper.error({
@@ -135,21 +135,21 @@ TransferEthKlass.prototype = {
       });
       return Promise.resolve(errObj);
     }
-  
+    
     // Format wei
     oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
-  
-    const EtherInteractKlass  = oThis.ic().getEtherInteractClass()
-      , etherInteractObj      = new EtherInteractKlass()
+    
+    const EtherInteractKlass = oThis.ic().getEtherInteractClass()
+      , etherInteractObj = new EtherInteractKlass()
     ;
-  
+    
     return etherInteractObj.transfer(
       oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei
       , {tag: oThis.tag, returnType: oThis.returnType}
     );
-
+    
   }
-
+  
 };
 
 InstanceComposer.registerShadowableClass(TransferEthKlass, "getTransferEthService");

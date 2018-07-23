@@ -8,7 +8,7 @@
 
 const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
@@ -32,7 +32,7 @@ require(rootPrefix + '/config/core_constants');
 const EstimateGasKlass = function (params) {
   const oThis = this
   ;
-
+  
   oThis.contractName = params.contract_name;
   oThis.contractAddress = params.contract_address;
   oThis.chain = params.chain;
@@ -50,7 +50,7 @@ EstimateGasKlass.prototype = {
   perform: function () {
     const oThis = this
     ;
-
+    
     return oThis.asyncPerform()
       .catch(function (error) {
         if (responseHelper.isCustomResult(error)) {
@@ -66,34 +66,34 @@ EstimateGasKlass.prototype = {
         }
       });
   },
-
+  
   /**
    * Async Perform
    *
    * @return {promise<result>}
    */
-  asyncPerform: async function() {
+  asyncPerform: async function () {
     const oThis = this
       , web3Provider = oThis.ic().getWeb3ProviderFactory().getProvider(oThis.chain, 'ws')
       , abi = oThis.ic().getCoreAddresses().getAbiForContract(oThis.contractName)
       , contractObj = new web3Provider.eth.Contract(abi)
       , bufferGasLimit = 10000
     ;
-
+    
     contractObj.options.address = oThis.contractAddress;
     //contractObj.setProvider(web3Provider.currentProvider);
-
+    
     let coreConstants = oThis.ic().getCoreConstants();
     const transactionOptions = {
       from: oThis.senderAddress,
       gasPrice: (oThis.chain === 'value') ? coreConstants.OST_VALUE_GAS_PRICE : coreConstants.OST_UTILITY_GAS_PRICE,
       gas: (oThis.chain === 'value') ? coreConstants.OST_VALUE_GAS_LIMIT : coreConstants.OST_UTILITY_GAS_LIMIT
     };
-
+    
     const scope = contractObj.methods
       , gasToUse = await (scope[oThis.methodName].apply(scope,
       (oThis.methodArguments || []))).estimateGas(transactionOptions);
-
+    
     return responseHelper.successWithData({gas_to_use: gasToUse + bufferGasLimit});
   }
 };

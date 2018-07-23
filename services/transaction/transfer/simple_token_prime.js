@@ -7,7 +7,7 @@
  */
 
 const rootPrefix = '../../..'
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
@@ -35,7 +35,7 @@ require(rootPrefix + '/lib/contract_interact/st_prime');
 const TransferSimpleTokenPrimeKlass = function (params) {
   const oThis = this
   ;
-
+  
   params = params || {};
   oThis.senderAddress = params.sender_address;
   oThis.senderPassphrase = params.sender_passphrase;
@@ -78,14 +78,14 @@ TransferSimpleTokenPrimeKlass.prototype = {
    *
    * @return {promise<result>} - returns a promise which resolves to an object of kind Result
    */
-  asyncPerform: async function() {
+  asyncPerform: async function () {
     const oThis = this
       , coreAddresses = oThis.ic().getCoreAddresses()
       , stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
       , StPrimeKlass = oThis.ic().getStPrimeInteractClass()
       , stPrime = new StPrimeKlass(stPrimeContractAddress)
     ;
-  
+    
     // Get sender details by name
     if (oThis.senderName) {
       oThis.senderAddress = coreAddresses.getAddressForUser(oThis.senderName);
@@ -129,10 +129,10 @@ TransferSimpleTokenPrimeKlass.prototype = {
       });
       return Promise.resolve(errObj);
     }
-  
+    
     // Format wei
     oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
-  
+    
     return stPrime.transfer(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei,
       {tag: oThis.tag, returnType: oThis.returnType});
     

@@ -5,7 +5,7 @@
  * @module tools/setup/geth_checker
  */
 const rootPrefix = "../.."
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , setupConfig = require(rootPrefix + '/tools/setup/config')
 ;
@@ -31,13 +31,13 @@ GethCheckerKlass.prototype = {
     const oThis = this
       , promiseArray = []
     ;
-
+    
     for (var chain in setupConfig.chains) {
       promiseArray.push(oThis._isRunning(chain));
     }
     return Promise.all(promiseArray);
   },
-
+  
   /**
    * Check if mentioned chain started mining and are ready
    *
@@ -45,22 +45,22 @@ GethCheckerKlass.prototype = {
    *
    * @return {promise}
    */
-  _isRunning: function(chain) {
-
+  _isRunning: function (chain) {
+    
     const oThis = this
       , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
-      , retryAttempts       = 100
-      , timerInterval       = 5000
-      , chainTimer          = {timer: undefined, blockNumber: 0, retryCounter: 0}
+      , retryAttempts = 100
+      , timerInterval = 5000
+      , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
     ;
-
-    chain = String( chain ).toLowerCase();
-    if ( chain !== 'utility' ) {
+    
+    chain = String(chain).toLowerCase();
+    if (chain !== 'utility') {
       chain = 'value';
     }
-
+    
     const provider = web3ProviderFactory.getProvider(chain, 'ws');
-
+    
     return new Promise(function (onResolve, onReject) {
       chainTimer['timer'] = setInterval(function () {
         if (chainTimer['retryCounter'] <= retryAttempts) {
@@ -68,7 +68,7 @@ GethCheckerKlass.prototype = {
             if (err) {
               console.log("getBlockNumber err: ", err);
             } else {
-              if (chainTimer['blockNumber']!=0 && chainTimer['blockNumber']!=blocknumber) {
+              if (chainTimer['blockNumber'] != 0 && chainTimer['blockNumber'] != blocknumber) {
                 logger.info("* Geth Checker - " + chain + " chain has new blocks.");
                 clearInterval(chainTimer['timer']);
                 onResolve();

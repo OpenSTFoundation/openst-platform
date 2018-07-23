@@ -29,11 +29,11 @@ HelperKlass.prototype = {
    *
    * @return {promise<object>} - branded tokens list
    */
-  getBrandedToken: function(uuid) {
+  getBrandedToken: function (uuid) {
     const oThis = this;
     return oThis._readJsonFile(setupHelper.btConfigAbsolutePath());
   },
-
+  
   /**
    * Add new branded tokens
    *
@@ -41,11 +41,11 @@ HelperKlass.prototype = {
    *
    * @return {promise<object>} - branded tokens list
    */
-  addBrandedToken: function(brandedTokens) {
+  addBrandedToken: function (brandedTokens) {
     const oThis = this;
     return oThis._writeJsonFile(setupHelper.btConfigAbsolutePath(), brandedTokens);
   },
-
+  
   /**
    * Read JSON file
    *
@@ -55,8 +55,8 @@ HelperKlass.prototype = {
    * @private
    */
   _readJsonFile: function (jsonFilePath) {
-    return new Promise(function(onResolve, onReject){
-      fs.readFile(jsonFilePath, function (err, data){
+    return new Promise(function (onResolve, onReject) {
+      fs.readFile(jsonFilePath, function (err, data) {
         if (err) {
           if (err.code === 'ENOENT') {
             data = "{}";
@@ -69,7 +69,7 @@ HelperKlass.prototype = {
       });
     });
   },
-
+  
   /**
    * Write content to JSON file
    *
@@ -80,9 +80,9 @@ HelperKlass.prototype = {
    * @private
    */
   _writeJsonFile: function (jsonFilePath, jsonContent) {
-    return new Promise( function(onResolve, onReject) {
+    return new Promise(function (onResolve, onReject) {
       var humanReadableContent = JSON.stringify(jsonContent, null, 2);
-      fs.writeFile(jsonFilePath, humanReadableContent, function (err){
+      fs.writeFile(jsonFilePath, humanReadableContent, function (err) {
         if (err) throw err;
         return onResolve(JSON.parse(humanReadableContent));
       });

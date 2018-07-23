@@ -11,7 +11,7 @@
  */
 const rootPrefix = '../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , setupHelper = require(rootPrefix + '/tools/setup/helper')
 ;
 

@@ -34,7 +34,7 @@ require(rootPrefix + '/lib/contract_interact/value_registrar');
  *
  * @constructor
  */
-const RegisterStPrimeKlass = function ( configStrategy, instanceComposer) {
+const RegisterStPrimeKlass = function (configStrategy, instanceComposer) {
 
 };
 
@@ -47,7 +47,7 @@ RegisterStPrimeKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function (showPrompts) {
-  
+    
     const oThis = this
       , coreConstants = oThis.ic().getCoreConstants()
       , coreAddresses = oThis.ic().getCoreAddresses()
@@ -81,11 +81,11 @@ RegisterStPrimeKlass.prototype = {
       logger.info("Foundation Address: " + foundationAddress);
       logger.info("Value Chain Registrar User Address: " + valueRegistrarUser);
       logger.info("Value Ops Address: " + valueOpsAddress);
-
+      
       logger.info("Value Registrar Contract: " + valueRegistrarContractAddress);
       logger.info("OpenST Utility Contract: " + openSTUtilityContractAddress);
       logger.info("OpenST Value Contract: " + openSTValueContractAddress);
-
+      
       await new Promise(
         function (onResolve, onReject) {
           prompts.question("Please verify all above details. Do you want to proceed? [Y/N]", function (intent) {
@@ -103,47 +103,49 @@ RegisterStPrimeKlass.prototype = {
     } else {
       prompts.close();
     }
-
+    
     const getSimpleTokenPrimeSymbolResponse = await openStUtility.getSimpleTokenPrimeSymbol()
       , stPrimeSymbol = getSimpleTokenPrimeSymbolResponse.data.symbol
       , getSimpleTokenPrimeNameResponse = await openStUtility.getSimpleTokenPrimeName()
       , stPrimeName = getSimpleTokenPrimeNameResponse.data.name
       , getSimpleTokenPrimeConversationRateResponse = await openStUtility.getSimpleTokenPrimeConversationRate()
       , stPrimeConversationRate = getSimpleTokenPrimeConversationRateResponse.data.conversion_rate
-      , getSimpleTokenPrimeConversationRateDecimalsResponse = await openStUtility.getSimpleTokenPrimeConversationRateDecimals()
-      , stPrimeConversationRateDecimals = getSimpleTokenPrimeConversationRateDecimalsResponse.data.conversion_rate_decimals
+      ,
+      getSimpleTokenPrimeConversationRateDecimalsResponse = await openStUtility.getSimpleTokenPrimeConversationRateDecimals()
+      ,
+      stPrimeConversationRateDecimals = getSimpleTokenPrimeConversationRateDecimalsResponse.data.conversion_rate_decimals
     ;
-
+    
     logger.step('** Calling registerUtilityToken of valueRegistrar Contract for ST Prime');
     const registerUtilityTokenResponse = await valueRegistrar.registerUtilityToken(
       valueOpsAddress, valueOpsPassphrase, openSTValueContractAddress, stPrimeSymbol, stPrimeName, stPrimeConversationRate,
       stPrimeConversationRateDecimals, UTILITY_CHAIN_ID, 0, stPrimeUUID, valueDeployerName);
-
-
+    
+    
     if (!registerUtilityTokenResponse.isSuccess()) {
       logger.error('registerUtilityToken of valueRegistrar Contract for ST Prime failed.');
       process.exit(1);
     }
-
+    
     logger.step('** Setting Ops Address of valueRegistrar Contract to valueRegistrar User');
     await valueRegistrar.setOpsAddress(valueDeployerName, valueRegistrarUser);
-
+    
     const opsAddress = await valueRegistrar.getOpsAddress();
-
+    
     if (!valueRegistrarUser.equalsIgnoreCase(opsAddress.data.address)) {
       logger.error('Exiting the deployment as ops address doesn\'t match');
       process.exit(1);
     }
-
+    
     await valueRegistrar.initiateOwnerShipTransfer(valueDeployerName, foundationAddress);
-
+    
     const getOwnerResponse = await valueRegistrar.getOwner();
-
+    
     if (!foundationAddress.equalsIgnoreCase(getOwnerResponse.data.address)) {
       logger.error('Exiting the deployment as owner address doesn\'t match');
       process.exit(1);
     }
-
+    
     return Promise.resolve();
   }
 };

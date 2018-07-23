@@ -35,11 +35,11 @@ require(rootPrefix + '/lib/contract_interact/openst_utility');
  *
  * @return {booelan} true when equal
  */
-String.prototype.equalsIgnoreCase = function ( compareWith ) {
+String.prototype.equalsIgnoreCase = function (compareWith) {
   const oThis = this
     , _self = this.toLowerCase()
-    , _compareWith = String( compareWith ).toLowerCase();
-
+    , _compareWith = String(compareWith).toLowerCase();
+  
   return _self === _compareWith;
 };
 
@@ -48,12 +48,12 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
  *
  * @constructor
  */
-const DeployOpenSTUtilityContractKlass = function ( configStrategy, instanceComposer) {
+const DeployOpenSTUtilityContractKlass = function (configStrategy, instanceComposer) {
 
 };
 
 DeployOpenSTUtilityContractKlass.prototype = {
-
+  
   /**
    * Perform
    *
@@ -62,7 +62,7 @@ DeployOpenSTUtilityContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function (showPrompts) {
-
+    
     const oThis = this
       , coreConstants = oThis.ic().getCoreConstants()
       , coreAddresses = oThis.ic().getCoreAddresses()
@@ -70,7 +70,7 @@ DeployOpenSTUtilityContractKlass.prototype = {
       , deployHelper = oThis.ic().getDeployHelper()
       , OpenStUtilityKlass = oThis.ic().getOpenSTUtilityInteractClass()
     ;
-
+    
     const utilityDeployerName = 'utilityDeployer'
       , utilityRegistrarContractName = 'utilityRegistrar'
       , openSTUtilityContractName = 'openSTUtility'
@@ -85,14 +85,14 @@ DeployOpenSTUtilityContractKlass.prototype = {
       , UTILITY_CHAIN_ID = coreConstants.OST_UTILITY_CHAIN_ID
       , web3Provider = web3ProviderFactory.getProvider('utility', web3ProviderFactory.typeRPC)
     ;
-
+    
     logger.step('** Deploying OpenST Utility Contract');
     if (showPrompts) {
       logger.info('Utility Chain Deployer Address: ' + utilityDeployerAddress);
       logger.info('Value Chain ID: ' + VALUE_CHAIN_ID);
       logger.info('Utility Chain ID: ' + UTILITY_CHAIN_ID);
       logger.info('Foundation Address: ' + foundationAddress);
-
+      
       await new Promise(
         function (onResolve, onReject) {
           prompts.question("Please verify all above details. Do you want to proceed? [Y/N]", function (intent) {
@@ -110,27 +110,27 @@ DeployOpenSTUtilityContractKlass.prototype = {
     } else {
       prompts.close();
     }
-
+    
     const openSTUtiltiyContractDeployResponse = await deployHelper.perform(openSTUtilityContractName,
       web3Provider, openSTUtilityContractAbi, openSTUtilityContractBin, utilityDeployerName,
       {gasPrice: UC_GAS_PRICE, gas: UC_GAS_LIMIT}, [VALUE_CHAIN_ID, UTILITY_CHAIN_ID, utilityRegistrarContractAddress]
     );
-
+    
     const openSTUtilityContractAddress = openSTUtiltiyContractDeployResponse.contractAddress
       , openStUtility = new OpenStUtilityKlass(openSTUtilityContractAddress);
-
+    
     logger.step('** Initiating OwnerShipTransfer of openSTUtility Contract to foundation');
-
+    
     await openStUtility.initiateOwnerShipTransfer(utilityDeployerName,
       foundationAddress, {gasPrice: UC_GAS_PRICE, gas: UC_GAS_LIMIT});
-
+    
     const getOwnerResponse = await openStUtility.getOwner();
-
+    
     if (!foundationAddress.equalsIgnoreCase(getOwnerResponse.data.address)) {
       logger.error('Exiting the deployment as owner of openSTUtility Contract does not match');
       process.exit(1);
     }
-
+    
     return Promise.resolve(responseHelper.successWithData(
       {contract: 'openSTUtility', address: openSTUtilityContractAddress}));
   }

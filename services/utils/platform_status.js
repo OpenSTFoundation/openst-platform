@@ -9,7 +9,7 @@
 const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , InstanceComposer = require( rootPrefix + '/instance_composer')
+  , InstanceComposer = require(rootPrefix + '/instance_composer')
 ;
 
 require(rootPrefix + '/lib/web3/providers/factory');
@@ -23,7 +23,7 @@ const PlatformStatusKlass = function () {
 };
 
 PlatformStatusKlass.prototype = {
-
+  
   /**
    *
    * Perform
@@ -34,7 +34,7 @@ PlatformStatusKlass.prototype = {
   perform: function () {
     const oThis = this
     ;
-
+    
     return oThis.asyncPerform()
       .catch(function (error) {
         if (responseHelper.isCustomResult(error)) {
@@ -50,17 +50,17 @@ PlatformStatusKlass.prototype = {
         }
       });
   },
-
+  
   /**
    * asyncPerform
    *
    * @return {Promise}
    */
-  asyncPerform: async function() {
-
+  asyncPerform: async function () {
+    
     const oThis = this
       , statusResponse = {chain: {value: false, utility: false}};
-
+    
     // check geth status
     for (var chainName in statusResponse.chain) {
       var response = await oThis._gethStatus(chainName);
@@ -70,11 +70,11 @@ PlatformStatusKlass.prototype = {
         return Promise.resolve(response);
       }
     }
-
+    
     return Promise.resolve(responseHelper.successWithData(statusResponse));
-
+    
   },
-
+  
   /**
    * Check geth status
    *
@@ -85,7 +85,7 @@ PlatformStatusKlass.prototype = {
    * @ignore
    */
   _gethStatus: function (chain) {
-
+    
     const oThis = this
       , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
       , web3Provider = web3ProviderFactory.getProvider(chain, web3ProviderFactory.typeWS)
@@ -93,7 +93,7 @@ PlatformStatusKlass.prototype = {
       , timerInterval = 5000
       , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
     ;
-
+    
     return new Promise(function (onResolve, onReject) {
       chainTimer['timer'] = setInterval(async function () {
         if (!web3Provider) {
@@ -105,10 +105,10 @@ PlatformStatusKlass.prototype = {
           });
           return Promise.reject(errObj);
         }
-
+        
         if (chainTimer['retryCounter'] <= retryAttempts) {
           let blockNumber = await web3Provider.eth.getBlockNumber();
-
+          
           if (!(blockNumber > 0)) {
             logger.error("Geth Checker - " + chain + " fetch block number failed.", err);
             chainTimer['retryCounter']++;
@@ -119,7 +119,7 @@ PlatformStatusKlass.prototype = {
             }
             chainTimer['blockNumber'] = blockNumber;
           }
-
+          
           // function (err, blocknumber) {
           //   if (err) {
           //     logger.error("Geth Checker - " + chain + " fetch block number failed.", err);
@@ -134,7 +134,7 @@ PlatformStatusKlass.prototype = {
           // }
         } else {
           logger.error("Geth Checker - " + chain + " chain has no new blocks.");
-
+          
           let errObj = responseHelper.error({
             internal_error_identifier: 's_u_ps_2_' + chain,
             api_error_identifier: 'no_new_blocks',
@@ -145,7 +145,7 @@ PlatformStatusKlass.prototype = {
         chainTimer['retryCounter']++;
       }, timerInterval);
     });
-
+    
   }
 };
 

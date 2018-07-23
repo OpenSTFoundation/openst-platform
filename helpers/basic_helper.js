@@ -23,7 +23,7 @@ const BasicHelperKlass = function () {
 };
 
 BasicHelperKlass.prototype = {
-
+  
   /**
    * Check if address is valid or not
    *
@@ -37,7 +37,7 @@ BasicHelperKlass.prototype = {
     }
     return /^0x[0-9a-fA-F]{40}$/.test(address);
   },
-
+  
   /**
    * Check if uuid is valid or not
    *
@@ -51,7 +51,7 @@ BasicHelperKlass.prototype = {
     }
     return /^0x[0-9a-fA-F]{64}$/.test(uuid);
   },
-
+  
   /**
    * Check if transaction hash is valid or not
    *
@@ -65,7 +65,7 @@ BasicHelperKlass.prototype = {
     }
     return /^0x[0-9a-fA-F]{64}$/.test(transactionHash);
   },
-
+  
   /**
    * Check if amount is valid wei number and not zero
    *
@@ -75,7 +75,7 @@ BasicHelperKlass.prototype = {
    */
   isNonZeroWeiValid: function (amountInWei) {
     const oneForMod = new BigNumber('1');
-
+    
     // Convert amount in BigNumber
     var bigNumAmount = null;
     if (amountInWei instanceof BigNumber) {
@@ -86,11 +86,11 @@ BasicHelperKlass.prototype = {
         bigNumAmount = new BigNumber(numAmount);
       }
     }
-
+    
     return (!bigNumAmount || bigNumAmount.lessThan(1) || bigNumAmount.isNaN() ||
       !bigNumAmount.isFinite() || bigNumAmount.mod(oneForMod) != 0) ? false : true;
   },
-
+  
   /**
    * Check if tag is valid or not
    *
@@ -107,7 +107,7 @@ BasicHelperKlass.prototype = {
     }
     return (/^[a-z0-9_\-.]{1,}$/i).test(tag);
   },
-
+  
   /**
    * get return type for transaction
    *
@@ -118,7 +118,7 @@ BasicHelperKlass.prototype = {
   getReturnType: function (returnType) {
     return ['uuid', 'txHash', 'txReceipt'].includes(returnType) ? returnType : 'txHash';
   },
-
+  
   /**
    * check if return type is uuid or not
    *
@@ -129,7 +129,7 @@ BasicHelperKlass.prototype = {
   isReturnTypeUUID: function (returnType) {
     return returnType === 'uuid';
   },
-
+  
   /**
    * check if return type is txHash or not
    *
@@ -140,7 +140,7 @@ BasicHelperKlass.prototype = {
   isReturnTypeTxHash: function (returnType) {
     return returnType === 'txHash';
   },
-
+  
   /**
    * check if return type is txReceipt or not
    *
@@ -151,7 +151,7 @@ BasicHelperKlass.prototype = {
   isReturnTypeTxReceipt: function (returnType) {
     return returnType === 'txReceipt';
   },
-
+  
   /**
    * Check if branded token name is valid or not
    *
@@ -165,7 +165,7 @@ BasicHelperKlass.prototype = {
     }
     return (/^[a-z0-9\s]{1,}$/i).test(name);
   },
-
+  
   /**
    * Check if branded token symbol is valid or not
    *
@@ -179,7 +179,7 @@ BasicHelperKlass.prototype = {
     }
     return (/^[a-z0-9]{1,}$/i).test(symbol);
   },
-
+  
   /**
    * Check if branded token conversion rate is valid or not
    *
@@ -193,7 +193,7 @@ BasicHelperKlass.prototype = {
     }
     return true;
   },
-
+  
   /**
    * Check if branded token conversion factor is valid or not
    *
@@ -207,8 +207,8 @@ BasicHelperKlass.prototype = {
     }
     return true;
   },
-
-
+  
+  
   /**
    * Check if branded token conversion rate decimal is valid or not
    *
@@ -222,7 +222,7 @@ BasicHelperKlass.prototype = {
     }
     return true;
   },
-
+  
   /**
    * Convert wei to proper string. Make sure it's a valid number
    *
@@ -234,7 +234,7 @@ BasicHelperKlass.prototype = {
     const oThis = this;
     return oThis.convertToBigNumber(amountInWei).toString(10);
   },
-
+  
   /**
    * Convert number to big number. Make sure it's a valid number
    *
@@ -245,7 +245,7 @@ BasicHelperKlass.prototype = {
   convertToBigNumber: function (number) {
     return (number instanceof BigNumber) ? number : new BigNumber(number);
   },
-
+  
   /**
    * Convert conversion factor to conversion rate and conversion rate decimals. Make sure it's a valid number
    *
@@ -254,9 +254,9 @@ BasicHelperKlass.prototype = {
    * @return {object} - response
    */
   convertConversionFactorToConversionRate: function (conversionFactor) {
-
+    
     const oThis = this;
-
+    
     if (!oThis.isBTConversionFactorValid(conversionFactor)) {
       return responseHelper.error({
         internal_error_identifier: 'bh_ccftcr_1',
@@ -277,9 +277,9 @@ BasicHelperKlass.prototype = {
         error_config: oThis.fetchErrorConfig()
       });
     }
-
+    
   },
-
+  
   /**
    * Convert conversion rate and conversion rate decimals to conversion factor. Make sure it's a valid number
    *
@@ -297,7 +297,7 @@ BasicHelperKlass.prototype = {
         error_config: oThis.fetchErrorConfig()
       });
     }
-
+    
     if (!oThis.isBTConversionRateDecimalsValid(conversionRateDecimals)) {
       return responseHelper.error({
         internal_error_identifier: 'bh_ccrtcf_2',
@@ -305,12 +305,12 @@ BasicHelperKlass.prototype = {
         error_config: oThis.fetchErrorConfig()
       });
     }
-
-
+    
+    
     const conversionFactor = (new BigNumber(conversionRate)).div((new BigNumber(10)).toPower(conversionRateDecimals))
     return responseHelper.successWithData({conversionFactor: conversionFactor.toString(10)});
   },
-
+  
   /**
    * Generate a secure random String
    *
@@ -319,18 +319,18 @@ BasicHelperKlass.prototype = {
    * @return {object} - response
    */
   generateRandomString: function (length) {
-
+    
     var text = "";
     var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
+    
     for (var i = 0; i < length; i++) {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
-
+    
     return text;
-
+    
   },
-
+  
   /**
    * Fetch Error Config
    *
@@ -351,11 +351,11 @@ BasicHelperKlass.prototype = {
  *
  * @return {booelan} true when equal
  */
-String.prototype.equalsIgnoreCase = function ( compareWith ) {
+String.prototype.equalsIgnoreCase = function (compareWith) {
   const oThis = this
     , _self = this.toLowerCase()
-    , _compareWith = String( compareWith ).toLowerCase();
-
+    , _compareWith = String(compareWith).toLowerCase();
+  
   return _self === _compareWith;
 };
 

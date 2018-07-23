@@ -9,7 +9,7 @@
 const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
 ;
 
@@ -26,13 +26,13 @@ require(rootPrefix + '/lib/contract_interact/ether');
  */
 const EthBalanceKlass = function (params) {
   const oThis = this;
-
+  
   params = params || {};
   oThis.address = params.address;
 };
 
 EthBalanceKlass.prototype = {
-
+  
   /**
    * Perform
    *
@@ -40,12 +40,12 @@ EthBalanceKlass.prototype = {
    */
   perform: function () {
     const oThis = this;
-
+    
     return oThis.asyncPerform()
       .catch(function (error) {
         logger.error('openst-platform::services/balance/eth.js::perform::catch');
         logger.error(error);
-
+        
         if (responseHelper.isCustomResult(error)) {
           return error;
         } else {
@@ -54,11 +54,11 @@ EthBalanceKlass.prototype = {
             api_error_identifier: 'something_went_wrong',
             error_config: basicHelper.fetchErrorConfig()
           });
-
+          
         }
       });
   },
-
+  
   /**
    * Async Perform
    *
@@ -66,7 +66,7 @@ EthBalanceKlass.prototype = {
    */
   asyncPerform: async function () {
     const oThis = this;
-
+    
     //Validations
     if (!basicHelper.isAddressValid(oThis.address)) {
       let errObj = responseHelper.error({
@@ -74,17 +74,17 @@ EthBalanceKlass.prototype = {
         api_error_identifier: 'invalid_address',
         error_config: basicHelper.fetchErrorConfig()
       });
-
+      
       return Promise.resolve(errObj);
     }
-
+    
     let etherInteractKlass = oThis.ic().getEtherInteractClass();
     let etherInteractObj = new etherInteractKlass();
-
+    
     return etherInteractObj.getBalanceOf(oThis.address);
-
+    
   }
-
+  
 };
 
 InstanceComposer.registerShadowableClass(EthBalanceKlass, 'getEthBalanceService');

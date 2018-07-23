@@ -26,9 +26,9 @@ const RegistrationStatusKlass = function () {
 };
 
 RegistrationStatusKlass.prototype = {
-
+  
   constructor: RegistrationStatusKlass,
-
+  
   /**
    * convert the RegistrationStatus object to an object
    *
@@ -37,7 +37,7 @@ RegistrationStatusKlass.prototype = {
   toHash: function () {
     const oThis = this
     ;
-
+    
     return {
       uuid: oThis.uuid,
       erc20_address: oThis.erc20Address,
@@ -46,7 +46,7 @@ RegistrationStatusKlass.prototype = {
       is_registered_on_vc: oThis.isRegisteredOnVc
     }
   },
-
+  
   /**
    * Return promise which resolves to result object
    *
@@ -55,10 +55,10 @@ RegistrationStatusKlass.prototype = {
   returnResultPromise: function () {
     const oThis = this
     ;
-
+    
     return Promise.resolve(responseHelper.successWithData({registration_status: oThis.toHash()}))
   },
-
+  
   /**
    * Set UUID
    *
@@ -67,10 +67,10 @@ RegistrationStatusKlass.prototype = {
   setUuid: function (uuid) {
     const oThis = this
     ;
-
+    
     oThis.uuid = uuid;
   },
-
+  
   /**
    * Set ERC 20 address
    *
@@ -79,10 +79,10 @@ RegistrationStatusKlass.prototype = {
   setErc20Address: function (erc20Address) {
     const oThis = this
     ;
-
+    
     oThis.erc20Address = erc20Address;
   },
-
+  
   /**
    * Set is registered on UC flag
    *
@@ -91,10 +91,10 @@ RegistrationStatusKlass.prototype = {
   setIsRegisteredOnUc: function (isRegisteredOnUc) {
     const oThis = this
     ;
-
+    
     oThis.isRegisteredOnUc = isRegisteredOnUc;
   },
-
+  
   /**
    * Set is registered on VC flag
    *
@@ -103,10 +103,10 @@ RegistrationStatusKlass.prototype = {
   setIsRegisteredOnVc: function (isRegisteredOnVc) {
     const oThis = this
     ;
-
+    
     oThis.isRegisteredOnVc = isRegisteredOnVc;
   },
-
+  
   /**
    * Set is proposal done
    *
@@ -115,7 +115,7 @@ RegistrationStatusKlass.prototype = {
   setIsProposalDone: function (isProposalDone) {
     const oThis = this
     ;
-
+    
     oThis.isProposalDone = isProposalDone;
   }
 };

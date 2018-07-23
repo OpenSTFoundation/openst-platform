@@ -10,7 +10,7 @@ const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-  , InstanceComposer = require( rootPrefix + '/instance_composer')
+  , InstanceComposer = require(rootPrefix + '/instance_composer')
 ;
 
 require(rootPrefix + '/config/core_addresses');
@@ -27,7 +27,7 @@ require(rootPrefix + '/lib/contract_interact/openst_value');
 const GetBrandedTokenDetailsKlass = function (params) {
   const oThis = this
   ;
-
+  
   params = params || {};
   oThis.uuid = params.uuid;
 };
@@ -65,7 +65,7 @@ GetBrandedTokenDetailsKlass.prototype = {
    *
    * @return {promise<result>}
    */
-  asyncPerform: async function() {
+  asyncPerform: async function () {
     const oThis = this
       , coreAddresses = oThis.ic().getCoreAddresses()
       , openSTValueContractName = 'openSTValue'
@@ -73,7 +73,7 @@ GetBrandedTokenDetailsKlass.prototype = {
       , OpenSTValueKlass = oThis.ic().getOpenSTValueInteractClass()
       , openSTValue = new OpenSTValueKlass(openSTValueContractAddr)
     ;
-
+    
     // validations
     if (!basicHelper.isUuidValid(oThis.uuid)) {
       let errObj = responseHelper.error({
@@ -83,9 +83,9 @@ GetBrandedTokenDetailsKlass.prototype = {
       });
       return Promise.resolve(errObj);
     }
-
+    
     var tokenDetails = await openSTValue.utilityTokens(oThis.uuid);
-
+    
     return tokenDetails;
   }
 };

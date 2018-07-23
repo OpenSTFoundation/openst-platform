@@ -33,7 +33,7 @@ coreBins.prototype = {
    *
    */
   simpleToken: readFile(rootPrefix + '/contracts/bin/SimpleToken.bin', 'utf8'),
-
+  
   /**
    * Mock Simple token contract binary
    *
@@ -41,7 +41,7 @@ coreBins.prototype = {
    *
    */
   mockSimpleToken: readFile(rootPrefix + '/contracts/bin/MockToken.bin', 'utf8'),
-
+  
   /**
    * Open ST Utility contract binary
    *
@@ -49,7 +49,7 @@ coreBins.prototype = {
    *
    */
   openSTUtility: readFile(rootPrefix + '/contracts/bin/OpenSTUtility.bin', 'utf8'),
-
+  
   /**
    * Open ST Value contract binary
    *
@@ -57,7 +57,7 @@ coreBins.prototype = {
    *
    */
   openSTValue: readFile(rootPrefix + '/contracts/bin/OpenSTValue.bin', 'utf8'),
-
+  
   /**
    * ST Prime contract binary
    *
@@ -65,7 +65,7 @@ coreBins.prototype = {
    *
    */
   stPrime: readFile(rootPrefix + '/contracts/bin/STPrime.bin', 'utf8'),
-
+  
   /**
    * Value Core contract binary
    *
@@ -73,7 +73,7 @@ coreBins.prototype = {
    *
    */
   valueCore: readFile(rootPrefix + '/contracts/bin/Core.bin', 'utf8'),
-
+  
   /**
    * Value Registrar contract binary
    *
@@ -81,7 +81,7 @@ coreBins.prototype = {
    *
    */
   valueRegistrar: readFile(rootPrefix + '/contracts/bin/Registrar.bin', 'utf8'),
-
+  
   /**
    * Utility Registrar contract binary
    *
@@ -89,7 +89,7 @@ coreBins.prototype = {
    *
    */
   utilityRegistrar: readFile(rootPrefix + '/contracts/bin/Registrar.bin', 'utf8'),
-
+  
   /**
    * Branded Token contract binary
    *
@@ -97,7 +97,7 @@ coreBins.prototype = {
    *
    */
   brandedToken: readFile(rootPrefix + '/contracts/bin/BrandedToken.bin', 'utf8'),
-
+  
   /**
    * Simple Stake contract binary
    *
@@ -105,7 +105,7 @@ coreBins.prototype = {
    *
    */
   simpleStake: readFile(rootPrefix + '/contracts/bin/SimpleStake.bin', 'utf8'),
-
+  
   /**
    * Airdrop contract binary
    *

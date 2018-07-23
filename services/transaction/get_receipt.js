@@ -9,7 +9,7 @@ const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , InstanceComposer = require(rootPrefix + "/instance_composer")
 ;
 
 require(rootPrefix + '/lib/web3/providers/factory');
@@ -28,7 +28,7 @@ require(rootPrefix + '/lib/web3/events/decoder');
 const GetReceiptKlass = function (params) {
   const oThis = this
   ;
-
+  
   params = params || {};
   oThis.transactionHash = params.transaction_hash;
   oThis.chain = params.chain;
@@ -44,7 +44,7 @@ GetReceiptKlass.prototype = {
   perform: function () {
     const oThis = this
     ;
-
+    
     return oThis.asyncPerform()
       .catch(function (error) {
         if (responseHelper.isCustomResult(error)) {
@@ -60,20 +60,20 @@ GetReceiptKlass.prototype = {
         }
       });
   },
-
+  
   /**
    * Async Perform
    *
    * @return {promise<result>}
    */
-  asyncPerform: async function() {
-
+  asyncPerform: async function () {
+    
     const oThis = this
       , web3EventsDecoder = oThis.ic().getWeb3EventsDecoder()
     ;
-
+    
     try {
-
+      
       // validations
       if (!basicHelper.isTxHashValid(oThis.transactionHash)) {
         let errObj = responseHelper.error({
@@ -94,16 +94,16 @@ GetReceiptKlass.prototype = {
         });
         return Promise.resolve(errObj);
       }
-
+      
       const txReceipt = await web3Provider.eth.getTransactionReceipt(oThis.transactionHash);
-
+      
       if (!txReceipt) {
         return Promise.resolve(responseHelper.successWithData({}));
       } else {
         const web3EventsDecoderResponse = web3EventsDecoder.perform(txReceipt, oThis.addressToNameMap);
         return Promise.resolve(web3EventsDecoderResponse);
       }
-
+      
     } catch (err) {
       console.error('err', err);
       let errObj = responseHelper.error({

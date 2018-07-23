@@ -7,7 +7,7 @@
  */
 
 const rootPrefix = '../../..'
-  , InstanceComposer = require( rootPrefix + '/instance_composer')
+  , InstanceComposer = require(rootPrefix + '/instance_composer')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
@@ -32,10 +32,10 @@ require(rootPrefix + '/lib/contract_interact/simple_token');
  * @constructor
  */
 const TransferSimpleTokenKlass = function (params) {
-
+  
   const oThis = this
   ;
-
+  
   params = params || {};
   oThis.senderAddress = params.sender_address;
   oThis.senderPassphrase = params.sender_passphrase;
@@ -45,7 +45,7 @@ const TransferSimpleTokenKlass = function (params) {
   oThis.amountInWei = params.amount_in_wei;
   oThis.tag = (params.options || {}).tag;
   oThis.returnType = (params.options || {}).returnType || 'txHash';
-
+  
 };
 
 TransferSimpleTokenKlass.prototype = {
@@ -79,11 +79,11 @@ TransferSimpleTokenKlass.prototype = {
    *
    * @return {promise<result>} - returns a promise which resolves to an object of kind Result
    */
-  asyncPerform: async function() {
+  asyncPerform: async function () {
     const oThis = this
       , coreAddresses = oThis.ic().getCoreAddresses()
       , SimpleTokenKlass = oThis.ic().getSimpleTokenInteractClass()
-      , simpleToken   = new SimpleTokenKlass()
+      , simpleToken = new SimpleTokenKlass()
     ;
     
     // Get sender details by name
@@ -91,12 +91,12 @@ TransferSimpleTokenKlass.prototype = {
       oThis.senderAddress = coreAddresses.getAddressForUser(oThis.senderName);
       oThis.senderPassphrase = coreAddresses.getPassphraseForUser(oThis.senderName);
     }
-  
+    
     // Get recipient details by name
     if (oThis.recipientName) {
       oThis.recipientAddress = coreAddresses.getAddressForUser(oThis.recipientName);
     }
-  
+    
     // Validations
     if (!basicHelper.isAddressValid(oThis.senderAddress) || !oThis.senderPassphrase) {
       let errObj = responseHelper.error({
@@ -130,17 +130,17 @@ TransferSimpleTokenKlass.prototype = {
       });
       return Promise.resolve(errObj);
     }
-  
+    
     // Format wei
     oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
-  
+    
     return simpleToken.transfer(
       oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei,
       {tag: oThis.tag, returnType: oThis.returnType}
     );
     
   }
-
+  
 };
 
 InstanceComposer.registerShadowableClass(TransferSimpleTokenKlass, "getTransferSimpleTokenService");

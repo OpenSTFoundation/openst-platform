@@ -35,11 +35,11 @@ require(rootPrefix + '/lib/contract_interact/value_registrar');
  *
  * @return {booelan} true when equal
  */
-String.prototype.equalsIgnoreCase = function ( compareWith ) {
+String.prototype.equalsIgnoreCase = function (compareWith) {
   const oThis = this
     , _self = this.toLowerCase()
-    , _compareWith = String( compareWith ).toLowerCase();
-
+    , _compareWith = String(compareWith).toLowerCase();
+  
   return _self === _compareWith;
 };
 
@@ -48,7 +48,7 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
  *
  * @constructor
  */
-const DeployValueCoreContractKlass = function ( configStrategy, instanceComposer) {
+const DeployValueCoreContractKlass = function (configStrategy, instanceComposer) {
 
 };
 
@@ -61,7 +61,7 @@ DeployValueCoreContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function (showPrompts) {
-
+    
     const oThis = this
       , coreConstants = oThis.ic().getCoreConstants()
       , coreAddresses = oThis.ic().getCoreAddresses()
@@ -88,7 +88,7 @@ DeployValueCoreContractKlass.prototype = {
       , valueRegistrar = new ValueRegistrarKlass(valueRegistrarContractAddress)
       , web3Provider = web3ProviderFactory.getProvider('value', web3ProviderFactory.typeWS)
     ;
-
+    
     logger.step('** Deploying valueCore Contract');
     if (showPrompts) {
       // confirming the important addresses
@@ -97,7 +97,7 @@ DeployValueCoreContractKlass.prototype = {
       logger.info("Value Registrar Contract: " + valueRegistrarContractAddress);
       logger.info("OpenST Utility Contract: " + openSTUtilityContractAddress);
       logger.info("OpenST Value Contract: " + openSTValueContractAddress);
-
+      
       await new Promise(
         function (onResolve, onReject) {
           prompts.question("Please verify all above details. Do you want to proceed? [Y/N]", function (intent) {
@@ -115,16 +115,16 @@ DeployValueCoreContractKlass.prototype = {
     } else {
       prompts.close();
     }
-
+    
     const valueCoreContractDeployResponse = await deployHelper.perform(valueCoreContractName, web3Provider,
       valueCoreContractAbi, valueCoreContractBin, valueDeployerName, {gasPrice: VALUE_GAS_PRICE, gas: VALUE_GAS_LIMIT},
       [valueRegistrarContractAddress, VALUE_CHAIN_ID, UTILITY_CHAIN_ID, openSTUtilityContractAddress]);
-
+    
     const valueCoreContractAddress = valueCoreContractDeployResponse.contractAddress;
-
+    
     logger.step('** Calling addCore of Value Registrar Contract');
     await valueRegistrar.addCore(valueOpsName, openSTValueContractAddress, valueCoreContractAddress);
-
+    
     return Promise.resolve(responseHelper.successWithData(
       {contract: 'valueCore', address: valueCoreContractAddress}));
   }
