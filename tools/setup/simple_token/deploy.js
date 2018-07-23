@@ -37,14 +37,14 @@ DeploySimpleTokenContractKlass.prototype = {
       , simpleTokenContractName = 'simpleToken'
       , simpleTokenContractAbi = coreAddresses.getAbiForContract(simpleTokenContractName)
       , simpleTokenContractBin = coreAddresses.getBinForContract(simpleTokenContractName)
-      , web3ValueProvider = oThis.ic().getWeb3ProviderFactory().getProvider('value', 'ws')
+      , web3ValueProvider = oThis.ic().getWeb3ProviderFactory()
       , deployHelper = oThis.ic().getDeployHelper()
     ;
 
     logger.step('** Deploying Simple Token Contract');
     const deploymentResult = await deployHelper.perform(
       simpleTokenContractName,
-      web3ProviderFactory.getProvider('value','ws'),
+      web3ValueProvider.getProvider('value','ws'),
       simpleTokenContractAbi,
       simpleTokenContractBin,
       'foundation');

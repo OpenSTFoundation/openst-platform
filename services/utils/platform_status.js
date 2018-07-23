@@ -88,7 +88,7 @@ PlatformStatusKlass.prototype = {
 
     const oThis = this
       , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
-      , web3Provider = web3ProviderFactory.getProvider(chain, 'ws')
+      , web3Provider = web3ProviderFactory.getProvider(chain, web3ProviderFactory.typeWS)
       , retryAttempts = 100
       , timerInterval = 5000
       , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
@@ -96,7 +96,6 @@ PlatformStatusKlass.prototype = {
 
     return new Promise(function (onResolve, onReject) {
       chainTimer['timer'] = setInterval(async function () {
-        const web3Provider = web3ProviderFactory.getProvider(chain, web3ProviderFactory.typeWS);
         if (!web3Provider) {
           // this is a error scenario.
           let errObj = responseHelper.error({

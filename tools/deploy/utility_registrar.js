@@ -105,7 +105,7 @@ DeployUtilityRegistrarContractKlass.prototype = {
       prompts.close();
     }
 
-    const utilityRegistrarContractDeployResult = await deployHelper.perform(utilityRegistrarContractName, web3ProviderFactory.getProvider('utility','ws'),
+    const utilityRegistrarContractDeployResult = await deployHelper.perform(utilityRegistrarContractName, web3Provider,
       utilityRegistrarContractAbi, utilityRegistrarContractBin, utilityDeployerName,
       {gasPrice: UC_GAS_PRICE, gas: UC_GAS_LIMIT});
 

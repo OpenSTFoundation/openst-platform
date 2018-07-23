@@ -112,7 +112,7 @@ DeployOpenSTUtilityContractKlass.prototype = {
     }
 
     const openSTUtiltiyContractDeployResponse = await deployHelper.perform(openSTUtilityContractName,
-      web3ProviderFactory.getProvider('utility','rpc'), openSTUtilityContractAbi, openSTUtilityContractBin, utilityDeployerName,
+      web3Provider, openSTUtilityContractAbi, openSTUtilityContractBin, utilityDeployerName,
       {gasPrice: UC_GAS_PRICE, gas: UC_GAS_LIMIT}, [VALUE_CHAIN_ID, UTILITY_CHAIN_ID, utilityRegistrarContractAddress]
     );
 

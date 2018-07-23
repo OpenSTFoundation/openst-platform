@@ -103,7 +103,7 @@ DeployValueRegistrarContractKlass.prototype = {
       prompts.close();
     }
 
-    const contractDeployTxReceipt = await deployHelper.perform(valueRegistrarContractName, web3ProviderFactory.getProvider('value','ws'),
+    const contractDeployTxReceipt = await deployHelper.perform(valueRegistrarContractName, web3Provider,
       valueRegistrarContractAbi, valueRegistrarContractBin, valueDeployerName, {gasPrice: VC_GAS_PRICE, gas: VC_GAS_LIMIT});
 
     const valueRegistrarContractAddr = contractDeployTxReceipt.contractAddress;

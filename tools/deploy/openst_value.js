@@ -110,7 +110,7 @@ DeployOpenSTValueContractKlass.prototype = {
       prompts.close();
     }
 
-    const contractDeployTxReceipt = await deployHelper.perform(openSTValueContractName, web3ProviderFactory.getProvider('value','rpc'), openSTValueContractAbi,
+    const contractDeployTxReceipt = await deployHelper.perform(openSTValueContractName, web3Provider, openSTValueContractAbi,
       openSTValueContractBin, valueDeployerName, {gasPrice: VC_GAS_PRICE, gas: VC_GAS_LIMIT},
       [VALUE_CHAIN_ID, simpleTokenContractAddress, valueRegistrarContractAddress]);
 

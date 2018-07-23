@@ -116,7 +116,7 @@ DeployValueCoreContractKlass.prototype = {
       prompts.close();
     }
 
-    const valueCoreContractDeployResponse = await deployHelper.perform(valueCoreContractName, web3ProviderFactory.getProvider('value','ws'),
+    const valueCoreContractDeployResponse = await deployHelper.perform(valueCoreContractName, web3Provider,
       valueCoreContractAbi, valueCoreContractBin, valueDeployerName, {gasPrice: VALUE_GAS_PRICE, gas: VALUE_GAS_LIMIT},
       [valueRegistrarContractAddress, VALUE_CHAIN_ID, UTILITY_CHAIN_ID, openSTUtilityContractAddress]);
 

@@ -66,7 +66,7 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
       , openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
     ;
 
-    oThis.completeContract = new (web3ProviderFactory.getProvider('value','ws')).eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
+    oThis.completeContract = new web3WsProvider.eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
   },
 
   /**
