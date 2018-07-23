@@ -122,7 +122,7 @@ ProposeBrandedTokenKlass.prototype = {
       oThis.conversionRate = conversionRateConversionResponse.data.conversionRate;
       oThis.conversionRateDecimals = conversionRateConversionResponse.data.conversionRateDecimals;
 
-      let OpenStUtilityContractInteractKlass = oThis.ic().getOpenSTUtilityeInteractClass()
+      let OpenStUtilityContractInteractKlass = oThis.ic().getOpenSTUtilityInteractClass()
         , openSTUtilityContractInteract = new OpenStUtilityContractInteractKlass(oThis.openSTUtilityContractAddress)
       ;
 

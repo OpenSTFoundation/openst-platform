@@ -41,6 +41,7 @@ require(rootPrefix + '/config/core_addresses');
 require(rootPrefix + '/lib/web3/providers/factory');
 require(rootPrefix + '/lib/contract_interact/st_prime');
 require(rootPrefix + '/lib/contract_interact/openst_utility');
+require(rootPrefix + '/lib/contract_interact/openst_value');
 require(rootPrefix + '/lib/contract_interact/branded_token');
 
 /**
@@ -127,7 +128,7 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
       , coreConstants = oThis.ic().getCoreConstants()
       , coreAddresses = oThis.ic().getCoreAddresses()
       , StPrimeKlass = oThis.ic().getStPrimeInteractClass()
-      , OpenStUtilityKlass = oThis.ic().getOpenSTUtilityeInteractClass()
+      , OpenStUtilityKlass = oThis.ic().getOpenSTUtilityInteractClass()
       , BrandedTokenKlass = oThis.ic().getBrandedTokenInteractClass()
       , OpenSTValueKlass = oThis.ic().getOpenSTValueInteractClass()
       

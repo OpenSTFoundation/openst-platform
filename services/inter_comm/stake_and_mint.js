@@ -26,6 +26,7 @@ const rootPrefix = '../..'
 ;
 
 require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/web3/providers/factory');
 
 /**
  * Inter comm process for the stake and mint.
@@ -54,10 +55,12 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
    *
    */
   setContractObj: function () {
+
     const oThis = this
       , coreAddresses = oThis.ic().getCoreAddresses()
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
 
-      , web3WsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
+      , web3WsProvider = web3ProviderFactory.getProvider('value', 'ws')
       , openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
       , openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
     ;
@@ -71,10 +74,15 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
    *
    */
   getChainHighestBlock: async function () {
-    const web3WsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
-      , highestBlock = await web3WsProvider.eth.getBlockNumber()
+
+    const oThis = this
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+
+      , web3WsProvider = web3ProviderFactory.getProvider('value', 'ws')
     ;
-    return highestBlock;
+
+    return await web3WsProvider.eth.getBlockNumber();
+
   },
 
   /**
@@ -90,6 +98,7 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
    * @param {object} eventObj - event object
    */
   processEventObj: async function (eventObj) {
+
     const oThis = this
       , coreAddresses = oThis.ic().getCoreAddresses()
 

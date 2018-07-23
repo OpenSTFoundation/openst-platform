@@ -119,7 +119,7 @@ GetRegistrationStatusKlass.prototype = {
     registrationStatus.setUuid(uuid);
 
     // now checking to confirm if registration on UC took place
-    let OpenStUtilityContractInteractKlass = oThis.ic().getOpenSTUtilityeInteractClass(),
+    let OpenStUtilityContractInteractKlass = oThis.ic().getOpenSTUtilityInteractClass(),
       openSTUtilityContractInteract = new OpenStUtilityContractInteractKlass(oThis.openStUtilityContractAddr)
     ;
 

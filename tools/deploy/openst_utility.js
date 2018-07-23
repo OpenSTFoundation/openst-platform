@@ -68,7 +68,7 @@ DeployOpenSTUtilityContractKlass.prototype = {
       , coreAddresses = oThis.ic().getCoreAddresses()
       , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
       , deployHelper = oThis.ic().getDeployHelper()
-      , OpenStUtilityKlass = oThis.ic().getOpenSTUtilityeInteractClass()
+      , OpenStUtilityKlass = oThis.ic().getOpenSTUtilityInteractClass()
     ;
     
     const utilityDeployerName = 'utilityDeployer'
