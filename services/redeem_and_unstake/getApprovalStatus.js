@@ -5,7 +5,7 @@
  */
 
 const rootPrefix = '../..'
-  , web3UcProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
+  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
   , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
@@ -15,7 +15,7 @@ const rootPrefix = '../..'
 const getApprovalStatus = async function (approvalTransactionHash) {
   try {
     const approvalTxReceipt = await contractInteractHelper
-      .waitAndGetTransactionReceipt(web3UcProvider, approvalTransactionHash);
+      .waitAndGetTransactionReceipt(web3ProviderFactory.getProvider('utility','ws'), approvalTransactionHash);
 
     if (!approvalTxReceipt || !approvalTxReceipt.isSuccess()) {
       let errObj = responseHelper.error({

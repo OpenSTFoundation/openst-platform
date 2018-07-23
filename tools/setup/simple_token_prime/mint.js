@@ -33,14 +33,14 @@ const StakeAndMintSimpleTokenPrime = function ( configStrategy, instanceComposer
 };
 
 StakeAndMintSimpleTokenPrime.prototype = {
-  
+
   /**
    * Perform
    *
    * @return {promise<result>}
    */
   perform: async function () {
-  
+
     const oThis = this
       , coreConstants = oThis.ic().getCoreConstants()
       , coreAddresses = oThis.ic().getCoreAddresses()
@@ -55,7 +55,7 @@ StakeAndMintSimpleTokenPrime.prototype = {
       , toStakeAmount = (new BigNumber(10000)).mul(new BigNumber(10).toPower(18))
       , web3Provider = web3ProviderFactory.getProvider('value', web3ProviderFactory.typeWS)
     ;
-    
+
     logger.step("** Starting stake mint for st prime for beneficiary utilityChainOwner");
 
     logger.info('* Utility Chain Owner transfers ST to staker');
@@ -73,7 +73,7 @@ StakeAndMintSimpleTokenPrime.prototype = {
     const approveTransactionHash = approveResponse.data.transaction_hash;
 
     logger.info('* Get approval status and keep doing so till success');
-    const approveReceiptResponse =  await contractInteractHelper.waitAndGetTransactionReceipt(web3Provider, approveTransactionHash, {});
+    const approveReceiptResponse =  await contractInteractHelper.waitAndGetTransactionReceipt(web3ProviderFactory.getProvider('value', 'ws'), approveTransactionHash, {});
     if (!approveReceiptResponse.isSuccess()) {
       logger.error('Approval receipt error ', approveReceiptResponse);
       process.exit(1);
@@ -99,18 +99,18 @@ StakeAndMintSimpleTokenPrime.prototype = {
    * @private
    */
   _waitForSTPrimeMint: function() {
-    
+
     const oThis = this
       , coreAddresses = oThis.ic().getCoreAddresses()
       , utilityChainOwnerAddr = coreAddresses.getAddressForUser('utilityChainOwner')
     ;
-    
+
     return new Promise(function(onResolve, onReject) {
 
       const getBalance = async function(){
 
         let fundManager = oThis.ic().getSetupFundManager();
-        
+
         const getSTPBalanceResponse = await fundManager.getSTPrimeBalanceOf(utilityChainOwnerAddr);
 
         if(getSTPBalanceResponse.isSuccess() && (new BigNumber(getSTPBalanceResponse.data.balance)).greaterThan(0)){
@@ -123,11 +123,11 @@ StakeAndMintSimpleTokenPrime.prototype = {
       };
 
       getBalance();
-      
+
     });
-    
+
   }
-  
+
 };
 
 InstanceComposer.register(StakeAndMintSimpleTokenPrime, "getStakeAndMintSTPrimeMinter", true);

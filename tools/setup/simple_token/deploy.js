@@ -44,7 +44,7 @@ DeploySimpleTokenContractKlass.prototype = {
     logger.step('** Deploying Simple Token Contract');
     const deploymentResult = await deployHelper.perform(
       simpleTokenContractName,
-      web3ValueProvider,
+      web3ProviderFactory.getProvider('value','ws'),
       simpleTokenContractAbi,
       simpleTokenContractBin,
       'foundation');

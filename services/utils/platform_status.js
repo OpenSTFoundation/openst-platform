@@ -34,7 +34,7 @@ PlatformStatusKlass.prototype = {
   perform: function () {
     const oThis = this
     ;
-    
+
     return oThis.asyncPerform()
       .catch(function (error) {
         if (responseHelper.isCustomResult(error)) {
@@ -50,7 +50,7 @@ PlatformStatusKlass.prototype = {
         }
       });
   },
-  
+
   /**
    * asyncPerform
    *
@@ -93,31 +93,46 @@ PlatformStatusKlass.prototype = {
       , timerInterval = 5000
       , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
     ;
-    if (!web3Provider) {
-      // this is a error scenario.
-      let errObj = responseHelper.error({
-        internal_error_identifier: 's_u_ps_1',
-        api_error_identifier: 'invalid_chain',
-        error_config: basicHelper.fetchErrorConfig()
-      });
-      return Promise.reject(errObj);
-    }
 
     return new Promise(function (onResolve, onReject) {
-      chainTimer['timer'] = setInterval(function () {
-        if (chainTimer['retryCounter'] <= retryAttempts) {
-          web3Provider.eth.getBlockNumber(function (err, blocknumber) {
-            if (err) {
-              logger.error("Geth Checker - " + chain + " fetch block number failed.", err);
-              chainTimer['retryCounter']++;
-            } else {
-              if (chainTimer['blockNumber'] != 0 && chainTimer['blockNumber'] != blocknumber) {
-                clearInterval(chainTimer['timer']);
-                onResolve(responseHelper.successWithData({}));
-              }
-              chainTimer['blockNumber'] = blocknumber;
-            }
+      chainTimer['timer'] = setInterval(async function () {
+        const web3Provider = web3ProviderFactory.getProvider(chain, web3ProviderFactory.typeWS);
+        if (!web3Provider) {
+          // this is a error scenario.
+          let errObj = responseHelper.error({
+            internal_error_identifier: 's_u_ps_1',
+            api_error_identifier: 'invalid_chain',
+            error_config: basicHelper.fetchErrorConfig()
           });
+          return Promise.reject(errObj);
+        }
+
+        if (chainTimer['retryCounter'] <= retryAttempts) {
+          let blockNumber = await web3Provider.eth.getBlockNumber();
+
+          if (!(blockNumber > 0)) {
+            logger.error("Geth Checker - " + chain + " fetch block number failed.", err);
+            chainTimer['retryCounter']++;
+          } else {
+            if (chainTimer['blockNumber'] != 0 && chainTimer['blockNumber'] != blockNumber) {
+              clearInterval(chainTimer['timer']);
+              onResolve(responseHelper.successWithData({}));
+            }
+            chainTimer['blockNumber'] = blockNumber;
+          }
+
+          // function (err, blocknumber) {
+          //   if (err) {
+          //     logger.error("Geth Checker - " + chain + " fetch block number failed.", err);
+          //     chainTimer['retryCounter']++;
+          //   } else {
+          //     if (chainTimer['blockNumber'] != 0 && chainTimer['blockNumber'] != blocknumber) {
+          //       clearInterval(chainTimer['timer']);
+          //       onResolve(responseHelper.successWithData({}));
+          //     }
+          //     chainTimer['blockNumber'] = blocknumber;
+          //   }
+          // }
         } else {
           logger.error("Geth Checker - " + chain + " chain has no new blocks.");
 

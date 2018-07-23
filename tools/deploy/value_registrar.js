@@ -32,7 +32,7 @@ require(rootPrefix + '/lib/contract_interact/value_registrar');
  *
  * @param {string} compareWith - string to compare with
  *
- * @return {booelan} true when equal
+ * @return {boolean} true when equal
  */
 String.prototype.equalsIgnoreCase = function ( compareWith ) {
   const oThis = this
@@ -52,7 +52,7 @@ const DeployValueRegistrarContractKlass = function ( configStrategy, instanceCom
 };
 
 DeployValueRegistrarContractKlass.prototype = {
-  
+
   /**
    * Perform
    *
@@ -61,7 +61,7 @@ DeployValueRegistrarContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function (showPrompts) {
-  
+
     const oThis = this
       , coreConstants = oThis.ic().getCoreConstants()
       , coreAddresses = oThis.ic().getCoreAddresses()
@@ -78,7 +78,7 @@ DeployValueRegistrarContractKlass.prototype = {
       , valueRegistrarContractBin = coreAddresses.getBinForContract(valueRegistrarContractName)
       , web3Provider = web3ProviderFactory.getProvider('value', web3ProviderFactory.typeWS)
     ;
-    
+
     logger.step('** Deploying Value Registrar Contract');
     if (showPrompts) {
       // confirming the important addresses
@@ -103,7 +103,7 @@ DeployValueRegistrarContractKlass.prototype = {
       prompts.close();
     }
 
-    const contractDeployTxReceipt = await deployHelper.perform(valueRegistrarContractName, web3Provider,
+    const contractDeployTxReceipt = await deployHelper.perform(valueRegistrarContractName, web3ProviderFactory.getProvider('value','ws'),
       valueRegistrarContractAbi, valueRegistrarContractBin, valueDeployerName, {gasPrice: VC_GAS_PRICE, gas: VC_GAS_LIMIT});
 
     const valueRegistrarContractAddr = contractDeployTxReceipt.contractAddress;

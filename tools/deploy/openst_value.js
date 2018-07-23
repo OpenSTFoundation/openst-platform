@@ -82,7 +82,7 @@ DeployOpenSTValueContractKlass.prototype = {
       , openSTValueContractBin = coreAddresses.getBinForContract(openSTValueContractName)
       , web3Provider = web3ProviderFactory.getProvider('value', web3ProviderFactory.typeRPC)
     ;
-    
+
     logger.step('** Deploying openSTValue Contract');
     if (showPrompts) {
       // confirming the important addresses
@@ -110,7 +110,7 @@ DeployOpenSTValueContractKlass.prototype = {
       prompts.close();
     }
 
-    const contractDeployTxReceipt = await deployHelper.perform(openSTValueContractName, web3Provider, openSTValueContractAbi,
+    const contractDeployTxReceipt = await deployHelper.perform(openSTValueContractName, web3ProviderFactory.getProvider('value','rpc'), openSTValueContractAbi,
       openSTValueContractBin, valueDeployerName, {gasPrice: VC_GAS_PRICE, gas: VC_GAS_LIMIT},
       [VALUE_CHAIN_ID, simpleTokenContractAddress, valueRegistrarContractAddress]);
 

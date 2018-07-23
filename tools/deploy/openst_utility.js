@@ -53,7 +53,7 @@ const DeployOpenSTUtilityContractKlass = function ( configStrategy, instanceComp
 };
 
 DeployOpenSTUtilityContractKlass.prototype = {
-  
+
   /**
    * Perform
    *
@@ -62,7 +62,7 @@ DeployOpenSTUtilityContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function (showPrompts) {
-  
+
     const oThis = this
       , coreConstants = oThis.ic().getCoreConstants()
       , coreAddresses = oThis.ic().getCoreAddresses()
@@ -70,7 +70,7 @@ DeployOpenSTUtilityContractKlass.prototype = {
       , deployHelper = oThis.ic().getDeployHelper()
       , OpenStUtilityKlass = oThis.ic().getOpenSTUtilityInteractClass()
     ;
-    
+
     const utilityDeployerName = 'utilityDeployer'
       , utilityRegistrarContractName = 'utilityRegistrar'
       , openSTUtilityContractName = 'openSTUtility'
@@ -112,7 +112,7 @@ DeployOpenSTUtilityContractKlass.prototype = {
     }
 
     const openSTUtiltiyContractDeployResponse = await deployHelper.perform(openSTUtilityContractName,
-      web3Provider, openSTUtilityContractAbi, openSTUtilityContractBin, utilityDeployerName,
+      web3ProviderFactory.getProvider('utility','rpc'), openSTUtilityContractAbi, openSTUtilityContractBin, utilityDeployerName,
       {gasPrice: UC_GAS_PRICE, gas: UC_GAS_LIMIT}, [VALUE_CHAIN_ID, UTILITY_CHAIN_ID, utilityRegistrarContractAddress]
     );
 

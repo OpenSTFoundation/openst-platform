@@ -61,7 +61,7 @@ DeployValueCoreContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function (showPrompts) {
-    
+
     const oThis = this
       , coreConstants = oThis.ic().getCoreConstants()
       , coreAddresses = oThis.ic().getCoreAddresses()
@@ -88,7 +88,7 @@ DeployValueCoreContractKlass.prototype = {
       , valueRegistrar = new ValueRegistrarKlass(valueRegistrarContractAddress)
       , web3Provider = web3ProviderFactory.getProvider('value', web3ProviderFactory.typeWS)
     ;
-    
+
     logger.step('** Deploying valueCore Contract');
     if (showPrompts) {
       // confirming the important addresses
@@ -116,7 +116,7 @@ DeployValueCoreContractKlass.prototype = {
       prompts.close();
     }
 
-    const valueCoreContractDeployResponse = await deployHelper.perform(valueCoreContractName, web3Provider,
+    const valueCoreContractDeployResponse = await deployHelper.perform(valueCoreContractName, web3ProviderFactory.getProvider('value','ws'),
       valueCoreContractAbi, valueCoreContractBin, valueDeployerName, {gasPrice: VALUE_GAS_PRICE, gas: VALUE_GAS_LIMIT},
       [valueRegistrarContractAddress, VALUE_CHAIN_ID, UTILITY_CHAIN_ID, openSTUtilityContractAddress]);
 

@@ -62,7 +62,7 @@ DeployUtilityRegistrarContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function (showPrompts) {
-  
+
     const oThis = this
       , coreConstants = oThis.ic().getCoreConstants()
       , coreAddresses = oThis.ic().getCoreAddresses()
@@ -80,7 +80,7 @@ DeployUtilityRegistrarContractKlass.prototype = {
       , UC_GAS_LIMIT = coreConstants.OST_UTILITY_GAS_LIMIT
       , web3Provider = web3ProviderFactory.getProvider('utility', web3ProviderFactory.typeWS)
     ;
-    
+
     logger.step('** Deploying utilityRegistrar Contract');
     if (showPrompts) {
       logger.info("Utility Chain Deployer Address: " + utilityDeployerAddress);
@@ -105,7 +105,7 @@ DeployUtilityRegistrarContractKlass.prototype = {
       prompts.close();
     }
 
-    const utilityRegistrarContractDeployResult = await deployHelper.perform(utilityRegistrarContractName, web3Provider,
+    const utilityRegistrarContractDeployResult = await deployHelper.perform(utilityRegistrarContractName, web3ProviderFactory.getProvider('utility','ws'),
       utilityRegistrarContractAbi, utilityRegistrarContractBin, utilityDeployerName,
       {gasPrice: UC_GAS_PRICE, gas: UC_GAS_LIMIT});
 

@@ -89,13 +89,13 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
     const oThis = this
       , coreAddresses = oThis.ic().getCoreAddresses()
       , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
-      
+
       , openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility')
       , openSTUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility')
     ;
     const web3WsProvider = web3ProviderFactory.getProvider('utility', web3ProviderFactory.typeWS);
 
-    oThis.completeContract = new web3WsProvider.eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
+    oThis.completeContract = new (web3ProviderFactory.getProvider('utility','ws')).eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
     //oThis.completeContract.setProvider(web3WsProvider.currentProvider);
   },
 
@@ -131,7 +131,7 @@ const StakeAndMintProcessorInterCommKlassSpecificPrototype = {
       , OpenStUtilityKlass = oThis.ic().getOpenSTUtilityInteractClass()
       , BrandedTokenKlass = oThis.ic().getBrandedTokenInteractClass()
       , OpenSTValueKlass = oThis.ic().getOpenSTValueInteractClass()
-      
+
       , returnValues = eventObj.returnValues
       , stakingIntentHash = returnValues._stakingIntentHash
       , staker = returnValues._staker

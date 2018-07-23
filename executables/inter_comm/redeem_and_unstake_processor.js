@@ -26,7 +26,7 @@ const rootPrefix = '../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , eventQueueManagerKlass = require(rootPrefix + '/lib/web3/events/queue_manager')
   , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , web3WsProvider = require(rootPrefix + '/lib/web3/providers/value_ws')
+  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
@@ -104,7 +104,7 @@ RedeemAndUnstakeProcessorInterComm.prototype = {
    *
    */
   listenToDesiredEvent: function (onError, onData, onChange) {
-    var completeContract = new web3WsProvider.eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
+    var completeContract = new (web3ProviderFactory.getProvider('value','ws')).eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
     //completeContract.setProvider(web3WsProvider.currentProvider);
 
     completeContract.events.RedemptionIntentConfirmed({})

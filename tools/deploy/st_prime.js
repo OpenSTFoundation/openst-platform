@@ -41,7 +41,7 @@ STPrimeContractKlass.prototype = {
    * @return {promise<result>}
    */
   perform: async function () {
-    
+
     const oThis = this
       , coreConstants = oThis.ic().getCoreConstants()
       , coreAddresses = oThis.ic().getCoreAddresses()
@@ -57,7 +57,7 @@ STPrimeContractKlass.prototype = {
       , stPrimeTotalSupplyInWei = web3Provider.utils.toWei(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY, "ether")
       , openStUtility = new OpenStUtilityKlass(openSTUtilityContractAddress)
     ;
-    
+
     logger.step('** Getting UUID of ST prime contract from openSTUtility Contract');
     const stPrimeUUIDResponse = await openStUtility.getSimpleTokenPrimeUUID()
       , simpleTokenPrimeUUID = stPrimeUUIDResponse.data.simpleTokenPrimeUUID
@@ -90,7 +90,6 @@ STPrimeContractKlass.prototype = {
 
     const stPrime = new StPrimeKlass(simpleTokenPrimeContractAddress);
     await stPrime.initialTransferToContract(utilityInitialSTPrimeHolder, {gasPrice: UC_GAS_PRICE, gas: UC_GAS_LIMIT});
-
     const simpleTokenPrimeContractBalanceInWei = await web3Provider.eth.getBalance(simpleTokenPrimeContractAddress);
 
     if (simpleTokenPrimeContractBalanceInWei != stPrimeTotalSupplyInWei) {
