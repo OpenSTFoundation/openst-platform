@@ -14,6 +14,8 @@ const rootPrefix = '../../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , tokenHelper = require(rootPrefix + '/tools/setup/branded_token/helper')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
+  , setupHelper = require(rootPrefix + '/tools/setup/helper')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
 
 require(rootPrefix + '/config/core_constants');
@@ -40,7 +42,11 @@ const MintBrandedToken = function (params) {
   oThis.reserveAddr = params.reserve_address;
   oThis.reservePassphrase = params.reserve_passphrase;
   oThis.erc20Address = params.erc20_address;
-  
+  oThis.config_strategy_file_path = params.config_strategy_file_path;
+
+  let configStrategy = oThis.config_strategy_file_path ? require(oThis.config_strategy_file_path) : require(setupHelper.configStrategyFilePath());
+  oThis.ic = new InstanceComposer(configStrategy);
+
 };
 
 MintBrandedToken.prototype = {
@@ -52,8 +58,8 @@ MintBrandedToken.prototype = {
   perform: async function () {
     
     const oThis = this
-      , coreConstants = oThis.ic().getCoreConstants()
-      , coreAddresses = oThis.ic().getCoreAddresses()
+      , coreConstants = oThis.ic.getCoreConstants()
+      , coreAddresses = oThis.ic.getCoreAddresses()
     ;
 
     // validations
@@ -89,7 +95,7 @@ MintBrandedToken.prototype = {
     const stakerAddr = coreAddresses.getAddressForUser('staker')
       , foundationAddr = coreAddresses.getAddressForUser('foundation')
       , foundationPassphrase = coreAddresses.getPassphraseForUser('foundation')
-      , fundManager = oThis.ic().getSetupFundManager()
+      , fundManager = oThis.ic.getSetupFundManager()
     ;
     
     await fundManager.transferST(
@@ -97,7 +103,7 @@ MintBrandedToken.prototype = {
         {tag: 'transferSTToBTReserve', returnType: 'txReceipt'}
     );
 
-    const approveService = oThis.ic().getApproveOpenstValueContractService();
+    const approveService = oThis.ic.getApproveOpenstValueContractService();
     
     logger.info('* Staker approves openSTValue contract');
     const approveResponse = await (new approveService()).perform();
@@ -109,9 +115,9 @@ MintBrandedToken.prototype = {
 
     logger.info('* Get approval status and keep doing so till success');
 
-    const web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+    const web3ProviderFactory = oThis.ic.getWeb3ProviderFactory()
       , web3Provider = web3ProviderFactory.getProvider('value', 'ws')
-      , contractInteractHelper = oThis.ic().getContractInteractHelper()
+      , contractInteractHelper = oThis.ic.getContractInteractHelper()
     ;
     
     const approveReceiptResponse =  await contractInteractHelper.waitAndGetTransactionReceipt(web3Provider, approveTransactionHash, {});
@@ -120,7 +126,7 @@ MintBrandedToken.prototype = {
       process.exit(1);
     }
 
-    const startStakeService = oThis.ic().getStartStakeService();
+    const startStakeService = oThis.ic.getStartStakeService();
     
     logger.info('* Start stake for Branded Token');
     await (new startStakeService({
@@ -152,14 +158,14 @@ MintBrandedToken.prototype = {
    * @private
    */
   _waitForBrandedTokenMint: function() {
+
     const oThis = this
     ;
 
     return new Promise(async function(onResolve, onReject) {
 
       // NOTE: NOT Relying on CACHE - this is because for in process memory, this goes into infinite loop
-      const oThis = this
-        , BrandedTokenKlass  = oThis.ic().getBrandedTokenInteractClass()
+      const BrandedTokenKlass  = oThis.ic.getBrandedTokenInteractClass()
         , brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address});
 
       const beforeBalanceResponse = await brandedToken._callMethod('balanceOf', [oThis.reserveAddr]);
@@ -193,7 +199,7 @@ MintBrandedToken.prototype = {
   _waitForSimpleTokenPrimeMint: function() {
     
     const oThis = this
-      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , web3ProviderFactory = oThis.ic.getWeb3ProviderFactory()
       , web3UcProvider = web3ProviderFactory.getProvider('utility', 'ws')
     ;
 

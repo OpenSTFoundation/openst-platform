@@ -85,8 +85,10 @@ PlatformStatusKlass.prototype = {
    * @ignore
    */
   _gethStatus: function (chain) {
+
     const oThis = this
-      , web3Provider = oThis.ic().getWeb3ProviderFactory().getProvider(chain, 'ws')
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , web3Provider = web3ProviderFactory.getProvider(chain, 'ws')
       , retryAttempts = 100
       , timerInterval = 5000
       , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}

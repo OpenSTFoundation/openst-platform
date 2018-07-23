@@ -13,6 +13,8 @@ const Path = require('path')
 const rootPrefix = '../../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , tokenHelper = require(rootPrefix + '/tools/setup/branded_token/helper')
+  , setupHelper = require(rootPrefix + '/tools/setup/helper')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
 ;
 
 require(rootPrefix + '/services/utils/generate_address');
@@ -42,23 +44,29 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
  * @param {object} params.bt_symbol - branded token symbol
  * @param {object} params.bt_name - branded token name
  * @param {object} params.bt_conversion_factor - branded token conversion factor
- 
+ * @param {string} params.config_strategy_file_path - path to file containing config strategy
  
  *
  * @constructor
  */
 const RegisterBTKlass = function (params) {
+
   const oThis = this;
 
   oThis.btName = params.bt_name; // branded token name
   oThis.btSymbol = params.bt_symbol; // branded token symbol
   oThis.btConversionFactor = params.bt_conversion_factor; // branded token to OST conversion factor, 1 OST = 10 ACME
-  
+  oThis.config_strategy_file_path = params.config_strategy_file_path;
+
   oThis.reserveAddress = ''; // Member company address (will be generated and populated)
   oThis.reservePassphrase = 'acmeOnopenST'; // Member company address passphrase
 
   oThis.uuid = ''; // Member company uuid (will be generated and populated)
   oThis.erc20 = ''; // Member company ERC20 contract address (will be generated and populated)
+
+  let configStrategy = oThis.config_strategy_file_path ? require(oThis.config_strategy_file_path) : require(setupHelper.configStrategyFilePath());
+  oThis.ic = new InstanceComposer(configStrategy);
+
 };
 
 RegisterBTKlass.prototype = {
@@ -66,6 +74,7 @@ RegisterBTKlass.prototype = {
    * Start BT proposal
    */
   perform: async function () {
+
     const oThis = this;
 
     // Validate new branded token
@@ -108,7 +117,7 @@ RegisterBTKlass.prototype = {
   _generateAddress: async function() {
     
     const oThis = this
-      , generateAddress = oThis.ic().getGenerateAddressService()
+      , generateAddress = oThis.ic.getGenerateAddressService()
     ;
     
     const addressObj = new generateAddress({chain: 'utility', passphrase: oThis.reservePassphrase})
@@ -129,7 +138,7 @@ RegisterBTKlass.prototype = {
   _propose: async function() {
     
     const oThis = this
-      , proposeBrandedToken = oThis.ic().getProposeBrandedTokenKlassClass()
+      , proposeBrandedToken = oThis.ic.getProposeBrandedTokenKlassClass()
     ;
     
     logger.step("** Starting BT proposal");
@@ -156,7 +165,7 @@ RegisterBTKlass.prototype = {
   _checkProposeStatus: function(transaction_hash) {
     
     const oThis = this
-      , getRegistrationStatus = oThis.ic().getRegistrationStatusService()
+      , getRegistrationStatus = oThis.ic.getRegistrationStatusService()
       , timeInterval = 5000
       , proposeSteps = {is_proposal_done: 0, is_registered_on_uc: 0, is_registered_on_vc: 0}
     ;
@@ -259,7 +268,7 @@ RegisterBTKlass.prototype = {
   _allocateShard: async function() {
     
     const oThis = this
-      , ddbServiceObj = oThis.ic().getDynamoDb()
+      , ddbServiceObj = oThis.ic.getDynamoDb()
     ;
 
     await new openSTStorage.TokenBalanceModel({
@@ -284,9 +293,14 @@ RegisterBTKlass.prototype = {
 const args = process.argv
   , btName = args[2]
   , btSymbol = args[3]
-  , btConversionFactor = args[4]  
+  , btConversionFactor = args[4]
+  , configStrategyFilePath = args[5]
 ;
 
 // Start Registration
-const services = new RegisterBTKlass({bt_name: btName, bt_symbol: btSymbol, bt_conversion_factor: btConversionFactor});
+const services = new RegisterBTKlass({
+  bt_name: btName, bt_symbol: btSymbol,
+  bt_conversion_factor: btConversionFactor,
+  config_strategy_file_path: configStrategyFilePath
+});
 services.perform();
