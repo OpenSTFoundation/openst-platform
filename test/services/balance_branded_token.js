@@ -7,12 +7,16 @@ const chai = require('chai')
 
 // Load cache service
 const rootPrefix = "../.."
-  , openstPlatform = require(rootPrefix + '/index')
+  , OpenstPlatform = require(rootPrefix + '/index')
+  , setupHelper = require(rootPrefix + '/tools/setup/helper')
+  , configStrategy = require( setupHelper.configStrategyFilePath() )
+  , openstPlatform = new OpenstPlatform( configStrategy )
   , platformServices = openstPlatform.services.balance
   , brandedTokenConfigPath = os.homedir() + "/openst-setup/branded_tokens.json"
   , brandedTokenConfig = require(brandedTokenConfigPath)
 ;
-var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]]
+
+var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]];
 var testValidData = {
   address: brandedTokenDetails['Reserve'],
   erc20_address: brandedTokenDetails['ERC20']

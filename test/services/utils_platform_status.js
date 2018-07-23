@@ -4,7 +4,10 @@ const chai = require('chai')
 
 // Load cache service
 const rootPrefix = "../.."
-  , openstPlatform = require(rootPrefix + '/index')
+  , OpenstPlatform = require(rootPrefix + '/index')
+  , setupHelper = require(rootPrefix + '/tools/setup/helper')
+  , configStrategy = require( setupHelper.configStrategyFilePath() )
+  , openstPlatform = new OpenstPlatform( configStrategy )
   , platformServices = openstPlatform.services.utils
 ;
 

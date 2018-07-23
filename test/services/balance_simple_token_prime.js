@@ -7,12 +7,15 @@ const chai = require('chai')
 
 // Load cache service
 const rootPrefix = "../.."
-  , openstPlatform = require(rootPrefix + '/index')
+  , OpenstPlatform = require(rootPrefix + '/index')
+  , setupHelper = require(rootPrefix + '/tools/setup/helper')
+  , configStrategy = require( setupHelper.configStrategyFilePath() )
+  , openstPlatform = new OpenstPlatform( configStrategy )
   , platformServices = openstPlatform.services.balance
 ;
 
 var testValidData = {
-  address: process.env.OST_UTILITY_CHAIN_OWNER_ADDR
+  address: configStrategy.OST_UTILITY_CHAIN_OWNER_ADDR
 };
 
 describe('services/balance/simple_token_prime', function () {

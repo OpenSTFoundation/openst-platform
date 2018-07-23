@@ -7,7 +7,6 @@
  */
 
 const rootPrefix = '../..'
-  , etherInteractKlass = require(rootPrefix + '/lib/contract_interact/ether')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
   , InstanceComposer = require( rootPrefix + "/instance_composer")

@@ -94,7 +94,7 @@ const ServiceManifestKlass = function (configStrategy, instanceComposer) {
    * Utils services
    */
   let utils = oThis.utils = {};
-  utils.platform_status = instanceComposer.getPlatformStatusService();
+  utils.platformStatus = instanceComposer.getPlatformStatusService();
   utils.generateAddress = instanceComposer.getGenerateAddressService();
   utils.getBrandedTokenDetails = instanceComposer.getBrandedTokenDetailsService();
   utils.generateRawKey = instanceComposer.getGenerateRawKeyService();

@@ -7,7 +7,10 @@ const chai = require('chai')
 
 // Load cache service
 const rootPrefix = "../.."
-  , openstPlatform = require(rootPrefix + '/index')
+  , OpenstPlatform = require(rootPrefix + '/index')
+  , setupHelper = require(rootPrefix + '/tools/setup/helper')
+  , configStrategy = require( setupHelper.configStrategyFilePath() )
+  , openstPlatform = new OpenstPlatform( configStrategy )
   , platformServices = openstPlatform.services.transaction.transfer
   , brandedTokenConfigPath = os.homedir() + "/openst-setup/branded_tokens.json"
   , brandedTokenConfig = require(brandedTokenConfigPath)
@@ -17,10 +20,10 @@ var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]]
 
 var testValidData = {
   erc20_address: brandedTokenDetails['ERC20'],
-  sender_address: process.env.OST_UTILITY_CHAIN_OWNER_ADDR,
-  sender_passphrase: process.env.OST_UTILITY_CHAIN_OWNER_PASSPHRASE,
+  sender_address: configStrategy.OST_UTILITY_CHAIN_OWNER_ADDR,
+  sender_passphrase: configStrategy.OST_UTILITY_CHAIN_OWNER_PASSPHRASE,
   sender_name: 'utilityChainOwner',
-  recipient_address: process.env.OST_STAKER_ADDR,
+  recipient_address: configStrategy.OST_STAKER_ADDR,
   recipient_name: 'staker',
   amount_in_wei: 2,
   options: {
