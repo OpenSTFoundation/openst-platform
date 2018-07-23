@@ -13,11 +13,20 @@
 
 const rootPrefix = '../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , StakeAndMintProcessorInterCommKlass = require(rootPrefix + '/services/inter_comm/stake_and_mint_processor')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , setupHelper = require(rootPrefix + '/tools/setup/helper')
 ;
 
 const args = process.argv
   , filePath = args[2]
+  , configStrategyFilePath = args[3]
+;
+
+require(rootPrefix + '/services/inter_comm/stake_and_mint_processor');
+
+const configStrategy = configStrategyFilePath ? require(configStrategyFilePath) : require(setupHelper.configStrategyFilePath())
+  , instanceComposer = new InstanceComposer(configStrategy)
+  , StakeAndMintProcessorInterCommKlass = instanceComposer.getStakeAndMintProcessorInterCommService()
 ;
 
 const stakeAndMintProcessorInterCommObj = new StakeAndMintProcessorInterCommKlass({file_path: filePath});

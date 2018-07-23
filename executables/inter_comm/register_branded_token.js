@@ -11,11 +11,20 @@
  */
 const rootPrefix = '../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , RegisterBrandedTokenInterComm = require(rootPrefix + '/services/inter_comm/register_branded_token')
+  , InstanceComposer = require( rootPrefix + "/instance_composer")
+  , setupHelper = require(rootPrefix + '/tools/setup/helper')
 ;
 
 const args = process.argv
   , filePath = args[2]
+  , configStrategyFilePath = args[3]
+;
+
+require(rootPrefix + '/services/inter_comm/register_branded_token');
+
+const configStrategy = configStrategyFilePath ? require(configStrategyFilePath) : require(setupHelper.configStrategyFilePath())
+  , instanceComposer = new InstanceComposer(configStrategy)
+  , RegisterBrandedTokenInterComm = instanceComposer.getRegisterBrandedTokenInterCommService()
 ;
 
 const registerBrandedTokenInterCommObj = new RegisterBrandedTokenInterComm({file_path: filePath});

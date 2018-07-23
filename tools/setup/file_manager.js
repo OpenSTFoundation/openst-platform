@@ -133,7 +133,7 @@ FileManagerKlass.prototype = {
    * @param {string} configValue - Config Value
    */
   getPlatformConfig: function ( configKey, configValue ) {
-    const filePath = setupHelper.setupFolderAbsolutePath() + '/' + setupConfig.openst_platform_config_file;
+    const filePath = setupHelper.configStrategyFilePath();
 
     // Read Config
     let content = fs.readFileSync( filePath )
@@ -150,7 +150,7 @@ FileManagerKlass.prototype = {
    * @param {string} configValue - Config Value
    */
   addPlatformConfig: function ( configKey, configValue ) {
-    const filePath = setupHelper.setupFolderAbsolutePath() + '/' + setupConfig.openst_platform_config_file;
+    const filePath = setupHelper.configStrategyFilePath();
 
     // Read Config
     let content = fs.readFileSync( filePath )

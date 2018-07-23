@@ -129,6 +129,19 @@ SetupHelperKlass.prototype = {
   intercomProcessIdentifiers: function() {
     return ["redeem_and_unstake", "redeem_and_unstake_processor", "register_branded_token",
       "stake_and_mint", "stake_and_mint_processor"];
+  },
+
+  /**
+   * config strategy file path
+   *
+   * @return {string}
+   *
+   */
+  configStrategyFilePath: function () {
+
+    const oThis = this;
+    return oThis.setupFolderAbsolutePath() + '/' + setupConfig.openst_platform_config_file
+
   }
 
 };
