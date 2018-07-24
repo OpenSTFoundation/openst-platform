@@ -1,3 +1,9 @@
+/**
+ *
+ * Test for Branded Token transfer Service
+ *
+ */
+
 // Load external packages
 const chai = require('chai')
   , assert = chai.assert

@@ -1,3 +1,9 @@
+/**
+ *
+ * Test for Simple Token Prime balance Service
+ *
+ */
+
 // Load external packages
 const chai = require('chai')
   , assert = chai.assert

@@ -1,5 +1,11 @@
 "use strict";
 
+/**
+ * Get Branded Token Balance from chain
+ *
+ * @module services/balance/branded_token_from_chain
+ */
+
 const rootPrefix = '../..'
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')

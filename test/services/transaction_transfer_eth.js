@@ -1,3 +1,9 @@
+/**
+ *
+ * Test for eth transfer Service
+ *
+ */
+
 // Load external packages
 const chai = require('chai')
   , assert = chai.assert

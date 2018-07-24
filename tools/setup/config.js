@@ -1,3 +1,9 @@
+/**
+ *
+ * Configurations for setup
+ *
+ */
+
 const os = require('os');
 
 const setupConfig = {
