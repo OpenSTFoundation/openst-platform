@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * This executable / script is intermediate communicator between value chain and utility chain used for the registering branded token.
@@ -9,25 +9,24 @@
  *
  * @module executables/inter_comm/register_branded_token
  */
-const rootPrefix = '../..'
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , InstanceComposer = require(rootPrefix + "/instance_composer")
-  , setupHelper = require(rootPrefix + '/tools/setup/helper')
-;
+const rootPrefix = '../..',
+  logger = require(rootPrefix + '/helpers/custom_console_logger'),
+  InstanceComposer = require(rootPrefix + '/instance_composer'),
+  setupHelper = require(rootPrefix + '/tools/setup/helper');
 
-const args = process.argv
-  , filePath = args[2]
-  , configStrategyFilePath = args[3]
-;
+const args = process.argv,
+  filePath = args[2],
+  configStrategyFilePath = args[3];
 
 require(rootPrefix + '/services/inter_comm/register_branded_token');
 
-const configStrategy = configStrategyFilePath ? require(configStrategyFilePath) : require(setupHelper.configStrategyFilePath())
-  , instanceComposer = new InstanceComposer(configStrategy)
-  , RegisterBrandedTokenInterComm = instanceComposer.getRegisterBrandedTokenInterCommService()
-;
+const configStrategy = configStrategyFilePath
+    ? require(configStrategyFilePath)
+    : require(setupHelper.configStrategyFilePath()),
+  instanceComposer = new InstanceComposer(configStrategy),
+  RegisterBrandedTokenInterComm = instanceComposer.getRegisterBrandedTokenInterCommService();
 
-const registerBrandedTokenInterCommObj = new RegisterBrandedTokenInterComm({file_path: filePath});
+const registerBrandedTokenInterCommObj = new RegisterBrandedTokenInterComm({ file_path: filePath });
 registerBrandedTokenInterCommObj.registerInterruptSignalHandlers();
 registerBrandedTokenInterCommObj.init();
-logger.win("InterComm Script for Register Branded Token initiated.");
+logger.win('InterComm Script for Register Branded Token initiated.');

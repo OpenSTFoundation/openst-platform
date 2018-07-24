@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Transfer Simple Token Prime
@@ -6,12 +6,11 @@
  * @module services/transaction/transfer/simple_token_prime
  */
 
-const rootPrefix = '../../..'
-  , InstanceComposer = require(rootPrefix + "/instance_composer")
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-;
+const rootPrefix = '../../..',
+  InstanceComposer = require(rootPrefix + '/instance_composer'),
+  logger = require(rootPrefix + '/helpers/custom_console_logger'),
+  responseHelper = require(rootPrefix + '/lib/formatter/response'),
+  basicHelper = require(rootPrefix + '/helpers/basic_helper');
 
 require(rootPrefix + '/config/core_addresses');
 require(rootPrefix + '/lib/contract_interact/st_prime');
@@ -32,10 +31,9 @@ require(rootPrefix + '/lib/contract_interact/st_prime');
  *
  * @constructor
  */
-const TransferSimpleTokenPrimeKlass = function (params) {
-  const oThis = this
-  ;
-  
+const TransferSimpleTokenPrimeKlass = function(params) {
+  const oThis = this;
+
   params = params || {};
   oThis.senderAddress = params.sender_address;
   oThis.senderPassphrase = params.sender_passphrase;
@@ -53,39 +51,36 @@ TransferSimpleTokenPrimeKlass.prototype = {
    *
    * @return {Promise}
    */
-  perform: function () {
-    const oThis = this
-    ;
-    
-    return oThis.asyncPerform()
-      .catch(function (error) {
-        if (responseHelper.isCustomResult(error)) {
-          return error;
-        } else {
-          logger.error('openst-platform::services/transaction/transfer/simple_token_prime.js::perform::catch');
-          logger.error(error);
-          return responseHelper.error({
-            internal_error_identifier: 's_t_t_stp_5',
-            api_error_identifier: 'something_went_wrong',
-            debug_options: {}
-          });
-        }
-      });
+  perform: function() {
+    const oThis = this;
+
+    return oThis.asyncPerform().catch(function(error) {
+      if (responseHelper.isCustomResult(error)) {
+        return error;
+      } else {
+        logger.error('openst-platform::services/transaction/transfer/simple_token_prime.js::perform::catch');
+        logger.error(error);
+        return responseHelper.error({
+          internal_error_identifier: 's_t_t_stp_5',
+          api_error_identifier: 'something_went_wrong',
+          debug_options: {}
+        });
+      }
+    });
   },
-  
+
   /**
    * asyncPerform
    *
    * @return {promise<result>} - returns a promise which resolves to an object of kind Result
    */
-  asyncPerform: async function () {
-    const oThis = this
-      , coreAddresses = oThis.ic().getCoreAddresses()
-      , stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
-      , StPrimeKlass = oThis.ic().getStPrimeInteractClass()
-      , stPrime = new StPrimeKlass(stPrimeContractAddress)
-    ;
-    
+  asyncPerform: async function() {
+    const oThis = this,
+      coreAddresses = oThis.ic().getCoreAddresses(),
+      stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime'),
+      StPrimeKlass = oThis.ic().getStPrimeInteractClass(),
+      stPrime = new StPrimeKlass(stPrimeContractAddress);
+
     // Get sender details by name
     if (oThis.senderName) {
       oThis.senderAddress = coreAddresses.getAddressForUser(oThis.senderName);
@@ -95,7 +90,7 @@ TransferSimpleTokenPrimeKlass.prototype = {
     if (oThis.recipientName) {
       oThis.recipientAddress = coreAddresses.getAddressForUser(oThis.recipientName);
     }
-    
+
     // Validations
     if (!basicHelper.isAddressValid(oThis.senderAddress) || !oThis.senderPassphrase) {
       let errObj = responseHelper.error({
@@ -129,16 +124,17 @@ TransferSimpleTokenPrimeKlass.prototype = {
       });
       return Promise.resolve(errObj);
     }
-    
+
     // Format wei
     oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
-    
-    return stPrime.transfer(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei,
-      {tag: oThis.tag, returnType: oThis.returnType});
-    
+
+    return stPrime.transfer(oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei, {
+      tag: oThis.tag,
+      returnType: oThis.returnType
+    });
   }
 };
 
-InstanceComposer.registerShadowableClass(TransferSimpleTokenPrimeKlass, "getTransferSimpleTokenPrimeService");
+InstanceComposer.registerShadowableClass(TransferSimpleTokenPrimeKlass, 'getTransferSimpleTokenPrimeService');
 
 module.exports = TransferSimpleTokenPrimeKlass;

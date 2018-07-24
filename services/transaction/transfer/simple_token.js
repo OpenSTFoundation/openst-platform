@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Transfer Simple Token
@@ -6,12 +6,11 @@
  * @module services/transaction/transfer/simple_token
  */
 
-const rootPrefix = '../../..'
-  , InstanceComposer = require(rootPrefix + '/instance_composer')
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-;
+const rootPrefix = '../../..',
+  InstanceComposer = require(rootPrefix + '/instance_composer'),
+  logger = require(rootPrefix + '/helpers/custom_console_logger'),
+  responseHelper = require(rootPrefix + '/lib/formatter/response'),
+  basicHelper = require(rootPrefix + '/helpers/basic_helper');
 require(rootPrefix + '/config/core_addresses');
 require(rootPrefix + '/lib/contract_interact/simple_token');
 
@@ -31,11 +30,9 @@ require(rootPrefix + '/lib/contract_interact/simple_token');
  *
  * @constructor
  */
-const TransferSimpleTokenKlass = function (params) {
-  
-  const oThis = this
-  ;
-  
+const TransferSimpleTokenKlass = function(params) {
+  const oThis = this;
+
   params = params || {};
   oThis.senderAddress = params.sender_address;
   oThis.senderPassphrase = params.sender_passphrase;
@@ -45,7 +42,6 @@ const TransferSimpleTokenKlass = function (params) {
   oThis.amountInWei = params.amount_in_wei;
   oThis.tag = (params.options || {}).tag;
   oThis.returnType = (params.options || {}).returnType || 'txHash';
-  
 };
 
 TransferSimpleTokenKlass.prototype = {
@@ -54,49 +50,46 @@ TransferSimpleTokenKlass.prototype = {
    *
    * @return {Promise}
    */
-  perform: function () {
-    const oThis = this
-    ;
-    
-    return oThis.asyncPerform()
-      .catch(function (error) {
-        if (responseHelper.isCustomResult(error)) {
-          return error;
-        } else {
-          logger.error('openst-platform::services/transaction/transfer/simple_token.js::perform::catch');
-          logger.error(error);
-          return responseHelper.error({
-            internal_error_identifier: 's_t_t_st_5',
-            api_error_identifier: 'something_went_wrong',
-            debug_options: {}
-          });
-        }
-      });
+  perform: function() {
+    const oThis = this;
+
+    return oThis.asyncPerform().catch(function(error) {
+      if (responseHelper.isCustomResult(error)) {
+        return error;
+      } else {
+        logger.error('openst-platform::services/transaction/transfer/simple_token.js::perform::catch');
+        logger.error(error);
+        return responseHelper.error({
+          internal_error_identifier: 's_t_t_st_5',
+          api_error_identifier: 'something_went_wrong',
+          debug_options: {}
+        });
+      }
+    });
   },
-  
+
   /**
    * asyncPerform
    *
    * @return {promise<result>} - returns a promise which resolves to an object of kind Result
    */
-  asyncPerform: async function () {
-    const oThis = this
-      , coreAddresses = oThis.ic().getCoreAddresses()
-      , SimpleTokenKlass = oThis.ic().getSimpleTokenInteractClass()
-      , simpleToken = new SimpleTokenKlass()
-    ;
-    
+  asyncPerform: async function() {
+    const oThis = this,
+      coreAddresses = oThis.ic().getCoreAddresses(),
+      SimpleTokenKlass = oThis.ic().getSimpleTokenInteractClass(),
+      simpleToken = new SimpleTokenKlass();
+
     // Get sender details by name
     if (oThis.senderName) {
       oThis.senderAddress = coreAddresses.getAddressForUser(oThis.senderName);
       oThis.senderPassphrase = coreAddresses.getPassphraseForUser(oThis.senderName);
     }
-    
+
     // Get recipient details by name
     if (oThis.recipientName) {
       oThis.recipientAddress = coreAddresses.getAddressForUser(oThis.recipientName);
     }
-    
+
     // Validations
     if (!basicHelper.isAddressValid(oThis.senderAddress) || !oThis.senderPassphrase) {
       let errObj = responseHelper.error({
@@ -130,19 +123,20 @@ TransferSimpleTokenKlass.prototype = {
       });
       return Promise.resolve(errObj);
     }
-    
+
     // Format wei
     oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
-    
+
     return simpleToken.transfer(
-      oThis.senderAddress, oThis.senderPassphrase, oThis.recipientAddress, oThis.amountInWei,
-      {tag: oThis.tag, returnType: oThis.returnType}
+      oThis.senderAddress,
+      oThis.senderPassphrase,
+      oThis.recipientAddress,
+      oThis.amountInWei,
+      { tag: oThis.tag, returnType: oThis.returnType }
     );
-    
   }
-  
 };
 
-InstanceComposer.registerShadowableClass(TransferSimpleTokenKlass, "getTransferSimpleTokenService");
+InstanceComposer.registerShadowableClass(TransferSimpleTokenKlass, 'getTransferSimpleTokenService');
 
 module.exports = TransferSimpleTokenKlass;

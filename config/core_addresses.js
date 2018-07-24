@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * List of all known addresses and there respective abi, bin, passphrase
@@ -8,26 +8,23 @@
  * @module config/core_addresses
  */
 
-const rootPrefix = '..'
-  , InstanceComposer = require(rootPrefix + '/instance_composer')
-  , coreAbis = require(rootPrefix + '/config/core_abis')
-  , coreBins = require(rootPrefix + '/config/core_bins')
-;
-
+const rootPrefix = '..',
+  InstanceComposer = require(rootPrefix + '/instance_composer'),
+  coreAbis = require(rootPrefix + '/config/core_abis'),
+  coreBins = require(rootPrefix + '/config/core_bins');
 
 /**
  * Constructor to access different account and contract addresses and their respective details
  *
  * @constructor
  */
-const CoreAddresses = function (configStrategy, instanceComposer) {
+const CoreAddresses = function(configStrategy, instanceComposer) {
   const oThis = this;
   oThis._buildAllAddresses(configStrategy);
 };
 
 CoreAddresses.prototype = {
-  
-  _buildAllAddresses: function (configStrategy) {
+  _buildAllAddresses: function(configStrategy) {
     // Flag to do a mock deployment testing on MainNet
     // OpenST mockSimpleToken contract is used for deployment
     // and services
@@ -44,7 +41,6 @@ CoreAddresses.prototype = {
     const oThis = this;
     oThis.allAddresses = {
       users: {
-        
         /**
          * foundation account details
          * @constant {object}
@@ -53,7 +49,7 @@ CoreAddresses.prototype = {
           address: configStrategy.OST_FOUNDATION_ADDR,
           passphrase: configStrategy.OST_FOUNDATION_PASSPHRASE
         },
-        
+
         /**
          * utility chain owner account details
          * @constant {object}
@@ -62,7 +58,7 @@ CoreAddresses.prototype = {
           address: configStrategy.OST_UTILITY_CHAIN_OWNER_ADDR,
           passphrase: configStrategy.OST_UTILITY_CHAIN_OWNER_PASSPHRASE
         },
-        
+
         /**
          * utility initial ST' Holder account details
          * @constant {object}
@@ -71,7 +67,7 @@ CoreAddresses.prototype = {
           address: configStrategy.OST_UTILITY_INITIAL_ST_PRIME_HOLDER_ADDR,
           passphrase: configStrategy.OST_UTILITY_INITIAL_ST_PRIME_HOLDER_PASSPHRASE
         },
-        
+
         /**
          * staker account details
          * @constant {object}
@@ -80,7 +76,7 @@ CoreAddresses.prototype = {
           address: configStrategy.OST_STAKER_ADDR,
           passphrase: configStrategy.OST_STAKER_PASSPHRASE
         },
-        
+
         /**
          * redeemer account details
          * @constant {object}
@@ -89,7 +85,7 @@ CoreAddresses.prototype = {
           address: configStrategy.OST_REDEEMER_ADDR,
           passphrase: configStrategy.OST_REDEEMER_PASSPHRASE
         },
-        
+
         /**
          * value registrar account details
          * @constant {object}
@@ -98,7 +94,7 @@ CoreAddresses.prototype = {
           address: configStrategy.OST_VALUE_REGISTRAR_ADDR,
           passphrase: configStrategy.OST_VALUE_REGISTRAR_PASSPHRASE
         },
-        
+
         /**
          * utility registrar account details
          * @constant {object}
@@ -107,7 +103,7 @@ CoreAddresses.prototype = {
           address: configStrategy.OST_UTILITY_REGISTRAR_ADDR,
           passphrase: configStrategy.OST_UTILITY_REGISTRAR_PASSPHRASE
         },
-        
+
         /**
          * value deployer account details
          * @constant {object}
@@ -116,7 +112,7 @@ CoreAddresses.prototype = {
           address: configStrategy.OST_VALUE_DEPLOYER_ADDR,
           passphrase: configStrategy.OST_VALUE_DEPLOYER_PASSPHRASE
         },
-        
+
         /**
          * utility deployer account details
          * @constant {object}
@@ -125,7 +121,7 @@ CoreAddresses.prototype = {
           address: configStrategy.OST_UTILITY_DEPLOYER_ADDR,
           passphrase: configStrategy.OST_UTILITY_DEPLOYER_PASSPHRASE
         },
-        
+
         /**
          * value ops account details
          * @constant {object}
@@ -134,7 +130,7 @@ CoreAddresses.prototype = {
           address: configStrategy.OST_VALUE_OPS_ADDR,
           passphrase: configStrategy.OST_VALUE_OPS_PASSPHRASE
         },
-        
+
         /**
          * utility ops account details
          * @constant {object}
@@ -143,11 +139,9 @@ CoreAddresses.prototype = {
           address: configStrategy.OST_UTILITY_OPS_ADDR,
           passphrase: configStrategy.OST_UTILITY_OPS_PASSPHRASE
         }
-        
       },
-      
+
       contracts: {
-        
         /**
          * simple token contract details
          * @constant {object}
@@ -157,7 +151,7 @@ CoreAddresses.prototype = {
           abi: simpleTokenAbi,
           bin: simpleTokenBin
         },
-        
+
         /**
          * openst utility contract details
          * @constant {object}
@@ -167,7 +161,7 @@ CoreAddresses.prototype = {
           abi: coreAbis.openSTUtility,
           bin: coreBins.openSTUtility
         },
-        
+
         /**
          * openst value contract details
          * @constant {object}
@@ -177,7 +171,7 @@ CoreAddresses.prototype = {
           abi: coreAbis.openSTValue,
           bin: coreBins.openSTValue
         },
-        
+
         /**
          * ST' contract details
          * @constant {object}
@@ -187,7 +181,7 @@ CoreAddresses.prototype = {
           abi: coreAbis.stPrime,
           bin: coreBins.stPrime
         },
-        
+
         /**
          * value core contract details
          * @constant {object}
@@ -197,7 +191,7 @@ CoreAddresses.prototype = {
           abi: coreAbis.valueCore,
           bin: coreBins.valueCore
         },
-        
+
         /**
          * value registrar contract details
          * @constant {object}
@@ -207,7 +201,7 @@ CoreAddresses.prototype = {
           abi: coreAbis.valueRegistrar,
           bin: coreBins.valueRegistrar
         },
-        
+
         /**
          * utility registrar contract details
          * @constant {object}
@@ -217,7 +211,7 @@ CoreAddresses.prototype = {
           abi: coreAbis.utilityRegistrar,
           bin: coreBins.utilityRegistrar
         },
-        
+
         /**
          * branded token contract details
          * @constant {object}
@@ -227,7 +221,7 @@ CoreAddresses.prototype = {
           abi: coreAbis.brandedToken,
           bin: coreBins.brandedToken
         },
-        
+
         /**
          * simple stake contract details
          * @constant {object}
@@ -237,7 +231,7 @@ CoreAddresses.prototype = {
           abi: coreAbis.simpleStake,
           bin: coreBins.simpleStake
         },
-        
+
         airdrop: {
           address: null,
           abi: coreAbis.airdrop,
@@ -246,29 +240,29 @@ CoreAddresses.prototype = {
       }
     };
   },
-  
+
   _addrToContractNameMap: null,
-  _getAddrToContractNameMap: function () {
+  _getAddrToContractNameMap: function() {
     const oThis = this;
-    
+
     if (oThis._addrToContractNameMap) {
       return oThis._addrToContractNameMap;
     }
-    const addrToContractNameMap = oThis._addrToContractNameMap = {};
+    const addrToContractNameMap = (oThis._addrToContractNameMap = {});
     for (var contractName in this.allAddresses.contracts) {
       var addr = this.allAddresses.contracts[contractName].address;
-      
+
       if (Array.isArray(addr)) {
         for (var i = 0; i < addr.length; i++) {
           addrToContractNameMap[addr[i].toLowerCase()] = contractName;
         }
-      } else if (addr !== null && typeof addr !== "undefined") {
+      } else if (addr !== null && typeof addr !== 'undefined') {
         addrToContractNameMap[addr.toLowerCase()] = contractName;
       }
     }
     return oThis._addrToContractNameMap;
   },
-  
+
   /**
    * Get address of specific account name
    *
@@ -277,10 +271,10 @@ CoreAddresses.prototype = {
    * @return {string} - account address
    *
    */
-  getAddressForUser: function (userName) {
+  getAddressForUser: function(userName) {
     return this.allAddresses.users[userName].address;
   },
-  
+
   /**
    * Get passphrase of specific account name
    *
@@ -289,10 +283,10 @@ CoreAddresses.prototype = {
    * @return {string} - account passphrase
    *
    */
-  getPassphraseForUser: function (userName) {
+  getPassphraseForUser: function(userName) {
     return this.allAddresses.users[userName].passphrase;
   },
-  
+
   /**
    * Get address of specific contract
    *
@@ -301,14 +295,14 @@ CoreAddresses.prototype = {
    * @return {string} - contract address
    *
    */
-  getAddressForContract: function (contractName) {
+  getAddressForContract: function(contractName) {
     var contractAddress = this.allAddresses.contracts[contractName].address;
     if (Array.isArray(contractAddress)) {
-      throw "Please pass valid contractName to get contract address for: " + contractName;
+      throw 'Please pass valid contractName to get contract address for: ' + contractName;
     }
     return contractAddress;
   },
-  
+
   /**
    * Get list of addresses of a specific contract
    *
@@ -317,14 +311,14 @@ CoreAddresses.prototype = {
    * @return {array} - contract addresses
    *
    */
-  getAddressesForContract: function (contractName) {
+  getAddressesForContract: function(contractName) {
     var contractAddresses = this.allAddresses.contracts[contractName].address;
     if (!contractAddresses || !Array.isArray(contractAddresses) || contractAddresses.length === 0) {
-      throw "Please pass valid contractName to get contract address for: " + contractName;
+      throw 'Please pass valid contractName to get contract address for: ' + contractName;
     }
     return contractAddresses;
   },
-  
+
   /**
    * Get contract name of a known contract address
    *
@@ -333,13 +327,12 @@ CoreAddresses.prototype = {
    * @return {string} - contract name
    *
    */
-  getContractNameFor: function (contractAddr) {
-    const oThis = this
-      , addrToContractNameMap = oThis._getAddrToContractNameMap()
-    ;
+  getContractNameFor: function(contractAddr) {
+    const oThis = this,
+      addrToContractNameMap = oThis._getAddrToContractNameMap();
     return addrToContractNameMap[(contractAddr || '').toLowerCase()];
   },
-  
+
   /**
    * Get contract ABI of a specific contract
    *
@@ -348,10 +341,10 @@ CoreAddresses.prototype = {
    * @return {object} - contract ABI
    *
    */
-  getAbiForContract: function (contractName) {
+  getAbiForContract: function(contractName) {
     return (this.allAddresses.contracts[contractName] || {}).abi || '';
   },
-  
+
   /**
    * Get contract binary of a specific contract
    *
@@ -360,12 +353,11 @@ CoreAddresses.prototype = {
    * @return {binary} - contract binary
    *
    */
-  getBinForContract: function (contractName) {
+  getBinForContract: function(contractName) {
     return (this.allAddresses.contracts[contractName] || {}).bin || '';
   }
 };
 
-InstanceComposer.register(CoreAddresses, "getCoreAddresses", true);
+InstanceComposer.register(CoreAddresses, 'getCoreAddresses', true);
 
 module.exports = CoreAddresses;
-

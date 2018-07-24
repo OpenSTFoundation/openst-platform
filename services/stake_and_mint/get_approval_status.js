@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Get Approval Status
@@ -7,11 +7,10 @@
  * @module services/stake_and_mint/get_approval_status
  */
 
-const rootPrefix = '../..'
-  , InstanceComposer = require(rootPrefix + "/instance_composer")
-  , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-;
+const rootPrefix = '../..',
+  InstanceComposer = require(rootPrefix + '/instance_composer'),
+  responseHelper = require(rootPrefix + '/lib/formatter/response'),
+  logger = require(rootPrefix + '/helpers/custom_console_logger');
 
 require(rootPrefix + '/services/transaction/get_receipt');
 
@@ -23,10 +22,9 @@ require(rootPrefix + '/services/transaction/get_receipt');
  *
  * @constructor
  */
-const GetApprovalStatusKlass = function (params) {
-  const oThis = this
-  ;
-  
+const GetApprovalStatusKlass = function(params) {
+  const oThis = this;
+
   params = params || {};
   oThis.transactionHash = params.transaction_hash;
   oThis.chain = 'value';
@@ -38,36 +36,34 @@ GetApprovalStatusKlass.prototype = {
    *
    * @return {promise<result>}
    */
-  perform: function () {
+  perform: function() {
     const oThis = this;
-    
-    return oThis.asyncPerform()
-      .catch(function (error) {
-        if (responseHelper.isCustomResult(error)) {
-          return error;
-        } else {
-          logger.error('openst-platform::services/stake_and_mint/get_approval_status.js::perform::catch');
-          logger.error(error);
-          
-          return responseHelper.error({
-            internal_error_identifier: 's_sam_gas_1',
-            api_error_identifier: 'something_went_wrong',
-            error_config: basicHelper.fetchErrorConfig(),
-            debug_options: {err: error}
-          });
-        }
-      });
+
+    return oThis.asyncPerform().catch(function(error) {
+      if (responseHelper.isCustomResult(error)) {
+        return error;
+      } else {
+        logger.error('openst-platform::services/stake_and_mint/get_approval_status.js::perform::catch');
+        logger.error(error);
+
+        return responseHelper.error({
+          internal_error_identifier: 's_sam_gas_1',
+          api_error_identifier: 'something_went_wrong',
+          error_config: basicHelper.fetchErrorConfig(),
+          debug_options: { err: error }
+        });
+      }
+    });
   },
-  
+
   /**
    * Async Perform
    *
    * @return {promise<result>}
    */
-  asyncPerform: async function () {
-    const oThis = this
-    ;
-    
+  asyncPerform: async function() {
+    const oThis = this;
+
     let TransactionReceiptServiceKlass = oThis.ic().getTransactionReceiptService();
     const getReceiptObj = new TransactionReceiptServiceKlass({
       transaction_hash: oThis.transactionHash,
@@ -75,10 +71,9 @@ GetApprovalStatusKlass.prototype = {
     });
     const receiptResponse = await getReceiptObj.perform();
     return Promise.resolve(receiptResponse);
-    
   }
 };
 
-InstanceComposer.registerShadowableClass(GetApprovalStatusKlass, "getApprovalStatusService");
+InstanceComposer.registerShadowableClass(GetApprovalStatusKlass, 'getApprovalStatusService');
 
 module.exports = GetApprovalStatusKlass;

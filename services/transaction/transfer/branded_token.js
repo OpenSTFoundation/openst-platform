@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Transfer Branded Token
@@ -6,12 +6,11 @@
  * @module services/transaction/transfer/branded_token
  */
 
-const rootPrefix = '../../..'
-  , InstanceComposer = require(rootPrefix + '/instance_composer')
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-;
+const rootPrefix = '../../..',
+  InstanceComposer = require(rootPrefix + '/instance_composer'),
+  logger = require(rootPrefix + '/helpers/custom_console_logger'),
+  responseHelper = require(rootPrefix + '/lib/formatter/response'),
+  basicHelper = require(rootPrefix + '/helpers/basic_helper');
 
 require(rootPrefix + '/config/core_addresses');
 require(rootPrefix + '/lib/contract_interact/branded_token');
@@ -34,10 +33,9 @@ require(rootPrefix + '/lib/contract_interact/branded_token');
  *
  * @constructor
  */
-const TransferBrandedTokenKlass = function (params) {
-  const oThis = this
-  ;
-  
+const TransferBrandedTokenKlass = function(params) {
+  const oThis = this;
+
   params = params || {};
   oThis.erc20Address = params.erc20_address;
   oThis.senderAddress = params.sender_address;
@@ -56,49 +54,45 @@ TransferBrandedTokenKlass.prototype = {
    *
    * @return {Promise}
    */
-  perform: function () {
-    
-    const oThis = this
-    ;
-    
-    return oThis.asyncPerform()
-      .catch(function (error) {
-        if (responseHelper.isCustomResult(error)) {
-          return error;
-        } else {
-          logger.error('openst-platform::services/transaction/transfer/branded_token.js::perform::catch');
-          logger.error(error);
-          return responseHelper.error({
-            internal_error_identifier: 's_t_t_bt_6',
-            api_error_identifier: 'something_went_wrong',
-            debug_options: {}
-          });
-        }
-      });
+  perform: function() {
+    const oThis = this;
+
+    return oThis.asyncPerform().catch(function(error) {
+      if (responseHelper.isCustomResult(error)) {
+        return error;
+      } else {
+        logger.error('openst-platform::services/transaction/transfer/branded_token.js::perform::catch');
+        logger.error(error);
+        return responseHelper.error({
+          internal_error_identifier: 's_t_t_bt_6',
+          api_error_identifier: 'something_went_wrong',
+          debug_options: {}
+        });
+      }
+    });
   },
-  
+
   /**
    * asyncPerform
    *
    * @return {promise<result>} - returns a promise which resolves to an object of kind Result
    */
-  asyncPerform: async function () {
-    const oThis = this
-      , coreAddresses = oThis.ic().getCoreAddresses()
-      , BrandedTokenKlass = oThis.ic().getBrandedTokenInteractClass()
-    ;
-    
+  asyncPerform: async function() {
+    const oThis = this,
+      coreAddresses = oThis.ic().getCoreAddresses(),
+      BrandedTokenKlass = oThis.ic().getBrandedTokenInteractClass();
+
     // Get sender details by name
     if (oThis.senderName) {
       oThis.senderAddress = coreAddresses.getAddressForUser(oThis.senderName);
       oThis.senderPassphrase = coreAddresses.getPassphraseForUser(oThis.senderName);
     }
-    
+
     // Get recipient details by name
     if (oThis.recipientName) {
       oThis.recipientAddress = coreAddresses.getAddressForUser(oThis.recipientName);
     }
-    
+
     // Validations
     if (!basicHelper.isAddressValid(oThis.erc20Address)) {
       let errObj = responseHelper.error({
@@ -140,18 +134,22 @@ TransferBrandedTokenKlass.prototype = {
       });
       return Promise.resolve(errObj);
     }
-    
+
     // Format wei
     oThis.amountInWei = basicHelper.formatWeiToString(oThis.amountInWei);
-    
-    var brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address});
-    
-    return brandedToken.transfer(oThis.senderAddress, oThis.senderPassphrase,
-      oThis.recipientAddress, oThis.amountInWei, {tag: oThis.tag, returnType: oThis.returnType});
-    
+
+    var brandedToken = new BrandedTokenKlass({ ERC20: oThis.erc20Address });
+
+    return brandedToken.transfer(
+      oThis.senderAddress,
+      oThis.senderPassphrase,
+      oThis.recipientAddress,
+      oThis.amountInWei,
+      { tag: oThis.tag, returnType: oThis.returnType }
+    );
   }
 };
 
-InstanceComposer.registerShadowableClass(TransferBrandedTokenKlass, "getTransferBrandedTokenService");
+InstanceComposer.registerShadowableClass(TransferBrandedTokenKlass, 'getTransferBrandedTokenService');
 
 module.exports = TransferBrandedTokenKlass;

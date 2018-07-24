@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * This executable / script is intermediate communicator between value chain and utility chain used for the redeem and unstake.
@@ -19,23 +19,21 @@
  *
  */
 
-const rootPrefix = '../..'
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , eventQueueManagerKlass = require(rootPrefix + '/lib/web3/events/queue_manager')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
-  , ValueRegistrarKlass = require(rootPrefix + '/lib/contract_interact/value_registrar')
-;
+const rootPrefix = '../..',
+  logger = require(rootPrefix + '/helpers/custom_console_logger'),
+  eventQueueManagerKlass = require(rootPrefix + '/lib/web3/events/queue_manager'),
+  coreAddresses = require(rootPrefix + '/config/core_addresses'),
+  web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory'),
+  ValueRegistrarKlass = require(rootPrefix + '/lib/contract_interact/value_registrar');
 
-const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
-  , openSTUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility')
-  , valueRegistrarContractAddr = coreAddresses.getAddressForContract("valueRegistrar")
-  , openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility')
-  , valueRegistrarAddr = coreAddresses.getAddressForUser('valueRegistrar')
-  , valueRegistrarPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar')
-  , valueRegistrarContractInteract = new ValueRegistrarKlass(valueRegistrarContractAddr)
-  , eventQueueManager = new eventQueueManagerKlass()
-;
+const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue'),
+  openSTUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility'),
+  valueRegistrarContractAddr = coreAddresses.getAddressForContract('valueRegistrar'),
+  openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility'),
+  valueRegistrarAddr = coreAddresses.getAddressForUser('valueRegistrar'),
+  valueRegistrarPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar'),
+  valueRegistrarContractInteract = new ValueRegistrarKlass(valueRegistrarContractAddr),
+  eventQueueManager = new eventQueueManagerKlass();
 
 /**
  * Inter comm process for the redeem and unstake.
@@ -43,39 +41,33 @@ const openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue
  * @constructor
  *
  */
-const RedeemAndUnstakeInterComm = function () {
-};
+const RedeemAndUnstakeInterComm = function() {};
 
 RedeemAndUnstakeInterComm.prototype = {
-  
   /**
    * Starts the process of the script with initializing processor
    *
    */
-  init: function () {
+  init: function() {
     var oThis = this;
-    
+
     eventQueueManager.setProcessor(oThis.processor);
     oThis.bindEvents();
   },
-  
+
   /**
    * Bind to start listening the desired event
    *
    */
-  bindEvents: function () {
+  bindEvents: function() {
     var oThis = this;
-    logger.log("bindEvents binding RedemptionIntentDeclared");
-    
-    oThis.listenToDesiredEvent(
-      oThis.onEventSubscriptionError,
-      oThis.onEvent,
-      oThis.onEvent
-    );
-    
-    logger.win("Started listening RedemptionIntentDeclared event emitted by redeem method of openSTUtility contract.");
+    logger.log('bindEvents binding RedemptionIntentDeclared');
+
+    oThis.listenToDesiredEvent(oThis.onEventSubscriptionError, oThis.onEvent, oThis.onEvent);
+
+    logger.win('Started listening RedemptionIntentDeclared event emitted by redeem method of openSTUtility contract.');
   },
-  
+
   /**
    * Listening RedemptionIntentDeclared event emitted by redeem method of openSTUtility contract.
    *
@@ -84,16 +76,19 @@ RedeemAndUnstakeInterComm.prototype = {
    * @param {function} onChange - The method to run on changed.
    *
    */
-  listenToDesiredEvent: function (onError, onData, onChange) {
-    var completeContract = new (web3ProviderFactory.getProvider('utility', 'ws')).eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
-    
-    
-    completeContract.events.RedemptionIntentDeclared({})
+  listenToDesiredEvent: function(onError, onData, onChange) {
+    var completeContract = new (web3ProviderFactory.getProvider('utility', 'ws')).eth.Contract(
+      openSTUtilityContractAbi,
+      openSTUtilityContractAddr
+    );
+
+    completeContract.events
+      .RedemptionIntentDeclared({})
       .on('error', onError)
       .on('data', onData)
       .on('changed', onChange);
   },
-  
+
   /**
    * Processing of RedemptionIntentDeclared event is delayed for n block confirmation by enqueueing to
    * {@link module:lib/web3/events/queue_manager|queue manager}.
@@ -101,23 +96,23 @@ RedeemAndUnstakeInterComm.prototype = {
    * @param {Object} eventObj - Object of event.
    *
    */
-  onEvent: function (eventObj) {
+  onEvent: function(eventObj) {
     // TODO: Publish (event received) to notify others
     eventQueueManager.addEditEventInQueue(eventObj);
   },
-  
+
   /**
    * Generic Method to log event subscription error
    *
    * @param {Object} error - Object of event.
    *
    */
-  onEventSubscriptionError: function (error) {
+  onEventSubscriptionError: function(error) {
     // TODO: Publish (error) to notify others
-    logger.log("onEventSubscriptionError triggered");
+    logger.log('onEventSubscriptionError triggered');
     logger.error(error);
   },
-  
+
   /**
    * Processor gets executed from {@link module:lib/web3/events/queue_manager|queue manager} for
    * every RedemptionIntentDeclared event after waiting for n block confirmation.
@@ -125,17 +120,16 @@ RedeemAndUnstakeInterComm.prototype = {
    * @param {Object} eventObj - Object of event.
    *
    */
-  processor: function (eventObj) {
+  processor: function(eventObj) {
     // TODO: Publish (event processing started and end result) to notify others
-    const returnValues = eventObj.returnValues
-      , uuid = returnValues._uuid
-      , redemptionIntentHash = returnValues._redemptionIntentHash
-      , redeemer = returnValues._redeemer
-      , redeemerNonce = returnValues._nonce
-      , amountUT = returnValues._amount
-      , unlockHeight = returnValues._unlockHeight
-    ;
-    
+    const returnValues = eventObj.returnValues,
+      uuid = returnValues._uuid,
+      redemptionIntentHash = returnValues._redemptionIntentHash,
+      redeemer = returnValues._redeemer,
+      redeemerNonce = returnValues._nonce,
+      amountUT = returnValues._amount,
+      unlockHeight = returnValues._unlockHeight;
+
     return valueRegistrarContractInteract.confirmRedemptionIntent(
       valueRegistrarAddr,
       valueRegistrarPassphrase,
@@ -148,9 +142,8 @@ RedeemAndUnstakeInterComm.prototype = {
       redemptionIntentHash
     );
   }
-  
 };
 
 new RedeemAndUnstakeInterComm().init();
 
-logger.win("InterComm Script for Redeem and Unstake initiated.");
+logger.win('InterComm Script for Redeem and Unstake initiated.');

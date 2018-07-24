@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * This executable / script is intermediate communicator between value chain and utility chain used for the stake and mint.
@@ -9,26 +9,25 @@
  * @module executables/inter_comm/stake_and_mint
  */
 
-const rootPrefix = '../..'
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , InstanceComposer = require(rootPrefix + "/instance_composer")
-  , setupHelper = require(rootPrefix + '/tools/setup/helper')
-;
+const rootPrefix = '../..',
+  logger = require(rootPrefix + '/helpers/custom_console_logger'),
+  InstanceComposer = require(rootPrefix + '/instance_composer'),
+  setupHelper = require(rootPrefix + '/tools/setup/helper');
 
-const args = process.argv
-  , filePath = args[2]
-  , configStrategyFilePath = args[3]
-;
+const args = process.argv,
+  filePath = args[2],
+  configStrategyFilePath = args[3];
 
 require(rootPrefix + '/services/inter_comm/stake_and_mint');
 
-const configStrategy = configStrategyFilePath ? require(configStrategyFilePath) : require(setupHelper.configStrategyFilePath())
-  , instanceComposer = new InstanceComposer(configStrategy)
-  , StakeAndMintInterCommKlass = instanceComposer.getStakeAndMintInterCommService()
-;
+const configStrategy = configStrategyFilePath
+    ? require(configStrategyFilePath)
+    : require(setupHelper.configStrategyFilePath()),
+  instanceComposer = new InstanceComposer(configStrategy),
+  StakeAndMintInterCommKlass = instanceComposer.getStakeAndMintInterCommService();
 
-const stakeAndMintInterCommObj = new StakeAndMintInterCommKlass({file_path: filePath});
+const stakeAndMintInterCommObj = new StakeAndMintInterCommKlass({ file_path: filePath });
 stakeAndMintInterCommObj.registerInterruptSignalHandlers();
 stakeAndMintInterCommObj.init();
 
-logger.win("InterComm Script for Stake and Mint initiated.");
+logger.win('InterComm Script for Stake and Mint initiated.');

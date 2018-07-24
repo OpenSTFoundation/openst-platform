@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * This service is intermediate communicator between value chain and utility chain used for the stake and mint.
@@ -18,12 +18,11 @@
  * @module services/inter_comm/stake_and_mint
  */
 
-const rootPrefix = '../..'
-  , InstanceComposer = require(rootPrefix + "/instance_composer")
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , IntercomBaseKlass = require(rootPrefix + '/services/inter_comm/base')
-;
+const rootPrefix = '../..',
+  InstanceComposer = require(rootPrefix + '/instance_composer'),
+  logger = require(rootPrefix + '/helpers/custom_console_logger'),
+  responseHelper = require(rootPrefix + '/lib/formatter/response'),
+  IntercomBaseKlass = require(rootPrefix + '/services/inter_comm/base');
 
 require(rootPrefix + '/config/core_addresses');
 require(rootPrefix + '/lib/web3/providers/factory');
@@ -38,89 +37,77 @@ require(rootPrefix + '/lib/contract_interact/utility_registrar');
  * @augments IntercomBaseKlass
  *
  */
-const StakeAndMintInterCommKlass = function (params) {
-  const oThis = this
-  ;
-  
+const StakeAndMintInterCommKlass = function(params) {
+  const oThis = this;
+
   IntercomBaseKlass.call(oThis, params);
 };
 
 StakeAndMintInterCommKlass.prototype = Object.create(IntercomBaseKlass.prototype);
 
 const StakeAndMintInterCommKlassSpecificPrototype = {
-  
   EVENT_NAME: 'StakingIntentDeclared',
-  
+
   /**
    * Set contract object for listening to events
    *
    */
-  setContractObj: function () {
-    
-    const oThis = this
-      , coreAddresses = oThis.ic().getCoreAddresses()
-      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
-      
-      , web3WsProvider = web3ProviderFactory.getProvider('value', 'ws')
-      , openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue')
-      , openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue')
-    ;
-    
+  setContractObj: function() {
+    const oThis = this,
+      coreAddresses = oThis.ic().getCoreAddresses(),
+      web3ProviderFactory = oThis.ic().getWeb3ProviderFactory(),
+      web3WsProvider = web3ProviderFactory.getProvider('value', 'ws'),
+      openSTValueContractAbi = coreAddresses.getAbiForContract('openSTValue'),
+      openSTValueContractAddr = coreAddresses.getAddressForContract('openSTValue');
+
     oThis.completeContract = new web3WsProvider.eth.Contract(openSTValueContractAbi, openSTValueContractAddr);
   },
-  
+
   /**
    * Get chain highest block
    *
    */
-  getChainHighestBlock: async function () {
-    
-    const oThis = this
-      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
-      
-      , web3WsProvider = web3ProviderFactory.getProvider('value', 'ws')
-    ;
-    
+  getChainHighestBlock: async function() {
+    const oThis = this,
+      web3ProviderFactory = oThis.ic().getWeb3ProviderFactory(),
+      web3WsProvider = web3ProviderFactory.getProvider('value', 'ws');
+
     return await web3WsProvider.eth.getBlockNumber();
-    
   },
-  
+
   /**
    * Parallel processing allowed
    * @return bool
    */
-  parallelProcessingAllowed: function () {
+  parallelProcessingAllowed: function() {
     return false;
   },
-  
+
   /**
    * Process event object
    * @param {object} eventObj - event object
    */
-  processEventObj: async function (eventObj) {
-    
+  processEventObj: async function(eventObj) {
     console.log('eventObj', eventObj);
-    const oThis = this
-      , coreAddresses = oThis.ic().getCoreAddresses()
-      , UtilityRegistrarKlass = oThis.ic().getUtilityRegistrarClass()
-      
-      , returnValues = eventObj.returnValues
-      , uuid = returnValues._uuid
-      , staker = returnValues._staker
-      , stakerNonce = returnValues._stakerNonce
-      , amountST = returnValues._amountST
-      , amountUT = returnValues._amountUT
-      , unlockHeight = returnValues._unlockHeight
-      , stakingIntentHash = returnValues._stakingIntentHash
-      , beneficiary = returnValues._beneficiary
-      , chainIdUtility = returnValues._chainIdUtility
-      , utilityRegistrarContractAddress = coreAddresses.getAddressForContract("utilityRegistrar")
-      , openSTUtilityCurrContractAddr = coreAddresses.getAddressForContract('openSTUtility')
-      , utilityRegistrarAddr = coreAddresses.getAddressForUser('utilityRegistrar')
-      , utilityRegistrarPassphrase = coreAddresses.getPassphraseForUser('utilityRegistrar')
-      , utilityRegistrarContractInteract = new UtilityRegistrarKlass(utilityRegistrarContractAddress)
-    ;
-    
+    const oThis = this,
+      coreAddresses = oThis.ic().getCoreAddresses(),
+      UtilityRegistrarKlass = oThis.ic().getUtilityRegistrarClass(),
+      returnValues = eventObj.returnValues,
+      uuid = returnValues._uuid,
+      staker = returnValues._staker,
+      stakerNonce = returnValues._stakerNonce,
+      amountST = returnValues._amountST,
+      amountUT = returnValues._amountUT,
+      unlockHeight = returnValues._unlockHeight,
+      stakingIntentHash = returnValues._stakingIntentHash,
+      beneficiary = returnValues._beneficiary,
+      chainIdUtility = returnValues._chainIdUtility,
+      utilityRegistrarContractAddress = coreAddresses.getAddressForContract('utilityRegistrar'),
+      openSTUtilityCurrContractAddr = coreAddresses.getAddressForContract('openSTUtility'),
+      utilityRegistrarAddr = coreAddresses.getAddressForUser('utilityRegistrar'),
+      utilityRegistrarPassphrase = coreAddresses.getPassphraseForUser('utilityRegistrar'),
+      utilityRegistrarContractInteract = new UtilityRegistrarKlass(utilityRegistrarContractAddress);
+
     const transactionHash = await utilityRegistrarContractInteract.confirmStakingIntent(
       utilityRegistrarAddr,
       utilityRegistrarPassphrase,
@@ -135,15 +122,15 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
       stakingIntentHash,
       true
     );
-    
+
     logger.info(stakingIntentHash, ':: transaction hash for confirmStakingIntent:', transactionHash);
-    
+
     return Promise.resolve(responseHelper.successWithData({}));
   }
 };
 
 Object.assign(StakeAndMintInterCommKlass.prototype, StakeAndMintInterCommKlassSpecificPrototype);
 
-InstanceComposer.registerShadowableClass(StakeAndMintInterCommKlass, "getStakeAndMintInterCommService");
+InstanceComposer.registerShadowableClass(StakeAndMintInterCommKlass, 'getStakeAndMintInterCommService');
 
 module.exports = StakeAndMintInterCommKlass;

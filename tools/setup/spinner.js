@@ -1,36 +1,34 @@
-"use strict";
+'use strict';
 /**
  * Run spinner while waiting
  *
  * @module tools/setup/spinner
  */
-const Spinner = require('cli-spinner').Spinner
-  , spinner = new Spinner('%s')
-;
+const Spinner = require('cli-spinner').Spinner,
+  spinner = new Spinner('%s');
 
 // Set spinner
-spinner.setSpinnerString("|/-\\\\");
+spinner.setSpinnerString('|/-\\\\');
 
 /**
  * Constructor for spinner
  *
  * @constructor
  */
-const SpinnerKlass = function () {
-};
+const SpinnerKlass = function() {};
 
 SpinnerKlass.prototype = {
   /**
    * Start spinner
    */
-  start: function () {
+  start: function() {
     spinner.start();
   },
-  
+
   /**
    * Stop spinner
    */
-  stop: function () {
+  stop: function() {
     spinner.stop(true);
   }
 };

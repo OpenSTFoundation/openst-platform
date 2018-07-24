@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Propose Branded Token
@@ -7,19 +7,17 @@
  */
 const uuid = require('uuid');
 
-const rootPrefix = '../..'
-  , InstanceComposer = require(rootPrefix + "/instance_composer")
-  , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-;
+const rootPrefix = '../..',
+  InstanceComposer = require(rootPrefix + '/instance_composer'),
+  responseHelper = require(rootPrefix + '/lib/formatter/response'),
+  basicHelper = require(rootPrefix + '/helpers/basic_helper'),
+  logger = require(rootPrefix + '/helpers/custom_console_logger');
 
 require(rootPrefix + '/config/core_addresses');
 require(rootPrefix + '/lib/contract_interact/openst_utility');
 
-const senderName = 'staker'
-  , openSTUtilityContractName = 'openSTUtility'
-;
+const senderName = 'staker',
+  openSTUtilityContractName = 'openSTUtility';
 
 /**
  * Propose Branded Token Service
@@ -31,62 +29,56 @@ const senderName = 'staker'
  *
  * @constructor
  */
-const ProposeBrandedTokenKlass = function (params) {
-  
-  const oThis = this
-    , coreAddresses = oThis.ic().getCoreAddresses()
-  ;
-  
+const ProposeBrandedTokenKlass = function(params) {
+  const oThis = this,
+    coreAddresses = oThis.ic().getCoreAddresses();
+
   params = params || {};
   oThis.name = params.name;
   oThis.symbol = params.symbol;
   oThis.conversionFactor = params.conversion_factor;
   oThis.conversionRate = null;
   oThis.conversionRateDecimals = null;
-  
+
   oThis.stakerAddr = coreAddresses.getAddressForUser(senderName);
   oThis.stakerPassphrase = coreAddresses.getPassphraseForUser(senderName);
   oThis.openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName);
-  
 };
 
 ProposeBrandedTokenKlass.prototype = {
-  
   /**
    * Perform
    *
    * @return {promise<result>}
    */
-  perform: function () {
+  perform: function() {
     const oThis = this;
-    
-    return oThis.asyncPerform()
-      .catch(function (error) {
-        logger.error('openst-platform::services/on_boarding/propose_branded_token.js::perform::catch');
-        logger.error(error);
-        
-        if (responseHelper.isCustomResult(error)) {
-          return error;
-        } else {
-          return responseHelper.error({
-            internal_error_identifier: 's_ob_pbt_4',
-            api_error_identifier: 'something_went_wrong',
-            error_config: basicHelper.fetchErrorConfig(),
-            debug_options: {err: error}
-          });
-        }
-      });
+
+    return oThis.asyncPerform().catch(function(error) {
+      logger.error('openst-platform::services/on_boarding/propose_branded_token.js::perform::catch');
+      logger.error(error);
+
+      if (responseHelper.isCustomResult(error)) {
+        return error;
+      } else {
+        return responseHelper.error({
+          internal_error_identifier: 's_ob_pbt_4',
+          api_error_identifier: 'something_went_wrong',
+          error_config: basicHelper.fetchErrorConfig(),
+          debug_options: { err: error }
+        });
+      }
+    });
   },
-  
+
   /**
    * Async Perform
    *
    * @return {promise<result>}
    */
-  asyncPerform: async function () {
-    const oThis = this
-    ;
-    
+  asyncPerform: async function() {
+    const oThis = this;
+
     //validations
     if (!basicHelper.isBTNameValid(oThis.name)) {
       let errObj = responseHelper.error({
@@ -94,7 +86,7 @@ ProposeBrandedTokenKlass.prototype = {
         api_error_identifier: 'invalid_branded_token_name',
         error_config: basicHelper.fetchErrorConfig()
       });
-      
+
       return Promise.resolve(errObj);
     }
     if (!basicHelper.isBTSymbolValid(oThis.symbol)) {
@@ -103,7 +95,7 @@ ProposeBrandedTokenKlass.prototype = {
         api_error_identifier: 'invalid_branded_token_symbol',
         error_config: basicHelper.fetchErrorConfig()
       });
-      
+
       return Promise.resolve(errObj);
     }
     if (!basicHelper.isBTConversionFactorValid(oThis.conversionFactor)) {
@@ -112,39 +104,40 @@ ProposeBrandedTokenKlass.prototype = {
         api_error_identifier: 'invalid_conversion_factor',
         error_config: basicHelper.fetchErrorConfig()
       });
-      
+
       return Promise.resolve(errObj);
     }
-    
-    const conversionRateConversionResponse = basicHelper.convertConversionFactorToConversionRate(oThis.conversionFactor);
+
+    const conversionRateConversionResponse = basicHelper.convertConversionFactorToConversionRate(
+      oThis.conversionFactor
+    );
     if (conversionRateConversionResponse.isSuccess()) {
-      
       oThis.conversionRate = conversionRateConversionResponse.data.conversionRate;
       oThis.conversionRateDecimals = conversionRateConversionResponse.data.conversionRateDecimals;
-      
-      let OpenStUtilityContractInteractKlass = oThis.ic().getOpenSTUtilityInteractClass()
-        , openSTUtilityContractInteract = new OpenStUtilityContractInteractKlass(oThis.openSTUtilityContractAddress)
-      ;
-      
+
+      let OpenStUtilityContractInteractKlass = oThis.ic().getOpenSTUtilityInteractClass(),
+        openSTUtilityContractInteract = new OpenStUtilityContractInteractKlass(oThis.openSTUtilityContractAddress);
+
       const proposalRsp = await openSTUtilityContractInteract.proposeBrandedToken(
         oThis.stakerAddr,
-        oThis.stakerPassphrase, oThis.symbol,
-        oThis.name, oThis.conversionRate, oThis.conversionRateDecimals
+        oThis.stakerPassphrase,
+        oThis.symbol,
+        oThis.name,
+        oThis.conversionRate,
+        oThis.conversionRateDecimals
       );
-      
+
       if (proposalRsp.isSuccess()) {
         proposalRsp.data.transaction_uuid = uuid.v4();
       }
-      
+
       return Promise.resolve(proposalRsp);
-      
     } else {
       return Promise.resolve(conversionRateConversionResponse);
     }
-    
   }
 };
 
-InstanceComposer.registerShadowableClass(ProposeBrandedTokenKlass, "getProposeBrandedTokenKlassClass");
+InstanceComposer.registerShadowableClass(ProposeBrandedTokenKlass, 'getProposeBrandedTokenKlassClass');
 
 module.exports = ProposeBrandedTokenKlass;

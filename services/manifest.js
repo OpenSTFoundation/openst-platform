@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Service manifest
@@ -6,9 +6,8 @@
  * @module services/manifest
  */
 
-const rootPrefix = ".."
-  , InstanceComposer = require(rootPrefix + "/instance_composer")
-;
+const rootPrefix = '..',
+  InstanceComposer = require(rootPrefix + '/instance_composer');
 
 // Approve related services
 require(rootPrefix + '/services/approve/branded_token');
@@ -44,7 +43,6 @@ require(rootPrefix + '/services/utils/generate_raw_key');
 require(rootPrefix + '/services/on_boarding/get_registration_status');
 require(rootPrefix + '/services/on_boarding/propose_branded_token');
 
-
 // Intercomm related services
 require(rootPrefix + '/services/inter_comm/register_branded_token');
 require(rootPrefix + '/services/inter_comm/stake_and_mint');
@@ -55,78 +53,77 @@ require(rootPrefix + '/services/inter_comm/stake_and_mint_processor');
  *
  * @constructor
  */
-const ServiceManifestKlass = function (configStrategy, instanceComposer) {
+const ServiceManifestKlass = function(configStrategy, instanceComposer) {
   const oThis = this;
-  
+
   /**
    * Approve services
    **/
-  let approve = oThis.approve = {};
+  let approve = (oThis.approve = {});
   approve.brandedToken = instanceComposer.getApproveBrandedTokenService();
-  
+
   /**
    * Transactions related services
    **/
-  let transaction = oThis.transaction = {};
+  let transaction = (oThis.transaction = {});
   transaction.getReceipt = instanceComposer.getTransactionReceiptService();
   transaction.estimateGas = instanceComposer.getEstimateGasService();
-  
+
   /**
    * transfer related services
    **/
-  let transfer = transaction.transfer = {};
+  let transfer = (transaction.transfer = {});
   transfer.brandedToken = instanceComposer.getTransferBrandedTokenService();
   transfer.simpleToken = instanceComposer.getTransferSimpleTokenService();
   transfer.simpleTokenPrime = instanceComposer.getTransferSimpleTokenPrimeService();
   transfer.eth = instanceComposer.getTransferEthService();
-  
+
   /**
    * Balance related services
    **/
-  let balance = oThis.balance = {};
+  let balance = (oThis.balance = {});
   balance.brandedToken = instanceComposer.getBrandedTokenBalanceService();
   balance.brandedTokenFromChain = instanceComposer.getBtBalanceFromChainService();
   balance.simpleToken = instanceComposer.getSimpleTokenBalanceService();
   balance.simpleTokenPrime = instanceComposer.getSimpleTokenPrimeBalanceService();
   balance.eth = instanceComposer.getEthBalanceService();
-  
+
   /**
    * Utils services
    */
-  let utils = oThis.utils = {};
+  let utils = (oThis.utils = {});
   utils.platformStatus = instanceComposer.getPlatformStatusService();
   utils.generateAddress = instanceComposer.getGenerateAddressService();
   utils.getBrandedTokenDetails = instanceComposer.getBrandedTokenDetailsService();
   utils.generateRawKey = instanceComposer.getGenerateRawKeyService();
-  
+
   /**
    * onBoarding services
    */
-  let onBoarding = oThis.onBoarding = {};
+  let onBoarding = (oThis.onBoarding = {});
   onBoarding.getRegistrationStatus = instanceComposer.getRegistrationStatusService();
   onBoarding.proposeBrandedToken = instanceComposer.getProposeBrandedTokenKlassClass();
-  
+
   /**
    * stake related services
    **/
-  let stake = oThis.stake = {};
+  let stake = (oThis.stake = {});
   stake.approveForStake = instanceComposer.getApproveOpenstValueContractService();
   stake.getApprovalStatus = instanceComposer.getApprovalStatusService();
   stake.start = instanceComposer.getStartStakeService();
   stake.getStakedAmount = instanceComposer.getGetStakeAmountService();
-  
+
   /**
    * intercomm related services
    **/
-  let interComm = oThis.interComm = {};
+  let interComm = (oThis.interComm = {});
   interComm.registerBrandedToken = instanceComposer.getRegisterBrandedTokenInterCommService();
   interComm.stakeAndMint = instanceComposer.getStakeAndMintInterCommService();
   interComm.stakeAndMintProcessor = instanceComposer.getStakeAndMintProcessorInterCommService();
-  
 };
 
 ServiceManifestKlass.prototype = {};
 
-InstanceComposer.register(ServiceManifestKlass, "getServiceManifest", true);
+InstanceComposer.register(ServiceManifestKlass, 'getServiceManifest', true);
 
 module.exports = ServiceManifestKlass;

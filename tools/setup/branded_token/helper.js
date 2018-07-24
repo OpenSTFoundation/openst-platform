@@ -1,25 +1,22 @@
-"use strict";
+'use strict';
 /**
  * Branded Token related tools helper file
  *
  * @module tools/setup/branded_token/helper
  */
 
-const fs = require('fs')
-  , shell = require('shelljs')
-;
+const fs = require('fs'),
+  shell = require('shelljs');
 
-const rootPrefix = '../../..'
-  , setupHelper = require(rootPrefix + '/tools/setup/helper')
-;
+const rootPrefix = '../../..',
+  setupHelper = require(rootPrefix + '/tools/setup/helper');
 
 /**
  * Constructor for helper class
  *
  * @constructor
  */
-const HelperKlass = function () {
-};
+const HelperKlass = function() {};
 
 HelperKlass.prototype = {
   /**
@@ -29,11 +26,11 @@ HelperKlass.prototype = {
    *
    * @return {promise<object>} - branded tokens list
    */
-  getBrandedToken: function (uuid) {
+  getBrandedToken: function(uuid) {
     const oThis = this;
     return oThis._readJsonFile(setupHelper.btConfigAbsolutePath());
   },
-  
+
   /**
    * Add new branded tokens
    *
@@ -41,11 +38,11 @@ HelperKlass.prototype = {
    *
    * @return {promise<object>} - branded tokens list
    */
-  addBrandedToken: function (brandedTokens) {
+  addBrandedToken: function(brandedTokens) {
     const oThis = this;
     return oThis._writeJsonFile(setupHelper.btConfigAbsolutePath(), brandedTokens);
   },
-  
+
   /**
    * Read JSON file
    *
@@ -54,13 +51,13 @@ HelperKlass.prototype = {
    * @return {promise<object>} - branded tokens list
    * @private
    */
-  _readJsonFile: function (jsonFilePath) {
-    return new Promise(function (onResolve, onReject) {
-      fs.readFile(jsonFilePath, function (err, data) {
+  _readJsonFile: function(jsonFilePath) {
+    return new Promise(function(onResolve, onReject) {
+      fs.readFile(jsonFilePath, function(err, data) {
         if (err) {
           if (err.code === 'ENOENT') {
-            data = "{}";
-            shell.exec('echo "' + data + '" > ' + jsonFilePath)
+            data = '{}';
+            shell.exec('echo "' + data + '" > ' + jsonFilePath);
           } else {
             throw err;
           }
@@ -69,7 +66,7 @@ HelperKlass.prototype = {
       });
     });
   },
-  
+
   /**
    * Write content to JSON file
    *
@@ -79,15 +76,15 @@ HelperKlass.prototype = {
    * @return {promise<object>} - branded tokens list
    * @private
    */
-  _writeJsonFile: function (jsonFilePath, jsonContent) {
-    return new Promise(function (onResolve, onReject) {
+  _writeJsonFile: function(jsonFilePath, jsonContent) {
+    return new Promise(function(onResolve, onReject) {
       var humanReadableContent = JSON.stringify(jsonContent, null, 2);
-      fs.writeFile(jsonFilePath, humanReadableContent, function (err) {
+      fs.writeFile(jsonFilePath, humanReadableContent, function(err) {
         if (err) throw err;
         return onResolve(JSON.parse(humanReadableContent));
       });
     });
-  },
+  }
 };
 
 module.exports = new HelperKlass();

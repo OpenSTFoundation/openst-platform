@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Load all required contract abi files and export them.<br><br>
@@ -6,16 +6,14 @@
  * @module config/core_abis
  */
 
-const fs = require('fs')
-  , path = require('path')
-;
+const fs = require('fs'),
+  path = require('path');
 
-const rootPrefix = ".."
-;
+const rootPrefix = '..';
 
 function parseFile(filePath, options) {
   filePath = path.join(__dirname, '/' + filePath);
-  const fileContent = fs.readFileSync(filePath, options || "utf8");
+  const fileContent = fs.readFileSync(filePath, options || 'utf8');
   return JSON.parse(fileContent);
 }
 
@@ -24,8 +22,7 @@ function parseFile(filePath, options) {
  *
  * @constructor
  */
-const coreAbis = function () {
-};
+const coreAbis = function() {};
 
 coreAbis.prototype = {
   /**
@@ -34,8 +31,8 @@ coreAbis.prototype = {
    * @constant {object}
    *
    */
-  simpleToken: parseFile(rootPrefix + '/contracts/abi/SimpleToken.abi', "utf8"),
-  
+  simpleToken: parseFile(rootPrefix + '/contracts/abi/SimpleToken.abi', 'utf8'),
+
   /**
    * Value Chain Contract: mock simple token EIP20 contract ABI.<br><br>
    * <b>NOTE: This contract is used to test protocol on MainNet and is destroyed, after testing.</b>
@@ -43,8 +40,8 @@ coreAbis.prototype = {
    * @constant {object}
    *
    */
-  mockSimpleToken: parseFile(rootPrefix + '/contracts/abi/MockToken.abi', "utf8"),
-  
+  mockSimpleToken: parseFile(rootPrefix + '/contracts/abi/MockToken.abi', 'utf8'),
+
   /**
    * Utility Chain Contract: openst utility contract ABI.<br><br>
    * <b>This contract has details of all registered branded tokens, and has methods for stake and redeem</b>
@@ -52,8 +49,8 @@ coreAbis.prototype = {
    * @constant {object}
    *
    */
-  openSTUtility: parseFile(rootPrefix + '/contracts/abi/OpenSTUtility.abi', "utf8"),
-  
+  openSTUtility: parseFile(rootPrefix + '/contracts/abi/OpenSTUtility.abi', 'utf8'),
+
   /**
    * Value Chain Contract: openst Value contract ABI.<br><br>
    * <b>This contract has details of all registered branded tokens, and has methods for stake and redeem</b>
@@ -61,8 +58,8 @@ coreAbis.prototype = {
    * @constant {object}
    *
    */
-  openSTValue: parseFile(rootPrefix + '/contracts/abi/OpenSTValue.abi', "utf8"),
-  
+  openSTValue: parseFile(rootPrefix + '/contracts/abi/OpenSTValue.abi', 'utf8'),
+
   /**
    * Utility Chain Contract: ST' contract ABI.<br><br>
    * <b>Simple Token Prime [ST'] is equivalently staked with Simple Token on the value chain and
@@ -72,8 +69,8 @@ coreAbis.prototype = {
    * @constant {object}
    *
    */
-  stPrime: parseFile(rootPrefix + '/contracts/abi/STPrime.abi', "utf8"),
-  
+  stPrime: parseFile(rootPrefix + '/contracts/abi/STPrime.abi', 'utf8'),
+
   /**
    * Value Chain Contract: Value core contract ABI.<br><br>
    * <b>For each utility chain, one value core contract is deployed and
@@ -82,8 +79,8 @@ coreAbis.prototype = {
    * @constant {object}
    *
    */
-  valueCore: parseFile(rootPrefix + '/contracts/abi/Core.abi', "utf8"),
-  
+  valueCore: parseFile(rootPrefix + '/contracts/abi/Core.abi', 'utf8'),
+
   /**
    * Value Chain Contract: Value registrar contract ABI.<br><br>
    * <b>This contract maintains the registry information of the utility token. It acts as a mediator for staking and redeeming.</b>
@@ -91,8 +88,8 @@ coreAbis.prototype = {
    * @constant {object}
    *
    */
-  valueRegistrar: parseFile(rootPrefix + '/contracts/abi/Registrar.abi', "utf8"),
-  
+  valueRegistrar: parseFile(rootPrefix + '/contracts/abi/Registrar.abi', 'utf8'),
+
   /**
    * Utility Chain Contract: Utility registrar contract ABI.<br><br>
    * <b>This contract maintains the registry information of the utility token. It acts as a mediator for staking and redeeming.</b>
@@ -100,16 +97,16 @@ coreAbis.prototype = {
    * @constant {object}
    *
    */
-  utilityRegistrar: parseFile(rootPrefix + '/contracts/abi/Registrar.abi', "utf8"),
-  
+  utilityRegistrar: parseFile(rootPrefix + '/contracts/abi/Registrar.abi', 'utf8'),
+
   /**
    * Utility Chain Contract: Branded token EIP20 contract ABI.<br><br>
    *
    * @constant {object}
    *
    */
-  brandedToken: parseFile(rootPrefix + '/contracts/abi/BrandedToken.abi', "utf8"),
-  
+  brandedToken: parseFile(rootPrefix + '/contracts/abi/BrandedToken.abi', 'utf8'),
+
   /**
    * Value Chain Contract: Simple stake contract ABI.<br><br>
    * <b>It holds the staked simple tokens for minted branded tokens.</b>
@@ -117,8 +114,8 @@ coreAbis.prototype = {
    * @constant {object}
    *
    */
-  simpleStake: parseFile(rootPrefix + '/contracts/abi/SimpleStake.abi', "utf8"),
-  
+  simpleStake: parseFile(rootPrefix + '/contracts/abi/SimpleStake.abi', 'utf8'),
+
   /**
    * Utility Chain Contract: Airdrop contract ABI.<br><br>
    * <b>Contract for managing airdrops.</b>
@@ -126,7 +123,7 @@ coreAbis.prototype = {
    * @constant {object}
    *
    */
-  airdrop: parseFile(rootPrefix + '/contracts/abi/Airdrop.abi', "utf8")
+  airdrop: parseFile(rootPrefix + '/contracts/abi/Airdrop.abi', 'utf8')
 };
 
 module.exports = new coreAbis();

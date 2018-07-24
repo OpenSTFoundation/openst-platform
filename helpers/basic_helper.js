@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Perform basic validations
@@ -6,11 +6,10 @@
  * @module helpers/basic_helper
  */
 
-const rootPrefix = '..'
-  , BigNumber = require('bignumber.js')
-  , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , generalErrorConfig = require(rootPrefix + '/config/error/general')
-;
+const rootPrefix = '..',
+  BigNumber = require('bignumber.js'),
+  responseHelper = require(rootPrefix + '/lib/formatter/response'),
+  generalErrorConfig = require(rootPrefix + '/config/error/general');
 
 const CONVERSION_RATE_DECIMALS = 5;
 /**
@@ -19,11 +18,9 @@ const CONVERSION_RATE_DECIMALS = 5;
  * @constructor
  *
  */
-const BasicHelperKlass = function () {
-};
+const BasicHelperKlass = function() {};
 
 BasicHelperKlass.prototype = {
-  
   /**
    * Check if address is valid or not
    *
@@ -31,13 +28,13 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isAddressValid: function (address) {
-    if (typeof address !== "string") {
+  isAddressValid: function(address) {
+    if (typeof address !== 'string') {
       return false;
     }
     return /^0x[0-9a-fA-F]{40}$/.test(address);
   },
-  
+
   /**
    * Check if uuid is valid or not
    *
@@ -45,13 +42,13 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isUuidValid: function (uuid) {
-    if (typeof uuid !== "string") {
+  isUuidValid: function(uuid) {
+    if (typeof uuid !== 'string') {
       return false;
     }
     return /^0x[0-9a-fA-F]{64}$/.test(uuid);
   },
-  
+
   /**
    * Check if transaction hash is valid or not
    *
@@ -59,13 +56,13 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isTxHashValid: function (transactionHash) {
-    if (typeof transactionHash !== "string") {
+  isTxHashValid: function(transactionHash) {
+    if (typeof transactionHash !== 'string') {
       return false;
     }
     return /^0x[0-9a-fA-F]{64}$/.test(transactionHash);
   },
-  
+
   /**
    * Check if amount is valid wei number and not zero
    *
@@ -73,9 +70,9 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isNonZeroWeiValid: function (amountInWei) {
+  isNonZeroWeiValid: function(amountInWei) {
     const oneForMod = new BigNumber('1');
-    
+
     // Convert amount in BigNumber
     var bigNumAmount = null;
     if (amountInWei instanceof BigNumber) {
@@ -86,11 +83,16 @@ BasicHelperKlass.prototype = {
         bigNumAmount = new BigNumber(numAmount);
       }
     }
-    
-    return (!bigNumAmount || bigNumAmount.lessThan(1) || bigNumAmount.isNaN() ||
-      !bigNumAmount.isFinite() || bigNumAmount.mod(oneForMod) != 0) ? false : true;
+
+    return !bigNumAmount ||
+      bigNumAmount.lessThan(1) ||
+      bigNumAmount.isNaN() ||
+      !bigNumAmount.isFinite() ||
+      bigNumAmount.mod(oneForMod) != 0
+      ? false
+      : true;
   },
-  
+
   /**
    * Check if tag is valid or not
    *
@@ -98,16 +100,16 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isTagValid: function (tag) {
+  isTagValid: function(tag) {
     if (tag == '') {
       return true;
     }
-    if (typeof tag !== "string") {
+    if (typeof tag !== 'string') {
       return false;
     }
-    return (/^[a-z0-9_\-.]{1,}$/i).test(tag);
+    return /^[a-z0-9_\-.]{1,}$/i.test(tag);
   },
-  
+
   /**
    * get return type for transaction
    *
@@ -115,10 +117,10 @@ BasicHelperKlass.prototype = {
    *
    * @return {string}
    */
-  getReturnType: function (returnType) {
+  getReturnType: function(returnType) {
     return ['uuid', 'txHash', 'txReceipt'].includes(returnType) ? returnType : 'txHash';
   },
-  
+
   /**
    * check if return type is uuid or not
    *
@@ -126,10 +128,10 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isReturnTypeUUID: function (returnType) {
+  isReturnTypeUUID: function(returnType) {
     return returnType === 'uuid';
   },
-  
+
   /**
    * check if return type is txHash or not
    *
@@ -137,10 +139,10 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isReturnTypeTxHash: function (returnType) {
+  isReturnTypeTxHash: function(returnType) {
     return returnType === 'txHash';
   },
-  
+
   /**
    * check if return type is txReceipt or not
    *
@@ -148,10 +150,10 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isReturnTypeTxReceipt: function (returnType) {
+  isReturnTypeTxReceipt: function(returnType) {
     return returnType === 'txReceipt';
   },
-  
+
   /**
    * Check if branded token name is valid or not
    *
@@ -159,13 +161,13 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isBTNameValid: function (name) {
-    if (typeof name !== "string") {
+  isBTNameValid: function(name) {
+    if (typeof name !== 'string') {
       return false;
     }
-    return (/^[a-z0-9\s]{1,}$/i).test(name);
+    return /^[a-z0-9\s]{1,}$/i.test(name);
   },
-  
+
   /**
    * Check if branded token symbol is valid or not
    *
@@ -173,13 +175,13 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isBTSymbolValid: function (symbol) {
-    if (typeof symbol !== "string") {
+  isBTSymbolValid: function(symbol) {
+    if (typeof symbol !== 'string') {
       return false;
     }
-    return (/^[a-z0-9]{1,}$/i).test(symbol);
+    return /^[a-z0-9]{1,}$/i.test(symbol);
   },
-  
+
   /**
    * Check if branded token conversion rate is valid or not
    *
@@ -187,13 +189,13 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isBTConversionRateValid: function (conversionRate) {
-    if (isNaN(conversionRate) || (conversionRate % 1) != 0 || parseInt(conversionRate) < 1) {
+  isBTConversionRateValid: function(conversionRate) {
+    if (isNaN(conversionRate) || conversionRate % 1 != 0 || parseInt(conversionRate) < 1) {
       return false;
     }
     return true;
   },
-  
+
   /**
    * Check if branded token conversion factor is valid or not
    *
@@ -201,14 +203,13 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isBTConversionFactorValid: function (conversionFactor) {
+  isBTConversionFactorValid: function(conversionFactor) {
     if (isNaN(conversionFactor) || conversionFactor <= 0) {
       return false;
     }
     return true;
   },
-  
-  
+
   /**
    * Check if branded token conversion rate decimal is valid or not
    *
@@ -216,13 +217,18 @@ BasicHelperKlass.prototype = {
    *
    * @return {boolean}
    */
-  isBTConversionRateDecimalsValid: function (conversionRateDecimals) {
-    if (isNaN(conversionRateDecimals) || (conversionRateDecimals % 1) != 0 || parseInt(conversionRateDecimals) < 0 || parseInt(conversionRateDecimals) > 5) {
+  isBTConversionRateDecimalsValid: function(conversionRateDecimals) {
+    if (
+      isNaN(conversionRateDecimals) ||
+      conversionRateDecimals % 1 != 0 ||
+      parseInt(conversionRateDecimals) < 0 ||
+      parseInt(conversionRateDecimals) > 5
+    ) {
       return false;
     }
     return true;
   },
-  
+
   /**
    * Convert wei to proper string. Make sure it's a valid number
    *
@@ -230,11 +236,11 @@ BasicHelperKlass.prototype = {
    *
    * @return {string}
    */
-  formatWeiToString: function (amountInWei) {
+  formatWeiToString: function(amountInWei) {
     const oThis = this;
     return oThis.convertToBigNumber(amountInWei).toString(10);
   },
-  
+
   /**
    * Convert number to big number. Make sure it's a valid number
    *
@@ -242,10 +248,10 @@ BasicHelperKlass.prototype = {
    *
    * @return {BigNumber}
    */
-  convertToBigNumber: function (number) {
-    return (number instanceof BigNumber) ? number : new BigNumber(number);
+  convertToBigNumber: function(number) {
+    return number instanceof BigNumber ? number : new BigNumber(number);
   },
-  
+
   /**
    * Convert conversion factor to conversion rate and conversion rate decimals. Make sure it's a valid number
    *
@@ -253,10 +259,9 @@ BasicHelperKlass.prototype = {
    *
    * @return {object} - response
    */
-  convertConversionFactorToConversionRate: function (conversionFactor) {
-    
+  convertConversionFactorToConversionRate: function(conversionFactor) {
     const oThis = this;
-    
+
     if (!oThis.isBTConversionFactorValid(conversionFactor)) {
       return responseHelper.error({
         internal_error_identifier: 'bh_ccftcr_1',
@@ -264,7 +269,9 @@ BasicHelperKlass.prototype = {
         error_config: oThis.fetchErrorConfig()
       });
     }
-    const conversionRate = (new BigNumber(String(conversionFactor))).mul((new BigNumber(10)).toPower(CONVERSION_RATE_DECIMALS));
+    const conversionRate = new BigNumber(String(conversionFactor)).mul(
+      new BigNumber(10).toPower(CONVERSION_RATE_DECIMALS)
+    );
     if (conversionRate.modulo(1).equals(0)) {
       return responseHelper.successWithData({
         conversionRate: conversionRate.toString(10),
@@ -277,9 +284,8 @@ BasicHelperKlass.prototype = {
         error_config: oThis.fetchErrorConfig()
       });
     }
-    
   },
-  
+
   /**
    * Convert conversion rate and conversion rate decimals to conversion factor. Make sure it's a valid number
    *
@@ -288,7 +294,7 @@ BasicHelperKlass.prototype = {
    *
    * @return {object} - response
    */
-  convertConversionRateToConversionFactor: function (conversionRate, conversionRateDecimals) {
+  convertConversionRateToConversionFactor: function(conversionRate, conversionRateDecimals) {
     const oThis = this;
     if (!oThis.isBTConversionRateValid(conversionRate)) {
       return responseHelper.error({
@@ -297,7 +303,7 @@ BasicHelperKlass.prototype = {
         error_config: oThis.fetchErrorConfig()
       });
     }
-    
+
     if (!oThis.isBTConversionRateDecimalsValid(conversionRateDecimals)) {
       return responseHelper.error({
         internal_error_identifier: 'bh_ccrtcf_2',
@@ -305,12 +311,11 @@ BasicHelperKlass.prototype = {
         error_config: oThis.fetchErrorConfig()
       });
     }
-    
-    
-    const conversionFactor = (new BigNumber(conversionRate)).div((new BigNumber(10)).toPower(conversionRateDecimals))
-    return responseHelper.successWithData({conversionFactor: conversionFactor.toString(10)});
+
+    const conversionFactor = new BigNumber(conversionRate).div(new BigNumber(10).toPower(conversionRateDecimals));
+    return responseHelper.successWithData({ conversionFactor: conversionFactor.toString(10) });
   },
-  
+
   /**
    * Generate a secure random String
    *
@@ -318,29 +323,27 @@ BasicHelperKlass.prototype = {
    *
    * @return {object} - response
    */
-  generateRandomString: function (length) {
-    
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    
+  generateRandomString: function(length) {
+    var text = '';
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
     for (var i = 0; i < length; i++) {
       text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
-    
+
     return text;
-    
   },
-  
+
   /**
    * Fetch Error Config
    *
    * @return {object}
    */
-  fetchErrorConfig: function () {
+  fetchErrorConfig: function() {
     return {
       param_error_config: {},
       api_error_config: generalErrorConfig
-    }
+    };
   }
 };
 
@@ -351,11 +354,11 @@ BasicHelperKlass.prototype = {
  *
  * @return {booelan} true when equal
  */
-String.prototype.equalsIgnoreCase = function (compareWith) {
-  const oThis = this
-    , _self = this.toLowerCase()
-    , _compareWith = String(compareWith).toLowerCase();
-  
+String.prototype.equalsIgnoreCase = function(compareWith) {
+  const oThis = this,
+    _self = this.toLowerCase(),
+    _compareWith = String(compareWith).toLowerCase();
+
   return _self === _compareWith;
 };
 
