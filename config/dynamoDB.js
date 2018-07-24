@@ -1,5 +1,12 @@
 "use strict";
 
+/**
+ * Load all the DynamoDB related constants from from config strategy OR define them as literals here and export them.
+ *
+ * @module config/dynamoDB
+ *
+ */
+
 const rootPrefix = '..'
   , InstanceComposer = require(rootPrefix + "/instance_composer")
 ;

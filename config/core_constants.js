@@ -1,7 +1,7 @@
 "use strict";
 
 /**
- * Load all the core constants from the environment variables OR define them as literals here and export them.
+ * Load all the core constants from config strategy OR define them as literals here and export them.
  *
  * @module config/core_constants
  *

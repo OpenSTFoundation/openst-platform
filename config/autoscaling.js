@@ -1,5 +1,12 @@
 "use strict";
 
+/**
+ * Load all the autoscaling constants from config strategy OR define them as literals here and export them.
+ *
+ * @module config/autoscaling
+ *
+ */
+
 const rootPrefix = '..'
   , InstanceComposer = require(rootPrefix + "/instance_composer")
 ;
