@@ -124,7 +124,24 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 
 
 #### On Boarding services
+##### Get registration status service 
+```js
+let Service = openSTPlatform.services.onBoarding.getRegistrationStatus;
+let sObj = new Service({
+  transaction_hash: '0xb0f72a92fd2252d766f5ff26e6ecc7bec576fcdf030c278ec55d75874381cbc4'
+});
+sObj.perform().then(function(r){console.log(JSON.stringify(r))});
+```
 
+##### Propose branded token service 
+```js
+let Service = openSTPlatform.services.onBoarding.proposeBrandedToken;
+let sObj = new Service({
+  name:'PUNE6', 
+  symbol: 'PUN6', 
+  conversion_factor: '1'});
+sObj.perform().then(function(r){console.log(JSON.stringify(r))});
+```
 
 
 #### Intercomm services
