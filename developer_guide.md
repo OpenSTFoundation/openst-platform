@@ -273,7 +273,7 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 
 #### Intercomm services
 
-#####Register Branded Token
+##### Register Branded Token
 This services exposes the register branded token inter chain communicator as a service, so that any one can run this on their own.
 
 ```js
@@ -284,7 +284,7 @@ let sObj = new Service({
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
-#####Stake and Mint
+##### Stake and Mint
 This services exposes the stane and mint inter chain communicator as a service, so that any one can run this on their own.
 ```js
 let Service = openSTPlatform.services.interComm.stakeAndMint;
@@ -294,7 +294,7 @@ let sObj = new Service({
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
-#####Stake and Mint Processor
+##### Stake and Mint Processor
 This services exposes the stake and mint processor inter chain communicator as a service, so that any one can run this on their own.
 
 ```js
