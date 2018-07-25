@@ -121,7 +121,17 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 
 ##### BT approve service
 
-
+```js
+let Service = openSTPlatform.services.transaction.getReceipt;
+let sObj = new Service({
+  erc20_address: '0x67b6Fd134e6d8fa32c801A85453726FA26B9aBdB',
+  approver_address: '0x8eC6FdCa06ff0FD945cDAC0F80122a01bd564da7',
+  approver_passphrase: 'acmeOnopenST',
+  approvee_address: '0xDBBC2C585CE468c3118Fa94e15c8c546b0bA4355',
+  to_approve_amount: '1000000000000000000'
+});
+sObj.perform().then(function(r){console.log(JSON.stringify(r))});
+```
 
 #### Balance services
 ##### Get Branded Token Balance Service
