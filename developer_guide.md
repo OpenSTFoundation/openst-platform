@@ -1,4 +1,4 @@
-# Usage guide
+# Developer guide
 This document describes the usage of OpenSTPlatform and its services. All the services are briefly described and their one usage is demonstrated.
 
 ##### Creating OpenSTPlatform object
@@ -195,50 +195,74 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
 #### Stake and mint services
-##### Approve OpenSTValue contract for starting the stake and mint processStart Stake
+
+##### Approve for Stake Service
+The Staker address needs to approve OpenST Value contract before calling stake. This service helps achieve this.
+
 ```js
 let Service = platform.services.stake.approveForStake;
-let sObj = new Service({})
+let sObj = new Service({});
 
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
 ##### Get Approval Status (need transaction_hash of approveForStake)
+This service helps in getting status of the approval transaction done from the above service.
+
 ```js
 let Service = platform.services.stake.getApprovalStatus;
 let sObj = new Service({
   transaction_hash : '0x4f43a920d2c6ea23a1c2b99a57352f26acb43c463d1862fa27ece3972d6ed4f6'
-})
+});
 
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
 ##### Start Stake
+This service is used for starting the stake process. It takes in the beneficiary address, to stake amount in weis and uuid of the branded token the stake is meant for in the parameters.
+
 ```js
 let Service = platform.services.stake.start;
 let sObj = new Service({
   beneficiary: '0xF0Bd98D421b058C34F60c4613D441A03FF363283', 
   to_stake_amount: '10000000000000000000', 
   uuid: '0x6fa1d34e78a0fcdbdd0432827f8ebdcf3ef274ed6e49d63baebecad4492011e7'
-})
+});
 
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
-
 ##### Get Staked Amount
+This service fetches the total staked amount of OST which a staker address has staked.
+
 ```js
 let Service = platform.services.stake.getStakedAmount;
 let sObj = new Service({
   simple_stake_contract_address: '0x2Ce60C3C481a58caf91Aab53b979E8342726976A'
-})
+});
 
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
-
 #### On Boarding services
+On boarding here means the process of getting branded token proposed and registered on both the chains.
+
+##### Propose branded token service 
+This service does the propose of the branded token using the name, symbol and conversion factor as its arguments.
+
+```js
+let Service = openSTPlatform.services.onBoarding.proposeBrandedToken;
+let sObj = new Service({
+  name:'ABCD', 
+  symbol: 'ABCD', 
+  conversion_factor: '1'});
+sObj.perform().then(function(r){console.log(JSON.stringify(r))});
+```
+
 ##### Get registration status service 
+To bring a branded token into existence, various steps are involved. To get status of all these steps, this service can be used.
+It takes in the transaction_hash of the propose transaction.
+
 ```js
 let Service = openSTPlatform.services.onBoarding.getRegistrationStatus;
 let sObj = new Service({
@@ -247,18 +271,11 @@ let sObj = new Service({
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
-##### Propose branded token service 
-```js
-let Service = openSTPlatform.services.onBoarding.proposeBrandedToken;
-let sObj = new Service({
-  name:'PUNE6', 
-  symbol: 'PUN6', 
-  conversion_factor: '1'});
-sObj.perform().then(function(r){console.log(JSON.stringify(r))});
-```
-
 #### Intercomm services
+
 #####Register Branded Token
+This services exposes the register branded token inter chain communicator as a service, so that any one can run this on their own.
+
 ```js
 let Service = openSTPlatform.services.interComm.registerBrandedToken;
 let sObj = new Service({
@@ -267,8 +284,8 @@ let sObj = new Service({
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
-
 #####Stake and Mint
+This services exposes the stane and mint inter chain communicator as a service, so that any one can run this on their own.
 ```js
 let Service = openSTPlatform.services.interComm.stakeAndMint;
 let sObj = new Service({
@@ -277,8 +294,9 @@ let sObj = new Service({
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
-
 #####Stake and Mint Processor
+This services exposes the stake and mint processor inter chain communicator as a service, so that any one can run this on their own.
+
 ```js
 let Service = openSTPlatform.services.interComm.stakeAndMintProcessor;
 let sObj = new Service({
