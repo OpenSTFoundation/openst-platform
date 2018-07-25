@@ -116,8 +116,52 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 
 
 #### Balance services
+##### Get Branded Token Balance Service
+```js
+let Service = openSTPlatform.services.balance.brandedToken;
+let sObj = new Service({
+  erc20_address: '0x67b6Fd134e6d8fa32c801A85453726FA26B9aBdB',
+  address: '0x8eC6FdCa06ff0FD945cDAC0F80122a01bd564da7'
+});
+sObj.perform().then(function(r){console.log(JSON.stringify(r))});
+```
 
+##### Get Branded Token Balance from Chain Service
+```js
+let Service = openSTPlatform.services.balance.brandedTokenFromChain;
+let sObj = new Service({
+  erc20_address: '0x67b6Fd134e6d8fa32c801A85453726FA26B9aBdB',
+  address: '0x8eC6FdCa06ff0FD945cDAC0F80122a01bd564da7'
+});
+sObj.perform().then(function(r){console.log(JSON.stringify(r))});
+```
 
+##### Get Eth Balance Service
+```js
+let Service = openSTPlatform.services.balance.eth;
+let sObj = new Service({
+  address: '0x8eC6FdCa06ff0FD945cDAC0F80122a01bd564da7'
+});
+sObj.perform().then(function(r){console.log(JSON.stringify(r))});
+```
+
+##### Get Simple Token Balance Service
+```js
+let Service = openSTPlatform.services.balance.simpleToken;
+let sObj = new Service({
+  address: '0x8eC6FdCa06ff0FD945cDAC0F80122a01bd564da7'
+});
+sObj.perform().then(function(r){console.log(JSON.stringify(r))});
+```
+
+##### Get Simple Token Prime Balance Service
+```js
+let Service = openSTPlatform.services.balance.simpleTokenPrime;
+let sObj = new Service({
+  address: '0x8eC6FdCa06ff0FD945cDAC0F80122a01bd564da7'
+});
+sObj.perform().then(function(r){console.log(JSON.stringify(r))});
+```
 
 #### Stake and mint services
 
@@ -142,6 +186,5 @@ let sObj = new Service({
   conversion_factor: '1'});
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
-
 
 #### Intercomm services
