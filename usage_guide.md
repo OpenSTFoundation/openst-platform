@@ -6,11 +6,11 @@ OpenST-Platform needs various configurations for its object creation. For gettin
 please see [OpenST-Platform-APIs](https://github.com/OpenSTFoundation/openst-platform-apis/blob/feature/config_strategy/config/strategies.json).
 
 Following snippet assumes that the config.json kept at a certain location has the configuration details.
-```bash
+
+```js
 const OpenStPlatform = require('@openstfoundation/openst-platform');
 
-const rootPrefix = '.',
-  configStrategies = require('$HOME/openst-setup/openst_platform_config.json');
+const configStrategies = require('$HOME/openst-setup/openst_platform_config.json');
 
 const openSTPlatform = new OpenStPlatform(configStrategies);
 ```
