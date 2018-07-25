@@ -3,7 +3,7 @@ This document describes the usage of OpenSTPlatform and its services. All the se
 
 ##### Creating OpenSTPlatform object
 OpenST-Platform needs various configurations for its object creation. For getting list of all the supported configurations,
-please see [OpenST-Platform-APIs](https://github.com/OpenSTFoundation/openst-platform-apis/blob/master/config/strategies.json).
+please see [OpenST-Platform-APIs](https://github.com/OpenSTFoundation/openst-platform-apis/blob/feature/config_strategy/config/strategies.json).
 
 Following snippet assumes that the config.json kept at a certain location has the configuration details.
 ```bash
