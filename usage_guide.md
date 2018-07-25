@@ -25,6 +25,7 @@ We will now go one by one into each of the services. Specifically, we will look 
 This service is used for transferring branded tokens on utility chain from sender address to recipient address.
 It takes the amount to be transferred in Wei unit (i.e. 10^-18 branded token). The ERC20 contract address of the branded token 
 is also needed as a parameter to the service.
+
 ```js
 let Service = openSTPlatform.services.transaction.transfer.brandedToken;
 let sObj = new Service({
@@ -43,6 +44,7 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ##### Transfer ETH service
 This service is used for transferring ETH on value chain from sender address to recipient address.
 It takes the amount to be transferred in Wei unit (i.e. 10^-18 ETH).
+
 ```js
 let Service = openSTPlatform.services.transaction.transfer.eth;
 let sObj = new Service({
@@ -57,6 +59,7 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ##### Transfer OST service
 This service is used for transferring OST on value chain from sender address to recipient address.
 It takes the amount to be transferred in Wei unit (i.e. 10^-18 OST).
+
 ```js
 let Service = openSTPlatform.services.transaction.transfer.simpleToken;
 let sObj = new Service({
@@ -71,6 +74,7 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ##### Transfer OST Prime service
 This service is used for transferring OST Prime (which is used as gas) on utility chain from sender address to recipient address.
 It takes the amount to be transferred in Wei unit (i.e. 10^-18 OST prime).
+
 ```js
 let Service = openSTPlatform.services.transaction.transfer.simpleTokenPrime;
 let sObj = new Service({
@@ -81,6 +85,7 @@ let sObj = new Service({
 });
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
+
 #### Transaction helper services
 
 ##### Estimate Gas service
@@ -88,6 +93,7 @@ This service is used for estimating gas which will be used in the execution of a
 Contract name can be one of - simpleToken, openSTUtility, openSTValue, stPrime, valueCore, valueRegistrar, utilityRegistrar,
 brandedToken, simpleStake, airdrop. Method name can be any valid method name which is defined in the given contract.
 Method arguments are passed as an array.
+
 ```js
 let Service = openSTPlatform.services.transaction.estimateGas;
 let sObj = new Service({
@@ -101,6 +107,8 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
 ##### Get Receipt service
+This service is used to fetch the transaction receipt using the transaction hash. It takes in the name of the chain which it needs to go for fetching the transaction hash.
+
 ```js
 let Service = openSTPlatform.services.transaction.getReceipt;
 let sObj = new Service({
