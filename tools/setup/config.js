@@ -189,6 +189,10 @@ const setupConfig = {
     endpoint: {
       env_var: 'OS_DYNAMODB_ENDPOINT',
       value: 'http://localhost:8000'
+    },
+    db_prefix: {
+      env_var: 'OS_DYNAMODB_TABLE_NAME_PREFIX',
+      value: 'd_pk_'
     }
   },
 
