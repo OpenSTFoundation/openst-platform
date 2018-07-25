@@ -200,7 +200,7 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 The Staker address needs to approve OpenST Value contract before calling stake. This service helps achieve this.
 
 ```js
-let Service = platform.services.stake.approveForStake;
+let Service = openSTPlatform.services.stake.approveForStake;
 let sObj = new Service({});
 
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
@@ -210,7 +210,7 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 This service helps in getting status of the approval transaction done from the above service.
 
 ```js
-let Service = platform.services.stake.getApprovalStatus;
+let Service = openSTPlatform.services.stake.getApprovalStatus;
 let sObj = new Service({
   transaction_hash : '0x4f43a920d2c6ea23a1c2b99a57352f26acb43c463d1862fa27ece3972d6ed4f6'
 });
@@ -222,7 +222,7 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 This service is used for starting the stake process. It takes in the beneficiary address, to stake amount in weis and uuid of the branded token the stake is meant for in the parameters.
 
 ```js
-let Service = platform.services.stake.start;
+let Service = openSTPlatform.services.stake.start;
 let sObj = new Service({
   beneficiary: '0xF0Bd98D421b058C34F60c4613D441A03FF363283', 
   to_stake_amount: '10000000000000000000', 
@@ -236,7 +236,7 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 This service fetches the total staked amount of OST which a staker address has staked.
 
 ```js
-let Service = platform.services.stake.getStakedAmount;
+let Service = openSTPlatform.services.stake.getStakedAmount;
 let sObj = new Service({
   simple_stake_contract_address: '0x2Ce60C3C481a58caf91Aab53b979E8342726976A'
 });
