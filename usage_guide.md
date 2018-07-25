@@ -235,3 +235,23 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
 #### Intercomm services
+#####Register Branded Token
+```js
+let Service = openSTPlatform.services.interComm.registerBrandedToken;
+let sObj = new Service({
+  file_path: '$HOME/openst-setup/logs/register_branded_token.data'
+});
+sObj.perform().then(function(r){console.log(JSON.stringify(r))});
+```
+
+
+#####Stake and Mint
+```js
+let Service = openSTPlatform.services.interComm.stakeAndMint;
+let sObj = new Service({
+  file_path: '$HOME/openst-setup/logs/register_branded_token.data'
+});
+sObj.perform().then(function(r){console.log(JSON.stringify(r))});
+```
+
+
