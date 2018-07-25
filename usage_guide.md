@@ -22,14 +22,14 @@ const openSTPlatform = new OpenStPlatform(configStrategies);
 ```js
 let Service = openSTPlatform.services.transaction.transfer.brandedToken;
 let sObj = new Service({
-	  erc20_address: '0x67b6Fd134e6d8fa32c801A85453726FA26B9aBdB',
-	  sender_address: '0x8eC6FdCa06ff0FD945cDAC0F80122a01bd564da7',
-	  sender_passphrase: 'acmeOnopenST',
-	  recipient_address: '0x38e1983a9b5bef2f0dc03e87c5d806e775437fb8',
-	  amount_in_wei: '1000000000000000000',
-	  options: {
-		  tag: 'upvote'
-	  }
+  erc20_address: '0x67b6Fd134e6d8fa32c801A85453726FA26B9aBdB',
+  sender_address: '0x8eC6FdCa06ff0FD945cDAC0F80122a01bd564da7',
+  sender_passphrase: 'acmeOnopenST',
+  recipient_address: '0x38e1983a9b5bef2f0dc03e87c5d806e775437fb8',
+  amount_in_wei: '1000000000000000000',
+  options: {
+    tag: 'upvote'
+  }
 });
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
@@ -94,3 +94,20 @@ let sObj = new Service({
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
+##### BT approve service
+
+
+
+#### Balance services
+
+
+
+#### Stake and mint services
+
+
+
+#### On Boarding services
+
+
+
+#### Intercomm services
