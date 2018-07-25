@@ -6,8 +6,7 @@
  */
 
 const Path = require('path'),
-  os = require('os'),
-  openSTStorage = require('@openstfoundation/openst-storage');
+  os = require('os');
 
 const rootPrefix = '../../..',
   logger = require(rootPrefix + '/helpers/custom_console_logger'),
@@ -18,7 +17,7 @@ const rootPrefix = '../../..',
 require(rootPrefix + '/services/utils/generate_address');
 require(rootPrefix + '/services/on_boarding/propose_branded_token');
 require(rootPrefix + '/services/on_boarding/get_registration_status');
-require(rootPrefix + '/lib/dynamoDB_service');
+require(rootPrefix + '/lib/web3/providers/storage');
 
 /**
  * is equal ignoring case
@@ -254,11 +253,10 @@ RegisterBTKlass.prototype = {
    */
   _allocateShard: async function() {
     const oThis = this,
-      ddbServiceObj = oThis.ic.getDynamoDb();
+      openSTStorageProvider = oThis.ic.getStorageProvider(),
+      openSTStorage = openSTStorageProvider.getInstance();
 
-    await new openSTStorage.TokenBalanceModel({
-      ddb_service: ddbServiceObj,
-      auto_scaling: ddbServiceObj.autoScalingServiceObj,
+    await new openSTStorage.model.TokenBalance({
       erc20_contract_address: oThis.erc20
     }).allocate();
   },
