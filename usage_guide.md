@@ -5,7 +5,8 @@ This document describes the usage of OpenSTPlatform and its services. All the se
 OpenST-Platform needs various configurations for its object creation. For getting list of all the supported configurations,
 please see [OpenST-Platform-APIs](https://github.com/OpenSTFoundation/openst-platform-apis/blob/feature/config_strategy/config/strategies.json).
 
-Following snippet assumes that the config.json kept at a certain location has the configuration details.
+Following snippet assumes that the config.json is kept at a certain location has the configuration details.
+This config can come from a database, from a file or from any other source.
 
 ```js
 const OpenStPlatform = require('@openstfoundation/openst-platform');
@@ -16,6 +17,7 @@ const openSTPlatform = new OpenStPlatform(configStrategies);
 ```
 
 ### OpenST-Platform Services
+We will now go one by one into each of the services. Specifically, we will look into what the service does and one example code usage.
 
 #### Transfer related services
 ##### Transfer BT service
