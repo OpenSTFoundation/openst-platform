@@ -134,7 +134,11 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
 #### Balance services
+
 ##### Get Branded Token Balance Service
+This service is used to get balance of Branded token for a particular address. The ERC20 contract address of the branded token 
+is needed as a parameter to the service. The balance which is fetched includes the effect of pessimistic caching.
+
 ```js
 let Service = openSTPlatform.services.balance.brandedToken;
 let sObj = new Service({
@@ -145,6 +149,9 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
 ##### Get Branded Token Balance from Chain Service
+This service is used to get balance of Branded token for a particular address. The ERC20 contract address of the branded token 
+is needed as a parameter to the service. The balance which is fetched does not include the effect of pessimistic caching.
+
 ```js
 let Service = openSTPlatform.services.balance.brandedTokenFromChain;
 let sObj = new Service({
@@ -155,6 +162,8 @@ sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
 ##### Get Eth Balance Service
+This service is used to get balance of ETH for a particular address.
+
 ```js
 let Service = openSTPlatform.services.balance.eth;
 let sObj = new Service({
@@ -163,7 +172,9 @@ let sObj = new Service({
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
-##### Get Simple Token Balance Service
+##### Get OST Balance Service
+This service is used to get balance of OST for a particular address.
+
 ```js
 let Service = openSTPlatform.services.balance.simpleToken;
 let sObj = new Service({
@@ -172,7 +183,9 @@ let sObj = new Service({
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
 
-##### Get Simple Token Prime Balance Service
+##### Get OST Prime Balance Service
+This service is used to get balance of OST Prime for a particular address.
+
 ```js
 let Service = openSTPlatform.services.balance.simpleTokenPrime;
 let sObj = new Service({
