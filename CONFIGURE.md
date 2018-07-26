@@ -13,7 +13,7 @@ this document for both kind of setups.
 * Install GETH version >= 1.7.2
 * Install DynamoDB at location ~/dynamodb_local_latest/ and start the DynamoDB process using following command.
 ```bash
-java -Djava.library.path=~/dynamodb_local_latest/DynamoDBLocal_lib/ -jar ~/dynamodb_local_latest/DynamoDBLocal.jar -sharedDb -dbPath ~/logs/
+java -Djava.library.path=~/dynamodb_local_latest/DynamoDBLocal_lib/ -jar ~/dynamodb_local_latest/DynamoDBLocal.jar -sharedDb -dbPath ~/openst-setup/logs/
 ```
 
 

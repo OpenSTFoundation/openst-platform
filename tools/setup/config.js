@@ -192,7 +192,7 @@ const setupConfig = {
     },
     db_prefix: {
       env_var: 'OS_DYNAMODB_TABLE_NAME_PREFIX',
-      value: 'd_pk_'
+      value: ''
     }
   },
 
