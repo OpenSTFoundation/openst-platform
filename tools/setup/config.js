@@ -193,6 +193,14 @@ const setupConfig = {
     db_prefix: {
       env_var: 'OS_DYNAMODB_TABLE_NAME_PREFIX',
       value: ''
+    },
+    ssl_enabled: {
+      env_var: 'OS_DYNAMODB_SSL_ENABLED',
+      value: '0'
+    },
+    logging_enabled: {
+      env_var: 'OS_DYNAMODB_LOGGING_ENABLED',
+      value: '0'
     }
   },
 
