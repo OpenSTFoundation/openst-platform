@@ -65,6 +65,5 @@ describe('services/transaction/estimate_gas', function() {
     console.log('response', response);
     assert.equal(response.isSuccess(), false);
     assert.isEmpty(response.data);
-    assert.isEmpty(response.data);
   });
 });
