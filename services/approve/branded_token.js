@@ -110,9 +110,19 @@ ApproveForBrandedTokenKlass.prototype = {
       return Promise.reject(errObj);
     }
 
-    if (oThis.toApproveAmount.lessThan(0)) {
+    if (!basicHelper.isAddressValid(oThis.approveeAddress)) {
       let errObj = responseHelper.error({
         internal_error_identifier: 's_a_bt_4',
+        api_error_identifier: 'invalid_address',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.reject(errObj);
+    }
+
+    if (oThis.toApproveAmount.lessThan(0)) {
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_a_bt_5',
         api_error_identifier: 'invalid_amount',
         error_config: basicHelper.fetchErrorConfig()
       });
