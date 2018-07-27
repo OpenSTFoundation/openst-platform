@@ -26,20 +26,45 @@ var coreAddresses = new coreAddressesKlass(configStrategy);
 
 //Following params are estimate of stPrime transfer to branded token reserve address
 var testValidData = {
-  contract_name: 'stPrime',
-  contract_address: coreAddresses.getAddressForContract('stPrime'),
+  contract_name: 'brandedToken',
+  contract_address: brandedTokenDetails['ERC20'],
   chain: 'utility',
-  senderAddress: configStrategy.OST_FOUNDATION_ADDR,
-  methodName: 'transfer',
-  methodArguments: [brandedTokenDetails['Reserve'], '100000000000']
+  sender_address: brandedTokenDetails['Reserve'],
+  method_name: 'transfer',
+  method_arguments: [configStrategy.OST_FOUNDATION_ADDR, '3']
+};
+
+var testInvalidData = {
+  contract_name: 'simpleToken',
+  contract_address: brandedTokenDetails['ERC20'],
+  chain: 'utility',
+  sender_address: brandedTokenDetails['Reserve'],
+  method_name: 'abc',
+  method_arguments: [brandedTokenDetails['Reserve'], '']
 };
 
 describe('services/transaction/estimate_gas', function() {
   it('should return promise', async function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
-    //console.log('1111',configStrategy);
     var brandedTokenObj = new platformServices.estimateGas(dupData),
       response = brandedTokenObj.perform();
     assert.typeOf(response, 'Promise');
+  });
+
+  it('should return number', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    var brandedTokenObj = new platformServices.estimateGas(dupData),
+      response = await brandedTokenObj.perform();
+    assert.typeOf(response.data.gas_to_use, 'number');
+  });
+
+  it('should return error', async function() {
+    var dupData = JSON.parse(JSON.stringify(testInvalidData));
+    var brandedTokenObj = new platformServices.estimateGas(dupData),
+      response = await brandedTokenObj.perform();
+    console.log('response', response);
+    assert.equal(response.isSuccess(), false);
+    assert.isEmpty(response.data);
+    assert.isEmpty(response.data);
   });
 });
