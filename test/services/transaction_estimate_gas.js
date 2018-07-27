@@ -34,15 +34,6 @@ var testValidData = {
   method_arguments: [configStrategy.OST_FOUNDATION_ADDR, '3']
 };
 
-var testInvalidData = {
-  contract_name: 'simpleToken',
-  contract_address: brandedTokenDetails['ERC20'],
-  chain: 'utility',
-  sender_address: brandedTokenDetails['Reserve'],
-  method_name: 'abc',
-  method_arguments: [brandedTokenDetails['Reserve'], '']
-};
-
 describe('services/transaction/estimate_gas', function() {
   it('should return promise', async function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
@@ -58,11 +49,110 @@ describe('services/transaction/estimate_gas', function() {
     assert.typeOf(response.data.gas_to_use, 'number');
   });
 
-  it('should return error', async function() {
-    var dupData = JSON.parse(JSON.stringify(testInvalidData));
+  it('should return error as method name is invalid', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.method_name = 'abc';
     var brandedTokenObj = new platformServices.estimateGas(dupData),
       response = await brandedTokenObj.perform();
-    console.log('response', response);
+    assert.equal(response.isSuccess(), false);
+    assert.isEmpty(response.data);
+  });
+
+  it('should return error as contract name is empty', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.contract_name = '';
+    var brandedTokenObj = new platformServices.estimateGas(dupData),
+      response = await brandedTokenObj.perform();
+    assert.equal(response.isSuccess(), false);
+    assert.isEmpty(response.data);
+  });
+
+  it('should return error as contract address is empty', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.contract_address = '';
+    var brandedTokenObj = new platformServices.estimateGas(dupData),
+      response = await brandedTokenObj.perform();
+    assert.equal(response.isSuccess(), false);
+    assert.isEmpty(response.data);
+  });
+
+  it('should return error as chain is empty', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.chain = '';
+    var brandedTokenObj = new platformServices.estimateGas(dupData),
+      response = await brandedTokenObj.perform();
+    assert.equal(response.isSuccess(), false);
+    assert.isEmpty(response.data);
+  });
+
+  it('should return error as chain name is empty', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.chain = '';
+    var brandedTokenObj = new platformServices.estimateGas(dupData),
+      response = await brandedTokenObj.perform();
+    assert.equal(response.isSuccess(), false);
+    assert.isEmpty(response.data);
+  });
+
+  it('should return error as chain name is empty', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.chain = '';
+    var brandedTokenObj = new platformServices.estimateGas(dupData),
+      response = await brandedTokenObj.perform();
+    assert.equal(response.isSuccess(), false);
+    assert.isEmpty(response.data);
+  });
+
+  it('should return error as sender name is empty', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.sender_address = '';
+    var brandedTokenObj = new platformServices.estimateGas(dupData),
+      response = await brandedTokenObj.perform();
+    assert.equal(response.isSuccess(), false);
+    assert.isEmpty(response.data);
+  });
+
+  it('should return error as sender address is empty', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.sender_address = '';
+    var brandedTokenObj = new platformServices.estimateGas(dupData),
+      response = await brandedTokenObj.perform();
+    assert.equal(response.isSuccess(), false);
+    assert.isEmpty(response.data);
+  });
+
+  it('should return error as sender address is invalid', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.sender_address = '0xyf73';
+    var brandedTokenObj = new platformServices.estimateGas(dupData),
+      response = await brandedTokenObj.perform();
+    assert.equal(response.isSuccess(), false);
+    assert.isEmpty(response.data);
+  });
+
+  it('should return error as method name is empty', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.method_name = '';
+    var brandedTokenObj = new platformServices.estimateGas(dupData),
+      response = await brandedTokenObj.perform();
+    assert.equal(response.isSuccess(), false);
+    assert.isEmpty(response.data);
+  });
+
+  it('should return error as method arguments is empty', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.method_arguments = '';
+    var brandedTokenObj = new platformServices.estimateGas(dupData),
+      response = await brandedTokenObj.perform();
+    assert.equal(response.isSuccess(), false);
+    assert.isEmpty(response.data);
+  });
+
+  it('should return error as method arguments have negative amount', async function() {
+    var dupData = JSON.parse(JSON.stringify(testValidData));
+    dupData.method_arguments = [configStrategy.OST_FOUNDATION_ADDR, '-100'];
+    var brandedTokenObj = new platformServices.estimateGas(dupData),
+      response = await brandedTokenObj.perform();
     assert.equal(response.isSuccess(), false);
     assert.isEmpty(response.data);
   });
