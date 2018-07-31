@@ -26,7 +26,7 @@ DynamoDBInit.prototype = {
 
     // run migrations
     logger.info('* Running DynamoDB initial migrations for shard management.');
-    let shardMgmtObj = openSTStorage.ddbServiceObj.shardManagement();
+    let shardMgmtObj = openSTStorage.dynamoDBService.shardManagement();
     await shardMgmtObj.runShardMigration();
 
     // createAndRegisterShard
