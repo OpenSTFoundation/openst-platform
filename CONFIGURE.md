@@ -150,6 +150,6 @@ Example: For 500 OST, reserve address will get:
 - 50 ST' ((10% of 500 staked OST) * (1 as conversion factor))
      
 
-### [x] Back on Terminal 1 - Stop start_services.js script, if you don't want to register and mint more branded tokens on utility chain.
+### [x] Back on Terminal 1 - Stop start_services.js script, if you don't want to register and mint more branded tokens on utility chain or don't want to run platform RESTful apis.
 
-For complete documentation of all the services of OpenST Platform, please refer [Developer Guide](developer_guide.md).
+For complete documentation on usage of OpenST Platform services, please refer [Developer Guide](developer_guide.md).

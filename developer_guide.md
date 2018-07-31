@@ -8,11 +8,16 @@ please see [OpenST-Platform-APIs](https://github.com/OpenSTFoundation/openst-pla
 Following snippet assumes that the config.json is kept at a certain location has the configuration details.
 This config can come from a database, from a file or from any other source.
 
+```sh
+npm install @openstfoundation/openst-platform
+```
+
+### OpenST-Platform Usage 
+
 ```js
 const OpenStPlatform = require('@openstfoundation/openst-platform');
-
-const configStrategies = require('$HOME/openst-setup/openst_platform_config.json');
-
+const os = require('os');
+const configStrategies = require(os.homedir() + '/openst-setup/openst_platform_config.json');
 const openSTPlatform = new OpenStPlatform(configStrategies);
 ```
 
