@@ -138,7 +138,7 @@ NOTE: Upon successful registration, branded token details will be published in t
 2. Amount - The OST amount in Weis to stake, where 1 OST = (1 X 10^18) OST Wei (example: 500 OST = 500000000000000000000 OST Wei)
 
 ```bash
-  > node $OPENST_PLATFORM_PATH/tools/setup/branded_token/mint.js "ACME" 500000000000000000000
+  > node $OPENST_PLATFORM_PATH/tools/setup/branded_token/mint.js "ACME" 500000000000000000000 ~/openst-setup/openst_platform_config.json
 ```
 
 NOTE: The above mint, actually does 2 different stakes. 90% of the total OST staked are staked for minting Branded Tokens.

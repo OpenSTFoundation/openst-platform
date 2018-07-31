@@ -43,7 +43,9 @@ const MintBrandedToken = function(params) {
   let configStrategy = oThis.config_strategy_file_path
     ? require(oThis.config_strategy_file_path)
     : require(setupHelper.configStrategyFilePath());
+
   oThis.ic = new InstanceComposer(configStrategy);
+
 };
 
 MintBrandedToken.prototype = {
@@ -216,7 +218,9 @@ MintBrandedToken.prototype = {
 
 const args = process.argv,
   symbol = (args[2] || '').trim(),
-  amountToStakeInWeis = (args[3] || '').trim();
+  amountToStakeInWeis = (args[3] || '').trim(),
+  configStrategyFilePath = (args[4] || '').trim()
+;
 
 tokenHelper
   .getBrandedToken()
@@ -248,7 +252,8 @@ tokenHelper
       uuid: uuid,
       reserve_address: reserveAddr,
       reserve_passphrase: reservePassphrase,
-      erc20_address: erc20Addr
+      erc20_address: erc20Addr,
+      config_strategy_file_path: configStrategyFilePath
     });
 
     await serviceObj.perform();
