@@ -141,7 +141,7 @@ RegisterBTKlass.prototype = {
     });
     const proposeBTResponse = await proposeBTObj.perform();
     if (proposeBTResponse.isFailure()) {
-      logger.error('* Proposal failed with error:', proposeBTResponse);
+      logger.error('* Proposal failed with error:', proposeBTResponse.getDebugData());
       process.exit(1);
     }
     return Promise.resolve(proposeBTResponse);
