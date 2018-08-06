@@ -1,24 +1,23 @@
-"use strict";
+'use strict';
 /**
  * Register Branded Token
  *
  * @module tools/setup/branded_token/register
  */
 
-const Path = require('path')
-  , os = require('os')
-  , openSTStorage = require('@openstfoundation/openst-storage')
-;
+const Path = require('path'),
+  os = require('os');
 
-const rootPrefix = '../../..'
-  , generateAddress = require(rootPrefix + '/services/utils/generate_address')
-  , proposeBrandedToken = require(rootPrefix + '/services/on_boarding/propose_branded_token')
-  , getRegistrationStatus = require(rootPrefix + '/services/on_boarding/get_registration_status')
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , tokenHelper = require(rootPrefix + '/tools/setup/branded_token/helper')
-  , ddbServiceObj = require(rootPrefix + '/lib/dynamoDB_service')
-  , autoScalingServiceObj = require(rootPrefix + '/lib/auto_scaling_service')
-;
+const rootPrefix = '../../..',
+  logger = require(rootPrefix + '/helpers/custom_console_logger'),
+  tokenHelper = require(rootPrefix + '/tools/setup/branded_token/helper'),
+  setupHelper = require(rootPrefix + '/tools/setup/helper'),
+  InstanceComposer = require(rootPrefix + '/instance_composer');
+
+require(rootPrefix + '/services/utils/generate_address');
+require(rootPrefix + '/services/on_boarding/propose_branded_token');
+require(rootPrefix + '/services/on_boarding/get_registration_status');
+require(rootPrefix + '/lib/web3/providers/storage');
 
 /**
  * is equal ignoring case
@@ -27,10 +26,10 @@ const rootPrefix = '../../..'
  *
  * @return {booelan} true when equal
  */
-String.prototype.equalsIgnoreCase = function ( compareWith ) {
-  const oThis = this
-    , _self = this.toLowerCase()
-    , _compareWith = String( compareWith ).toLowerCase();
+String.prototype.equalsIgnoreCase = function(compareWith) {
+  const oThis = this,
+    _self = this.toLowerCase(),
+    _compareWith = String(compareWith).toLowerCase();
 
   return _self === _compareWith;
 };
@@ -38,45 +37,51 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
 /**
  * Constructor for proposing branded token
  *
- * @param {object} params - this is params 
+ * @param {object} params - this is params
  * @param {object} params.bt_symbol - branded token symbol
  * @param {object} params.bt_name - branded token name
  * @param {object} params.bt_conversion_factor - branded token conversion factor
- 
+ * @param {string} params.config_strategy_file_path - path to file containing config strategy
  
  *
  * @constructor
  */
-const RegisterBTKlass = function (params) {
+const RegisterBTKlass = function(params) {
   const oThis = this;
 
   oThis.btName = params.bt_name; // branded token name
   oThis.btSymbol = params.bt_symbol; // branded token symbol
   oThis.btConversionFactor = params.bt_conversion_factor; // branded token to OST conversion factor, 1 OST = 10 ACME
-  
+  oThis.config_strategy_file_path = params.config_strategy_file_path;
+
   oThis.reserveAddress = ''; // Member company address (will be generated and populated)
   oThis.reservePassphrase = 'acmeOnopenST'; // Member company address passphrase
 
   oThis.uuid = ''; // Member company uuid (will be generated and populated)
   oThis.erc20 = ''; // Member company ERC20 contract address (will be generated and populated)
+
+  let configStrategy = oThis.config_strategy_file_path
+    ? require(oThis.config_strategy_file_path)
+    : require(setupHelper.configStrategyFilePath());
+  oThis.ic = new InstanceComposer(configStrategy);
 };
 
 RegisterBTKlass.prototype = {
   /**
    * Start BT proposal
    */
-  perform: async function () {
+  perform: async function() {
     const oThis = this;
 
     // Validate new branded token
-    logger.step("** Validating branded token");
+    logger.step('** Validating branded token');
     await oThis._validateBrandedTokenDetails();
 
     // Generate reserve address
-    logger.step("** Generating reserve address");
+    logger.step('** Generating reserve address');
     var addressRes = await oThis._generateAddress();
     oThis.reserveAddress = addressRes.data.address;
-    logger.info("* address:", oThis.reserveAddress);
+    logger.info('* address:', oThis.reserveAddress);
 
     // Start the BT proposal
     var proposeRes = await oThis._propose();
@@ -88,15 +93,14 @@ RegisterBTKlass.prototype = {
     oThis.erc20 = registrationStatus['erc20_address'];
 
     // Add branded token to config file
-    logger.step("** Updating branded token config file");
+    logger.step('** Updating branded token config file');
     await oThis._updateBrandedTokenConfig();
 
     // Allocating shard for storage of token balances
-    logger.step("** Allocating shard for storage of token balances");
+    logger.step('** Allocating shard for storage of token balances');
     await oThis._allocateShard();
 
     process.exit(0);
-
   },
 
   /**
@@ -106,12 +110,13 @@ RegisterBTKlass.prototype = {
    * @private
    */
   _generateAddress: async function() {
-    const oThis = this
-    ;
-    const addressObj = new generateAddress({chain: 'utility', passphrase: oThis.reservePassphrase})
-      , addressResponse = await addressObj.perform();
+    const oThis = this,
+      generateAddress = oThis.ic.getGenerateAddressService();
+
+    const addressObj = new generateAddress({ chain: 'utility', passphrase: oThis.reservePassphrase }),
+      addressResponse = await addressObj.perform();
     if (addressResponse.isFailure()) {
-      logger.error("* Reserve address generation failed with error:", addressResponse);
+      logger.error('* Reserve address generation failed with error:', addressResponse);
       process.exit(1);
     }
     return Promise.resolve(addressResponse);
@@ -124,16 +129,19 @@ RegisterBTKlass.prototype = {
    * @private
    */
   _propose: async function() {
-    const oThis = this
-    ;
-    logger.step("** Starting BT proposal");
-    logger.info("* Name:", oThis.btName, "Symbol:", oThis.btSymbol, "Conversion Factor:", oThis.btConversionFactor);
-    const proposeBTObj = new proposeBrandedToken(
-      {name: oThis.btName, symbol: oThis.btSymbol, conversion_factor: oThis.btConversionFactor}
-    );
+    const oThis = this,
+      proposeBrandedToken = oThis.ic.getProposeBrandedTokenKlassClass();
+
+    logger.step('** Starting BT proposal');
+    logger.info('* Name:', oThis.btName, 'Symbol:', oThis.btSymbol, 'Conversion Factor:', oThis.btConversionFactor);
+    const proposeBTObj = new proposeBrandedToken({
+      name: oThis.btName,
+      symbol: oThis.btSymbol,
+      conversion_factor: oThis.btConversionFactor
+    });
     const proposeBTResponse = await proposeBTObj.perform();
     if (proposeBTResponse.isFailure()) {
-      logger.error("* Proposal failed with error:", proposeBTResponse);
+      logger.error('* Proposal failed with error:', proposeBTResponse.getDebugData());
       process.exit(1);
     }
     return Promise.resolve(proposeBTResponse);
@@ -148,16 +156,15 @@ RegisterBTKlass.prototype = {
    *
    */
   _checkProposeStatus: function(transaction_hash) {
-    const oThis = this
-      , timeInterval = 5000
-      , proposeSteps = {is_proposal_done: 0, is_registered_on_uc: 0, is_registered_on_vc: 0}
-    ;
+    const oThis = this,
+      getRegistrationStatus = oThis.ic.getRegistrationStatusService(),
+      timeInterval = 5000,
+      proposeSteps = { is_proposal_done: 0, is_registered_on_uc: 0, is_registered_on_vc: 0 };
 
-    return new Promise(function(onResolve, onReject){
-
-      logger.step("** Monitoring BT proposal status");
-      const statusObj = new getRegistrationStatus({transaction_hash: transaction_hash});
-      var statusTimer = setInterval(async function () {
+    return new Promise(function(onResolve, onReject) {
+      logger.step('** Monitoring BT proposal status');
+      const statusObj = new getRegistrationStatus({ transaction_hash: transaction_hash });
+      var statusTimer = setInterval(async function() {
         var statusResponse = await statusObj.perform();
         if (statusResponse.isFailure()) {
           logger.error(statusResponse);
@@ -182,9 +189,7 @@ RegisterBTKlass.prototype = {
           }
         }
       }, timeInterval);
-
     });
-
   },
 
   /**
@@ -194,17 +199,16 @@ RegisterBTKlass.prototype = {
    * @private
    */
   _validateBrandedTokenDetails: async function() {
-    const oThis = this
-      , existingBrandedTokens = await oThis._loadBrandedTokenConfig()
-    ;
+    const oThis = this,
+      existingBrandedTokens = await oThis._loadBrandedTokenConfig();
     for (var uuid in existingBrandedTokens) {
       var brandedToken = existingBrandedTokens[uuid];
       if (oThis.btName.equalsIgnoreCase(brandedToken.Name)) {
-        logger.error("* Branded token name already registered and present in BT config file");
+        logger.error('* Branded token name already registered and present in BT config file');
         process.exit(1);
       }
       if (oThis.btSymbol.equalsIgnoreCase(brandedToken.Symbol)) {
-        logger.error("* Branded token symbol already registered and present in BT config file");
+        logger.error('* Branded token symbol already registered and present in BT config file');
         process.exit(1);
       }
     }
@@ -218,12 +222,11 @@ RegisterBTKlass.prototype = {
    * @private
    */
   _updateBrandedTokenConfig: async function() {
-    const oThis = this
-      , existingBrandedTokens = await oThis._loadBrandedTokenConfig()
-    ;
+    const oThis = this,
+      existingBrandedTokens = await oThis._loadBrandedTokenConfig();
 
     if (existingBrandedTokens[oThis.uuid]) {
-      logger.error("* Branded token uuid already registered and present in BT config file");
+      logger.error('* Branded token uuid already registered and present in BT config file');
       process.exit(1);
     }
 
@@ -237,7 +240,7 @@ RegisterBTKlass.prototype = {
       ERC20: oThis.erc20
     };
 
-    logger.info("* Branded token config:", existingBrandedTokens[oThis.uuid]);
+    logger.info('* Branded token config:', existingBrandedTokens[oThis.uuid]);
 
     return tokenHelper.addBrandedToken(existingBrandedTokens);
   },
@@ -249,12 +252,11 @@ RegisterBTKlass.prototype = {
    * @private
    */
   _allocateShard: async function() {
-    const oThis = this
-    ;
+    const oThis = this,
+      openSTStorageProvider = oThis.ic.getStorageProvider(),
+      openSTStorage = openSTStorageProvider.getInstance();
 
-    await new openSTStorage.TokenBalanceModel({
-      ddb_service: ddbServiceObj,
-      auto_scaling: autoScalingServiceObj,
+    await new openSTStorage.model.TokenBalance({
       erc20_contract_address: oThis.erc20
     }).allocate();
   },
@@ -270,12 +272,17 @@ RegisterBTKlass.prototype = {
   }
 };
 
-const args = process.argv
-  , btName = args[2]
-  , btSymbol = args[3]
-  , btConversionFactor = args[4]  
-;
+const args = process.argv,
+  btName = args[2],
+  btSymbol = args[3],
+  btConversionFactor = args[4],
+  configStrategyFilePath = args[5];
 
 // Start Registration
-const services = new RegisterBTKlass({bt_name: btName, bt_symbol: btSymbol, bt_conversion_factor: btConversionFactor});
+const services = new RegisterBTKlass({
+  bt_name: btName,
+  bt_symbol: btSymbol,
+  bt_conversion_factor: btConversionFactor,
+  config_strategy_file_path: configStrategyFilePath
+});
 services.perform();

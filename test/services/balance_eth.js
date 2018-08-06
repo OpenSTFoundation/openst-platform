@@ -1,6 +1,6 @@
 /**
  *
- * Test for Simple Token balance Service
+ * Test for Eth balance Service
  *
  */
 
@@ -16,50 +16,53 @@ const rootPrefix = '../..',
   setupHelper = require(rootPrefix + '/tools/setup/helper'),
   configStrategy = require(setupHelper.configStrategyFilePath()),
   openstPlatform = new OpenstPlatform(configStrategy),
-  platformServices = openstPlatform.services.balance;
+  platformServices = openstPlatform.services.balance,
+  brandedTokenConfigPath = os.homedir() + '/openst-setup/branded_tokens.json',
+  brandedTokenConfig = require(brandedTokenConfigPath);
 
+var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]];
 var testValidData = {
-  address: configStrategy.OST_UTILITY_CHAIN_OWNER_ADDR
+  address: brandedTokenDetails['Reserve']
 };
 
-describe('services/balance/simple_token', function() {
+describe('services/balance/eth', function() {
   it('should return promise', async function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
-    var simpleTokenObj = new platformServices.simpleToken(dupData),
-      response = simpleTokenObj.perform();
+    var ethObj = new platformServices.eth(dupData),
+      response = ethObj.perform();
     assert.typeOf(response, 'Promise');
   });
 
   it('should fail when params is undefined', async function() {
     var dupData = undefined;
 
-    var simpleTokenObj = new platformServices.simpleToken(dupData),
-      response = await simpleTokenObj.perform();
+    var ethObj = new platformServices.eth(dupData),
+      response = await ethObj.perform();
     assert.equal(response.isSuccess(), false);
   });
 
   it('should fail when params is a string', async function() {
     var dupData = 'abc';
 
-    var simpleTokenObj = new platformServices.simpleToken(dupData),
-      response = await simpleTokenObj.perform();
+    var ethObj = new platformServices.eth(dupData),
+      response = await ethObj.perform();
     assert.equal(response.isSuccess(), false);
   });
 
   it('should fail when params is empty object', async function() {
     var dupData = {};
 
-    var simpleTokenObj = new platformServices.simpleToken(dupData),
-      response = await simpleTokenObj.perform();
+    var ethObj = new platformServices.eth(dupData),
+      response = await ethObj.perform();
     assert.equal(response.isSuccess(), false);
   });
 
   it('should fail when params is empty array', async function() {
     var dupData = [];
 
-    var simpleTokenObj = new platformServices.simpleToken(dupData),
-      response = await simpleTokenObj.perform();
+    var ethObj = new platformServices.eth(dupData),
+      response = await ethObj.perform();
     assert.equal(response.isSuccess(), false);
   });
 
@@ -68,8 +71,8 @@ describe('services/balance/simple_token', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.address = '';
 
-    var simpleTokenObj = new platformServices.simpleToken(dupData),
-      response = await simpleTokenObj.perform();
+    var ethObj = new platformServices.eth(dupData),
+      response = await ethObj.perform();
     assert.equal(response.isSuccess(), false);
   });
 
@@ -77,18 +80,17 @@ describe('services/balance/simple_token', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.address = '0xh32323';
 
-    var simpleTokenObj = new platformServices.simpleToken(dupData),
-      response = await simpleTokenObj.perform();
+    var ethObj = new platformServices.eth(dupData),
+      response = await ethObj.perform();
     assert.equal(response.isSuccess(), false);
   });
 
-  // Success Variations
-
+  //Success variations
   it('should pass when everything is valid', async function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
-    var simpleTokenObj = new platformServices.simpleToken(dupData),
-      response = await simpleTokenObj.perform();
+    var ethObj = new platformServices.eth(dupData),
+      response = await ethObj.perform();
     assert.equal(response.isSuccess(), true);
     assert.isNotNull(response.data.balance);
   });

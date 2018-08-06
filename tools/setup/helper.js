@@ -1,25 +1,23 @@
-"use strict";
+'use strict';
 /**
  * Setup Helper
  *
  * @module tools/setup/helper
  */
 
-const shell = require('shelljs')
-  , Path = require('path')
-  , os = require('os')
-;
+const shell = require('shelljs'),
+  Path = require('path'),
+  os = require('os');
 
-const rootPrefix = "../.."
-  , setupConfig = require(rootPrefix + '/tools/setup/config')
-;
+const rootPrefix = '../..',
+  setupConfig = require(rootPrefix + '/tools/setup/config');
 
 /**
  * Setup Helper Constructor
  *
  * @constructor
  */
-const SetupHelperKlass = function () {};
+const SetupHelperKlass = function() {};
 
 SetupHelperKlass.prototype = {
   /**
@@ -44,7 +42,7 @@ SetupHelperKlass.prototype = {
    */
   setupFolderAbsolutePath: function() {
     const oThis = this;
-    return setupConfig.setup_path + "/" + oThis.setupFolder();
+    return setupConfig.setup_path + '/' + oThis.setupFolder();
   },
 
   /**
@@ -55,7 +53,7 @@ SetupHelperKlass.prototype = {
    */
   logsFolderAbsolutePath: function() {
     const oThis = this;
-    return oThis.setupFolderAbsolutePath() + "/" + oThis.logsFolder();
+    return oThis.setupFolderAbsolutePath() + '/' + oThis.logsFolder();
   },
 
   /**
@@ -66,7 +64,7 @@ SetupHelperKlass.prototype = {
    */
   binFolderAbsolutePath: function() {
     const oThis = this;
-    return oThis.setupFolderAbsolutePath() + "/" + oThis.binFolder();
+    return oThis.setupFolderAbsolutePath() + '/' + oThis.binFolder();
   },
 
   /**
@@ -87,7 +85,7 @@ SetupHelperKlass.prototype = {
    *
    */
   logsFolder: function() {
-    return "logs";
+    return 'logs';
   },
 
   /**
@@ -97,7 +95,7 @@ SetupHelperKlass.prototype = {
    *
    */
   binFolder: function() {
-    return "bin";
+    return 'bin';
   },
 
   /**
@@ -107,7 +105,7 @@ SetupHelperKlass.prototype = {
    *
    */
   setupFolder: function() {
-    return "openst-setup";
+    return 'openst-setup';
   },
 
   /**
@@ -127,10 +125,19 @@ SetupHelperKlass.prototype = {
    *
    */
   intercomProcessIdentifiers: function() {
-    return ["register_branded_token",
-      "stake_and_mint", "stake_and_mint_processor"];
-  }
+    return ['register_branded_token', 'stake_and_mint', 'stake_and_mint_processor'];
+  },
 
+  /**
+   * config strategy file path
+   *
+   * @return {string}
+   *
+   */
+  configStrategyFilePath: function() {
+    const oThis = this;
+    return oThis.setupFolderAbsolutePath() + '/' + setupConfig.openst_platform_config_file;
+  }
 };
 
 module.exports = new SetupHelperKlass();

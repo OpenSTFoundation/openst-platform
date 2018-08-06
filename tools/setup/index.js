@@ -1,33 +1,38 @@
-"use strict";
+'use strict';
 
 /**
  * Start the OpenST Setup step-by-step
  */
 
-const rootPrefix = "../.."
-    , performer = require(rootPrefix + '/tools/setup/performer')
-    , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  ;
+const rootPrefix = '../..',
+  logger = require(rootPrefix + '/helpers/custom_console_logger'),
+  InstanceComposer = require(rootPrefix + '/instance_composer');
 
-var run = async function(step){
+require(rootPrefix + '/tools/setup/performer');
 
+const run = async function(step, config) {
+  const instanceComposer = new InstanceComposer(config || {}),
+    performer = instanceComposer.getOpenSTSetup();
+  console.log('step', step);
   await performer.perform(step);
-
   process.exit(0);
-}
+};
 
-var args = process.argv.slice(2)
-  , step = args[0]
-;
+const program = require('commander');
 
-run(step||'all');
+program
+  .description('Setup OpenST-Platfomr')
+  .option(
+    '-s, --step <step>',
+    'Step to be performed. (all|setup|init|st_contract|registrar|stake_n_mint|st_prime_mint|end)',
+    /^(all|setup|init|st_contract|fund_users_with_st|deploy_platform_contracts|registrar|stake_n_mint|st_prime_mint|end)$/i,
+    'all'
+  )
+  .option('-c, --config <path>', 'Json Config file path.');
 
-// To run step-by-step follow following order:
+program.parse(process.argv);
 
-// run('setup');
-// run('init');
-// run('st_contract');
-// run('registrar');
-// run('stake_n_mint');
-// run('st_prime_mint');
-// run('end');
+const step = program.step;
+console.log('step', step);
+const config = program.path ? require(program.path) : {};
+run(step || 'all', config);

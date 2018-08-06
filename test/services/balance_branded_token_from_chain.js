@@ -1,6 +1,6 @@
 /**
  *
- * Test for Branded Token balance Service
+ * Test for Branded Token from chain balance Service
  *
  */
 
@@ -22,48 +22,48 @@ const rootPrefix = '../..',
 
 var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]];
 var testValidData = {
-  address: brandedTokenDetails['Reserve'],
-  erc20_address: brandedTokenDetails['ERC20']
+  erc20_address: brandedTokenDetails['ERC20'],
+  address: brandedTokenDetails['Reserve']
 };
 
 describe('services/balance/branded_token', function() {
   it('should return promise', async function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData),
-      response = brandedTokenObj.perform();
+    var brandedTokenFromChainObj = new platformServices.brandedTokenFromChain(dupData),
+      response = brandedTokenFromChainObj.perform();
     assert.typeOf(response, 'Promise');
   });
 
   it('should fail when params is undefined', async function() {
     var dupData = undefined;
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData),
-      response = await brandedTokenObj.perform();
+    var brandedTokenFromChainObj = new platformServices.brandedTokenFromChain(dupData),
+      response = await brandedTokenFromChainObj.perform();
     assert.equal(response.isSuccess(), false);
   });
 
   it('should fail when params is a string', async function() {
     var dupData = 'abc';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData),
-      response = await brandedTokenObj.perform();
+    var brandedTokenFromChainObj = new platformServices.brandedTokenFromChain(dupData),
+      response = await brandedTokenFromChainObj.perform();
     assert.equal(response.isSuccess(), false);
   });
 
   it('should fail when params is empty object', async function() {
     var dupData = {};
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData),
-      response = await brandedTokenObj.perform();
+    var brandedTokenFromChainObj = new platformServices.brandedTokenFromChain(dupData),
+      response = await brandedTokenFromChainObj.perform();
     assert.equal(response.isSuccess(), false);
   });
 
   it('should fail when params is empty array', async function() {
     var dupData = [];
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData),
-      response = await brandedTokenObj.perform();
+    var brandedTokenFromChainObj = new platformServices.brandedTokenFromChain(dupData),
+      response = await brandedTokenFromChainObj.perform();
     assert.equal(response.isSuccess(), false);
   });
 
@@ -72,8 +72,8 @@ describe('services/balance/branded_token', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.address = '';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData),
-      response = await brandedTokenObj.perform();
+    var brandedTokenFromChainObj = new platformServices.brandedTokenFromChain(dupData),
+      response = await brandedTokenFromChainObj.perform();
     assert.equal(response.isSuccess(), false);
   });
 
@@ -81,8 +81,8 @@ describe('services/balance/branded_token', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.address = '0xh32323';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData),
-      response = await brandedTokenObj.perform();
+    var brandedTokenFromChainObj = new platformServices.brandedTokenFromChain(dupData),
+      response = await brandedTokenFromChainObj.perform();
     assert.equal(response.isSuccess(), false);
   });
 
@@ -91,8 +91,8 @@ describe('services/balance/branded_token', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.erc20_address = '';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData),
-      response = await brandedTokenObj.perform();
+    var brandedTokenFromChainObj = new platformServices.brandedTokenFromChain(dupData),
+      response = await brandedTokenFromChainObj.perform();
     assert.equal(response.isSuccess(), false);
   });
 
@@ -100,8 +100,8 @@ describe('services/balance/branded_token', function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
     dupData.erc20_address = '0x2323';
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData),
-      response = await brandedTokenObj.perform();
+    var brandedTokenFromChainObj = new platformServices.brandedTokenFromChain(dupData),
+      response = await brandedTokenFromChainObj.perform();
     assert.equal(response.isSuccess(), false);
   });
 
@@ -110,8 +110,8 @@ describe('services/balance/branded_token', function() {
   it('should pass when everything is valid', async function() {
     var dupData = JSON.parse(JSON.stringify(testValidData));
 
-    var brandedTokenObj = new platformServices.brandedToken(dupData),
-      response = await brandedTokenObj.perform();
+    var brandedTokenFromChainObj = new platformServices.brandedTokenFromChain(dupData),
+      response = await brandedTokenFromChainObj.perform();
     assert.equal(response.isSuccess(), true);
     assert.isNotNull(response.data.balance);
   });
