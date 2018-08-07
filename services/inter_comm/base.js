@@ -59,7 +59,7 @@ IntercomBaseKlass.prototype = {
       const highestBlock = await this.getChainHighestBlock();
 
       // return if nothing more to do.
-      if (highestBlock - 6 <= oThis.lastProcessedBlock) return oThis.schedule();
+      if (highestBlock - 6 <= oThis.snmData.lastProcessedBlock) return oThis.schedule();
 
       // consider case in which last block was not processed completely
 
