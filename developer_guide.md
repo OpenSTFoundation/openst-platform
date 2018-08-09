@@ -39,9 +39,7 @@ let sObj = new Service({
   sender_passphrase: 'acmeOnopenST',
   recipient_address: '0x38e1983a9b5bef2f0dc03e87c5d806e775437fb8',
   amount_in_wei: '1000000000000000000',
-  options: {
-    tag: 'upvote'
-  }
+  options: {tag: 'upvote'}
 });
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
@@ -56,7 +54,8 @@ let sObj = new Service({
   sender_address: '0x8eC6FdCa06ff0FD945cDAC0F80122a01bd564da7',
   sender_passphrase: 'acmeOnopenST',
   recipient_address: '0x38e1983a9b5bef2f0dc03e87c5d806e775437fb8',
-  amount_in_wei: '1000000000000000000'
+  amount_in_wei: '1000000000000000000',
+  options: {tag: 'options'}
 });
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
@@ -71,7 +70,8 @@ let sObj = new Service({
   sender_address: '0x8eC6FdCa06ff0FD945cDAC0F80122a01bd564da7',
   sender_passphrase: 'acmeOnopenST',
   recipient_address: '0x38e1983a9b5bef2f0dc03e87c5d806e775437fb8',
-  amount_in_wei: '1000000000000000000'
+  amount_in_wei: '1000000000000000000',
+  options: {tag: 'options'}
 });
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
@@ -86,7 +86,8 @@ let sObj = new Service({
   sender_address: '0x8eC6FdCa06ff0FD945cDAC0F80122a01bd564da7',
   sender_passphrase: 'acmeOnopenST',
   recipient_address: '0x38e1983a9b5bef2f0dc03e87c5d806e775437fb8',
-  amount_in_wei: '1000000000000000000'
+  amount_in_wei: '1000000000000000000',
+  options: {tag: 'options'}
 });
 sObj.perform().then(function(r){console.log(JSON.stringify(r))});
 ```
