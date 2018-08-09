@@ -11,6 +11,7 @@ const rootPrefix = '..',
 
 // Approve related services
 require(rootPrefix + '/services/approve/branded_token');
+require(rootPrefix + '/services/approve/get_allowance');
 
 // Transaction related services
 require(rootPrefix + '/services/transaction/get_receipt');
@@ -61,6 +62,7 @@ const ServiceManifestKlass = function(configStrategy, instanceComposer) {
    **/
   let approve = (oThis.approve = {});
   approve.brandedToken = instanceComposer.getApproveBrandedTokenService();
+  approve.getAllowance = instanceComposer.getAllowanceService();
 
   /**
    * Transactions related services

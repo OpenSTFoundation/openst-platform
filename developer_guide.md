@@ -24,6 +24,21 @@ const openSTPlatform = new OpenStPlatform(configStrategies);
 ### OpenST-Platform Services
 We will now go one by one into each of the services. Specifically, we will look into what the service does and one example code usage.
 
+
+#### Approve related services
+
+#### Get Allowance service
+
+```js
+let Service = openSTPlatform.services.approve.getAllowance;
+let sObj = new Service({
+  erc20_address: '0xb65FFE52F9a9AACc5Cb6f210A874D0A77c4223B1',
+  owner_address: '0x148c7437DA4361F963096480F8B543279A1F82A4',
+  spender_address: '0x7E0271D9DE2e6649cb589071F5efd1c9f021F6DC'
+});
+sObj.perform().then(function(r){console.log(JSON.stringify(r))});
+```
+
 #### Transfer related services
 
 ##### Transfer BT service
