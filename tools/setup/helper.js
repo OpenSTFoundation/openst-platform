@@ -79,6 +79,16 @@ SetupHelperKlass.prototype = {
   },
 
   /**
+   * get the data folder name
+   *
+   * @return {string}
+   *
+   */
+  dataFolder: function() {
+    return 'data';
+  },
+
+  /**
    * get the logs folder name
    *
    * @return {string}
@@ -106,6 +116,100 @@ SetupHelperKlass.prototype = {
    */
   setupFolder: function() {
     return 'openst-setup';
+  },
+
+  /**
+   * master GETH folder
+   *
+   * @return {string}
+   *
+   */
+  masterGethFolder: function() {
+    return 'all-geths';
+  },
+
+  /**
+   * GETH folder for a particular chain
+   *
+   * @param {string} chain
+   * @return {string}
+   *
+   */
+  gethFolderFor: function(chain) {
+    const oThis = this;
+
+    let folderName = setupConfig.chains[chain].folder_name;
+
+    folderName = folderName + '-' + oThis.chainIdFor(chain);
+
+    return oThis.masterGethFolder() + '/' + folderName;
+  },
+
+  /**
+   * chain id for a particular chain
+   *
+   * @param {string} chain
+   * @return {number}
+   */
+  chainIdFor: function(chain) {
+    const oThis = this;
+
+    if (chain === 'value') {
+      return oThis.valueChainId();
+    } else {
+      return oThis.utilityChainId();
+    }
+  },
+
+  /**
+   * utility chain id
+   *
+   * @return {number}
+   */
+  utilityChainId: function() {
+    return setupConfig.chains.utility.chain_id.value;
+  },
+
+  /**
+   * value chain id
+   *
+   * @return {number}
+   */
+  valueChainId: function() {
+    return setupConfig.chains.value.chain_id.value;
+  },
+
+  /**
+   * utility chain logs files folder
+   *
+   * @return {number}
+   */
+  utilityChainLogsFilesFolder: function() {
+    const oThis = this;
+
+    return oThis.logsFolder() + '/' + 'utility-chain-' + oThis.utilityChainId();
+  },
+
+  /**
+   * utility chain data files folder
+   *
+   * @return {number}
+   */
+  utilityChainDataFilesFolder: function() {
+    const oThis = this;
+
+    return oThis.dataFolder() + '/' + 'utility-chain-' + oThis.utilityChainId();
+  },
+
+  /**
+   * intercomm data file folder
+   *
+   * @return {number}
+   */
+  utilityChainBinFilesFolder: function() {
+    const oThis = this;
+
+    return oThis.binFolder() + '/' + 'utility-chain-' + oThis.utilityChainId();
   },
 
   /**
@@ -137,6 +241,16 @@ SetupHelperKlass.prototype = {
   configStrategyFilePath: function() {
     const oThis = this;
     return oThis.setupFolderAbsolutePath() + '/' + setupConfig.openst_platform_config_file;
+  },
+
+  /**
+   * allocated addresses file path
+   *
+   * @return {string}
+   */
+  allocatedAddressFilePath: function() {
+    const oThis = this;
+    return oThis.setupFolderAbsolutePath() + '/' + setupConfig.allocated_addresses_file_path;
   }
 };
 

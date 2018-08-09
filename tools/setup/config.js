@@ -10,6 +10,7 @@ const setupConfig = {
   // Platform environment variables filename
   env_vars_file: process.env.OST_SETUP_ENV_FILE || 'openst_env_vars.sh', //Editable
   openst_platform_config_file: process.env.OST_PLATFROM_CONFIG_JSON || 'openst_platform_config.json', //Editable
+  allocated_addresses_file_path: 'allocated_addresses.json',
   setup_path: process.env.OST_SETUP_PATH || os.homedir(),
 
   /**
@@ -297,7 +298,7 @@ const setupConfig = {
     // Sealer address
     sealer: {
       address: {
-        env_var: '',
+        env_var: 'OST_SEALER_ADDR',
         value: ''
       },
       passphrase: {

@@ -6,7 +6,7 @@ const shellSource = require('shell-source'),
   Path = require('path');
 
 // load shelljs and disable output
-var shell = require('shelljs');
+const shell = require('shelljs');
 shell.config.silent = true;
 
 const rootPrefix = '../..',
@@ -43,23 +43,28 @@ OpenSTSetup.prototype = {
     const oThis = this,
       validSteps = [
         'all',
-        'setup',
-        'init',
+        'fresh_setup',
+        'generate_addresses',
+        'init_value_chain',
         'st_contract',
         'fund_users_with_st',
-        'deploy_platform_contracts',
+        'deploy_value_chain',
+
+        'init_utility_chain',
+        'dynamo_db_init',
+        'deploy_utility_chain',
         'snm_intercomm',
         'snmp_intercomm',
         'st_prime_mint',
         'end'
       ];
 
-    if (validSteps.indexOf(step) == -1) {
+    if (validSteps.indexOf(step) === -1) {
       logger.error('\n!!! Invalid step !!!\n Step should be one of the following: [', validSteps.join(', '), ']\n');
       return;
     }
 
-    if (step == 'setup' || step == 'all') {
+    if (step === 'fresh_setup' || step === 'all') {
       // Stop running services
       logger.step('** Stopping openST services');
       oThis.serviceManager.stopServices();
@@ -69,49 +74,91 @@ OpenSTSetup.prototype = {
       fileManager.freshSetup();
     }
 
-    if (step == 'init' || step == 'all') {
+    if (step === 'generate_addresses' || step === 'all') {
+      // Creating temp GETH folder
+      oThis.gethManager.createTempGethFolder();
+
       // generate all pre init required addresses
-      logger.step('** Generating all pre init required account keystore files at temp location');
+      logger.step('** Generating sealer address keystore files at temp location');
       oThis.gethManager.generatePreInitAddresses();
 
       // generate all required addresses
       logger.step('** Generating all required accounts.');
-      var addresses = oThis.gethManager.generateAddresses(options);
+      let allocatedAddresses = oThis.gethManager.generateAddresses(options);
 
-      // Modify genesis files and init chains
-      for (var chain in setupConfig.chains) {
-        logger.step('** Initiating ' + chain + ' chain and generating/modifying genesis files');
-        oThis.gethManager.initChain(chain);
-      }
+      // save allocated addresses to a file
+      fileManager.createAllocatedAddressFile(allocatedAddresses);
 
-      // Copy addresses to required chains
-      logger.step('** Copying keystore files from temp location to required chains');
-      oThis.gethManager.copyPreInitAddressesToChains();
-
-      // Start services for deployment
-      logger.step('** Starting openST services for deployment');
-      oThis.serviceManager.startServices('deployment');
-
-      // Write environment file
+      // Write config file
       logger.step('** Writing env variables file');
       envManager.generateConfigFile('deployment');
+    }
+
+    if (step === 'init_value_chain' || step === 'all') {
+      // Modify genesis files and init value chain
+      logger.step('** Initiating value chain and generating/modifying genesis files');
+      oThis.gethManager.initChain('value');
+
+      // Copy addresses to value chain
+      logger.step('** Copying keystore files from temp location to value chain');
+      oThis.gethManager.copyPreInitAddressesToChain('value');
+
+      // Start services for deployment
+      logger.step('** Starting openST Value GETH server for deployment');
+      oThis.serviceManager.startGeth('value', 'deployment');
 
       // Chains have started mining
-      logger.step('** Checking if chains have started generating blocks');
-      await oThis.performHelperService(oThis.gethChecker);
+      logger.step('** Checking if value chain has started generating blocks');
+      await oThis.performHelperService(oThis.gethChecker, 'isRunning', ['value']);
 
-      // Copy addresses to required chains
-      logger.step('** Convert private keys to keystore files and move to required chains.');
-      oThis.gethManager.importPostInitAddressesToChains(addresses);
+      // Copy addresses to value chain geth folder
+      logger.step('** Convert private keys to keystore files and move to value chain GETH folder.');
+      oThis.gethManager.importPostInitAddressesToChain(fileManager.getAllocatedAddresses(), 'value');
 
       // Write environment file
       logger.step('** Writing env variables file');
       envManager.generateConfigFile();
 
       // Fund required addresses
-      logger.step('** Funding required addresses');
+      logger.step('** Funding required addresses with ETH');
       await oThis.performHelperService(oThis.fundUsers);
+    }
 
+    if (step === 'init_utility_chain' || step === 'all') {
+      // Utility chain folders setup
+      logger.step('** Utility chain folders setup');
+      fileManager.utilityChainFoldersSetup();
+
+      // Modify genesis files and init utility chain
+      logger.step('** Initiating utility chain and generating/modifying genesis files');
+      oThis.gethManager.initChain('utility');
+
+      // Copy addresses to utility chain
+      logger.step('** Copying keystore files from temp location to utility chain');
+      oThis.gethManager.copyPreInitAddressesToChain('utility');
+
+      // Start services for deployment
+      logger.step('** Starting openST Utility GETH server for deployment');
+      oThis.serviceManager.startGeth('utility', 'deployment');
+
+      // Write environment file
+      logger.step('** Writing env variables file');
+      envManager.generateConfigFile('');
+
+      // Chains have started mining
+      logger.step('** Checking if utility chain has started generating blocks');
+      await oThis.performHelperService(oThis.gethChecker, 'isRunning', ['utility']);
+
+      // Copy addresses to value chain geth folder
+      logger.step('** Convert private keys to keystore files and move to utility chain GETH folder.');
+      oThis.gethManager.importPostInitAddressesToChain(fileManager.getAllocatedAddresses(), 'utility');
+
+      // Write environment file
+      logger.step('** Writing env variables file');
+      envManager.generateConfigFile();
+    }
+
+    if (step === 'dynamo_db_init' || step === 'all') {
       let cmd = "ps aux | grep dynamo | grep -v grep | tr -s ' ' | cut -d ' ' -f2";
       let processId = shell.exec(cmd).stdout;
 
@@ -126,7 +173,7 @@ OpenSTSetup.prototype = {
       await oThis.performHelperService(oThis.dynamoDbInit);
     }
 
-    if (step == 'st_contract' || step == 'all') {
+    if (step === 'st_contract' || step === 'all') {
       // Deploy Simple Token Contract and update ENV
       const stDeployResponse = await oThis.performHelperService(oThis.simpleTokenDeploy);
       setupConfig.contracts['simpleToken'].address.value = stDeployResponse.data.address;
@@ -136,13 +183,13 @@ OpenSTSetup.prototype = {
       await oThis.performHelperService(oThis.finalizeSimpleToken);
     }
 
-    if (step == 'fund_users_with_st' || step == 'all') {
+    if (step === 'fund_users_with_st' || step === 'all') {
       // Fund required addresses
       logger.step('** Funding required addresses with ST');
       await oThis.performHelperService(oThis.fundUsersWithST);
     }
 
-    if (step == 'deploy_platform_contracts' || step == 'all') {
+    if (step === 'deploy_value_chain' || step === 'all') {
       // Deploy Value Registrar Contract and update ENV
       const valueRegistrarDeployResponse = await oThis.performHelperService(oThis.deployValueRegistrarContract);
       setupConfig.contracts['valueRegistrar'].address.value = valueRegistrarDeployResponse.data.address;
@@ -152,7 +199,9 @@ OpenSTSetup.prototype = {
       const openSTValueDeployResponse = await oThis.performHelperService(oThis.openStValueDeployer);
       setupConfig.contracts['openSTValue'].address.value = openSTValueDeployResponse.data.address;
       envManager.generateConfigFile();
+    }
 
+    if (step === 'deploy_utility_chain') {
       // Deploy Utility Registrar Contract and update ENV
       const utilityRegistrarDeployResponse = await oThis.performHelperService(oThis.utilityRegistrarDeployer);
       setupConfig.contracts['utilityRegistrar'].address.value = utilityRegistrarDeployResponse.data.address;
@@ -178,14 +227,14 @@ OpenSTSetup.prototype = {
       await oThis.performHelperService(oThis.registerStPrime);
     }
 
-    if (step == 'snm_intercomm' || step == 'all') {
+    if (step === 'snm_intercomm' || step === 'all') {
       // Starting stake and mint intercomm
       logger.step('** Starting stake and mint intercomm');
       var intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/logs/stake_and_mint.data';
       await oThis.serviceManager.startExecutable('executables/inter_comm/stake_and_mint.js ' + intercomProcessDataFile);
     }
 
-    if (step == 'snmp_intercomm' || step == 'all') {
+    if (step === 'snmp_intercomm' || step === 'all') {
       // Starting stake and mint processor intercomm
       logger.step('** Starting stake and mint processor intercomm');
       var intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/logs/stake_and_mint_processor.data';
@@ -194,7 +243,7 @@ OpenSTSetup.prototype = {
       );
     }
 
-    if (step == 'st_prime_mint' || step == 'all') {
+    if (step === 'st_prime_mint' || step === 'all') {
       // Stake and mint simple token prime
       await oThis.performHelperService(oThis.stPrimeMinter);
 
@@ -203,7 +252,7 @@ OpenSTSetup.prototype = {
       await oThis.performHelperService(oThis.fundUsersWithSTPrime);
     }
 
-    if (step == 'end' || step == 'all') {
+    if (step === 'end' || step === 'all') {
       // Cleanup build files
       logger.step('** Cleaning temporary build files');
       oThis.gethManager.buildCleanup();
@@ -220,7 +269,10 @@ OpenSTSetup.prototype = {
 
     return Promise.resolve(setupConfig);
   },
-  performHelperService: function(service) {
+
+  performHelperService: function(service, methodName, args) {
+    methodName = methodName || 'perform';
+
     const oThis = this;
 
     //1. Reload the config.
@@ -232,7 +284,7 @@ OpenSTSetup.prototype = {
     oThis.ic().getCoreConstants();
     oThis.ic().getCoreAddresses();
 
-    return service.perform();
+    return service[methodName].apply(service, args || []);
   }
 };
 
@@ -323,47 +375,6 @@ Object.defineProperties(OpenSTSetup.prototype, {
     }
   }
 });
-
-/*
-  const oThis = this;
-
-  //1. Reload the config.
-  oThis.ic().configStrategy = fileManager.getPlatformConfig();
-
-
-  const setupHelper = require(deployPath);
-  return setupHelper.perform();
-
-*/
-
-/**
- * Run the deployer helper service
- *
- * @param {string} deployPath - contract deployment script path
- *
- * @return {promise}
- */
-const runHelperService = function(deployPath) {
-  const envFilePath = setupHelper.setupFolderAbsolutePath() + '/' + setupConfig.env_vars_file,
-    clearCacheOfExpr = /(openst-platform\/config\/)|(openst-platform\/lib\/)|(openst-platform\/services\/)/;
-
-  return new Promise(function(onResolve, onReject) {
-    // source env
-    shellSource(envFilePath, async function(err) {
-      if (err) {
-        throw err;
-      }
-      Object.keys(require.cache).forEach(function(key) {
-        if (key.search(clearCacheOfExpr) !== -1) {
-          delete require.cache[key];
-        }
-      });
-
-      const setupHelper = require(deployPath);
-      return onResolve(await setupHelper.perform());
-    });
-  });
-};
 
 // Start the platform setup
 logger.error(Array(30).join('='));

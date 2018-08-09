@@ -29,7 +29,7 @@ GethCheckerKlass.prototype = {
       promiseArray = [];
 
     for (var chain in setupConfig.chains) {
-      promiseArray.push(oThis._isRunning(chain));
+      promiseArray.push(oThis.isRunning(chain));
     }
     return Promise.all(promiseArray);
   },
@@ -41,7 +41,7 @@ GethCheckerKlass.prototype = {
    *
    * @return {promise}
    */
-  _isRunning: function(chain) {
+  isRunning: function(chain) {
     const oThis = this,
       web3ProviderFactory = oThis.ic().getWeb3ProviderFactory(),
       retryAttempts = 100,

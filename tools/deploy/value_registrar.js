@@ -64,11 +64,14 @@ DeployValueRegistrarContractKlass.prototype = {
       ValueRegistrarKlass = oThis.ic().getValueRegistrarInteractClass(),
       deployHelper = oThis.ic().getDeployHelper(),
       valueDeployerName = 'valueDeployer',
+      valueRegistrarUserName = 'valueRegistrar',
       valueRegistrarContractName = 'valueRegistrar',
+      foundationName = 'foundation',
       VC_GAS_PRICE = coreConstants.OST_VALUE_GAS_PRICE,
       VC_GAS_LIMIT = coreConstants.OST_VALUE_GAS_LIMIT,
       deployerAddress = coreAddresses.getAddressForUser(valueDeployerName),
-      valueOpsAddress = coreAddresses.getAddressForUser('valueOps'),
+      valueRegistrarUserAddress = coreAddresses.getAddressForUser(valueRegistrarUserName),
+      foundationAddress = coreAddresses.getAddressForUser(foundationName),
       valueRegistrarContractAbi = coreAddresses.getAbiForContract(valueRegistrarContractName),
       valueRegistrarContractBin = coreAddresses.getBinForContract(valueRegistrarContractName),
       web3Provider = web3ProviderFactory.getProvider('value', web3ProviderFactory.typeWS);
@@ -77,7 +80,7 @@ DeployValueRegistrarContractKlass.prototype = {
     if (showPrompts) {
       // confirming the important addresses
       logger.info('Deployer Address: ' + deployerAddress);
-      logger.info('Value Ops Address: ' + valueOpsAddress);
+      logger.info('Value Registrar Address: ' + valueRegistrarUserAddress);
 
       await new Promise(function(onResolve, onReject) {
         prompts.question('Please verify all above details. Do you want to proceed? [Y/N]', function(intent) {
@@ -109,14 +112,24 @@ DeployValueRegistrarContractKlass.prototype = {
 
     const valueRegistrarContractAddr = contractDeployTxReceipt.contractAddress;
 
-    logger.step('** Setting Ops Address of Value Registrar contract to valueOps address and verifying it');
+    logger.step('** Setting Ops Address of Value Registrar contract to Value Registrar user address and verifying it');
     const valueRegistrar = new ValueRegistrarKlass(valueRegistrarContractAddr);
-    await valueRegistrar.setOpsAddress(valueDeployerName, valueOpsAddress);
+    await valueRegistrar.setOpsAddress(valueDeployerName, valueRegistrarUserAddress, {});
 
     const getOpsAddressResponse = await valueRegistrar.getOpsAddress();
 
-    if (!valueOpsAddress.equalsIgnoreCase(getOpsAddressResponse.data.address)) {
+    if (!valueRegistrarUserAddress.equalsIgnoreCase(getOpsAddressResponse.data.address)) {
       logger.error('Exiting the deployment as opsAddress which was set just before does not match.');
+      process.exit(1);
+    }
+
+    logger.step('** Initiate Ownership Transfer of Value Registrar contract to foundation');
+    await valueRegistrar.initiateOwnerShipTransfer(valueDeployerName, foundationAddress, {});
+
+    const getOwnerResponse = await valueRegistrar.getOwner();
+
+    if (!foundationAddress.equalsIgnoreCase(getOwnerResponse.data.address)) {
+      logger.error("Exiting the deployment as owner address doesn't match");
       process.exit(1);
     }
 

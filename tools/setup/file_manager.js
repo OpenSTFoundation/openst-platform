@@ -22,7 +22,7 @@ const FileManagerKlass = function() {};
 
 FileManagerKlass.prototype = {
   /**
-   * Do the old setup clean up
+   * Fresh setup
    */
   freshSetup: function() {
     const oThis = this;
@@ -35,23 +35,21 @@ FileManagerKlass.prototype = {
     logger.info('* Creating new openST setup folder');
     oThis.mkdir('');
 
-    // Create logs setup folder
-    logger.info('* Creating openST setup logs folder');
+    // Creating logs folder
+    logger.info('* Creating logs folder');
     oThis.mkdir(setupHelper.logsFolder());
 
-    // Create intercom data files in logs folder
-    logger.info('* Creating openST intercom data files');
-    const intercomProcessIdentifiers = setupHelper.intercomProcessIdentifiers();
-    for (var i = 0; i < intercomProcessIdentifiers.length; i++) {
-      oThis.touch(
-        'logs/' + intercomProcessIdentifiers[i] + '.data',
-        '{\\"lastProcessedBlock\\":0,\\"lastProcessedTransactionIndex\\":0}'
-      );
-    }
-
-    // Create bin setup folder
-    logger.info('* Creating openST setup bin folder');
+    // Creating bin folder
+    logger.info('* Creating bin folder');
     oThis.mkdir(setupHelper.binFolder());
+
+    // Creating data folder
+    logger.info('* Creating data folder');
+    oThis.mkdir(setupHelper.dataFolder());
+
+    // Create master GETH folder
+    logger.info('* Creating master GETH folder');
+    oThis.mkdir(setupHelper.masterGethFolder());
 
     // Create empty ENV file
     logger.info('* Create empty ENV file');
@@ -60,6 +58,34 @@ FileManagerKlass.prototype = {
     // Create empty OpenST Platform JSON Config File.
     logger.info('* Create empty ENV file');
     oThis.touch(setupConfig.openst_platform_config_file, '{}');
+  },
+
+  /**
+   * Utility chain folders setup
+   */
+  utilityChainFoldersSetup: function() {
+    const oThis = this;
+
+    // Create intercom data files in logs folder
+    logger.info('* Creating utility chain specific logs folder');
+    oThis.mkdir(setupHelper.utilityChainLogsFilesFolder());
+
+    logger.info('* Creating utility chain specific data folder');
+    oThis.mkdir(setupHelper.utilityChainDataFilesFolder());
+
+    // Create intercom data files in logs folder
+    logger.info('* Creating openST intercom data files');
+    const intercomProcessIdentifiers = setupHelper.intercomProcessIdentifiers();
+    for (let i = 0; i < intercomProcessIdentifiers.length; i++) {
+      oThis.touch(
+        setupHelper.utilityChainDataFilesFolder() + '/' + intercomProcessIdentifiers[i] + '.data',
+        '{\\"lastProcessedBlock\\":0,\\"lastProcessedTransactionIndex\\":0}'
+      );
+    }
+
+    // Create utility chain bin folder
+    logger.info('* Creating utility chain bin folder');
+    oThis.mkdir(setupHelper.utilityChainBinFilesFolder());
   },
 
   /**
@@ -129,11 +155,8 @@ FileManagerKlass.prototype = {
 
   /**
    * Load OpenST Platform Config
-   *
-   * @param {string} configKey - Config Key
-   * @param {string} configValue - Config Value
    */
-  getPlatformConfig: function(configKey, configValue) {
+  getPlatformConfig: function() {
     const filePath = setupHelper.configStrategyFilePath();
 
     // Read Config
@@ -165,6 +188,31 @@ FileManagerKlass.prototype = {
 
     // Write Config
     fs.writeFileSync(filePath, content);
+  },
+
+  /**
+   * Create allocated addresses file
+   *
+   * @param {object} allocatedAddresses
+   */
+  createAllocatedAddressFile: function(allocatedAddresses) {
+    const filePath = setupHelper.allocatedAddressFilePath();
+    let content = JSON.stringify(allocatedAddresses, null, 2);
+    fs.writeFileSync(filePath, content);
+  },
+
+  /**
+   * get allocated addresses from file
+   *
+   * @return {object} allocatedAddresses
+   */
+  getAllocatedAddresses: function() {
+    const filePath = setupHelper.allocatedAddressFilePath();
+
+    let content = fs.readFileSync(filePath),
+      allocatedAddresses = JSON.parse(content);
+
+    return allocatedAddresses;
   }
 };
 

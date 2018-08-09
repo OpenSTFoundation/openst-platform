@@ -41,6 +41,14 @@ const GethManagerKlass = function(configStrategy, instanceComposer) {};
 
 GethManagerKlass.prototype = {
   /**
+   * Create Temp GETH folder
+   */
+  createTempGethFolder: function() {
+    // create temp geth folder
+    fileManager.mkdir(tempGethFolder);
+  },
+
+  /**
    * Do the build clean up
    */
   buildCleanup: function() {
@@ -48,25 +56,6 @@ GethManagerKlass.prototype = {
 
     // remove tmp geth
     fileManager.rm(tempGethFolder);
-  },
-
-  /**
-   * Get chain data dir absolute path
-   *
-   * @return {string}
-   */
-  getChainAbsoluteDataDir: function(chain) {
-    const oThis = this;
-    return setupHelper.setupFolderAbsolutePath() + '/' + oThis.getChainDataFolder(chain);
-  },
-
-  /**
-   * Get chain data folder name
-   *
-   * @return {string}
-   */
-  getChainDataFolder: function(chain) {
-    return setupConfig.chains[chain].folder_name;
   },
 
   /**
@@ -87,15 +76,14 @@ GethManagerKlass.prototype = {
   generatePreInitAddresses: function() {
     const oThis = this;
 
-    // create temp geth folder
-    fileManager.mkdir(tempGethFolder);
-
     // create all required addresses in tmp geth data dir
-    for (var i = 0; i < preInitAddressName.length; i++) {
-      var name = preInitAddressName[i],
-        nameDetails = setupConfig.addresses[name];
-      logger.info('* ' + name + ' address: ');
-      nameDetails.address.value = oThis._generatePreInitAddresses(tempGethFolder, nameDetails.passphrase.value);
+    for (let i = 0; i < preInitAddressName.length; i++) {
+      let name = preInitAddressName[i],
+        nameDetails = setupConfig.addresses[name],
+        address = oThis._generatePreInitAddresses(tempGethFolder, nameDetails.passphrase.value);
+
+      logger.info('* ' + name + ' address:', address);
+      nameDetails.address.value = address;
     }
   },
 
@@ -106,15 +94,14 @@ GethManagerKlass.prototype = {
    */
   initChain: function(chain) {
     const oThis = this,
-      chainFolder = oThis.getChainDataFolder(chain),
-      chainDataDir = oThis.getChainAbsoluteDataDir(chain),
+      chainFolder = setupHelper.gethFolderFor(chain),
+      chainDataDir = setupHelper.setupFolderAbsolutePath() + '/' + setupHelper.gethFolderFor(chain),
       chainGenesisTemplateLocation = genesisTemplateLocation + '/genesis-' + chain + '.json',
       chainGenesisLocation = chainDataDir + '/genesis-' + chain + '.json';
 
     // create chain folder
     logger.info('* Creating ' + chain + ' folder');
     fileManager.mkdir(chainFolder);
-
     // copy genesis template file in chain folder
     logger.info('* Copying ' + chain + ' genesis template file');
     fileManager.exec('cp ' + chainGenesisTemplateLocation + ' ' + chainGenesisLocation);
@@ -131,47 +118,54 @@ GethManagerKlass.prototype = {
   /**
    * Move keystore files from temp geth to required geth instances
    *
+   * @param {string} chain - name of the chain to which the addresses are to be copied
+   *
    * @return {object}
    */
-  copyPreInitAddressesToChains: function() {
+  copyPreInitAddressesToChain: function(chain) {
     const oThis = this;
 
     // copy all keystore files from temp location to required location
-    for (var i = 0; i < preInitAddressName.length; i++) {
-      var name = preInitAddressName[i],
+    for (let i = 0; i < preInitAddressName.length; i++) {
+      let name = preInitAddressName[i],
         nameDetails = setupConfig.addresses[name],
         keystoreFileNameLike = nameDetails.address.value.replace(hexStartsWith, '*');
-      for (var chain in nameDetails.chains) {
-        var chainFolder = oThis.getChainDataFolder(chain),
-          fromFolder = tempGethFolder + '/' + keystoreFolder,
-          toFolder = chainFolder + '/' + keystoreFolder;
-        logger.info('* Copying ' + name + ' keystore file to ' + chain + ' chain');
-        fileManager.cp(fromFolder, toFolder, keystoreFileNameLike);
-      }
+
+      // if the address is not valid for the chain, continue with the next address
+      if (!nameDetails.chains[chain]) continue;
+
+      let chainFolder = setupHelper.gethFolderFor(chain),
+        fromFolder = tempGethFolder + '/' + keystoreFolder,
+        toFolder = chainFolder + '/' + keystoreFolder;
+      logger.info('* Copying ' + name + ' keystore file to ' + chain + ' chain');
+      fileManager.cp(fromFolder, toFolder, keystoreFileNameLike);
     }
   },
 
   /**
    * Copy all addresses and import respective keystore files to required geth instances
    *
-   * @param addresses
+   * @param {object} allocatedAddresses - address name to address details map
+   * @param {string} chain - name of the chain to which the addresses are to be copied
+   *
    */
-  importPostInitAddressesToChains: function(addresses) {
+  importPostInitAddressesToChain: function(allocatedAddresses, chain) {
     const oThis = this;
 
-    for (var name in setupConfig.addresses) {
-      var nameDetails = setupConfig.addresses[name],
-        privateKey = addresses[nameDetails.address.value];
+    for (let name in setupConfig.addresses) {
       if (preInitAddressName.includes(name)) {
         continue;
       }
 
-      var chainsToImport = Object.keys(nameDetails.chains);
-      for (var i = 0; i < chainsToImport.length; i++) {
-        var chain = chainsToImport[i];
-        logger.info('* Copying ' + name + ' keystore file to ' + chain + ' chain');
-        oThis._importKeyFilesToGeth(setupConfig.chains[chain].folder_name, nameDetails, privateKey);
-      }
+      let nameDetails = setupConfig.addresses[name],
+        privateKey = allocatedAddresses[name].private_key;
+
+      let chainsToImport = Object.keys(nameDetails.chains);
+
+      if (chainsToImport.indexOf(chain) === -1) continue;
+
+      logger.info('* Copying ' + name + ' keystore file to ' + chain + ' chain');
+      oThis._importKeyFilesToGeth(setupHelper.gethFolderFor(chain), privateKey, nameDetails.passphrase.value);
     }
   },
 
@@ -220,6 +214,18 @@ GethManagerKlass.prototype = {
   },
 
   /**
+   * Get address by name
+   *
+   * @param {string} name - account name
+   */
+  getGeneratedAddressByName: function(name) {
+    const addressSetupConfigObj = setupConfig.addresses[name].address;
+    return addressSetupConfigObj.value === ''
+      ? fileManager.getPlatformConfig()[addressSetupConfigObj.env_var]
+      : addressSetupConfigObj.value;
+  },
+
+  /**
    * Modify genesis file
    *
    * @param {string} chain - name of the chain
@@ -238,14 +244,16 @@ GethManagerKlass.prototype = {
       };
     const chainId = setupConfig.chains[chain].chain_id.value,
       allocBalanceToAddrName = setupConfig.chains[chain].alloc_balance_to_addr,
-      allocAmountToAddress = setupConfig.addresses[allocBalanceToAddrName].address.value,
       allocAmount = hexStartsWith + allocBalancesOn[chain].toString(16),
-      gasLimit = hexStartsWith + gasLimitOn[chain].toString(16),
-      sealerAddress = setupConfig.addresses['sealer'].address.value,
-      extraData =
-        '0x0000000000000000000000000000000000000000000000000000000000000000' +
-        sealerAddress.replace(hexStartsWith, '') +
-        '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
+      gasLimit = hexStartsWith + gasLimitOn[chain].toString(16);
+
+    const allocAmountToAddress = oThis.getGeneratedAddressByName(allocBalanceToAddrName);
+    const sealerAddress = oThis.getGeneratedAddressByName('sealer');
+
+    const extraData =
+      '0x0000000000000000000000000000000000000000000000000000000000000000' +
+      sealerAddress.replace(hexStartsWith, '') +
+      '0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000';
 
     // If the file doesn't exist, the content will be an empty object by default.
     const file = editJsonFile(chainGenesisLocation);
@@ -307,7 +315,7 @@ GethManagerKlass.prototype = {
       setupHelper.setupFolderAbsolutePath() +
       '/' +
       tmpPasswordFilePath;
-    var addressGerationResponse = fileManager.exec(cmd);
+    let addressGerationResponse = fileManager.exec(cmd);
 
     // remove password
     fileManager.rm(tmpPasswordFilePath);
@@ -330,11 +338,11 @@ GethManagerKlass.prototype = {
     const oThis = this,
       generateRawKeyKlass = oThis.ic().getGenerateRawKeyService();
 
-    var pre_generated_addresses = (options || {}).pre_generated_addresses,
+    let pre_generated_addresses = (options || {}).pre_generated_addresses,
       rawAddresses = {};
 
-    for (var name in setupConfig.addresses) {
-      var nameDetails = setupConfig.addresses[name],
+    for (let name in setupConfig.addresses) {
+      let nameDetails = setupConfig.addresses[name],
         privateKey = '';
 
       if (preInitAddressName.includes(name)) {
@@ -343,12 +351,12 @@ GethManagerKlass.prototype = {
 
       // Check if pre generated address details are provided and can be overwritten
       if (Array.isArray(pre_generated_addresses) && pre_generated_addresses.length > 0) {
-        var pre_generated_address = pre_generated_addresses.pop();
+        let pre_generated_address = pre_generated_addresses.pop();
 
         // retrieve details from private key
         try {
           if (pre_generated_address.privateKey) {
-            var privateKeyObj = new Web3().eth.accounts.privateKeyToAccount(pre_generated_address.privateKey);
+            let privateKeyObj = new Web3().eth.accounts.privateKeyToAccount(pre_generated_address.privateKey);
             if (
               basicHelper.isAddressValid(pre_generated_address.address) &&
               pre_generated_address.address === privateKeyObj.address
@@ -379,7 +387,12 @@ GethManagerKlass.prototype = {
 
         privateKey = response.data.privateKey;
       }
-      rawAddresses[nameDetails.address.value] = privateKey;
+
+      rawAddresses[name] = {
+        address: nameDetails.address.value,
+        private_key: privateKey
+      };
+
       logger.info('* ' + name + ' address: {' + nameDetails.address.value + '}');
     }
 
@@ -390,22 +403,23 @@ GethManagerKlass.prototype = {
    * Import keystore file to respective chain directory.
    *
    * @param chainDirectory
-   * @param nameDetails
    * @param privateKey
+   * @param passphrase
+   *
    * @private
    */
-  _importKeyFilesToGeth: function(chainDirectory, nameDetails, privateKey) {
-    var relativeDataDir = chainDirectory,
+  _importKeyFilesToGeth: function(chainDirectory, privateKey, passphrase) {
+    let relativeDataDir = chainDirectory,
       tmpPasswordFilePath = relativeDataDir + '/' + tempPasswordFile,
       tmpPassphraseFilePath = relativeDataDir + '/' + tempPrivateKeyFile,
       absoluteDirPath = setupHelper.setupFolderAbsolutePath() + '/' + relativeDataDir;
 
     // creating password and passphrase file in a temp location
-    fileManager.touch(tmpPasswordFilePath, nameDetails.passphrase.value);
+    fileManager.touch(tmpPasswordFilePath, passphrase);
     fileManager.touch(tmpPassphraseFilePath, privateKey.replace(hexStartsWith, ''));
 
     // generate keystore file and address
-    var cmd =
+    let cmd =
       'geth --datadir "' +
       absoluteDirPath +
       '" account import --password ' +
@@ -416,7 +430,7 @@ GethManagerKlass.prototype = {
       setupHelper.setupFolderAbsolutePath() +
       '/' +
       tmpPassphraseFilePath;
-    var addressGerationResponse = fileManager.exec(cmd);
+    let addressGerationResponse = fileManager.exec(cmd);
 
     // remove password and passphrase file
     fileManager.rm(tmpPasswordFilePath);

@@ -37,8 +37,8 @@ program
   .description('Setup OpenST-Platform')
   .option(
     '-s, --step <step>',
-    'Step to be performed. (all|setup|init|st_contract|fund_users_with_st|deploy_platform_contracts|snm_intercomm|snmp_intercomm|st_prime_mint|end)',
-    /^(all|setup|init|st_contract|fund_users_with_st|deploy_platform_contracts|snm_intercomm|snmp_intercomm|st_prime_mint|end)$/i,
+    'Step to be performed. (all|fresh_setup|generate_addresses|init_value_chain|init_utility_chain|dynamo_db_init|st_contract|fund_users_with_st|deploy_value_chain|deploy_utility_chain|snm_intercomm|snmp_intercomm|st_prime_mint|end)',
+    /^(all|fresh_setup|generate_addresses|init_value_chain|init_utility_chain|dynamo_db_init|st_contract|fund_users_with_st|deploy_value_chain|deploy_utility_chain|snm_intercomm|snmp_intercomm|st_prime_mint|end)$/i,
     'all'
   )
   .option('-c, --config <path>', 'Json Config file path.');
@@ -46,6 +46,5 @@ program
 program.parse(process.argv);
 
 const step = program.step;
-console.log('step', step);
 const config = program.path ? require(program.path) : {};
 run(step || 'all', config);

@@ -133,8 +133,8 @@ ServiceManagerKlass.prototype = {
     );
 
     // create geth run script
-    for (var chain in setupConfig.chains) {
-      var binFolder = setupHelper.binFolder(),
+    for (let chain in setupConfig.chains) {
+      let binFolder = setupHelper.binFolder(),
         cmd = oThis._startGethCommand(chain, ''),
         gethRunScript = 'run-' + chain + '.sh';
       fileManager.touch(binFolder + '/' + gethRunScript, '#!/bin/sh');
@@ -153,19 +153,25 @@ ServiceManagerKlass.prototype = {
 
     // Generate executables
     const intercomProcessIdentifiers = setupHelper.intercomProcessIdentifiers();
-    for (var i = 0; i < intercomProcessIdentifiers.length; i++) {
-      var binFolder = setupHelper.binFolder(),
-        executablePath = 'executables/inter_comm/' + intercomProcessIdentifiers[i] + '.js',
+    for (let i = 0; i < intercomProcessIdentifiers.length; i++) {
+      let intercomIdentifier = intercomProcessIdentifiers[i],
+        binFolder = setupHelper.binFolder(),
+        executablePath = 'executables/inter_comm/' + intercomIdentifier + '.js',
         intercomProcessDataFile =
-          setupHelper.setupFolderAbsolutePath() + '/logs/' + intercomProcessIdentifiers[i] + '.data',
+          setupHelper.setupFolderAbsolutePath() +
+          '/' +
+          setupHelper.utilityChainDataFilesFolder() +
+          '/' +
+          intercomIdentifier +
+          '.data',
         cmd = oThis._startExecutableCommand(executablePath + ' ' + intercomProcessDataFile),
-        runScript = 'run-' + intercomProcessIdentifiers[i] + '.sh';
+        runScript = 'run-' + intercomIdentifier + '.sh';
 
       fileManager.touch(binFolder + '/' + runScript, '#!/bin/sh');
-      shellAsyncCmd.run("echo '" + cmd + "' >> " + setupHelper.binFolderAbsolutePath() + '/' + runScript);
+      shellAsyncCmd.run("echo '" + cmd + "' >> " + setupHelper.utilityChainBinFilesFolder() + '/' + runScript);
       logger.info(
         '* Start ' +
-          intercomProcessIdentifiers[i] +
+          intercomIdentifier +
           ' intercomm: sh ' +
           setupHelper.setupFolderAbsolutePath() +
           '/' +
@@ -176,7 +182,7 @@ ServiceManagerKlass.prototype = {
     }
 
     //Make Utility gas price to default after deployment
-    var cmd =
+    let cmd =
       'export ' +
       setupConfig.chains.utility.gas_price.env_var +
       '=' +
@@ -230,9 +236,8 @@ ServiceManagerKlass.prototype = {
       zeroGas = coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT,
       gasLimit = { utility: coreConstants.OST_UTILITY_GAS_LIMIT, value: coreConstants.OST_VALUE_GAS_LIMIT },
       gasPrice = purpose === 'deployment' && chain == 'utility' ? zeroGas : chainDetails.gas_price.value,
-      chainFolder = gethManager.getChainDataFolder(chain),
-      chainDataDir = gethManager.getChainAbsoluteDataDir(chain),
-      sealerAddr = setupConfig.addresses['sealer'].address.value,
+      chainFolder = setupHelper.gethFolderFor(chain),
+      chainDataDir = setupHelper.setupFolderAbsolutePath() + '/' + setupHelper.gethFolderFor(chain),
       sealerPassword = setupConfig.addresses['sealer'].passphrase.value,
       rpcProviderHostPort = chainDetails.rpc_provider.value.replace('http://', '').split(':'),
       rpcHost = rpcProviderHostPort[0],
@@ -240,6 +245,8 @@ ServiceManagerKlass.prototype = {
       wsProviderHostPort = chainDetails.ws_provider.value.replace('ws://', '').split(':'),
       wsHost = wsProviderHostPort[0],
       wsPort = wsProviderHostPort[1];
+
+    const sealerAddr = gethManager.getGeneratedAddressByName('sealer');
 
     // creating password file in a temp location
     fileManager.touch(chainFolder + '/' + sealerPassphraseFile, sealerPassword);
@@ -274,8 +281,10 @@ ServiceManagerKlass.prototype = {
       sealerPassphraseFile +
       ' 2> ' +
       setupHelper.logsFolderAbsolutePath() +
-      '/chain-' +
+      '/' +
       chain +
+      '-chain-' +
+      setupHelper.chainIdFor(chain) +
       '.log'
     );
   }

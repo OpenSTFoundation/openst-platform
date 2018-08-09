@@ -62,7 +62,7 @@ StartServicesKlass.prototype = {
 
     // Start Utility Chain
     logger.step('** Start utility chain');
-    var cmd = 'sh ' + setupHelper.binFolderAbsolutePath() + '/run-utility.sh';
+    var cmd = 'sh ' + setupHelper.utilityChainBinFilesFolder() + '/run-utility.sh';
     servicesList.push(cmd);
     oThis._asyncCommand(cmd);
 
@@ -92,18 +92,18 @@ StartServicesKlass.prototype = {
 
     // Start intercom processes in openST env
     logger.step('** Start stake and mint inter-communication process');
-    var cmd = 'sh ' + setupHelper.binFolderAbsolutePath() + '/run-stake_and_mint.sh';
+    var cmd = 'sh ' + setupHelper.utilityChainBinFilesFolder() + '/run-stake_and_mint.sh';
     servicesList.push(cmd);
     oThis._asyncCommand(cmd);
 
     logger.step('** Start register branded token inter-communication process');
-    var cmd = 'sh ' + setupHelper.binFolderAbsolutePath() + '/run-register_branded_token.sh';
+    var cmd = 'sh ' + setupHelper.utilityChainBinFilesFolder() + '/run-register_branded_token.sh';
     servicesList.push(cmd);
     oThis._asyncCommand(cmd);
 
     // Start intercom processes in OST env
     logger.step('** Start stake and mint processor');
-    var cmd = 'sh ' + setupHelper.binFolderAbsolutePath() + '/run-stake_and_mint_processor.sh';
+    var cmd = 'sh ' + setupHelper.utilityChainBinFilesFolder() + '/run-stake_and_mint_processor.sh';
     servicesList.push(cmd);
     oThis._asyncCommand(cmd);
 

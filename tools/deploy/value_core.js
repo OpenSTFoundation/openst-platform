@@ -64,7 +64,7 @@ DeployValueCoreContractKlass.prototype = {
       ValueRegistrarKlass = oThis.ic().getValueRegistrarInteractClass(),
       deployHelper = oThis.ic().getDeployHelper(),
       valueDeployerName = 'valueDeployer',
-      valueOpsName = 'valueOps',
+      valueRegistrarUserName = 'valueRegistrar',
       openSTValueContractName = 'openSTValue',
       openSTUtilityContractName = 'openSTUtility',
       valueRegistrarContractName = 'valueRegistrar',
@@ -73,7 +73,7 @@ DeployValueCoreContractKlass.prototype = {
       VALUE_GAS_LIMIT = coreConstants.OST_VALUE_GAS_LIMIT,
       VALUE_CHAIN_ID = coreConstants.OST_VALUE_CHAIN_ID,
       UTILITY_CHAIN_ID = coreConstants.OST_UTILITY_CHAIN_ID,
-      valueOpsAddress = coreAddresses.getAddressForUser(valueOpsName),
+      valueRegistrarUserAddress = coreAddresses.getAddressForUser(valueRegistrarUserName),
       valueDeployerAddress = coreAddresses.getAddressForUser(valueDeployerName),
       valueRegistrarContractAddress = coreAddresses.getAddressForContract(valueRegistrarContractName),
       openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName),
@@ -86,11 +86,11 @@ DeployValueCoreContractKlass.prototype = {
     logger.step('** Deploying valueCore Contract');
     if (showPrompts) {
       // confirming the important addresses
-      logger.info('Deployer Address: ' + valueDeployerAddress);
-      logger.info('Value Ops Address: ' + valueOpsAddress);
-      logger.info('Value Registrar Contract: ' + valueRegistrarContractAddress);
-      logger.info('OpenST Utility Contract: ' + openSTUtilityContractAddress);
-      logger.info('OpenST Value Contract: ' + openSTValueContractAddress);
+      logger.info('Deployer User Address: ' + valueDeployerAddress);
+      logger.info('Value Registrar User Address: ' + valueRegistrarUserAddress);
+      logger.info('Value Registrar Contract Address: ' + valueRegistrarContractAddress);
+      logger.info('OpenST Utility Contract Address: ' + openSTUtilityContractAddress);
+      logger.info('OpenST Value Contract Address: ' + openSTValueContractAddress);
 
       await new Promise(function(onResolve, onReject) {
         prompts.question('Please verify all above details. Do you want to proceed? [Y/N]', function(intent) {
@@ -121,7 +121,7 @@ DeployValueCoreContractKlass.prototype = {
     const valueCoreContractAddress = valueCoreContractDeployResponse.contractAddress;
 
     logger.step('** Calling addCore of Value Registrar Contract');
-    await valueRegistrar.addCore(valueOpsName, openSTValueContractAddress, valueCoreContractAddress);
+    await valueRegistrar.addCore(valueRegistrarUserName, openSTValueContractAddress, valueCoreContractAddress);
 
     return Promise.resolve(
       responseHelper.successWithData({ contract: 'valueCore', address: valueCoreContractAddress })
