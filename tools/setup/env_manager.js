@@ -19,19 +19,24 @@ const EnvManagerKlass = function() {};
 
 EnvManagerKlass.prototype = {
   /**
-   * Generate ENV file from config.js
+   * Generate Config file from config.js and the existing config file
    */
-  generateEnvFile: function(purpose) {
+  generateConfigFile: function(purpose) {
     const oThis = this;
 
-    // Create empty ENV file
-    fileManager.touch(setupConfig.env_vars_file, '#!/bin/sh');
-    fileManager.append(setupConfig.env_vars_file, '#################');
-    fileManager.append(setupConfig.env_vars_file, '# opentST Platform Environment file');
-    fileManager.append(setupConfig.env_vars_file, '#################');
+    // only create a new file only when purpose is deployment
 
-    // Create empty OpenST Platform Config JSON file
-    fileManager.touch(setupConfig.openst_platform_config_file, '{}');
+    if (purpose == 'deployment') {
+      logger.info('* generating an empty config strategy file');
+      // Create empty ENV file
+      fileManager.touch(setupConfig.env_vars_file, '#!/bin/sh');
+      fileManager.append(setupConfig.env_vars_file, '#################');
+      fileManager.append(setupConfig.env_vars_file, '# opentST Platform Environment file');
+      fileManager.append(setupConfig.env_vars_file, '#################');
+
+      // Create empty OpenST Platform Config JSON file
+      fileManager.touch(setupConfig.openst_platform_config_file, '{}');
+    }
 
     logger.info('* writing env basic, geth, cache and addresses related env vars');
 

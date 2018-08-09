@@ -51,6 +51,8 @@ FinalizeSimpleTokenContractKlass.prototype = {
 
     logger.step('** Setting Admin Address of Simple Token Contract to value Registrar');
 
+    console.log('############### valueRegistrarAddr', valueRegistrarAddr);
+
     await simpleTokenObj.setAdminAddress('foundation', valueRegistrarAddr, {});
     const simpleTokenAdminAddressResponse = await simpleTokenObj.getAdminAddress(),
       simpleTokenAdminAddress = simpleTokenAdminAddressResponse.data.address;

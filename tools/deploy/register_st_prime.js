@@ -136,6 +136,7 @@ RegisterStPrimeKlass.prototype = {
       process.exit(1);
     }
 
+    logger.step('** Initiate Ownership Transfer of valueRegistrar Contract to foundation');
     await valueRegistrar.initiateOwnerShipTransfer(valueDeployerName, foundationAddress);
 
     const getOwnerResponse = await valueRegistrar.getOwner();

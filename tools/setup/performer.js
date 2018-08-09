@@ -41,7 +41,18 @@ const OpenSTSetup = function(configStrategy, instanceComposer) {};
 OpenSTSetup.prototype = {
   perform: async function(step, options) {
     const oThis = this,
-      validSteps = ['all', 'setup', 'init', 'st_contract', 'registrar', 'stake_n_mint', 'st_prime_mint', 'end'];
+      validSteps = [
+        'all',
+        'setup',
+        'init',
+        'st_contract',
+        'fund_users_with_st',
+        'deploy_platform_contracts',
+        'snm_intercomm',
+        'snmp_intercomm',
+        'st_prime_mint',
+        'end'
+      ];
 
     if (validSteps.indexOf(step) == -1) {
       logger.error('\n!!! Invalid step !!!\n Step should be one of the following: [', validSteps.join(', '), ']\n');
@@ -83,7 +94,7 @@ OpenSTSetup.prototype = {
 
       // Write environment file
       logger.step('** Writing env variables file');
-      envManager.generateEnvFile('deployment');
+      envManager.generateConfigFile('deployment');
 
       // Chains have started mining
       logger.step('** Checking if chains have started generating blocks');
@@ -95,7 +106,7 @@ OpenSTSetup.prototype = {
 
       // Write environment file
       logger.step('** Writing env variables file');
-      envManager.generateEnvFile();
+      envManager.generateConfigFile();
 
       // Fund required addresses
       logger.step('** Funding required addresses');
@@ -119,7 +130,7 @@ OpenSTSetup.prototype = {
       // Deploy Simple Token Contract and update ENV
       const stDeployResponse = await oThis.performHelperService(oThis.simpleTokenDeploy);
       setupConfig.contracts['simpleToken'].address.value = stDeployResponse.data.address;
-      envManager.generateEnvFile();
+      envManager.generateConfigFile();
 
       // Finalize Simple Token Contract
       await oThis.performHelperService(oThis.finalizeSimpleToken);
@@ -135,46 +146,46 @@ OpenSTSetup.prototype = {
       // Deploy Value Registrar Contract and update ENV
       const valueRegistrarDeployResponse = await oThis.performHelperService(oThis.deployValueRegistrarContract);
       setupConfig.contracts['valueRegistrar'].address.value = valueRegistrarDeployResponse.data.address;
-      envManager.generateEnvFile();
+      envManager.generateConfigFile();
 
       // Deploy OpenST Value Contract and update ENV
       const openSTValueDeployResponse = await oThis.performHelperService(oThis.openStValueDeployer);
       setupConfig.contracts['openSTValue'].address.value = openSTValueDeployResponse.data.address;
-      envManager.generateEnvFile();
+      envManager.generateConfigFile();
 
       // Deploy Utility Registrar Contract and update ENV
       const utilityRegistrarDeployResponse = await oThis.performHelperService(oThis.utilityRegistrarDeployer);
       setupConfig.contracts['utilityRegistrar'].address.value = utilityRegistrarDeployResponse.data.address;
-      envManager.generateEnvFile();
+      envManager.generateConfigFile();
 
       // Deploy OpenST Utility Contract and update ENV
       const openSTUtilityDeployResponse = await oThis.performHelperService(oThis.openStUtilityDeployer);
       setupConfig.contracts['openSTUtility'].address.value = openSTUtilityDeployResponse.data.address;
-      envManager.generateEnvFile();
+      envManager.generateConfigFile();
 
       // Deploy Value Core Contract and update ENV
       const valueCoreDeployResponse = await oThis.performHelperService(oThis.valueCoreDeployer);
       setupConfig.contracts['valueCore'].address.value = valueCoreDeployResponse.data.address;
-      envManager.generateEnvFile();
+      envManager.generateConfigFile();
 
       // Deploy OpenST Utility Contract and update ENV
       const stPrimeDeploymentStepsResponse = await oThis.performHelperService(oThis.stPrimeDeployer);
       setupConfig.contracts['stPrime'].address.value = stPrimeDeploymentStepsResponse.data.address;
       setupConfig.misc_deployment.st_prime_uuid.value = stPrimeDeploymentStepsResponse.data.uuid;
-      envManager.generateEnvFile();
+      envManager.generateConfigFile();
 
       // Register ST Prime and update ENV
       await oThis.performHelperService(oThis.registerStPrime);
     }
 
-    if (step == 'stake_n_mint' || step == 'all') {
+    if (step == 'snm_intercomm' || step == 'all') {
       // Starting stake and mint intercomm
       logger.step('** Starting stake and mint intercomm');
       var intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/logs/stake_and_mint.data';
       await oThis.serviceManager.startExecutable('executables/inter_comm/stake_and_mint.js ' + intercomProcessDataFile);
     }
 
-    if (step == 'stake_and_mint_processor' || step == 'all') {
+    if (step == 'snmp_intercomm' || step == 'all') {
       // Starting stake and mint processor intercomm
       logger.step('** Starting stake and mint processor intercomm');
       var intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/logs/stake_and_mint_processor.data';

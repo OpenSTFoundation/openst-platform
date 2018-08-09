@@ -150,6 +150,9 @@ FileManagerKlass.prototype = {
    * @param {string} configValue - Config Value
    */
   addPlatformConfig: function(configKey, configValue) {
+    if (configValue == '') {
+      return;
+    }
     const filePath = setupHelper.configStrategyFilePath();
 
     // Read Config
