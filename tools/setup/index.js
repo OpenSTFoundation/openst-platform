@@ -46,5 +46,5 @@ program
 program.parse(process.argv);
 
 const step = program.step;
-const config = program.path ? require(program.path) : {};
+const config = program.config ? require(program.config) : {};
 run(step || 'all', config);

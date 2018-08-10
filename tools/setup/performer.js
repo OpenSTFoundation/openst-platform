@@ -130,6 +130,51 @@ OpenSTSetup.prototype = {
       await oThis.performHelperService(oThis.fundUsers);
     }
 
+    if (step === 'st_contract' || step === 'all') {
+      // Deploy Simple Token Contract and update ENV
+      const stDeployResponse = await oThis.performHelperService(oThis.simpleTokenDeploy);
+      setupConfig.contracts['simpleToken'].address.value = stDeployResponse.data.address;
+      envManager.generateConfigFile();
+
+      // Finalize Simple Token Contract
+      await oThis.performHelperService(oThis.finalizeSimpleToken);
+    }
+
+    if (step === 'fund_users_with_st' || step === 'all') {
+      // Fund required addresses
+      logger.step('** Funding required addresses with ST');
+      await oThis.performHelperService(oThis.fundUsersWithST);
+    }
+
+    if (step === 'deploy_value_chain' || step === 'all') {
+      // Deploy Value Registrar Contract and update ENV
+      const valueRegistrarDeployResponse = await oThis.performHelperService(oThis.deployValueRegistrarContract);
+      setupConfig.contracts['valueRegistrar'].address.value = valueRegistrarDeployResponse.data.address;
+      envManager.generateConfigFile();
+
+      // Deploy OpenST Value Contract and update ENV
+      const openSTValueDeployResponse = await oThis.performHelperService(oThis.openStValueDeployer);
+      setupConfig.contracts['openSTValue'].address.value = openSTValueDeployResponse.data.address;
+      envManager.generateConfigFile();
+
+      // TODO - copy the config file to value config location
+    }
+
+    if (step === 'dynamo_db_init' || step === 'all') {
+      let cmd = "ps aux | grep dynamo | grep -v grep | tr -s ' ' | cut -d ' ' -f2";
+      let processId = shell.exec(cmd).stdout;
+
+      if (processId == '') {
+        // Start Dynamo DB
+        let startDynamo = new StartDynamo();
+        await startDynamo.perform();
+      }
+
+      // Dynamo DB init
+      logger.step('** Dynamo DB init');
+      await oThis.performHelperService(oThis.dynamoDbInit);
+    }
+
     if (step === 'init_utility_chain' || step === 'all') {
       // Utility chain folders setup
       logger.step('** Utility chain folders setup');
@@ -162,51 +207,6 @@ OpenSTSetup.prototype = {
       // Write environment file
       logger.step('** Writing env variables file');
       envManager.generateConfigFile();
-    }
-
-    if (step === 'dynamo_db_init' || step === 'all') {
-      let cmd = "ps aux | grep dynamo | grep -v grep | tr -s ' ' | cut -d ' ' -f2";
-      let processId = shell.exec(cmd).stdout;
-
-      if (processId == '') {
-        // Start Dynamo DB
-        let startDynamo = new StartDynamo();
-        await startDynamo.perform();
-      }
-
-      // Dynamo DB init
-      logger.step('** Dynamo DB init');
-      await oThis.performHelperService(oThis.dynamoDbInit);
-    }
-
-    if (step === 'st_contract' || step === 'all') {
-      // Deploy Simple Token Contract and update ENV
-      const stDeployResponse = await oThis.performHelperService(oThis.simpleTokenDeploy);
-      setupConfig.contracts['simpleToken'].address.value = stDeployResponse.data.address;
-      envManager.generateConfigFile();
-
-      // Finalize Simple Token Contract
-      await oThis.performHelperService(oThis.finalizeSimpleToken);
-    }
-
-    if (step === 'fund_users_with_st' || step === 'all') {
-      // Fund required addresses
-      logger.step('** Funding required addresses with ST');
-      await oThis.performHelperService(oThis.fundUsersWithST);
-    }
-
-    if (step === 'deploy_value_chain' || step === 'all') {
-      // Deploy Value Registrar Contract and update ENV
-      const valueRegistrarDeployResponse = await oThis.performHelperService(oThis.deployValueRegistrarContract);
-      setupConfig.contracts['valueRegistrar'].address.value = valueRegistrarDeployResponse.data.address;
-      envManager.generateConfigFile();
-
-      // Deploy OpenST Value Contract and update ENV
-      const openSTValueDeployResponse = await oThis.performHelperService(oThis.openStValueDeployer);
-      setupConfig.contracts['openSTValue'].address.value = openSTValueDeployResponse.data.address;
-      envManager.generateConfigFile();
-
-      // TODO - copy the config file to value config location
     }
 
     if (step === 'deploy_utility_chain') {
