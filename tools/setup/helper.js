@@ -167,7 +167,6 @@ SetupHelperKlass.prototype = {
 
     return oThis.configFolder() + '/' + chain + '-' + oThis.chainIdFor(chain) + '.json';
   },
-
   /**
    * chain id for a particular chain
    *

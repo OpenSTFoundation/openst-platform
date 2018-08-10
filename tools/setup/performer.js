@@ -22,7 +22,8 @@ require(rootPrefix + '/tools/setup/service_manager');
 require(rootPrefix + '/tools/setup/geth_manager');
 require(rootPrefix + '/tools/setup/geth_checker');
 require(rootPrefix + '/tools/setup/fund_users');
-require(rootPrefix + '/tools/setup/dynamo_db_init');
+require(rootPrefix + '/tools/setup/dynamo_db_shard_management');
+require(rootPrefix + '/tools/setup/dynamo_db_register_shards');
 require(rootPrefix + '/tools/setup/simple_token/deploy');
 require(rootPrefix + '/tools/setup/simple_token/finalize');
 require(rootPrefix + '/tools/setup/fund_users_with_st');
@@ -51,11 +52,10 @@ OpenSTSetup.prototype = {
         'st_contract',
         'fund_users_with_st',
         'deploy_value_chain',
-
-        // following step needs to be split into 2 - one will be one time migrations to be run and other will be run per utility chain
-        'dynamo_db_init',
+        'dynamo_db_shard_management', //one time migrations
 
         // utility chain setup steps
+        'dynamo_db_register_shards', // creation and registration of DDB shards, utility chain specific
         'init_utility_chain',
         'deploy_utility_chain',
         'snm_intercomm',
@@ -160,7 +160,7 @@ OpenSTSetup.prototype = {
       // TODO - copy the config file to value config location
     }
 
-    if (step === 'dynamo_db_init' || step === 'all') {
+    if (step === 'dynamo_db_shard_management' || step === 'all') {
       let cmd = "ps aux | grep dynamo | grep -v grep | tr -s ' ' | cut -d ' ' -f2";
       let processId = shell.exec(cmd).stdout;
 
@@ -170,9 +170,15 @@ OpenSTSetup.prototype = {
         await startDynamo.perform();
       }
 
-      // Dynamo DB init
-      logger.step('** Dynamo DB init');
-      await oThis.performHelperService(oThis.dynamoDbInit);
+      // Dynamo DB one time migrations
+      logger.step('** Dynamo DB One Time Migrations');
+      await oThis.performHelperService(oThis.dynamoDbShardManagement);
+    }
+
+    if (step === 'dynamo_db_register_shards' || step === 'all') {
+      // Dynamo DB creation and registration of shards
+      logger.step('** Dynamo DB Shard creation and registration for Utility Chain ');
+      await oThis.performHelperService(oThis.dynamoDbRegisterShards);
     }
 
     if (step === 'init_utility_chain' || step === 'all') {
@@ -329,9 +335,14 @@ Object.defineProperties(OpenSTSetup.prototype, {
       return this.ic().getSetupFundUsers();
     }
   },
-  dynamoDbInit: {
+  dynamoDbShardManagement: {
     get: function() {
-      return this.ic().getSetupDynamoDBInit();
+      return this.ic().getSetupDynamoDBShardManagement();
+    }
+  },
+  dynamoDbRegisterShards: {
+    get: function() {
+      return this.ic().getSetupDynamoDBRegisterShards();
     }
   },
   simpleTokenDeploy: {

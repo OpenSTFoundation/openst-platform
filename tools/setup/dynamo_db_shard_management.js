@@ -1,8 +1,10 @@
 'use strict';
 /**
- * Dynamo DB init
+ * Dynamo DB shard management
  *
- * @module tools/setup/dynamo_db_init
+ * one time migrations to be run for setup
+ *
+ * @module tools/setup/dynamo_db_shard_management
  */
 
 const rootPrefix = '../..',
@@ -12,13 +14,13 @@ const rootPrefix = '../..',
 require(rootPrefix + '/lib/web3/providers/storage');
 
 /**
- * Dynamo db init
+ * Dynamo db shard management
  *
  * @constructor
  */
-const DynamoDBInit = function(configStrategy, instanceComposer) {};
+const DynamoDBShardManagement = function(configStrategy, instanceComposer) {};
 
-DynamoDBInit.prototype = {
+DynamoDBShardManagement.prototype = {
   perform: async function() {
     const oThis = this,
       openSTStorageProvider = oThis.ic().getStorageProvider(),
@@ -28,13 +30,9 @@ DynamoDBInit.prototype = {
     logger.info('* Running DynamoDB initial migrations for shard management.');
     let shardMgmtObj = openSTStorage.dynamoDBService.shardManagement();
     await shardMgmtObj.runShardMigration();
-
-    // createAndRegisterShard
-    logger.info('* Creating and registering shard for token balance model.');
-    await new openSTStorage.model.TokenBalance({}).createAndRegisterShard('tokenBalancesShard1');
   }
 };
 
-InstanceComposer.register(DynamoDBInit, 'getSetupDynamoDBInit', false);
+InstanceComposer.register(DynamoDBShardManagement, 'getSetupDynamoDBShardManagement', false);
 
-module.exports = DynamoDBInit;
+module.exports = DynamoDBShardManagement;
