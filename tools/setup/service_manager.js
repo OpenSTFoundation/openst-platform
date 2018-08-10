@@ -128,24 +128,20 @@ ServiceManagerKlass.prototype = {
   postSetupSteps: function() {
     const oThis = this;
 
-    logger.info(
-      '* Source environment values: source ' + setupHelper.setupFolderAbsolutePath() + '/' + setupConfig.env_vars_file
-    );
-
     // create geth run script
     for (let chain in setupConfig.chains) {
-      let binFolder = setupHelper.binFolder(),
+      let utilityChainBinFolder = setupHelper.utilityChainBinFilesFolder(),
         cmd = oThis._startGethCommand(chain, ''),
         gethRunScript = 'run-' + chain + '.sh';
-      fileManager.touch(binFolder + '/' + gethRunScript, '#!/bin/sh');
-      fileManager.append(binFolder + '/' + gethRunScript, cmd);
+      fileManager.touch(utilityChainBinFolder + '/' + gethRunScript, '#!/bin/sh');
+      fileManager.append(utilityChainBinFolder + '/' + gethRunScript, cmd);
       logger.info(
         '* Start ' +
           chain +
           ' chain: sh ' +
           setupHelper.setupFolderAbsolutePath() +
           '/' +
-          binFolder +
+          utilityChainBinFolder +
           '/' +
           gethRunScript
       );
@@ -155,7 +151,8 @@ ServiceManagerKlass.prototype = {
     const intercomProcessIdentifiers = setupHelper.intercomProcessIdentifiers();
     for (let i = 0; i < intercomProcessIdentifiers.length; i++) {
       let intercomIdentifier = intercomProcessIdentifiers[i],
-        binFolder = setupHelper.binFolder(),
+        utilityChainBinFolder = setupHelper.utilityChainBinFilesFolder(),
+        absoluteBinFolderPath = setupHelper.setupFolderAbsolutePath() + '/' + utilityChainBinFolder,
         executablePath = 'executables/inter_comm/' + intercomIdentifier + '.js',
         intercomProcessDataFile =
           setupHelper.setupFolderAbsolutePath() +
@@ -167,18 +164,10 @@ ServiceManagerKlass.prototype = {
         cmd = oThis._startExecutableCommand(executablePath + ' ' + intercomProcessDataFile),
         runScript = 'run-' + intercomIdentifier + '.sh';
 
-      fileManager.touch(binFolder + '/' + runScript, '#!/bin/sh');
-      shellAsyncCmd.run("echo '" + cmd + "' >> " + setupHelper.utilityChainBinFilesFolder() + '/' + runScript);
-      logger.info(
-        '* Start ' +
-          intercomIdentifier +
-          ' intercomm: sh ' +
-          setupHelper.setupFolderAbsolutePath() +
-          '/' +
-          binFolder +
-          '/' +
-          runScript
-      );
+      fileManager.touch(utilityChainBinFolder + '/' + runScript, '#!/bin/sh');
+      console.log("echo '" + cmd + "' >> " + absoluteBinFolderPath + '/' + runScript);
+      shellAsyncCmd.run("echo '" + cmd + "' >> " + absoluteBinFolderPath + '/' + runScript);
+      logger.info('* Start ' + intercomIdentifier + ' intercomm: sh ' + absoluteBinFolderPath + '/' + runScript);
     }
 
     //Make Utility gas price to default after deployment
@@ -201,7 +190,7 @@ ServiceManagerKlass.prototype = {
    * @private
    */
   _startExecutableCommand: function(executablePath) {
-    var logFilename = executablePath
+    let logFilename = executablePath
       .split(' ')[0]
       .split('/')
       .slice(-1)[0]
@@ -210,7 +199,9 @@ ServiceManagerKlass.prototype = {
       'node $OPENST_PLATFORM_PATH/' +
       executablePath +
       ' >> ' +
-      setupHelper.logsFolderAbsolutePath() +
+      setupHelper.setupFolderAbsolutePath() +
+      '/' +
+      setupHelper.utilityChainLogsFilesFolder() +
       '/executables-' +
       logFilename +
       '.log'

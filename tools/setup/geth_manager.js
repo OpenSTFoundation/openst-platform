@@ -49,16 +49,6 @@ GethManagerKlass.prototype = {
   },
 
   /**
-   * Do the build clean up
-   */
-  buildCleanup: function() {
-    const oThis = this;
-
-    // remove tmp geth
-    fileManager.rm(tempGethFolder);
-  },
-
-  /**
    * Generate all required addresses.
    *
    * @param options

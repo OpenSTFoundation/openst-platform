@@ -43,6 +43,8 @@ OpenSTSetup.prototype = {
     const oThis = this,
       validSteps = [
         'all',
+
+        // value chain one time setup steps
         'fresh_setup',
         'generate_addresses',
         'init_value_chain',
@@ -50,12 +52,16 @@ OpenSTSetup.prototype = {
         'fund_users_with_st',
         'deploy_value_chain',
 
-        'init_utility_chain',
+        // following step needs to be split into 2 - one will be one time migrations to be run and other will be run per utility chain
         'dynamo_db_init',
+
+        // utility chain setup steps
+        'init_utility_chain',
         'deploy_utility_chain',
         'snm_intercomm',
         'snmp_intercomm',
         'st_prime_mint',
+
         'end'
       ];
 
@@ -230,14 +236,24 @@ OpenSTSetup.prototype = {
     if (step === 'snm_intercomm' || step === 'all') {
       // Starting stake and mint intercomm
       logger.step('** Starting stake and mint intercomm');
-      var intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/logs/stake_and_mint.data';
+      var intercomProcessDataFile =
+        setupHelper.setupFolderAbsolutePath() +
+        '/' +
+        setupHelper.utilityChainDataFilesFolder() +
+        '/' +
+        'stake_and_mint.data';
       await oThis.serviceManager.startExecutable('executables/inter_comm/stake_and_mint.js ' + intercomProcessDataFile);
     }
 
     if (step === 'snmp_intercomm' || step === 'all') {
       // Starting stake and mint processor intercomm
       logger.step('** Starting stake and mint processor intercomm');
-      var intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/logs/stake_and_mint_processor.data';
+      var intercomProcessDataFile =
+        setupHelper.setupFolderAbsolutePath() +
+        '/' +
+        setupHelper.utilityChainDataFilesFolder() +
+        '/' +
+        'stake_and_mint_processor.data';
       await oThis.serviceManager.startExecutable(
         'executables/inter_comm/stake_and_mint_processor.js ' + intercomProcessDataFile
       );
@@ -253,16 +269,12 @@ OpenSTSetup.prototype = {
     }
 
     if (step === 'end' || step === 'all') {
-      // Cleanup build files
-      logger.step('** Cleaning temporary build files');
-      oThis.gethManager.buildCleanup();
-
       // Stop running services
       logger.step('** Stopping openST services');
-      oThis.serviceManager.stopServices();
+      // oThis.serviceManager.stopServices();
 
       // Print all the helpful scripts post setup
-      logger.step('** OpenST Platform created following executables for further usages:');
+      logger.step('** OpenST Platform created following executables for further usages.');
       logger.info(Array(30).join('='));
       oThis.serviceManager.postSetupSteps();
     }

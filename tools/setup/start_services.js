@@ -56,7 +56,7 @@ StartServicesKlass.prototype = {
 
     // Start Value Chain
     logger.step('** Start value chain');
-    var cmd = 'sh ' + setupHelper.binFolderAbsolutePath() + '/run-value.sh';
+    var cmd = 'sh ' + setupHelper.utilityChainBinFilesFolder() + '/run-value.sh';
     servicesList.push(cmd);
     oThis._asyncCommand(cmd);
 

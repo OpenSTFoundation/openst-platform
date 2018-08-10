@@ -53,15 +53,15 @@ const setupConfig = {
       alloc_balance_to_addr: 'utilityInitialSTPrimeHolder',
       chain_id: {
         env_var: 'OST_UTILITY_CHAIN_ID',
-        value: 2000 //Editable
+        value: 1000 //Editable
       },
       network_id: {
         env_var: '',
-        value: 2000 //Editable
+        value: 1000 //Editable
       },
       port: {
         env_var: '',
-        value: 30300 //Editable
+        value: 30310 //Editable
       },
       gas_price: {
         env_var: 'OST_UTILITY_GAS_PRICE',
@@ -69,11 +69,11 @@ const setupConfig = {
       },
       ws_provider: {
         env_var: 'OST_UTILITY_GETH_WS_PROVIDER',
-        value: 'ws://127.0.0.1:19546' //Editable
+        value: 'ws://127.0.0.1:19547' //Editable
       },
       rpc_provider: {
         env_var: 'OST_UTILITY_GETH_RPC_PROVIDER',
-        value: 'http://127.0.0.1:9546' //Editable
+        value: 'http://127.0.0.1:9547' //Editable
       }
     }
   },
