@@ -205,9 +205,13 @@ OpenSTSetup.prototype = {
       const openSTValueDeployResponse = await oThis.performHelperService(oThis.openStValueDeployer);
       setupConfig.contracts['openSTValue'].address.value = openSTValueDeployResponse.data.address;
       envManager.generateConfigFile();
+
+      // TODO - copy the config file to value config location
     }
 
     if (step === 'deploy_utility_chain') {
+      // TODO - copy the config file from value config location to default config location
+
       // Deploy Utility Registrar Contract and update ENV
       const utilityRegistrarDeployResponse = await oThis.performHelperService(oThis.utilityRegistrarDeployer);
       setupConfig.contracts['utilityRegistrar'].address.value = utilityRegistrarDeployResponse.data.address;
@@ -269,13 +273,17 @@ OpenSTSetup.prototype = {
     }
 
     if (step === 'end' || step === 'all') {
+      // TODO - copy config from default location to utility location
+
       // Stop running services
+      // TODO - stop GETH and executables from current utility chain
       logger.step('** Stopping openST services');
-      // oThis.serviceManager.stopServices();
+      oThis.serviceManager.stopServices();
 
       // Print all the helpful scripts post setup
       logger.step('** OpenST Platform created following executables for further usages.');
       logger.info(Array(30).join('='));
+      // TODO - Pass the config file create to the intercomm scripts
       oThis.serviceManager.postSetupSteps();
     }
 

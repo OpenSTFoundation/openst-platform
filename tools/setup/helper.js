@@ -109,6 +109,16 @@ SetupHelperKlass.prototype = {
   },
 
   /**
+   * get the config folder name
+   *
+   * @return {string}
+   *
+   */
+  configFolder: function() {
+    return 'config';
+  },
+
+  /**
    * get the openst-setup folder name
    *
    * @return {string}
@@ -143,6 +153,19 @@ SetupHelperKlass.prototype = {
     folderName = folderName + '-' + oThis.chainIdFor(chain);
 
     return oThis.masterGethFolder() + '/' + folderName;
+  },
+
+  /**
+   * Config file path for a chain
+   *
+   * @param {string} chain
+   * @return {string}
+   *
+   */
+  configFilePathFor: function(chain) {
+    const oThis = this;
+
+    return oThis.configFolder() + '/' + chain + '-' + oThis.chainIdFor(chain) + '.json';
   },
 
   /**

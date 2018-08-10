@@ -47,6 +47,10 @@ FileManagerKlass.prototype = {
     logger.info('* Creating data folder');
     oThis.mkdir(setupHelper.dataFolder());
 
+    // Creating config folder
+    logger.info('* Creating config folder');
+    oThis.mkdir(setupHelper.configFolder());
+
     // Create master GETH folder
     logger.info('* Creating master GETH folder');
     oThis.mkdir(setupHelper.masterGethFolder());
