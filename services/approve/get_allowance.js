@@ -83,6 +83,15 @@ GetAllowance.prototype = {
 
     //Validations
 
+    if (!basicHelper.isAddressValid(oThis.erc20Address)) {
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_a_ga_3',
+        api_error_identifier: 'invalid_address',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+      return Promise.reject(errObj);
+    }
+
     if (!basicHelper.isAddressValid(oThis.ownerAddress)) {
       let errObj = responseHelper.error({
         internal_error_identifier: 's_a_ga_3',
