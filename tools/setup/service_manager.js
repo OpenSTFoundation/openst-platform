@@ -216,7 +216,7 @@ ServiceManagerKlass.prototype = {
           intercomIdentifier +
           '.data',
         cmd = oThis._startExecutableCommand(
-          executablePath + ' ' + intercomProcessDataFile + ' ' + setupHelper.configStrategyFilePath()
+          executablePath + ' ' + intercomProcessDataFile + ' ' + setupHelper.configStrategyUtilityFilePath()
         ),
         runScript = 'run-' + intercomIdentifier + '.sh';
 

@@ -162,7 +162,7 @@ OpenSTSetup.prototype = {
     }
 
     if (step === 'dynamo_db_shard_management' || step === 'all') {
-      let cmd = "ps aux | grep dynamo | grep -v grep | tr -s ' ' | cut -d ' ' -f2";
+      let cmd = "ps aux | grep dynamo | grep java | grep -v grep | tr -s ' ' | cut -d ' ' -f2";
       let processId = shell.exec(cmd).stdout;
 
       if (processId == '') {
@@ -219,7 +219,7 @@ OpenSTSetup.prototype = {
       envManager.generateConfigFile();
     }
 
-    if (step === 'deploy_utility_chain') {
+    if (step === 'deploy_utility_chain' || step === 'all') {
       // Deploy Utility Registrar Contract and update ENV
       const utilityRegistrarDeployResponse = await oThis.performHelperService(oThis.utilityRegistrarDeployer);
       setupConfig.contracts['utilityRegistrar'].address.value = utilityRegistrarDeployResponse.data.address;
