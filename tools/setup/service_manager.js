@@ -171,18 +171,34 @@ ServiceManagerKlass.prototype = {
       let utilityChainBinFolder = setupHelper.utilityChainBinFilesFolder(),
         cmd = oThis._startGethCommand(chain, ''),
         gethRunScript = 'run-' + chain + '.sh';
-      fileManager.touch(utilityChainBinFolder + '/' + gethRunScript, '#!/bin/sh');
-      fileManager.append(utilityChainBinFolder + '/' + gethRunScript, cmd);
-      logger.info(
-        '* Start ' +
-          chain +
-          ' chain: sh ' +
-          setupHelper.setupFolderAbsolutePath() +
-          '/' +
-          utilityChainBinFolder +
-          '/' +
-          gethRunScript
-      );
+
+      if (chain == 'utility') {
+        fileManager.touch(utilityChainBinFolder + '/' + gethRunScript, '#!/bin/sh');
+        fileManager.append(utilityChainBinFolder + '/' + gethRunScript, cmd);
+        logger.info(
+          '* Start ' +
+            chain +
+            ' chain: sh ' +
+            setupHelper.setupFolderAbsolutePath() +
+            '/' +
+            utilityChainBinFolder +
+            '/' +
+            gethRunScript
+        );
+      } else {
+        fileManager.touch('/' + setupHelper.binFolder() + '/' + gethRunScript, '#!/bin/sh');
+        fileManager.append('/' + setupHelper.binFolder() + '/' + gethRunScript, cmd);
+        logger.info(
+          '* Start ' +
+            chain +
+            ' chain: sh ' +
+            setupHelper.setupFolderAbsolutePath() +
+            '/' +
+            setupHelper.binFolder() +
+            '/' +
+            gethRunScript
+        );
+      }
     }
 
     // Generate executables
