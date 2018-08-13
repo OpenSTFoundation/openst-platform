@@ -91,11 +91,11 @@ IntercomBaseKlass.prototype = {
     const oThis = this;
 
     process.on('SIGINT', function() {
-      logger.info('Received SIGINT, cancelling block scaning');
+      logger.info('Received SIGINT, cancelling block scanning');
       oThis.interruptSignalObtained = true;
     });
     process.on('SIGTERM', function() {
-      logger.info('Received SIGTERM, cancelling block scaning');
+      logger.info('Received SIGTERM, cancelling block scanning');
       oThis.interruptSignalObtained = true;
     });
   },
@@ -116,7 +116,7 @@ IntercomBaseKlass.prototype = {
       return Promise.resolve();
     }
 
-    for (var i = 0; i < events.length; i++) {
+    for (let i = 0; i < events.length; i++) {
       const eventObj = events[i],
         j = i;
 

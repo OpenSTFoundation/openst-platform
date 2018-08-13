@@ -165,7 +165,7 @@ OpenSTSetup.prototype = {
       let cmd = "ps aux | grep dynamo | grep java | grep -v grep | tr -s ' ' | cut -d ' ' -f2";
       let processId = shell.exec(cmd).stdout;
 
-      if (processId == '') {
+      if (processId === '') {
         // Start Dynamo DB
         let startDynamo = new StartDynamo();
         await startDynamo.perform();
@@ -248,7 +248,7 @@ OpenSTSetup.prototype = {
     if (step === 'snm_intercomm' || step === 'all') {
       // Starting stake and mint intercomm
       logger.step('** Starting stake and mint intercomm');
-      var intercomProcessDataFile =
+      let intercomProcessDataFile =
         setupHelper.setupFolderAbsolutePath() +
         '/' +
         setupHelper.utilityChainDataFilesFolder() +
@@ -260,7 +260,7 @@ OpenSTSetup.prototype = {
     if (step === 'snmp_intercomm' || step === 'all') {
       // Starting stake and mint processor intercomm
       logger.step('** Starting stake and mint processor intercomm');
-      var intercomProcessDataFile =
+      let intercomProcessDataFile =
         setupHelper.setupFolderAbsolutePath() +
         '/' +
         setupHelper.utilityChainDataFilesFolder() +
