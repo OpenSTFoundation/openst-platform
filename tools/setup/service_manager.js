@@ -57,6 +57,19 @@ ServiceManagerKlass.prototype = {
   },
 
   /**
+   * Stop all services
+   */
+  stopUtilityServices: function() {
+    const oThis = this;
+
+    // Stop geth nodes
+    oThis.stopUtilityGeth();
+
+    // Stop all executables
+    oThis.stopUtilityExecutable();
+  },
+
+  /**
    * Start Geth node
    * @params {string} chain - name of the chain
    * @params {string} purpose - if mentioned as deployment, geths will start with zero gas. Else in normal mode
@@ -78,6 +91,18 @@ ServiceManagerKlass.prototype = {
     logger.info('* Stopping all running geths');
     const cmd =
       "ps -ef | grep 'openst-setup\\|openst-platform' | grep 'geth ' |  grep -v grep | awk '{print $2}' | xargs kill";
+    shellAsyncCmd.run(cmd);
+  },
+
+  /**
+   * Start Geth node
+   */
+  stopUtilityGeth: function() {
+    logger.info('* Stopping all running utility geths');
+    const cmd =
+      "ps -ef | grep 'openst-setup\\|openst-platform' | grep 'openst-geth-utility-" +
+      setupHelper.utilityChainId() +
+      "' |  grep -v grep | awk '{print $2}' | xargs kill";
     shellAsyncCmd.run(cmd);
   },
 
@@ -123,6 +148,19 @@ ServiceManagerKlass.prototype = {
   },
 
   /**
+   * Stop Utility executables
+   */
+  stopUtilityExecutable: function() {
+    logger.info('* Stopping all running utility executable');
+    const cmd =
+      "ps -ef | grep 'openst-setup\\|openst-platform' | grep 'executables' | " +
+      "grep 'utility-chain-" +
+      setupHelper.utilityChainId() +
+      "' |  grep -v grep | awk '{print $2}' | xargs kill";
+    shellAsyncCmd.run(cmd);
+  },
+
+  /**
    * Post platform setup
    */
   postSetupSteps: function() {
@@ -161,7 +199,9 @@ ServiceManagerKlass.prototype = {
           '/' +
           intercomIdentifier +
           '.data',
-        cmd = oThis._startExecutableCommand(executablePath + ' ' + intercomProcessDataFile),
+        cmd = oThis._startExecutableCommand(
+          executablePath + ' ' + intercomProcessDataFile + ' ' + setupHelper.configStrategyFilePath()
+        ),
         runScript = 'run-' + intercomIdentifier + '.sh';
 
       fileManager.touch(utilityChainBinFolder + '/' + runScript, '#!/bin/sh');

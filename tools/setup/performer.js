@@ -157,7 +157,8 @@ OpenSTSetup.prototype = {
       setupConfig.contracts['openSTValue'].address.value = openSTValueDeployResponse.data.address;
       envManager.generateConfigFile();
 
-      // TODO - copy the config file to value config location
+      // Copy the config file to config folder
+      fileManager.cp('.', setupHelper.configFolder(), setupConfig.openst_platform_config_file);
     }
 
     if (step === 'dynamo_db_shard_management' || step === 'all') {
@@ -182,6 +183,9 @@ OpenSTSetup.prototype = {
     }
 
     if (step === 'init_utility_chain' || step === 'all') {
+      // Get value config file to default location
+      fileManager.cp(setupHelper.configFolder(), '.', setupConfig.openst_platform_config_file);
+
       // Utility chain folders setup
       logger.step('** Utility chain folders setup');
       fileManager.utilityChainFoldersSetup();
@@ -216,8 +220,6 @@ OpenSTSetup.prototype = {
     }
 
     if (step === 'deploy_utility_chain') {
-      // TODO - copy the config file from value config location to default config location
-
       // Deploy Utility Registrar Contract and update ENV
       const utilityRegistrarDeployResponse = await oThis.performHelperService(oThis.utilityRegistrarDeployer);
       setupConfig.contracts['utilityRegistrar'].address.value = utilityRegistrarDeployResponse.data.address;
@@ -279,17 +281,15 @@ OpenSTSetup.prototype = {
     }
 
     if (step === 'end' || step === 'all') {
-      // TODO - copy config from default location to utility location
+      fileManager.cp('.', setupHelper.utilityChainBinFilesFolder(), setupConfig.openst_platform_config_file);
 
       // Stop running services
-      // TODO - stop GETH and executables from current utility chain
       logger.step('** Stopping openST services');
-      oThis.serviceManager.stopServices();
+      oThis.serviceManager.stopUtilityServices();
 
       // Print all the helpful scripts post setup
       logger.step('** OpenST Platform created following executables for further usages.');
       logger.info(Array(30).join('='));
-      // TODO - Pass the config file create to the intercomm scripts
       oThis.serviceManager.postSetupSteps();
     }
 

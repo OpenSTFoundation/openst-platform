@@ -265,6 +265,17 @@ SetupHelperKlass.prototype = {
     return oThis.setupFolderAbsolutePath() + '/' + setupConfig.openst_platform_config_file;
   },
 
+  configStrategyUtilityFilePath: function() {
+    const oThis = this;
+    return (
+      oThis.setupFolderAbsolutePath() +
+      '/' +
+      oThis.utilityChainBinFilesFolder() +
+      '/' +
+      setupConfig.openst_platform_config_file
+    );
+  },
+
   /**
    * allocated addresses file path
    *
