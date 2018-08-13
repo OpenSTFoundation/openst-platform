@@ -42,6 +42,7 @@ OpenSTSetup.prototype = {
     const oThis = this,
       validSteps = [
         'all',
+        'utility',
 
         // value chain one time setup steps
         'fresh_setup',
@@ -174,13 +175,13 @@ OpenSTSetup.prototype = {
       await oThis.performHelperService(oThis.dynamoDbShardManagement);
     }
 
-    if (step === 'dynamo_db_register_shards' || step === 'all') {
+    if (step === 'dynamo_db_register_shards' || step === 'all' || step === 'utility') {
       // Dynamo DB creation and registration of shards
       logger.step('** Dynamo DB Shard creation and registration for Utility Chain ');
       await oThis.performHelperService(oThis.dynamoDbRegisterShards);
     }
 
-    if (step === 'init_utility_chain' || step === 'all') {
+    if (step === 'init_utility_chain' || step === 'all' || step === 'utility') {
       // Get value config file to default location
       fileManager.cp(setupHelper.configFolder(), '.', setupConfig.openst_platform_config_file);
 
@@ -217,7 +218,7 @@ OpenSTSetup.prototype = {
       envManager.generateConfigFile();
     }
 
-    if (step === 'deploy_utility_chain' || step === 'all') {
+    if (step === 'deploy_utility_chain' || step === 'all' || step === 'utility') {
       // Deploy Utility Registrar Contract and update ENV
       const utilityRegistrarDeployResponse = await oThis.performHelperService(oThis.utilityRegistrarDeployer);
       setupConfig.contracts['utilityRegistrar'].address.value = utilityRegistrarDeployResponse.data.address;
@@ -243,7 +244,7 @@ OpenSTSetup.prototype = {
       await oThis.performHelperService(oThis.registerStPrime);
     }
 
-    if (step === 'snm_intercomm' || step === 'all') {
+    if (step === 'snm_intercomm' || step === 'all' || step === 'utility') {
       // Starting stake and mint intercomm
       logger.step('** Starting stake and mint intercomm');
       let intercomProcessDataFile =
@@ -258,7 +259,7 @@ OpenSTSetup.prototype = {
       );
     }
 
-    if (step === 'snmp_intercomm' || step === 'all') {
+    if (step === 'snmp_intercomm' || step === 'all' || step === 'utility') {
       // Starting stake and mint processor intercomm
       logger.step('** Starting stake and mint processor intercomm');
       let intercomProcessDataFile =
@@ -273,7 +274,7 @@ OpenSTSetup.prototype = {
       );
     }
 
-    if (step === 'st_prime_mint' || step === 'all') {
+    if (step === 'st_prime_mint' || step === 'all' || step === 'utility') {
       // Stake and mint simple token prime
       await oThis.performHelperService(oThis.stPrimeMinter);
 
@@ -282,7 +283,7 @@ OpenSTSetup.prototype = {
       await oThis.performHelperService(oThis.fundUsersWithSTPrime);
     }
 
-    if (step === 'end' || step === 'all') {
+    if (step === 'end' || step === 'all' || step === 'utility') {
       fileManager.cp('.', setupHelper.utilityChainBinFilesFolder(), setupConfig.openst_platform_config_file);
 
       // Stop running services
