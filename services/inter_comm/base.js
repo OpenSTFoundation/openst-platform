@@ -84,7 +84,7 @@ IntercomBaseKlass.prototype = {
   },
 
   /**
-   * Register interrup signal handlers
+   * Register interrupt signal handlers
    *
    */
   registerInterruptSignalHandlers: function() {

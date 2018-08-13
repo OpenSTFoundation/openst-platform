@@ -5,9 +5,7 @@
  * @module tools/setup/helper
  */
 
-const shell = require('shelljs'),
-  Path = require('path'),
-  os = require('os');
+const shell = require('shelljs');
 
 const rootPrefix = '../..',
   setupConfig = require(rootPrefix + '/tools/setup/config');

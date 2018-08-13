@@ -2,8 +2,6 @@
 /**
  * Start the OpenST Setup
  */
-const shellSource = require('shell-source'),
-  Path = require('path');
 
 // load shelljs and disable output
 const shell = require('shelljs');

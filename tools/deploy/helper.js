@@ -33,7 +33,7 @@ DeployHelperKlass.prototype = {
    * Deploy
    *
    * @param {string} contractName - Contract Name to be deployed
-   * @param {web3} web3Provider - Web3 Provider object
+   * @param {object} web3Provider - Web3 Provider object
    * @param {string} contractAbi - Contract Abi to be deployed
    * @param {binary} contractBin - Contract Bin file to be deployed
    * @param {string} deployerName - Deployer name
