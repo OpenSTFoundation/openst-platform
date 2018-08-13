@@ -252,7 +252,10 @@ OpenSTSetup.prototype = {
         setupHelper.utilityChainDataFilesFolder() +
         '/' +
         'stake_and_mint.data';
-      await oThis.serviceManager.startExecutable('executables/inter_comm/stake_and_mint.js ' + intercomProcessDataFile);
+      let configPath = setupHelper.configStrategyFilePath();
+      await oThis.serviceManager.startExecutable(
+        'executables/inter_comm/stake_and_mint.js ' + intercomProcessDataFile + ' ' + configPath
+      );
     }
 
     if (step === 'snmp_intercomm' || step === 'all') {
@@ -264,8 +267,9 @@ OpenSTSetup.prototype = {
         setupHelper.utilityChainDataFilesFolder() +
         '/' +
         'stake_and_mint_processor.data';
+      let configPath = setupHelper.configStrategyFilePath();
       await oThis.serviceManager.startExecutable(
-        'executables/inter_comm/stake_and_mint_processor.js ' + intercomProcessDataFile
+        'executables/inter_comm/stake_and_mint_processor.js ' + intercomProcessDataFile + ' ' + configPath
       );
     }
 
