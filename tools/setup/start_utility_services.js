@@ -2,7 +2,7 @@
 /**
  * Start All openST Platform Services
  *
- * @module tools/setup/start_services.js
+ * @module tools/setup/start_utility_services.js
  */
 
 const shellAsyncCmd = require('node-cmd');
@@ -12,21 +12,26 @@ let shell = require('shelljs');
 shell.config.silent = true;
 
 const rootPrefix = '../..',
-  setupHelper = require(rootPrefix + '/tools/setup/helper'),
+  startServicesHelper = require(rootPrefix + '/tools/setup/start_services_helper'),
   InstanceComposer = require(rootPrefix + '/instance_composer'),
-  logger = require(rootPrefix + '/helpers/custom_console_logger'),
-  StartDynamo = require(rootPrefix + '/lib/start_dynamo');
+  logger = require(rootPrefix + '/helpers/custom_console_logger');
 
 const args = process.argv,
   configStrategyFilePath = args[2];
 
-require(rootPrefix + '/services/utils/platform_status');
+if (!configStrategyFilePath) {
+  logger.error(
+    'Please pass the config strategy for the utility chain. Run the code as: \nnode start_utility_services "utility_chain_config_strategy_file_path"'
+  );
+  process.exit(1);
+}
 
-const configStrategy = configStrategyFilePath
-    ? require(configStrategyFilePath)
-    : require(setupHelper.configStrategyFilePath()),
+require(rootPrefix + '/services/utils/utility_chain_status');
+
+const configStrategy = require(configStrategyFilePath),
   instanceComposer = new InstanceComposer(configStrategy),
-  PlatformStatusKlass = instanceComposer.getPlatformStatusService();
+  UtilityChainStatusKlass = instanceComposer.getUtilityChainStatusService(),
+  utilityChainId = configStrategy.OST_UTILITY_CHAIN_ID;
 
 /**
  * Constructor for start services
@@ -43,24 +48,14 @@ StartServicesKlass.prototype = {
     const oThis = this,
       servicesList = [];
 
-    let cmd = "ps aux | grep dynamo | grep java | grep -v grep | tr -s ' ' | cut -d ' ' -f2";
-    let processId = shell.exec(cmd).stdout;
-
-    if (processId === '') {
-      // Start Dynamo DB in openST env
-      let startDynamo = new StartDynamo();
-      await startDynamo.perform();
-    }
-
-    // Start Value Chain
-    logger.step('** Start value chain');
-    cmd = 'sh ' + setupHelper.utilityChainBinFilesFolder() + '/run-value.sh';
-    servicesList.push(cmd);
-    oThis._asyncCommand(cmd);
-
     // Start Utility Chain
     logger.step('** Start utility chain');
-    cmd = 'sh ' + setupHelper.utilityChainBinFilesFolder() + '/run-utility.sh';
+    let cmd =
+      'sh ' +
+      startServicesHelper.setupFolderAbsolutePath() +
+      '/' +
+      startServicesHelper.utilityChainBinFilesFolder(utilityChainId) +
+      '/run-utility.sh';
     servicesList.push(cmd);
     oThis._asyncCommand(cmd);
 
@@ -74,39 +69,49 @@ StartServicesKlass.prototype = {
 
     // Check geths are up and running
     logger.step('** Check chains are up and responding');
-    const statusObj = new PlatformStatusKlass(),
+    const statusObj = new UtilityChainStatusKlass(),
       servicesResponse = await statusObj.perform();
     if (servicesResponse.isFailure()) {
       logger.error('* Error ', servicesResponse);
       process.exit(1);
     } else {
-      logger.info(
-        '* Value Chain:',
-        servicesResponse.data.chain.value,
-        'Utility Chain:',
-        servicesResponse.data.chain.utility
-      );
+      logger.info('Utility Chain:', servicesResponse.data.chain.utility);
     }
 
     // Start intercom processes in openST env
     logger.step('** Start stake and mint inter-communication process');
-    cmd = 'sh ' + setupHelper.utilityChainBinFilesFolder() + '/run-stake_and_mint.sh';
+    cmd =
+      'sh ' +
+      startServicesHelper.setupFolderAbsolutePath() +
+      '/' +
+      startServicesHelper.utilityChainBinFilesFolder(utilityChainId) +
+      '/run-stake_and_mint.sh';
     servicesList.push(cmd);
     oThis._asyncCommand(cmd);
 
     logger.step('** Start register branded token inter-communication process');
-    cmd = 'sh ' + setupHelper.utilityChainBinFilesFolder() + '/run-register_branded_token.sh';
+    cmd =
+      'sh ' +
+      startServicesHelper.setupFolderAbsolutePath() +
+      '/' +
+      startServicesHelper.utilityChainBinFilesFolder(utilityChainId) +
+      '/run-register_branded_token.sh';
     servicesList.push(cmd);
     oThis._asyncCommand(cmd);
 
     // Start intercom processes in OST env
     logger.step('** Start stake and mint processor');
-    cmd = 'sh ' + setupHelper.utilityChainBinFilesFolder() + '/run-stake_and_mint_processor.sh';
+    cmd =
+      'sh ' +
+      startServicesHelper.setupFolderAbsolutePath() +
+      '/' +
+      startServicesHelper.utilityChainBinFilesFolder(utilityChainId) +
+      '/run-stake_and_mint_processor.sh';
     servicesList.push(cmd);
     oThis._asyncCommand(cmd);
 
     logger.win(
-      '\n** Congratulation! All services are up and running. \n' +
+      '\n** Congratulation! All utility chain services are up and running. \n' +
         'NOTE: We will keep monitoring the services, and notify you if any service stops.'
     );
 
@@ -148,7 +153,7 @@ StartServicesKlass.prototype = {
 logger.error(Array(30).join('='));
 logger.error(
   'Note: For scalability and security reasons, this script should only be used in ' +
-    setupHelper.allowedEnvironment().join(' and ') +
+    startServicesHelper.allowedEnvironment().join(' and ') +
     ' environments.'
 );
 logger.error(Array(30).join('='));

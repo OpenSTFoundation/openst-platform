@@ -1,8 +1,8 @@
 'use strict';
 /**
- * Start All openST Platform Services
+ * Start Value Chain Specific Services
  *
- * @module tools/setup/start_services.js
+ * @module tools/setup/start_value_services.js
  */
 
 const shellAsyncCmd = require('node-cmd');
@@ -12,7 +12,7 @@ let shell = require('shelljs');
 shell.config.silent = true;
 
 const rootPrefix = '../..',
-  setupHelper = require(rootPrefix + '/tools/setup/helper'),
+  startServicesHelper = require(rootPrefix + '/tools/setup/start_services_helper'),
   InstanceComposer = require(rootPrefix + '/instance_composer'),
   logger = require(rootPrefix + '/helpers/custom_console_logger'),
   StartDynamo = require(rootPrefix + '/lib/start_dynamo');
@@ -20,24 +20,24 @@ const rootPrefix = '../..',
 const args = process.argv,
   configStrategyFilePath = args[2];
 
-require(rootPrefix + '/services/utils/platform_status');
+require(rootPrefix + '/services/utils/value_chain_status');
 
 const configStrategy = configStrategyFilePath
     ? require(configStrategyFilePath)
-    : require(setupHelper.configStrategyFilePath()),
+    : require(startServicesHelper.configStrategyFilePath()),
   instanceComposer = new InstanceComposer(configStrategy),
-  PlatformStatusKlass = instanceComposer.getPlatformStatusService();
+  ValueChainStatusKlass = instanceComposer.getValueChainStatusService();
 
 /**
- * Constructor for start services
+ * Constructor for start value chain services
  *
  * @constructor
  */
-const StartServicesKlass = function() {};
+const StartValueServicesKlass = function() {};
 
-StartServicesKlass.prototype = {
+StartValueServicesKlass.prototype = {
   /**
-   * Start all platform services
+   * Start all value chain services
    */
   perform: async function() {
     const oThis = this,
@@ -54,13 +54,8 @@ StartServicesKlass.prototype = {
 
     // Start Value Chain
     logger.step('** Start value chain');
-    cmd = 'sh ' + setupHelper.utilityChainBinFilesFolder() + '/run-value.sh';
-    servicesList.push(cmd);
-    oThis._asyncCommand(cmd);
-
-    // Start Utility Chain
-    logger.step('** Start utility chain');
-    cmd = 'sh ' + setupHelper.utilityChainBinFilesFolder() + '/run-utility.sh';
+    cmd =
+      'sh ' + startServicesHelper.setupFolderAbsolutePath() + '/' + startServicesHelper.binFolder() + '/run-value.sh';
     servicesList.push(cmd);
     oThis._asyncCommand(cmd);
 
@@ -74,39 +69,17 @@ StartServicesKlass.prototype = {
 
     // Check geths are up and running
     logger.step('** Check chains are up and responding');
-    const statusObj = new PlatformStatusKlass(),
+    const statusObj = new ValueChainStatusKlass(),
       servicesResponse = await statusObj.perform();
     if (servicesResponse.isFailure()) {
       logger.error('* Error ', servicesResponse);
       process.exit(1);
     } else {
-      logger.info(
-        '* Value Chain:',
-        servicesResponse.data.chain.value,
-        'Utility Chain:',
-        servicesResponse.data.chain.utility
-      );
+      logger.info('* Value Chain:', servicesResponse.data.chain.value);
     }
 
-    // Start intercom processes in openST env
-    logger.step('** Start stake and mint inter-communication process');
-    cmd = 'sh ' + setupHelper.utilityChainBinFilesFolder() + '/run-stake_and_mint.sh';
-    servicesList.push(cmd);
-    oThis._asyncCommand(cmd);
-
-    logger.step('** Start register branded token inter-communication process');
-    cmd = 'sh ' + setupHelper.utilityChainBinFilesFolder() + '/run-register_branded_token.sh';
-    servicesList.push(cmd);
-    oThis._asyncCommand(cmd);
-
-    // Start intercom processes in OST env
-    logger.step('** Start stake and mint processor');
-    cmd = 'sh ' + setupHelper.utilityChainBinFilesFolder() + '/run-stake_and_mint_processor.sh';
-    servicesList.push(cmd);
-    oThis._asyncCommand(cmd);
-
     logger.win(
-      '\n** Congratulation! All services are up and running. \n' +
+      '\n** Congratulations! All value chain related services are up and running. \n' +
         'NOTE: We will keep monitoring the services, and notify you if any service stops.'
     );
 
@@ -148,10 +121,10 @@ StartServicesKlass.prototype = {
 logger.error(Array(30).join('='));
 logger.error(
   'Note: For scalability and security reasons, this script should only be used in ' +
-    setupHelper.allowedEnvironment().join(' and ') +
+    startServicesHelper.allowedEnvironment().join(' and ') +
     ' environments.'
 );
 logger.error(Array(30).join('='));
 
-const services = new StartServicesKlass();
+const services = new StartValueServicesKlass();
 services.perform();
