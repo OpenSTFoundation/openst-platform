@@ -25,6 +25,7 @@ const rootPrefix = '../..',
   IntercomBaseKlass = require(rootPrefix + '/services/inter_comm/base');
 
 require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/config/core_constants');
 require(rootPrefix + '/lib/web3/providers/factory');
 require(rootPrefix + '/lib/contract_interact/utility_registrar');
 
@@ -88,9 +89,11 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
    * @param {object} eventObj - event object
    */
   processEventObj: async function(eventObj) {
-    console.log('eventObj', eventObj);
+    logger.info('eventObj', eventObj);
+
     const oThis = this,
       coreAddresses = oThis.ic().getCoreAddresses(),
+      coreConstants = oThis.ic().getCoreConstants(),
       UtilityRegistrarKlass = oThis.ic().getUtilityRegistrarClass(),
       returnValues = eventObj.returnValues,
       uuid = returnValues._uuid,
@@ -107,6 +110,11 @@ const StakeAndMintInterCommKlassSpecificPrototype = {
       utilityRegistrarAddr = coreAddresses.getAddressForUser('utilityRegistrar'),
       utilityRegistrarPassphrase = coreAddresses.getPassphraseForUser('utilityRegistrar'),
       utilityRegistrarContractInteract = new UtilityRegistrarKlass(utilityRegistrarContractAddress);
+
+    if (chainIdUtility != coreConstants.OST_UTILITY_CHAIN_ID) {
+      logger.info('==== Ignoring event from other chain in stake and mint inter-comm');
+      return Promise.resolve(responseHelper.successWithData({}));
+    }
 
     const transactionHash = await utilityRegistrarContractInteract.confirmStakingIntent(
       utilityRegistrarAddr,
