@@ -188,7 +188,7 @@ EnvManagerKlass.prototype = {
         var line = 'export ' + dataKey + "='" + dataVal + "'";
         fileManager.append(setupConfig.env_vars_file, line);
         fileManager.addPlatformConfig(dataKey, dataVal);
-        logger.log('Wrote ', dataKey, ' : ', dataVal);
+        //logger.log('Wrote ', dataKey, ' : ', dataVal);
       }
     }
   }
