@@ -49,6 +49,9 @@ require(rootPrefix + '/services/inter_comm/register_branded_token');
 require(rootPrefix + '/services/inter_comm/stake_and_mint');
 require(rootPrefix + '/services/inter_comm/stake_and_mint_processor');
 
+//Setup related services
+require(rootPrefix + '/tools/setup/performer');
+
 /**
  * Service Manifest Constructor
  *
@@ -124,6 +127,12 @@ const ServiceManifestKlass = function(configStrategy, instanceComposer) {
   interComm.registerBrandedToken = instanceComposer.getRegisterBrandedTokenInterCommService();
   interComm.stakeAndMint = instanceComposer.getStakeAndMintInterCommService();
   interComm.stakeAndMintProcessor = instanceComposer.getStakeAndMintProcessorInterCommService();
+
+  /**
+   * setup related services
+   **/
+  let setup = (oThis.setup = {});
+  setup.performer = instanceComposer.getOpenSTSetup();
 };
 
 ServiceManifestKlass.prototype = {};
