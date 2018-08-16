@@ -24,7 +24,7 @@ require(rootPrefix + '/lib/web3/providers/storage');
  *
  * @param {string} compareWith - string to compare with
  *
- * @return {booelan} true when equal
+ * @return {boolean} true when equal
  */
 String.prototype.equalsIgnoreCase = function(compareWith) {
   const oThis = this,
@@ -79,16 +79,16 @@ RegisterBTKlass.prototype = {
 
     // Generate reserve address
     logger.step('** Generating reserve address');
-    var addressRes = await oThis._generateAddress();
+    let addressRes = await oThis._generateAddress();
     oThis.reserveAddress = addressRes.data.address;
     logger.info('* address:', oThis.reserveAddress);
 
     // Start the BT proposal
-    var proposeRes = await oThis._propose();
+    let proposeRes = await oThis._propose();
 
     // Monitor the BT proposal response
-    var statusRes = await oThis._checkProposeStatus(proposeRes.data.transaction_hash);
-    var registrationStatus = statusRes.data.registration_status;
+    let statusRes = await oThis._checkProposeStatus(proposeRes.data.transaction_hash);
+    let registrationStatus = statusRes.data.registration_status;
     oThis.uuid = registrationStatus['uuid'];
     oThis.erc20 = registrationStatus['erc20_address'];
 
@@ -164,14 +164,14 @@ RegisterBTKlass.prototype = {
     return new Promise(function(onResolve, onReject) {
       logger.step('** Monitoring BT proposal status');
       const statusObj = new getRegistrationStatus({ transaction_hash: transaction_hash });
-      var statusTimer = setInterval(async function() {
-        var statusResponse = await statusObj.perform();
+      let statusTimer = setInterval(async function() {
+        let statusResponse = await statusObj.perform();
         if (statusResponse.isFailure()) {
           logger.error(statusResponse);
           clearInterval(statusTimer);
           process.exit(1);
         } else {
-          var registrationStatus = statusResponse.data.registration_status;
+          let registrationStatus = statusResponse.data.registration_status;
           if (proposeSteps['is_proposal_done'] != registrationStatus['is_proposal_done']) {
             logger.info('* BT proposal done on utility chain. Waiting for registration utility and value chain.');
             proposeSteps['is_proposal_done'] = registrationStatus['is_proposal_done'];
@@ -201,8 +201,8 @@ RegisterBTKlass.prototype = {
   _validateBrandedTokenDetails: async function() {
     const oThis = this,
       existingBrandedTokens = await oThis._loadBrandedTokenConfig();
-    for (var uuid in existingBrandedTokens) {
-      var brandedToken = existingBrandedTokens[uuid];
+    for (let uuid in existingBrandedTokens) {
+      let brandedToken = existingBrandedTokens[uuid];
       if (oThis.btName.equalsIgnoreCase(brandedToken.Name)) {
         logger.error('* Branded token name already registered and present in BT config file');
         process.exit(1);

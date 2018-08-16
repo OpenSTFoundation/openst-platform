@@ -36,6 +36,8 @@ require(rootPrefix + '/services/stake_and_mint/get_approval_status');
 
 // Utils services
 require(rootPrefix + '/services/utils/platform_status');
+require(rootPrefix + '/services/utils/utility_chain_status');
+require(rootPrefix + '/services/utils/value_chain_status');
 require(rootPrefix + '/services/utils/generate_address');
 require(rootPrefix + '/services/utils/get_branded_token_details');
 require(rootPrefix + '/services/utils/generate_raw_key');
@@ -98,8 +100,8 @@ const ServiceManifestKlass = function(configStrategy, instanceComposer) {
    */
   let utils = (oThis.utils = {});
   utils.platformStatus = instanceComposer.getPlatformStatusService();
-  utils.valueChainStatus = instanceComposer.getValueChainStatusServive();
-  utils.utilityChainStatus = instanceComposer.getUtilityChainStatusServive();
+  utils.valueChainStatus = instanceComposer.getValueChainStatusService();
+  utils.utilityChainStatus = instanceComposer.getUtilityChainStatusService();
   utils.generateAddress = instanceComposer.getGenerateAddressService();
   utils.getBrandedTokenDetails = instanceComposer.getBrandedTokenDetailsService();
   utils.generateRawKey = instanceComposer.getGenerateRawKeyService();

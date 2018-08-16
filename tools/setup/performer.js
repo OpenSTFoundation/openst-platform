@@ -61,7 +61,8 @@ OpenSTSetup.prototype = {
         'snmp_intercomm',
         'st_prime_mint',
 
-        'end'
+        'stop_utility_services',
+        'stop_value_services'
       ];
 
     if (validSteps.indexOf(step) === -1) {
@@ -283,7 +284,7 @@ OpenSTSetup.prototype = {
       await oThis.performHelperService(oThis.fundUsersWithSTPrime);
     }
 
-    if (step === 'end' || step === 'all' || step === 'utility') {
+    if (step === 'stop_utility_services' || step === 'all' || step === 'utility') {
       fileManager.cp('.', setupHelper.utilityChainBinFilesFolder(), setupConfig.openst_platform_config_file);
 
       // Stop running services
@@ -294,6 +295,11 @@ OpenSTSetup.prototype = {
       logger.step('** OpenST Platform created following executables for further usages.');
       logger.info(Array(30).join('='));
       oThis.serviceManager.postSetupSteps();
+    }
+    if (step === 'stop_value_services' || step === 'all') {
+      // Stop running services
+      logger.step('** Stopping openST services');
+      oThis.serviceManager.stopValueServices();
     }
 
     return Promise.resolve(setupConfig);

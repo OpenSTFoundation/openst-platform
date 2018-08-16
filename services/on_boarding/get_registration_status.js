@@ -122,7 +122,7 @@ GetRegistrationStatusKlass.prototype = {
     if (
       !registeredOnUCResponse ||
       !registeredOnUCResponse.isSuccess() ||
-      registeredOnUCResponse.data.erc20Address == '0x0000000000000000000000000000000000000000'
+      registeredOnUCResponse.data.erc20Address === '0x0000000000000000000000000000000000000000'
     ) {
       return registrationStatus.returnResultPromise();
     }
@@ -139,7 +139,7 @@ GetRegistrationStatusKlass.prototype = {
     if (
       !registeredOnVCResponse ||
       !registeredOnVCResponse.isSuccess() ||
-      registeredOnVCResponse.data.symbol.length == 0
+      registeredOnVCResponse.data.symbol.length === 0
     ) {
       return registrationStatus.returnResultPromise();
     }

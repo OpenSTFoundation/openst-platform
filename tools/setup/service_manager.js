@@ -44,25 +44,35 @@ ServiceManagerKlass.prototype = {
   },
 
   /**
-   * Stop all services
+   * Stop all geth nodes and executables
    */
   stopServices: function() {
     const oThis = this;
 
-    // Stop geth nodes
-    oThis.stopGeth();
+    // Stop All geth nodes
+    oThis.stopAllGeth();
 
     // Stop all executables
     oThis.stopExecutable();
   },
 
   /**
-   * Stop all services
+   * Stop Value Chain Services
+   */
+  stopValueServices: function() {
+    const oThis = this;
+
+    // Stop geth nodes
+    oThis.stopValueGeth();
+  },
+
+  /**
+   * Stop Utility Chain Services
    */
   stopUtilityServices: function() {
     const oThis = this;
 
-    // Stop geth nodes
+    // Stop Utility chain geth nodes
     oThis.stopUtilityGeth();
 
     // Stop all executables
@@ -85,9 +95,9 @@ ServiceManagerKlass.prototype = {
   },
 
   /**
-   * Start Geth node
+   * Stop All Geth nodes
    */
-  stopGeth: function() {
+  stopAllGeth: function() {
     logger.info('* Stopping all running geths');
     const cmd =
       "ps -ef | grep 'openst-setup\\|openst-platform' | grep 'geth ' |  grep -v grep | awk '{print $2}' | xargs kill";
@@ -95,7 +105,19 @@ ServiceManagerKlass.prototype = {
   },
 
   /**
-   * Start Geth node
+   * Stop Value Geth node
+   */
+  stopValueGeth: function() {
+    logger.info('* Stopping all running utility geths');
+    const cmd =
+      "ps -ef | grep 'openst-setup\\|openst-platform' | grep 'openst-geth-value-" +
+      setupHelper.valueChainId() +
+      "' |  grep -v grep | awk '{print $2}' | xargs kill";
+    shellAsyncCmd.run(cmd);
+  },
+
+  /**
+   * Stop Utility Geth node
    */
   stopUtilityGeth: function() {
     logger.info('* Stopping all running utility geths');
@@ -282,7 +304,7 @@ ServiceManagerKlass.prototype = {
       chainPort = chainDetails['port'].value,
       zeroGas = coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT,
       gasLimit = { utility: coreConstants.OST_UTILITY_GAS_LIMIT, value: coreConstants.OST_VALUE_GAS_LIMIT },
-      gasPrice = purpose === 'deployment' && chain == 'utility' ? zeroGas : chainDetails.gas_price.value,
+      gasPrice = purpose === 'deployment' && chain === 'utility' ? zeroGas : chainDetails.gas_price.value,
       chainFolder = setupHelper.gethFolderFor(chain),
       chainDataDir = setupHelper.setupFolderAbsolutePath() + '/' + setupHelper.gethFolderFor(chain),
       sealerPassword = setupConfig.addresses['sealer'].passphrase.value,

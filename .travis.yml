@@ -6,6 +6,7 @@ branches:
   - master
   - develop
   - release-0.9
+  - feature/config_strategy
 notifications:
   email:
     recipients:
@@ -37,13 +38,18 @@ before_script:
 script:
   - export OPENST_PLATFORM_PATH=$(pwd)
   - export OST_DEBUG_ENABLED=1
-  - node tools/setup/index.js
+  - node tools/setup/index.js -s all </dev/null >/dev/null 2>&1 &
+  - sleep 60
   - source $HOME/openst-setup/openst_env_vars.sh
-  - nohup node tools/setup/start_services.js </dev/null >/dev/null 2>&1 &
+  - nohup node tools/setup/start_value_services.js </dev/null >/dev/null 2>&1 &
+  - sleep 30
+  - nohup node tools/setup/start_utility_services.js ~/openst-setup/bin/utility-chain-1000/openst_platform_config.json </dev/null >/dev/null 2>&1 &
   - sleep 120
   - source $HOME/openst-setup/openst_env_vars.sh
-  - node tools/setup/branded_token/register.js "ACME Coin" "ACME" 10
-  - node tools/setup/branded_token/mint.js "ACME" 1000000000000000000000
+  - node tools/setup/branded_token/register.js "ACME Coin" "ACME" 10 </dev/null >/dev/null 2>&1 &
+  - sleep 30
+  - node tools/setup/branded_token/mint.js "ACME" 1000000000000000000000 </dev/null >/dev/null 2>&1 &
+  - sleep 30
   - mocha --timeout 120000 test/* --exit
 after_script:
   - kill $(ps aux | grep 'tools/setup/start_services.js' | awk '{print $2}')
