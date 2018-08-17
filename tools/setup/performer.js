@@ -119,7 +119,7 @@ OpenSTSetup.prototype = {
       logger.step('** Starting openST Value GETH server for deployment');
       oThis.serviceManager.startGeth('value', 'deployment');
 
-      await sleep(30000);
+      await sleep(60000);
 
       // Chains have started mining
       logger.step('** Checking if value chain has started generating blocks');
@@ -214,7 +214,7 @@ OpenSTSetup.prototype = {
       logger.step('** Writing env variables file');
       envManager.generateConfigFile('');
 
-      await sleep(30000);
+      await sleep(60000);
 
       // Chains have started mining
       logger.step('** Checking if utility chain has started generating blocks');
