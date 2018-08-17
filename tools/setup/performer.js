@@ -65,6 +65,12 @@ OpenSTSetup.prototype = {
         'stop_value_services'
       ];
 
+    const sleep = function(ms) {
+      return new Promise(function(resolve) {
+        setTimeout(resolve, ms);
+      });
+    };
+
     if (validSteps.indexOf(step) === -1) {
       logger.error('\n!!! Invalid step !!!\n Step should be one of the following: [', validSteps.join(', '), ']\n');
       return;
@@ -113,9 +119,11 @@ OpenSTSetup.prototype = {
       logger.step('** Starting openST Value GETH server for deployment');
       oThis.serviceManager.startGeth('value', 'deployment');
 
+      await sleep(30000);
+
       // Chains have started mining
       logger.step('** Checking if value chain has started generating blocks');
-      oThis.performHelperService(oThis.gethChecker, 'isRunning', ['value']);
+      await oThis.performHelperService(oThis.gethChecker, 'isRunning', ['value']);
 
       // Copy addresses to value chain geth folder
       logger.step('** Convert private keys to keystore files and move to value chain GETH folder.');
@@ -206,9 +214,11 @@ OpenSTSetup.prototype = {
       logger.step('** Writing env variables file');
       envManager.generateConfigFile('');
 
+      await sleep(30000);
+
       // Chains have started mining
       logger.step('** Checking if utility chain has started generating blocks');
-      oThis.performHelperService(oThis.gethChecker, 'isRunning', ['utility']);
+      await oThis.performHelperService(oThis.gethChecker, 'isRunning', ['utility']);
 
       // Copy addresses to value chain geth folder
       logger.step('** Convert private keys to keystore files and move to utility chain GETH folder.');
