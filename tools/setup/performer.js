@@ -115,7 +115,7 @@ OpenSTSetup.prototype = {
 
       // Chains have started mining
       logger.step('** Checking if value chain has started generating blocks');
-      await oThis.performHelperService(oThis.gethChecker, 'isRunning', ['value']);
+      oThis.performHelperService(oThis.gethChecker, 'isRunning', ['value']);
 
       // Copy addresses to value chain geth folder
       logger.step('** Convert private keys to keystore files and move to value chain GETH folder.');
@@ -208,7 +208,7 @@ OpenSTSetup.prototype = {
 
       // Chains have started mining
       logger.step('** Checking if utility chain has started generating blocks');
-      await oThis.performHelperService(oThis.gethChecker, 'isRunning', ['utility']);
+      oThis.performHelperService(oThis.gethChecker, 'isRunning', ['utility']);
 
       // Copy addresses to value chain geth folder
       logger.step('** Convert private keys to keystore files and move to utility chain GETH folder.');
