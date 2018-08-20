@@ -14,12 +14,9 @@
  * @module tools/deploy/register_st_prime
  */
 
-const readline = require('readline');
-
 const rootPrefix = '../..',
   InstanceComposer = require(rootPrefix + '/instance_composer'),
-  logger = require(rootPrefix + '/helpers/custom_console_logger'),
-  prompts = readline.createInterface(process.stdin, process.stdout);
+  logger = require(rootPrefix + '/helpers/custom_console_logger');
 
 require(rootPrefix + '/config/core_constants');
 require(rootPrefix + '/config/core_addresses');

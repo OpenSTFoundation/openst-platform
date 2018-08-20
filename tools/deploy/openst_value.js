@@ -18,7 +18,7 @@ const rootPrefix = '../..',
   InstanceComposer = require(rootPrefix + '/instance_composer'),
   responseHelper = require(rootPrefix + '/lib/formatter/response'),
   logger = require(rootPrefix + '/helpers/custom_console_logger'),
-  prompts = readline.createInterface(process.stdin, process.stdout);
+  prompts = readline.createInterface({ input: process.stdin, output: process.stdout, terminal: false });
 
 require(rootPrefix + '/config/core_constants');
 require(rootPrefix + '/config/core_addresses');
