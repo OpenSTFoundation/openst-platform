@@ -53,6 +53,11 @@ require(rootPrefix + '/services/inter_comm/stake_and_mint_processor');
 
 //Setup related services
 require(rootPrefix + '/tools/setup/performer');
+require(rootPrefix + '/tools/setup/simple_token_prime/mint');
+require(rootPrefix + '/tools/deploy/utility_registrar');
+require(rootPrefix + '/tools/deploy/openst_utility');
+require(rootPrefix + '/tools/deploy/value_core');
+require(rootPrefix + '/tools/deploy/st_prime');
 
 /**
  * Service Manifest Constructor
@@ -135,6 +140,11 @@ const ServiceManifestKlass = function(configStrategy, instanceComposer) {
    **/
   let setup = (oThis.setup = {});
   setup.performer = instanceComposer.getOpenSTSetup();
+  setup.utilityRegistrarDeployer = instanceComposer.getUtilityRegistrarDeployer();
+  setup.openStUtilityDeployer = instanceComposer.getOpenStUtilityDeployer();
+  setup.valueCoreDeployer = instanceComposer.getValueCoreDeployer();
+  setup.stPrimeDeployer = instanceComposer.getSTPrimeDeployer();
+  setup.stPrimeMinter = instanceComposer.getStakeAndMintSTPrimeMinter();
 };
 
 ServiceManifestKlass.prototype = {};
