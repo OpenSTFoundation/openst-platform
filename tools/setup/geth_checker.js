@@ -16,7 +16,9 @@ require(rootPrefix + '/lib/web3/providers/factory');
  *
  * @constructor
  */
-const GethCheckerKlass = function(configStrategy, instanceComposer) {};
+const GethCheckerKlass = function(configStrategy, instanceComposer) {
+  console.log('=====configStrategy in Geth Checker=========', configStrategy);
+};
 
 GethCheckerKlass.prototype = {
   /**

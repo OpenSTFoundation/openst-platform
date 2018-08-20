@@ -84,7 +84,8 @@ ServiceManagerKlass.prototype = {
    * @params {string} chain - name of the chain
    * @params {string} purpose - if mentioned as deployment, geths will start with zero gas. Else in normal mode
    */
-  startGeth: function(chain, purpose) {
+
+  startGeth: async function(chain, purpose) {
     const oThis = this;
 
     // start geth
@@ -92,6 +93,21 @@ ServiceManagerKlass.prototype = {
     const cmd = oThis._startGethCommand(chain, purpose);
     logger.info(cmd);
     shellAsyncCmd.run(cmd);
+
+    const sleep = function(ms) {
+      return new Promise(function(resolve) {
+        setTimeout(resolve, ms);
+      });
+    };
+
+    const cmd1 = ' tail -1000  ' + setupHelper.setupFolderAbsolutePath() + '/logs/value-chain-2001.log ';
+    logger.info(cmd1);
+
+    await sleep(3000);
+
+    shellAsyncCmd.get(cmd1, function(err, data, stderr) {
+      console.log('============== tail log ================: \n\n', data);
+    });
   },
 
   /**

@@ -322,6 +322,7 @@ OpenSTSetup.prototype = {
 
     //1. Reload the config.
     oThis.ic().configStrategy = fileManager.getPlatformConfig();
+    console.log('----------RELOADED configStrategy in performer-----------', oThis.ic().configStrategy);
     //2. Clear all retained instances.
     oThis.ic().instanceMap = {};
 
