@@ -43,6 +43,7 @@ const rootPrefix = ".."
   , RegisterBrandedTokenInterComm = require(rootPrefix + '/services/inter_comm/register_branded_token')
   , StakeAndMintInterCommKlass = require(rootPrefix + '/services/inter_comm/stake_and_mint')
   , StakeAndMintProcessorInterCommKlass = require(rootPrefix + '/services/inter_comm/stake_and_mint_processor')
+  , StakeHunterInterCommKlass = require(rootPrefix + '/services/inter_comm/stake_hunter')
 ;
 
 /**
@@ -146,8 +147,10 @@ ServiceManifestKlass.prototype = {
   interComm: {
     registerBrandedToken: RegisterBrandedTokenInterComm,
     stakeAndMint: StakeAndMintInterCommKlass,
-    stakeAndMintProcessor: StakeAndMintProcessorInterCommKlass
+    stakeAndMintProcessor: StakeAndMintProcessorInterCommKlass,
+    stakeHunter: StakeHunterInterCommKlass
   }
+
 };
 
 module.exports = new ServiceManifestKlass();

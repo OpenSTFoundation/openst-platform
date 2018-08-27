@@ -131,6 +131,14 @@ openSTSetup.prototype = {
       setupConfig.contracts['openSTValue'].address.value = openSTValueDeployResponse.data.address;
       envManager.generateEnvFile();
 
+
+      // Set Admin address for openST Value
+      logger.step('** Setting admin address for openst value');
+
+      const openSTValueSetAdminResponse = await runHelperService(rootPrefix + '/tools/setup/openst_value/set_admin_address');
+
+      envManager.generateEnvFile();
+
       // Deploy Utility Registrar Contract and update ENV
       const utilityRegistrarDeployResponse = await runHelperService(rootPrefix + '/tools/deploy/utility_registrar');
       setupConfig.contracts['utilityRegistrar'].address.value = utilityRegistrarDeployResponse.data.address;

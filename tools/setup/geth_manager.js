@@ -33,7 +33,7 @@ const tempGethFolder = 'tmp-geth'
   , genesisTemplateLocation = Path.join(__dirname)
   , etherToWeiCinversion = new BigNumber(1000000000000000000)
   , preInitAddressName = [
-    'sealer'
+    'sealer', 'valueAdmin'
   ]
 ;
 
