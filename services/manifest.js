@@ -58,6 +58,8 @@ require(rootPrefix + '/tools/deploy/utility_registrar');
 require(rootPrefix + '/tools/deploy/openst_utility');
 require(rootPrefix + '/tools/deploy/value_core');
 require(rootPrefix + '/tools/deploy/st_prime');
+require(rootPrefix + '/tools/deploy/register_st_prime');
+require(rootPrefix + '/tools/setup/fund_users_with_st_prime');
 
 /**
  * Service Manifest Constructor
@@ -145,6 +147,9 @@ const ServiceManifestKlass = function(configStrategy, instanceComposer) {
   setup.valueCoreDeployer = instanceComposer.getValueCoreDeployer();
   setup.stPrimeDeployer = instanceComposer.getSTPrimeDeployer();
   setup.stPrimeMinter = instanceComposer.getStakeAndMintSTPrimeMinter();
+  setup.registerSTPrime = instanceComposer.getSetupRegisterSTPrime();
+  setup.fundUsersWithSTPrime = instanceComposer.getSetupFundUsersWithSTPrime();
+
 };
 
 ServiceManifestKlass.prototype = {};

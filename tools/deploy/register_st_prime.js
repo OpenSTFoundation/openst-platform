@@ -59,8 +59,6 @@ RegisterStPrimeKlass.prototype = {
       valueRegistrar = new ValueRegistrarKlass(valueRegistrarContractAddress),
       openStUtility = new OpenStUtilityKlass(openSTUtilityContractAddress);
 
-    logger.step('** Deploying valueCore Contract');
-
     const getSimpleTokenPrimeSymbolResponse = await openStUtility.getSimpleTokenPrimeSymbol(),
       stPrimeSymbol = getSimpleTokenPrimeSymbolResponse.data.symbol,
       getSimpleTokenPrimeNameResponse = await openStUtility.getSimpleTokenPrimeName(),

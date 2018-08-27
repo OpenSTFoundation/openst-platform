@@ -21,7 +21,7 @@ const args = process.argv,
 
 if (!configStrategyFilePath) {
   logger.error(
-    'Please pass the config strategy for the utility chain. Run the code as: \nnode start_utility_services "utility_chain_config_strategy_file_path"'
+    'Please pass the config strategy for the utility chain. Run the code as: \nnode tools/setup/start_utility_services.js "utility_chain_config_strategy_file_path"'
   );
   process.exit(1);
 }

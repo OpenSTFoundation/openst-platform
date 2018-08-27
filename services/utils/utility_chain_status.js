@@ -9,6 +9,7 @@
 const rootPrefix = '../..',
   responseHelper = require(rootPrefix + '/lib/formatter/response'),
   logger = require(rootPrefix + '/helpers/custom_console_logger'),
+  basicHelper = require(rootPrefix + '/helpers/basic_helper'),
   InstanceComposer = require(rootPrefix + '/instance_composer');
 
 require(rootPrefix + '/lib/web3/providers/factory');
@@ -35,10 +36,10 @@ UtilityChainStatusKlass.prototype = {
       if (responseHelper.isCustomResult(error)) {
         return error;
       } else {
-        logger.error('openst-platform::services/utils/platform_status.js::perform::catch');
+        logger.error('openst-platform::services/utils/utility_chain_status.js::perform::catch');
         logger.error(error);
         return responseHelper.error({
-          internal_error_identifier: 's_u_ps_3',
+          internal_error_identifier: 's_u_ucs_3',
           api_error_identifier: 'something_went_wrong',
           debug_options: {}
         });
@@ -90,7 +91,7 @@ UtilityChainStatusKlass.prototype = {
         if (!web3Provider) {
           // this is a error scenario.
           let errObj = responseHelper.error({
-            internal_error_identifier: 's_u_ps_1',
+            internal_error_identifier: 's_u_ucs_1',
             api_error_identifier: 'invalid_chain',
             error_config: basicHelper.fetchErrorConfig()
           });
@@ -127,7 +128,7 @@ UtilityChainStatusKlass.prototype = {
           logger.error('Geth Checker - ' + chain + ' chain has no new blocks.');
 
           let errObj = responseHelper.error({
-            internal_error_identifier: 's_u_ps_2_' + chain,
+            internal_error_identifier: 's_u_ucs_2' + chain,
             api_error_identifier: 'no_new_blocks',
             error_config: basicHelper.fetchErrorConfig()
           });

@@ -29,7 +29,7 @@ const tempGethFolder = 'tmp-geth',
   tempPrivateKeyFile = 'tmp_private_key_file',
   hexStartsWith = '0x',
   genesisTemplateLocation = Path.join(__dirname),
-  etherToWeiCinversion = new BigNumber(1000000000000000000),
+  etherToWeiConversion = new BigNumber(1000000000000000000),
   preInitAddressName = ['sealer'];
 
 /**
@@ -119,7 +119,12 @@ GethManagerKlass.prototype = {
     for (let i = 0; i < preInitAddressName.length; i++) {
       let name = preInitAddressName[i],
         nameDetails = setupConfig.addresses[name],
-        keystoreFileNameLike = nameDetails.address.value.replace(hexStartsWith, '*');
+        addressSetupConfigObj = setupConfig.addresses[name].address,
+        addressValue =
+          addressSetupConfigObj.value === ''
+            ? fileManager.getPlatformConfig()[addressSetupConfigObj.env_var]
+            : addressSetupConfigObj.value,
+        keystoreFileNameLike = addressValue.replace(hexStartsWith, '*');
 
       // if the address is not valid for the chain, continue with the next address
       if (!nameDetails.chains[chain]) continue;
@@ -229,8 +234,8 @@ GethManagerKlass.prototype = {
       coreConstants = oThis.ic().getCoreConstants(),
       gasLimitOn = { utility: coreConstants.OST_UTILITY_GAS_LIMIT, value: coreConstants.OST_VALUE_GAS_LIMIT },
       allocBalancesOn = {
-        utility: new BigNumber(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY).mul(etherToWeiCinversion),
-        value: new BigNumber('1000000').mul(etherToWeiCinversion)
+        utility: new BigNumber(coreConstants.OST_UTILITY_STPRIME_TOTAL_SUPPLY).mul(etherToWeiConversion),
+        value: new BigNumber('1000000').mul(etherToWeiConversion)
       };
     const chainId = setupConfig.chains[chain].chain_id.value,
       allocBalanceToAddrName = setupConfig.chains[chain].alloc_balance_to_addr,
@@ -305,13 +310,13 @@ GethManagerKlass.prototype = {
       setupHelper.setupFolderAbsolutePath() +
       '/' +
       tmpPasswordFilePath;
-    let addressGerationResponse = fileManager.exec(cmd);
+    let addressGenerationResponse = fileManager.exec(cmd);
 
     // remove password
     fileManager.rm(tmpPasswordFilePath);
 
     // parsing the response to get address
-    return addressGerationResponse.stdout
+    return addressGenerationResponse.stdout
       .replace('Address: {', hexStartsWith)
       .replace('}', '')
       .trim();
@@ -385,7 +390,6 @@ GethManagerKlass.prototype = {
 
       logger.info('* ' + name + ' address: {' + nameDetails.address.value + '}');
     }
-
     return rawAddresses;
   },
 
@@ -420,7 +424,7 @@ GethManagerKlass.prototype = {
       setupHelper.setupFolderAbsolutePath() +
       '/' +
       tmpPassphraseFilePath;
-    let addressGerationResponse = fileManager.exec(cmd);
+    let addressGenerationResponse = fileManager.exec(cmd);
 
     // remove password and passphrase file
     fileManager.rm(tmpPasswordFilePath);
