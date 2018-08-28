@@ -20,6 +20,7 @@
  */
 
 const rootPrefix = '../..'
+  , InstanceComposer = require(rootPrefix + '/instance_composer')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , IntercomBaseKlass = require(rootPrefix + '/services/inter_comm/base')
