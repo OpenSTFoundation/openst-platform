@@ -28,9 +28,9 @@
     "pre-commit": "lint-staged"
   },
   "dependencies": {
-    "@openstfoundation/openst-base": "0.9.3-beta.3",
-    "@openstfoundation/openst-notification": "1.0.4-beta.2",
-    "@openstfoundation/openst-storage": "1.0.2-beta.2",
+    "@openstfoundation/openst-base": "0.9.3-beta.4",
+    "@openstfoundation/openst-notification": "1.0.4-beta.3",
+    "@openstfoundation/openst-storage": "1.0.2-beta.3",
     "abi-decoder": "1.0.9",
     "bignumber.js": "4.1.0",
     "child_process": "1.0.2",
