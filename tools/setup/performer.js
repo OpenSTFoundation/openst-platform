@@ -155,6 +155,7 @@ OpenSTSetup.prototype = {
     }
 
     if (step === 'deploy_value_chain' || step === 'all') {
+
       // Deploy Value Registrar Contract and update ENV
       const valueRegistrarDeployResponse = await oThis.performHelperService(oThis.deployValueRegistrarContract);
       setupConfig.contracts['valueRegistrar'].address.value = valueRegistrarDeployResponse.data.address;
@@ -163,6 +164,13 @@ OpenSTSetup.prototype = {
       // Deploy OpenST Value Contract and update ENV
       const openSTValueDeployResponse = await oThis.performHelperService(oThis.openStValueDeployer);
       setupConfig.contracts['openSTValue'].address.value = openSTValueDeployResponse.data.address;
+      envManager.generateConfigFile();
+
+      // Set Admin address for openST Value
+      logger.step('** Setting admin address for openst value');
+
+      const openSTValueSetAdminResponse = await runHelperService(rootPrefix + '/tools/setup/openst_value/set_admin_address');
+
       envManager.generateConfigFile();
 
       // Copy the config file to config folder

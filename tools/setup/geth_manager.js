@@ -30,7 +30,7 @@ const tempGethFolder = 'tmp-geth',
   hexStartsWith = '0x',
   genesisTemplateLocation = Path.join(__dirname),
   etherToWeiConversion = new BigNumber(1000000000000000000),
-  preInitAddressName = ['sealer'];
+  preInitAddressName = ['sealer', 'valueAdmin'];
 
 /**
  * Constructor for geth manager

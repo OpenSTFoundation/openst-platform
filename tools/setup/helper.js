@@ -249,7 +249,7 @@ SetupHelperKlass.prototype = {
    *
    */
   intercomProcessIdentifiers: function() {
-    return ['register_branded_token', 'stake_and_mint', 'stake_and_mint_processor'];
+    return ['register_branded_token', 'stake_and_mint', 'stake_and_mint_processor', 'stake_hunter'];
   },
 
   /**

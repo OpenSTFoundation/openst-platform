@@ -50,6 +50,7 @@ require(rootPrefix + '/services/on_boarding/propose_branded_token');
 require(rootPrefix + '/services/inter_comm/register_branded_token');
 require(rootPrefix + '/services/inter_comm/stake_and_mint');
 require(rootPrefix + '/services/inter_comm/stake_and_mint_processor');
+require(rootPrefix + '/services/inter_comm/stake_hunter');
 
 //Setup related services
 require(rootPrefix + '/tools/setup/performer');
@@ -136,6 +137,7 @@ const ServiceManifestKlass = function(configStrategy, instanceComposer) {
   interComm.registerBrandedToken = instanceComposer.getRegisterBrandedTokenInterCommService();
   interComm.stakeAndMint = instanceComposer.getStakeAndMintInterCommService();
   interComm.stakeAndMintProcessor = instanceComposer.getStakeAndMintProcessorInterCommService();
+  interComm.stakeHunter = instanceComposer.getStakeHunterInterCommService();
 
   /**
    * setup related services

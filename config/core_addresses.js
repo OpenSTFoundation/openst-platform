@@ -138,7 +138,17 @@ CoreAddresses.prototype = {
         utilityOps: {
           address: configStrategy.OST_UTILITY_OPS_ADDR,
           passphrase: configStrategy.OST_UTILITY_OPS_PASSPHRASE
+        },
+
+        /**
+         * value admin account details
+         * @constant {object}
+         */
+        valueAdmin: {
+          address: configStrategy.OST_VALUE_ADMIN_ADDR,
+          passphrase: configStrategy.OST_VALUE_ADMIN_PASSPHRASE
         }
+
       },
 
       contracts: {

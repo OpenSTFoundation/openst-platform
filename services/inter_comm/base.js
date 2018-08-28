@@ -53,12 +53,12 @@ IntercomBaseKlass.prototype = {
       const highestBlock = await this.getChainHighestBlock();
 
       // return if nothing more to do.
-      if (highestBlock - 6 <= oThis.lastProcessedBlock) return oThis.schedule();
+      if (highestBlock - oThis.BLOCK_CONFIRMATION <= oThis.snmData.lastProcessedBlock) return oThis.schedule();
 
       // consider case in which last block was not processed completely
 
       oThis.fromBlock = oThis.snmData.lastProcessedBlock + 1;
-      oThis.toBlock = highestBlock - 6;
+      oThis.toBlock = highestBlock - oThis.BLOCK_CONFIRMATION;
 
       const events = await oThis.completeContract.getPastEvents(
         oThis.EVENT_NAME,

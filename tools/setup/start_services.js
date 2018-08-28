@@ -105,6 +105,11 @@ StartServicesKlass.prototype = {
     servicesList.push(cmd);
     oThis._asyncCommand(cmd);
 
+    logger.step("** Start Stake hunter inter-communication process");
+    var cmd = "sh " + setupHelper.binFolderAbsolutePath() + "/run-stake_hunter.sh";
+    servicesList.push(cmd);
+    oThis._asyncCommand(cmd);
+
     logger.win(
       '\n** Congratulation! All services are up and running. \n' +
         'NOTE: We will keep monitoring the services, and notify you if any service stops.'

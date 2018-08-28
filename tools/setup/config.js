@@ -315,6 +315,23 @@ const setupConfig = {
       }
     },
 
+    // Value admin address
+    valueAdmin: {
+      address: {
+        env_var: 'OST_VALUE_ADMIN_ADDR',
+        value: ''
+      },
+      passphrase: {
+        env_var: 'OST_VALUE_ADMIN_PASSPHRASE',
+        value: 'testtest' //Editable
+      },
+      chains: {
+        value: {
+          fund: ''
+        }
+      }
+    },
+
     // utility chain owner
     utilityChainOwner: {
       address: {
