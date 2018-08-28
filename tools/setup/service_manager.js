@@ -38,7 +38,7 @@ ServiceManagerKlass.prototype = {
     const oThis = this;
 
     // Start geth nodes
-    for (var chain in setupConfig.chains) {
+    for (let chain in setupConfig.chains) {
       oThis.startGeth(chain, purpose);
     }
   },
@@ -94,20 +94,6 @@ ServiceManagerKlass.prototype = {
     logger.info(cmd);
     shellAsyncCmd.run(cmd);
 
-    const sleep = function(ms) {
-      return new Promise(function(resolve) {
-        setTimeout(resolve, ms);
-      });
-    };
-
-    const cmd1 = ' tail -1000  ' + setupHelper.setupFolderAbsolutePath() + '/logs/value-chain-2001.log ';
-    logger.info(cmd1);
-
-    await sleep(3000);
-
-    shellAsyncCmd.get(cmd1, function(err, data, stderr) {
-      console.log('============== tail log ================: \n\n', data);
-    });
   },
 
   /**
@@ -210,7 +196,7 @@ ServiceManagerKlass.prototype = {
         cmd = oThis._startGethCommand(chain, ''),
         gethRunScript = 'run-' + chain + '.sh';
 
-      if (chain == 'utility') {
+      if (chain === 'utility') {
         fileManager.touch(utilityChainBinFolder + '/' + gethRunScript, '#!/bin/sh');
         fileManager.append(utilityChainBinFolder + '/' + gethRunScript, cmd);
         logger.info(
@@ -259,7 +245,7 @@ ServiceManagerKlass.prototype = {
         runScript = 'run-' + intercomIdentifier + '.sh';
 
       fileManager.touch(utilityChainBinFolder + '/' + runScript, '#!/bin/sh');
-      console.log("echo '" + cmd + "' >> " + absoluteBinFolderPath + '/' + runScript);
+      logger.log("echo '" + cmd + "' >> " + absoluteBinFolderPath + '/' + runScript);
       shellAsyncCmd.run("echo '" + cmd + "' >> " + absoluteBinFolderPath + '/' + runScript);
       logger.info('* Start ' + intercomIdentifier + ' intercomm: sh ' + absoluteBinFolderPath + '/' + runScript);
     }

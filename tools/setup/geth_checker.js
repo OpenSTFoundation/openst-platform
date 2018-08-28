@@ -16,9 +16,7 @@ require(rootPrefix + '/lib/web3/providers/factory');
  *
  * @constructor
  */
-const GethCheckerKlass = function(configStrategy, instanceComposer) {
-  console.log('=====configStrategy in Geth Checker=========', configStrategy);
-};
+const GethCheckerKlass = function(configStrategy, instanceComposer) {};
 
 GethCheckerKlass.prototype = {
   /**
@@ -30,7 +28,7 @@ GethCheckerKlass.prototype = {
     const oThis = this,
       promiseArray = [];
 
-    for (var chain in setupConfig.chains) {
+    for (let chain in setupConfig.chains) {
       promiseArray.push(oThis.isRunning(chain));
     }
     return Promise.all(promiseArray);
@@ -62,7 +60,7 @@ GethCheckerKlass.prototype = {
         if (chainTimer['retryCounter'] <= retryAttempts) {
           provider.eth.getBlockNumber(function(err, blocknumber) {
             if (err) {
-              console.log('getBlockNumber err: ', err);
+              logger.log('getBlockNumber err: ', err);
             } else {
               if (chainTimer['blockNumber'] != 0 && chainTimer['blockNumber'] != blocknumber) {
                 logger.info('* Geth Checker - ' + chain + ' chain has new blocks.');

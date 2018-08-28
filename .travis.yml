@@ -6,7 +6,6 @@ branches:
   - master
   - develop
   - release-0.9
-  - feature/config_strategy
 notifications:
   email:
     recipients:

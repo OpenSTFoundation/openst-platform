@@ -18,7 +18,8 @@ const rootPrefix = '../..',
   openstPlatform = new OpenstPlatform(configStrategy),
   platformServices = openstPlatform.services.approve,
   brandedTokenConfigPath = os.homedir() + '/openst-setup/branded_tokens.json',
-  brandedTokenConfig = require(brandedTokenConfigPath);
+  brandedTokenConfig = require(brandedTokenConfigPath),
+  logger = require(rootPrefix + '/helpers/custom_console_logger');
 
 var brandedTokenDetails = brandedTokenConfig[Object.keys(brandedTokenConfig)[0]];
 var testValidData = {
@@ -145,7 +146,7 @@ describe('services/approve/branded_token', function() {
 
     var brandedTokenObj = new platformServices.brandedToken(dupData),
       response = await brandedTokenObj.perform();
-    console.log(response);
+    logger.log(response);
     assert.equal(response.isSuccess(), false);
   });
 
