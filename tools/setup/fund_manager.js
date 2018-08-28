@@ -1,35 +1,22 @@
-"use strict";
+'use strict';
 /**
  * Fund Manager to give ETH on value chain, ST' on utility chain and transfer Simple Tokens
  *
  * @module lib/fund_manager
  */
-const BigNumber = require('bignumber.js')
-;
+const BigNumber = require('bignumber.js');
 
-const rootPrefix = "../.."
-  , coreConstants = require(rootPrefix + '/config/core_constants')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
-  , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-;
-
-/**
- * is equal ignoring case
- *
- * @param {string} compareWith - string to compare with
- *
- * @return {booelan} true when equal
- */
-String.prototype.equalsIgnoreCase = function ( compareWith ) {
-  const oThis = this
-    , _self = this.toLowerCase()
-    , _compareWith = String( compareWith ).toLowerCase();
-
-  return _self === _compareWith;
-};
+const rootPrefix = '../..',
+  InstanceComposer = require(rootPrefix + '/instance_composer'),
+  responseHelper = require(rootPrefix + '/lib/formatter/response'),
+  logger = require(rootPrefix + '/helpers/custom_console_logger'),
+  basicHelper = require(rootPrefix + '/helpers/basic_helper');
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/lib/contract_interact/branded_token');
+require(rootPrefix + '/lib/contract_interact/simple_token');
+require(rootPrefix + '/lib/contract_interact/st_prime');
 
 /**
  * Constructor for fund manager
@@ -37,7 +24,7 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
  * @constructor
  *
  */
-const FundManagerKlass = function () {};
+const FundManagerKlass = function(configStrategy, instanceComposer) {};
 
 FundManagerKlass.prototype = {
   /**
@@ -53,11 +40,12 @@ FundManagerKlass.prototype = {
    */
   transferEth: async function(senderAddr, senderPassphrase, recipient, amountInWei) {
     // TODO: should we have isAsync with UUID (unlock account will take time) and also tag, publish events?
-    const oThis = this
-      , web3Provider = web3ProviderFactory.getProvider('value', 'ws')
-      , gasPrice = coreConstants.OST_VALUE_GAS_PRICE
-      , gas = coreConstants.OST_VALUE_GAS_LIMIT
-    ;
+    const oThis = this,
+      coreConstants = oThis.ic().getCoreConstants(),
+      web3ProviderFactory = oThis.ic().getWeb3ProviderFactory(),
+      web3Provider = web3ProviderFactory.getProvider('value', 'ws'),
+      gasPrice = coreConstants.OST_VALUE_GAS_PRICE,
+      gas = coreConstants.OST_VALUE_GAS_LIMIT;
 
     // Validations
     if (!basicHelper.isAddressValid(senderAddr)) {
@@ -111,13 +99,19 @@ FundManagerKlass.prototype = {
 
     // Perform transfer async
     const asyncTransfer = async function() {
-      return web3Provider.eth.personal.unlockAccount(senderAddr, senderPassphrase)
+      return web3Provider.eth.personal
+        .unlockAccount(senderAddr, senderPassphrase)
         .then(function() {
-          return web3Provider.eth.sendTransaction(
-            {from: senderAddr, to: recipient, value: bigNumAmount.toString(10), gasPrice: gasPrice, gas: gas});
+          return web3Provider.eth.sendTransaction({
+            from: senderAddr,
+            to: recipient,
+            value: bigNumAmount.toString(10),
+            gasPrice: gasPrice,
+            gas: gas
+          });
         })
         .then(function(transactionHash) {
-          return responseHelper.successWithData({transactionHash: transactionHash});
+          return responseHelper.successWithData({ transactionHash: transactionHash });
         })
         .catch(function(reason) {
           logger.error('reason', reason);
@@ -145,12 +139,11 @@ FundManagerKlass.prototype = {
    * @return {promise<result>}
    */
   transferBrandedToken: function(erc20Address, senderAddr, senderPassphrase, recipient, amountInWei) {
+    const oThis = this,
+      BrandedTokenKlass = oThis.ic().getBrandedTokenInteractClass(),
+      brandedToken = new BrandedTokenKlass({ ERC20: erc20Address });
 
-    const BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
-      , brandedToken = new BrandedTokenKlass({ERC20: erc20Address})
-    ;
-
-    return brandedToken.transfer(senderAddr, senderPassphrase, recipient, amountInWei)
+    return brandedToken.transfer(senderAddr, senderPassphrase, recipient, amountInWei);
   },
 
   /**
@@ -169,11 +162,11 @@ FundManagerKlass.prototype = {
    *
    */
   transferST: async function(senderAddr, senderPassphrase, recipient, amountInWei, options) {
-    const simpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
-    ;
+    const oThis = this,
+      SimpleToken = oThis.ic().getSimpleTokenInteractClass(),
+      simpleToken = new SimpleToken();
 
     return simpleToken.transfer(senderAddr, senderPassphrase, recipient, amountInWei, options);
-
   },
 
   /**
@@ -188,12 +181,16 @@ FundManagerKlass.prototype = {
    *
    */
   transferSTP: async function(senderAddr, senderPassphrase, recipient, amountInWei) {
-    const stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime')
-      , StPrimeKlass = require(rootPrefix + '/lib/contract_interact/st_prime')
-      , stPrime = new StPrimeKlass(stPrimeContractAddress)
-    ;
+    const oThis = this,
+      coreAddresses = oThis.ic().getCoreAddresses(),
+      StPrimeKlass = oThis.ic().getStPrimeInteractClass(),
+      stPrimeContractAddress = coreAddresses.getAddressForContract('stPrime'),
+      stPrime = new StPrimeKlass(stPrimeContractAddress);
 
-    return stPrime.transfer(senderAddr, senderPassphrase, recipient, amountInWei, {returnType: 'txReceipt', tag: 'GasRefill'})
+    return stPrime.transfer(senderAddr, senderPassphrase, recipient, amountInWei, {
+      returnType: 'txReceipt',
+      tag: 'GasRefill'
+    });
   },
 
   /**
@@ -204,9 +201,10 @@ FundManagerKlass.prototype = {
    * @return {promise<result>}
    *
    */
-  getEthBalanceOf: function (owner) {
-    const web3Provider = web3ProviderFactory.getProvider('value', 'ws')
-    ;
+  getEthBalanceOf: function(owner) {
+    const oThis = this,
+      web3ProviderFactory = oThis.ic().getWeb3ProviderFactory(),
+      web3Provider = web3ProviderFactory.getProvider('value', 'ws');
 
     // Validate addresses
     if (!basicHelper.isAddressValid(owner)) {
@@ -218,11 +216,12 @@ FundManagerKlass.prototype = {
       return Promise.resolve(errObj);
     }
 
-    return web3Provider.eth.getBalance(owner)
+    return web3Provider.eth
+      .getBalance(owner)
       .then(function(balance) {
-        return responseHelper.successWithData({balance: balance});
+        return responseHelper.successWithData({ balance: balance });
       })
-      .catch(function (err) {
+      .catch(function(err) {
         //Format the error
         logger.error(err);
         return responseHelper.error({
@@ -241,9 +240,10 @@ FundManagerKlass.prototype = {
    * @return {promise<result>}
    *
    */
-  getSTPrimeBalanceOf: function (owner) {
-    const web3Provider = web3ProviderFactory.getProvider('utility', 'ws')
-    ;
+  getSTPrimeBalanceOf: function(owner) {
+    const oThis = this,
+      web3ProviderFactory = oThis.ic().getWeb3ProviderFactory(),
+      web3Provider = web3ProviderFactory.getProvider('utility', 'ws');
 
     // Validate addresses
     if (!basicHelper.isAddressValid(owner)) {
@@ -255,11 +255,12 @@ FundManagerKlass.prototype = {
       return Promise.resolve(errObj);
     }
 
-    return web3Provider.eth.getBalance(owner)
+    return web3Provider.eth
+      .getBalance(owner)
       .then(function(balance) {
-        return responseHelper.successWithData({balance: balance});
+        return responseHelper.successWithData({ balance: balance });
       })
-      .catch(function (err) {
+      .catch(function(err) {
         //Format the error
         logger.error(err);
 
@@ -279,9 +280,8 @@ FundManagerKlass.prototype = {
    * @return {promise<result>}
    *
    */
-  getSTBalanceOf: function (owner) {
-    const simpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
-    ;
+  getSTBalanceOf: function(owner) {
+    const simpleToken = require(rootPrefix + '/lib/contract_interact/simple_token');
 
     return simpleToken.balanceOf(owner);
   },
@@ -295,10 +295,9 @@ FundManagerKlass.prototype = {
    * @return {promise<result>}
    *
    */
-  getBrandedTokenBalanceOf: function (erc20Address, owner) {
-    const BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
-      , brandedToken = new BrandedTokenKlass({ERC20: erc20Address})
-    ;
+  getBrandedTokenBalanceOf: function(erc20Address, owner) {
+    const BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token'),
+      brandedToken = new BrandedTokenKlass({ ERC20: erc20Address });
 
     return brandedToken.getBalanceOf(owner);
   },
@@ -312,37 +311,37 @@ FundManagerKlass.prototype = {
    * @return {promise<result>}
    *
    */
-  validateEthBalance: function (owner, bigMinAmount) {
+  validateEthBalance: function(owner, bigMinAmount) {
     const oThis = this;
 
-    return oThis.getEthBalanceOf(owner)
-      .then(function (response) {
+    return oThis.getEthBalanceOf(owner).then(function(response) {
+      if (response.isFailure()) {
+        return response;
+      }
 
-        if (response.isFailure()) {
-          return response;
-        }
+      var balance = response.data.balance;
+      if (typeof balance === 'undefined' || isNaN(Number(balance))) {
+        return responseHelper.error({
+          internal_error_identifier: 't_s_fm_6',
+          api_error_identifier: 'something_went_wrong',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+      }
 
-        var balance = response.data.balance;
-        if (typeof balance === "undefined" || isNaN(Number(balance))) {
-          return responseHelper.error({
-            internal_error_identifier: 't_s_fm_6',
-            api_error_identifier: 'something_went_wrong',
-            error_config: basicHelper.fetchErrorConfig()
-          });
-        }
+      var bigNumBalance = new BigNumber(balance);
+      if (bigNumBalance.lessThan(bigMinAmount)) {
+        return responseHelper.error({
+          internal_error_identifier: 't_s_fm_7',
+          api_error_identifier: 'insufficient_funds',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+      }
 
-        var bigNumBalance = new BigNumber(balance);
-        if (bigNumBalance.lessThan(bigMinAmount)) {
-          return responseHelper.error({
-            internal_error_identifier: 't_s_fm_7',
-            api_error_identifier: 'insufficient_funds',
-            error_config: basicHelper.fetchErrorConfig()
-          });
-        }
-
-        return responseHelper.successWithData({balance: balance, bigNumBalance: bigNumBalance});
-      });
-  },
+      return responseHelper.successWithData({ balance: balance, bigNumBalance: bigNumBalance });
+    });
+  }
 };
 
-module.exports = new FundManagerKlass();
+InstanceComposer.register(FundManagerKlass, 'getSetupFundManager', false);
+
+module.exports = FundManagerKlass;

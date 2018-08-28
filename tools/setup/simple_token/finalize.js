@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Finalize Simple Token Contract
@@ -6,15 +6,12 @@
  * @module tools/setup/simple_token/finalize
  */
 
-const rootPrefix = "../../.."
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , SimpleToken = require(rootPrefix + '/lib/contract_interact/simple_token')
-;
+const rootPrefix = '../../..',
+  logger = require(rootPrefix + '/helpers/custom_console_logger'),
+  InstanceComposer = require(rootPrefix + '/instance_composer');
 
-const valueRegistrarAddr = coreAddresses.getAddressForUser('valueRegistrar')
-  , valueRegistrarPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar')
-;
+require(rootPrefix + '/lib/contract_interact/simple_token');
+require(rootPrefix + '/config/core_addresses');
 
 /**
  * is equal ignoring case
@@ -23,10 +20,10 @@ const valueRegistrarAddr = coreAddresses.getAddressForUser('valueRegistrar')
  *
  * @return {booelan} true when equal
  */
-String.prototype.equalsIgnoreCase = function ( compareWith ) {
-  const oThis = this
-    , _self = this.toLowerCase()
-    , _compareWith = String( compareWith ).toLowerCase();
+String.prototype.equalsIgnoreCase = function(compareWith) {
+  const oThis = this,
+    _self = this.toLowerCase(),
+    _compareWith = String(compareWith).toLowerCase();
 
   return _self === _compareWith;
 };
@@ -36,34 +33,41 @@ String.prototype.equalsIgnoreCase = function ( compareWith ) {
  *
  * @constructor
  */
-const FinalizeSimpleTokenContractKlass = function () {
-};
+const FinalizeSimpleTokenContractKlass = function() {};
 
 FinalizeSimpleTokenContractKlass.prototype = {
-
   /**
    * Perform
    *
    * @return {promise}
    */
-  perform: async function () {
-    logger.step("** Setting Admin Address of Simple Token Contract to value Registrar");
+  perform: async function() {
+    const oThis = this,
+      coreAddresses = oThis.ic().getCoreAddresses(),
+      valueRegistrarAddr = coreAddresses.getAddressForUser('valueRegistrar'),
+      valueRegistrarPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar'),
+      SimpleToken = oThis.ic().getSimpleTokenInteractClass(),
+      simpleTokenObj = new SimpleToken();
 
-    await SimpleToken.setAdminAddress('foundation', valueRegistrarAddr, {});
-    const simpleTokenAdminAddressResponse = await SimpleToken.getAdminAddress()
-      , simpleTokenAdminAddress = simpleTokenAdminAddressResponse.data.address;
+    logger.step('** Setting Admin Address of Simple Token Contract to value Registrar');
+
+    await simpleTokenObj.setAdminAddress('foundation', valueRegistrarAddr, {});
+    const simpleTokenAdminAddressResponse = await simpleTokenObj.getAdminAddress(),
+      simpleTokenAdminAddress = simpleTokenAdminAddressResponse.data.address;
 
     // check if the admin address is correctly set.
-    if(!simpleTokenAdminAddress || !simpleTokenAdminAddress.equalsIgnoreCase(valueRegistrarAddr)){
+    if (!simpleTokenAdminAddress || !simpleTokenAdminAddress.equalsIgnoreCase(valueRegistrarAddr)) {
       return Promise.reject('Admin Address not correctly set');
     }
 
-    logger.step("** Finalize Simple Token Contract");
+    logger.step('** Finalize Simple Token Contract');
     // finalize the simple token contract
-    await SimpleToken.finalize(valueRegistrarAddr, valueRegistrarPassphrase);
+    await simpleTokenObj.finalize(valueRegistrarAddr, valueRegistrarPassphrase);
 
     return Promise.resolve();
   }
 };
 
-module.exports = new FinalizeSimpleTokenContractKlass();
+InstanceComposer.register(FinalizeSimpleTokenContractKlass, 'getSimpleTokenFinalizar', false);
+
+module.exports = FinalizeSimpleTokenContractKlass;

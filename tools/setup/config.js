@@ -1,9 +1,16 @@
+/**
+ *
+ * Configurations for setup
+ *
+ */
+
 const os = require('os');
 
 const setupConfig = {
-
   // Platform environment variables filename
-  env_vars_file: process.env.OST_SETUP_ENV_FILE || "openst_env_vars.sh", //Editable
+  env_vars_file: process.env.OST_SETUP_ENV_FILE || 'openst_env_vars.sh', //Editable
+  openst_platform_config_file: process.env.OST_PLATFROM_CONFIG_JSON || 'openst_platform_config.json', //Editable
+  allocated_addresses_file_path: 'allocated_addresses.json',
   setup_path: process.env.OST_SETUP_PATH || os.homedir(),
 
   /**
@@ -12,7 +19,7 @@ const setupConfig = {
   chains: {
     // Value Chain
     value: {
-      folder_name: "openst-geth-value", //Editable
+      folder_name: 'openst-geth-value', //Editable
       alloc_balance_to_addr: 'foundation',
       chain_id: {
         env_var: 'OST_VALUE_CHAIN_ID',
@@ -42,19 +49,19 @@ const setupConfig = {
 
     // Utility Chain
     utility: {
-      folder_name: "openst-geth-utility", //Editable
+      folder_name: 'openst-geth-utility', //Editable
       alloc_balance_to_addr: 'utilityInitialSTPrimeHolder',
       chain_id: {
         env_var: 'OST_UTILITY_CHAIN_ID',
-        value: 2000 //Editable
+        value: 1000 //Editable
       },
       network_id: {
         env_var: '',
-        value: 2000 //Editable
+        value: 1000 //Editable
       },
       port: {
         env_var: '',
-        value: 30300 //Editable
+        value: 30310 //Editable
       },
       gas_price: {
         env_var: 'OST_UTILITY_GAS_PRICE',
@@ -62,11 +69,11 @@ const setupConfig = {
       },
       ws_provider: {
         env_var: 'OST_UTILITY_GETH_WS_PROVIDER',
-        value: 'ws://127.0.0.1:19546' //Editable
+        value: 'ws://127.0.0.1:19547' //Editable
       },
       rpc_provider: {
         env_var: 'OST_UTILITY_GETH_RPC_PROVIDER',
-        value: 'http://127.0.0.1:9546' //Editable
+        value: 'http://127.0.0.1:9547' //Editable
       }
     }
   },
@@ -183,6 +190,18 @@ const setupConfig = {
     endpoint: {
       env_var: 'OS_DYNAMODB_ENDPOINT',
       value: 'http://localhost:8000'
+    },
+    db_prefix: {
+      env_var: 'OS_DYNAMODB_TABLE_NAME_PREFIX',
+      value: ''
+    },
+    ssl_enabled: {
+      env_var: 'OS_DYNAMODB_SSL_ENABLED',
+      value: '0'
+    },
+    logging_enabled: {
+      env_var: 'OS_DYNAMODB_LOGGING_ENABLED',
+      value: '0'
     }
   },
 
@@ -221,7 +240,6 @@ const setupConfig = {
    * Address configurations
    */
   addresses: {
-
     // foundation
     foundation: {
       address: {
@@ -280,7 +298,7 @@ const setupConfig = {
     // Sealer address
     sealer: {
       address: {
-        env_var: '',
+        env_var: 'OST_SEALER_ADDR',
         value: ''
       },
       passphrase: {
@@ -291,6 +309,23 @@ const setupConfig = {
         utility: {
           fund: ''
         },
+        value: {
+          fund: ''
+        }
+      }
+    },
+
+    // Value admin address
+    valueAdmin: {
+      address: {
+        env_var: 'OST_VALUE_ADMIN_ADDR',
+        value: ''
+      },
+      passphrase: {
+        env_var: 'OST_VALUE_ADMIN_PASSPHRASE',
+        value: 'testtest' //Editable
+      },
+      chains: {
         value: {
           fund: ''
         }
@@ -441,14 +476,12 @@ const setupConfig = {
         }
       }
     }
-
   },
 
   /**
    * Contract addresses configurations
    */
   contracts: {
-
     // Simple Token EIP20
     simpleToken: {
       address: {
@@ -503,10 +536,8 @@ const setupConfig = {
         env_var: 'OST_VALUE_CORE_CONTRACT_ADDR',
         value: ''
       }
-    },
-
+    }
   }
-
 };
 
 module.exports = setupConfig;

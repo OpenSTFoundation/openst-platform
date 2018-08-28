@@ -1,25 +1,21 @@
-"use strict";
+'use strict';
 /**
  * Setup Helper
  *
  * @module tools/setup/helper
  */
 
-const shell = require('shelljs')
-  , Path = require('path')
-  , os = require('os')
-;
+const shell = require('shelljs');
 
-const rootPrefix = "../.."
-  , setupConfig = require(rootPrefix + '/tools/setup/config')
-;
+const rootPrefix = '../..',
+  setupConfig = require(rootPrefix + '/tools/setup/config');
 
 /**
  * Setup Helper Constructor
  *
  * @constructor
  */
-const SetupHelperKlass = function () {};
+const SetupHelperKlass = function() {};
 
 SetupHelperKlass.prototype = {
   /**
@@ -44,7 +40,7 @@ SetupHelperKlass.prototype = {
    */
   setupFolderAbsolutePath: function() {
     const oThis = this;
-    return setupConfig.setup_path + "/" + oThis.setupFolder();
+    return setupConfig.setup_path + '/' + oThis.setupFolder();
   },
 
   /**
@@ -55,7 +51,7 @@ SetupHelperKlass.prototype = {
    */
   logsFolderAbsolutePath: function() {
     const oThis = this;
-    return oThis.setupFolderAbsolutePath() + "/" + oThis.logsFolder();
+    return oThis.setupFolderAbsolutePath() + '/' + oThis.logsFolder();
   },
 
   /**
@@ -66,7 +62,7 @@ SetupHelperKlass.prototype = {
    */
   binFolderAbsolutePath: function() {
     const oThis = this;
-    return oThis.setupFolderAbsolutePath() + "/" + oThis.binFolder();
+    return oThis.setupFolderAbsolutePath() + '/' + oThis.binFolder();
   },
 
   /**
@@ -81,13 +77,23 @@ SetupHelperKlass.prototype = {
   },
 
   /**
+   * get the data folder name
+   *
+   * @return {string}
+   *
+   */
+  dataFolder: function() {
+    return 'data';
+  },
+
+  /**
    * get the logs folder name
    *
    * @return {string}
    *
    */
   logsFolder: function() {
-    return "logs";
+    return 'logs';
   },
 
   /**
@@ -97,7 +103,17 @@ SetupHelperKlass.prototype = {
    *
    */
   binFolder: function() {
-    return "bin";
+    return 'bin';
+  },
+
+  /**
+   * get the config folder name
+   *
+   * @return {string}
+   *
+   */
+  configFolder: function() {
+    return 'config';
   },
 
   /**
@@ -107,7 +123,113 @@ SetupHelperKlass.prototype = {
    *
    */
   setupFolder: function() {
-    return "openst-setup";
+    return 'openst-setup';
+  },
+
+  /**
+   * master GETH folder
+   *
+   * @return {string}
+   *
+   */
+  masterGethFolder: function() {
+    return 'all-geths';
+  },
+
+  /**
+   * GETH folder for a particular chain
+   *
+   * @param {string} chain
+   * @return {string}
+   *
+   */
+  gethFolderFor: function(chain) {
+    const oThis = this;
+
+    let folderName = setupConfig.chains[chain].folder_name;
+
+    folderName = folderName + '-' + oThis.chainIdFor(chain);
+
+    return oThis.masterGethFolder() + '/' + folderName;
+  },
+
+  /**
+   * Config file path for a chain
+   *
+   * @param {string} chain
+   * @return {string}
+   *
+   */
+  configFilePathFor: function(chain) {
+    const oThis = this;
+
+    return oThis.configFolder() + '/' + chain + '-' + oThis.chainIdFor(chain) + '.json';
+  },
+  /**
+   * chain id for a particular chain
+   *
+   * @param {string} chain
+   * @return {number}
+   */
+  chainIdFor: function(chain) {
+    const oThis = this;
+
+    if (chain === 'value') {
+      return oThis.valueChainId();
+    } else {
+      return oThis.utilityChainId();
+    }
+  },
+
+  /**
+   * utility chain id
+   *
+   * @return {number}
+   */
+  utilityChainId: function() {
+    return setupConfig.chains.utility.chain_id.value;
+  },
+
+  /**
+   * value chain id
+   *
+   * @return {number}
+   */
+  valueChainId: function() {
+    return setupConfig.chains.value.chain_id.value;
+  },
+
+  /**
+   * utility chain logs files folder
+   *
+   * @return {number}
+   */
+  utilityChainLogsFilesFolder: function() {
+    const oThis = this;
+
+    return oThis.logsFolder() + '/' + 'utility-chain-' + oThis.utilityChainId();
+  },
+
+  /**
+   * utility chain data files folder
+   *
+   * @return {number}
+   */
+  utilityChainDataFilesFolder: function() {
+    const oThis = this;
+
+    return oThis.dataFolder() + '/' + 'utility-chain-' + oThis.utilityChainId();
+  },
+
+  /**
+   * intercomm data file folder
+   *
+   * @return {number}
+   */
+  utilityChainBinFilesFolder: function() {
+    const oThis = this;
+
+    return oThis.binFolder() + '/' + 'utility-chain-' + oThis.utilityChainId();
   },
 
   /**
@@ -127,10 +249,40 @@ SetupHelperKlass.prototype = {
    *
    */
   intercomProcessIdentifiers: function() {
-    return ["register_branded_token",
-      "stake_and_mint", "stake_and_mint_processor"];
-  }
+    return ['register_branded_token', 'stake_and_mint', 'stake_and_mint_processor', 'stake_hunter'];
+  },
 
+  /**
+   * config strategy file path
+   *
+   * @return {string}
+   *
+   */
+  configStrategyFilePath: function() {
+    const oThis = this;
+    return oThis.setupFolderAbsolutePath() + '/' + setupConfig.openst_platform_config_file;
+  },
+
+  configStrategyUtilityFilePath: function() {
+    const oThis = this;
+    return (
+      oThis.setupFolderAbsolutePath() +
+      '/' +
+      oThis.utilityChainBinFilesFolder() +
+      '/' +
+      setupConfig.openst_platform_config_file
+    );
+  },
+
+  /**
+   * allocated addresses file path
+   *
+   * @return {string}
+   */
+  allocatedAddressFilePath: function() {
+    const oThis = this;
+    return oThis.setupFolderAbsolutePath() + '/' + setupConfig.allocated_addresses_file_path;
+  }
 };
 
 module.exports = new SetupHelperKlass();

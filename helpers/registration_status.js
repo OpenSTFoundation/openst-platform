@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Registration status
@@ -6,10 +6,8 @@
  * @module helpers/registration_status
  */
 
-const rootPrefix = '..'
-  , responseHelper = require(rootPrefix + '/lib/formatter/response')
-;
-
+const rootPrefix = '..',
+  responseHelper = require(rootPrefix + '/lib/formatter/response');
 
 /**
  * Registration status
@@ -17,7 +15,7 @@ const rootPrefix = '..'
  * @constructor
  *
  */
-const RegistrationStatusKlass = function () {
+const RegistrationStatusKlass = function() {
   this.uuid = '';
   this.erc20Address = '';
   this.isProposalDone = 0;
@@ -26,7 +24,6 @@ const RegistrationStatusKlass = function () {
 };
 
 RegistrationStatusKlass.prototype = {
-
   constructor: RegistrationStatusKlass,
 
   /**
@@ -34,9 +31,8 @@ RegistrationStatusKlass.prototype = {
    *
    * @return {object} returns a formatted object of registration status
    */
-  toHash: function () {
-    const oThis = this
-    ;
+  toHash: function() {
+    const oThis = this;
 
     return {
       uuid: oThis.uuid,
@@ -44,7 +40,7 @@ RegistrationStatusKlass.prototype = {
       is_proposal_done: oThis.isProposalDone,
       is_registered_on_uc: oThis.isRegisteredOnUc,
       is_registered_on_vc: oThis.isRegisteredOnVc
-    }
+    };
   },
 
   /**
@@ -52,11 +48,10 @@ RegistrationStatusKlass.prototype = {
    *
    * @return {promise<result>} returns a Promise which resolves to result object
    */
-  returnResultPromise: function () {
-    const oThis = this
-    ;
+  returnResultPromise: function() {
+    const oThis = this;
 
-    return Promise.resolve(responseHelper.successWithData({registration_status: oThis.toHash()}))
+    return Promise.resolve(responseHelper.successWithData({ registration_status: oThis.toHash() }));
   },
 
   /**
@@ -64,9 +59,8 @@ RegistrationStatusKlass.prototype = {
    *
    * @param {string} uuid - uuid to set into the object
    */
-  setUuid: function (uuid) {
-    const oThis = this
-    ;
+  setUuid: function(uuid) {
+    const oThis = this;
 
     oThis.uuid = uuid;
   },
@@ -76,9 +70,8 @@ RegistrationStatusKlass.prototype = {
    *
    * @param {string} erc20Address - ERC20 address to set into the object
    */
-  setErc20Address: function (erc20Address) {
-    const oThis = this
-    ;
+  setErc20Address: function(erc20Address) {
+    const oThis = this;
 
     oThis.erc20Address = erc20Address;
   },
@@ -88,9 +81,8 @@ RegistrationStatusKlass.prototype = {
    *
    * @param {number} isRegisteredOnUc - is registered on UC flag
    */
-  setIsRegisteredOnUc: function (isRegisteredOnUc) {
-    const oThis = this
-    ;
+  setIsRegisteredOnUc: function(isRegisteredOnUc) {
+    const oThis = this;
 
     oThis.isRegisteredOnUc = isRegisteredOnUc;
   },
@@ -100,9 +92,8 @@ RegistrationStatusKlass.prototype = {
    *
    * @param {number} isRegisteredOnVc - is registered on VC flag
    */
-  setIsRegisteredOnVc: function (isRegisteredOnVc) {
-    const oThis = this
-    ;
+  setIsRegisteredOnVc: function(isRegisteredOnVc) {
+    const oThis = this;
 
     oThis.isRegisteredOnVc = isRegisteredOnVc;
   },
@@ -112,9 +103,8 @@ RegistrationStatusKlass.prototype = {
    *
    * @param {number} isProposalDone - is proposal done
    */
-  setIsProposalDone: function (isProposalDone) {
-    const oThis = this
-    ;
+  setIsProposalDone: function(isProposalDone) {
+    const oThis = this;
 
     oThis.isProposalDone = isProposalDone;
   }

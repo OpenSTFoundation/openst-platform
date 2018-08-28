@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Load all required contract abi files and export them.<br><br>
@@ -6,15 +6,14 @@
  * @module config/core_bins
  */
 
-const fs = require('fs')
-  , path = require('path')
-;
+const fs = require('fs'),
+  path = require('path');
 
-const rootPrefix = "..";
+const rootPrefix = '..';
 
 function readFile(filePath, options) {
   filePath = path.join(__dirname, '/' + filePath);
-  return fs.readFileSync(filePath, options || "utf8");
+  return fs.readFileSync(filePath, options || 'utf8');
 }
 
 /**
@@ -22,8 +21,7 @@ function readFile(filePath, options) {
  *
  * @constructor
  */
-const coreBins = function () {
-};
+const coreBins = function() {};
 
 coreBins.prototype = {
   /**

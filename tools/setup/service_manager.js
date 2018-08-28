@@ -1,33 +1,32 @@
-"use strict";
+'use strict';
 /**
  * Manage openST Platform Services
  *
  * @module tools/setup/service_manager
  */
 
-const shellAsyncCmd = require('node-cmd')
-  , shellSource = require('shell-source')
-  , Path = require('path')
-;
+const shellAsyncCmd = require('node-cmd'),
+  shellSource = require('shell-source'),
+  Path = require('path');
 
-const rootPrefix = "../.."
-  , setupConfig = require(rootPrefix + '/tools/setup/config')
-  , setupHelper = require(rootPrefix + '/tools/setup/helper')
-  , gethManager = require(rootPrefix + '/tools/setup/geth_manager')
-  , fileManager = require(rootPrefix + '/tools/setup/file_manager')
-  , coreConstants = require(rootPrefix + '/config/core_constants')
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-;
+const rootPrefix = '../..',
+  InstanceComposer = require(rootPrefix + '/instance_composer'),
+  setupConfig = require(rootPrefix + '/tools/setup/config'),
+  setupHelper = require(rootPrefix + '/tools/setup/helper'),
+  fileManager = require(rootPrefix + '/tools/setup/file_manager'),
+  logger = require(rootPrefix + '/helpers/custom_console_logger');
 
-const sealerPassphraseFile = "sealer-passphrase"
-;
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/tools/setup/geth_manager');
+
+const sealerPassphraseFile = 'sealer-passphrase';
 
 /**
  * Constructor for service manager
  *
  * @constructor
  */
-const ServiceManagerKlass = function () {};
+const ServiceManagerKlass = function(configStrategy, instanceComposer) {};
 
 ServiceManagerKlass.prototype = {
   /**
@@ -35,7 +34,7 @@ ServiceManagerKlass.prototype = {
    *
    * @params {string} purpose - if mentioned as deployment, geth will start with zero gas. Else in normal mode
    */
-  startServices: function (purpose) {
+  startServices: function(purpose) {
     const oThis = this;
 
     // Start geth nodes
@@ -45,16 +44,39 @@ ServiceManagerKlass.prototype = {
   },
 
   /**
-   * Stop all services
+   * Stop all geth nodes and executables
    */
-  stopServices: function () {
+  stopServices: function() {
     const oThis = this;
 
-    // Stop geth nodes
-    oThis.stopGeth();
+    // Stop All geth nodes
+    oThis.stopAllGeth();
 
     // Stop all executables
     oThis.stopExecutable();
+  },
+
+  /**
+   * Stop Value Chain Services
+   */
+  stopValueServices: function() {
+    const oThis = this;
+
+    // Stop geth nodes
+    oThis.stopValueGeth();
+  },
+
+  /**
+   * Stop Utility Chain Services
+   */
+  stopUtilityServices: function() {
+    const oThis = this;
+
+    // Stop Utility chain geth nodes
+    oThis.stopUtilityGeth();
+
+    // Stop all executables
+    oThis.stopUtilityExecutable();
   },
 
   /**
@@ -62,23 +84,63 @@ ServiceManagerKlass.prototype = {
    * @params {string} chain - name of the chain
    * @params {string} purpose - if mentioned as deployment, geths will start with zero gas. Else in normal mode
    */
-  startGeth: function(chain, purpose) {
-    const oThis = this
-    ;
+
+  startGeth: async function(chain, purpose) {
+    const oThis = this;
 
     // start geth
-    logger.info("* Starting " + chain + " chain");
+    logger.info('* Starting ' + chain + ' chain');
     const cmd = oThis._startGethCommand(chain, purpose);
     logger.info(cmd);
+    shellAsyncCmd.run(cmd);
+
+    const sleep = function(ms) {
+      return new Promise(function(resolve) {
+        setTimeout(resolve, ms);
+      });
+    };
+
+    const cmd1 = ' tail -1000  ' + setupHelper.setupFolderAbsolutePath() + '/logs/value-chain-2001.log ';
+    logger.info(cmd1);
+
+    await sleep(3000);
+
+    shellAsyncCmd.get(cmd1, function(err, data, stderr) {
+      console.log('============== tail log ================: \n\n', data);
+    });
+  },
+
+  /**
+   * Stop All Geth nodes
+   */
+  stopAllGeth: function() {
+    logger.info('* Stopping all running geths');
+    const cmd =
+      "ps -ef | grep 'openst-setup\\|openst-platform' | grep 'geth ' |  grep -v grep | awk '{print $2}' | xargs kill";
     shellAsyncCmd.run(cmd);
   },
 
   /**
-   * Start Geth node
+   * Stop Value Geth node
    */
-  stopGeth: function() {
-    logger.info("* Stopping all running geths");
-    const cmd = "ps -ef | grep 'openst-setup\\|openst-platform' | grep 'geth ' |  grep -v grep | awk '{print $2}' | xargs kill";
+  stopValueGeth: function() {
+    logger.info('* Stopping all running utility geths');
+    const cmd =
+      "ps -ef | grep 'openst-setup\\|openst-platform' | grep 'openst-geth-value-" +
+      setupHelper.valueChainId() +
+      "' |  grep -v grep | awk '{print $2}' | xargs kill";
+    shellAsyncCmd.run(cmd);
+  },
+
+  /**
+   * Stop Utility Geth node
+   */
+  stopUtilityGeth: function() {
+    logger.info('* Stopping all running utility geths');
+    const cmd =
+      "ps -ef | grep 'openst-setup\\|openst-platform' | grep 'openst-geth-utility-" +
+      setupHelper.utilityChainId() +
+      "' |  grep -v grep | awk '{print $2}' | xargs kill";
     shellAsyncCmd.run(cmd);
   },
 
@@ -90,13 +152,15 @@ ServiceManagerKlass.prototype = {
    * @return {promise}
    */
   startExecutable: function(executablePath) {
-    const oThis = this
-      , envFilePath = setupHelper.setupFolderAbsolutePath() + '/' + setupConfig.env_vars_file;
+    const oThis = this,
+      envFilePath = setupHelper.setupFolderAbsolutePath() + '/' + setupConfig.env_vars_file;
 
-    return new Promise(function (onResolve, onReject) {
+    return new Promise(function(onResolve, onReject) {
       // source env
       shellSource(envFilePath, function(err) {
-        if (err) { throw err;}
+        if (err) {
+          throw err;
+        }
 
         logger.info('* Starting executable:', executablePath);
         const cmd = oThis._startExecutableCommand(executablePath);
@@ -104,7 +168,9 @@ ServiceManagerKlass.prototype = {
         shellAsyncCmd.run(cmd);
 
         logger.info('* Waiting for 10 seconds for executable to start.');
-        setTimeout(function(){ onResolve(Promise.resolve()) }, 10000);
+        setTimeout(function() {
+          onResolve(Promise.resolve());
+        }, 10000);
       });
     });
   },
@@ -113,8 +179,22 @@ ServiceManagerKlass.prototype = {
    * Stop executables
    */
   stopExecutable: function() {
-    logger.info("* Stopping all running executable");
-    const cmd = "ps -ef | grep 'openst-setup\\|openst-platform' | grep 'executables' |  grep -v grep | awk '{print $2}' | xargs kill";
+    logger.info('* Stopping all running executable');
+    const cmd =
+      "ps -ef | grep 'openst-setup\\|openst-platform' | grep 'executables' |  grep -v grep | awk '{print $2}' | xargs kill";
+    shellAsyncCmd.run(cmd);
+  },
+
+  /**
+   * Stop Utility executables
+   */
+  stopUtilityExecutable: function() {
+    logger.info('* Stopping all running utility executable');
+    const cmd =
+      "ps -ef | grep 'openst-setup\\|openst-platform' | grep 'executables' | " +
+      "grep 'utility-chain-" +
+      setupHelper.utilityChainId() +
+      "' |  grep -v grep | awk '{print $2}' | xargs kill";
     shellAsyncCmd.run(cmd);
   },
 
@@ -122,40 +202,77 @@ ServiceManagerKlass.prototype = {
    * Post platform setup
    */
   postSetupSteps: function() {
-    const oThis = this
-    ;
-
-    logger.info("* Source environment values: source " + setupHelper.setupFolderAbsolutePath() + "/" + setupConfig.env_vars_file);
+    const oThis = this;
 
     // create geth run script
-    for (var chain in setupConfig.chains) {
-      var binFolder = setupHelper.binFolder()
-        , cmd = oThis._startGethCommand(chain, '')
-        , gethRunScript = "run-" + chain + ".sh"
-      ;
-      fileManager.touch(binFolder + "/" + gethRunScript, '#!/bin/sh');
-      fileManager.append(binFolder + "/" + gethRunScript, cmd);
-      logger.info("* Start " + chain + " chain: sh " + setupHelper.setupFolderAbsolutePath() + "/" + binFolder + "/" + gethRunScript);
+    for (let chain in setupConfig.chains) {
+      let utilityChainBinFolder = setupHelper.utilityChainBinFilesFolder(),
+        cmd = oThis._startGethCommand(chain, ''),
+        gethRunScript = 'run-' + chain + '.sh';
+
+      if (chain == 'utility') {
+        fileManager.touch(utilityChainBinFolder + '/' + gethRunScript, '#!/bin/sh');
+        fileManager.append(utilityChainBinFolder + '/' + gethRunScript, cmd);
+        logger.info(
+          '* Start ' +
+            chain +
+            ' chain: sh ' +
+            setupHelper.setupFolderAbsolutePath() +
+            '/' +
+            utilityChainBinFolder +
+            '/' +
+            gethRunScript
+        );
+      } else {
+        fileManager.touch('/' + setupHelper.binFolder() + '/' + gethRunScript, '#!/bin/sh');
+        fileManager.append('/' + setupHelper.binFolder() + '/' + gethRunScript, cmd);
+        logger.info(
+          '* Start ' +
+            chain +
+            ' chain: sh ' +
+            setupHelper.setupFolderAbsolutePath() +
+            '/' +
+            setupHelper.binFolder() +
+            '/' +
+            gethRunScript
+        );
+      }
     }
 
     // Generate executables
     const intercomProcessIdentifiers = setupHelper.intercomProcessIdentifiers();
-    for (var i=0; i < intercomProcessIdentifiers.length; i++) {
-      var binFolder = setupHelper.binFolder()
-        , executablePath = 'executables/inter_comm/' + intercomProcessIdentifiers[i] + '.js'
-        , intercomProcessDataFile = setupHelper.setupFolderAbsolutePath() + '/logs/' + intercomProcessIdentifiers[i] + '.data'
-        , cmd = oThis._startExecutableCommand(executablePath + " " + intercomProcessDataFile)
-        , runScript = "run-" + intercomProcessIdentifiers[i] + ".sh"
-      ;
+    for (let i = 0; i < intercomProcessIdentifiers.length; i++) {
+      let intercomIdentifier = intercomProcessIdentifiers[i],
+        utilityChainBinFolder = setupHelper.utilityChainBinFilesFolder(),
+        absoluteBinFolderPath = setupHelper.setupFolderAbsolutePath() + '/' + utilityChainBinFolder,
+        executablePath = 'executables/inter_comm/' + intercomIdentifier + '.js',
+        intercomProcessDataFile =
+          setupHelper.setupFolderAbsolutePath() +
+          '/' +
+          setupHelper.utilityChainDataFilesFolder() +
+          '/' +
+          intercomIdentifier +
+          '.data',
+        cmd = oThis._startExecutableCommand(
+          executablePath + ' ' + intercomProcessDataFile + ' ' + setupHelper.configStrategyUtilityFilePath()
+        ),
+        runScript = 'run-' + intercomIdentifier + '.sh';
 
-      fileManager.touch(binFolder + "/" + runScript, '#!/bin/sh');
-      shellAsyncCmd.run("echo '"+ cmd +"' >> " + setupHelper.binFolderAbsolutePath() + "/" + runScript);
-      logger.info("* Start " + intercomProcessIdentifiers[i] + " intercomm: sh " + setupHelper.setupFolderAbsolutePath() + "/" + binFolder + "/" + runScript);
+      fileManager.touch(utilityChainBinFolder + '/' + runScript, '#!/bin/sh');
+      console.log("echo '" + cmd + "' >> " + absoluteBinFolderPath + '/' + runScript);
+      shellAsyncCmd.run("echo '" + cmd + "' >> " + absoluteBinFolderPath + '/' + runScript);
+      logger.info('* Start ' + intercomIdentifier + ' intercomm: sh ' + absoluteBinFolderPath + '/' + runScript);
     }
 
-      //Make Utility gas price to default after deployment
-      var cmd = "export " + setupConfig.chains.utility.gas_price.env_var + "=" + "'" + setupConfig.chains.utility.gas_price.value + "'";
-      fileManager.append(setupConfig.env_vars_file, cmd);
+    //Make Utility gas price to default after deployment
+    let cmd =
+      'export ' +
+      setupConfig.chains.utility.gas_price.env_var +
+      '=' +
+      "'" +
+      setupConfig.chains.utility.gas_price.value +
+      "'";
+    fileManager.append(setupConfig.env_vars_file, cmd);
   },
 
   /**
@@ -167,9 +284,22 @@ ServiceManagerKlass.prototype = {
    * @private
    */
   _startExecutableCommand: function(executablePath) {
-    var logFilename = executablePath.split(' ')[0].split('/').slice(-1)[0].split('.')[0];
-    return 'node $OPENST_PLATFORM_PATH/' + executablePath + ' >> ' +
-      setupHelper.logsFolderAbsolutePath() + '/executables-' + logFilename + '.log'
+    let logFilename = executablePath
+      .split(' ')[0]
+      .split('/')
+      .slice(-1)[0]
+      .split('.')[0];
+    return (
+      'node $OPENST_PLATFORM_PATH/' +
+      executablePath +
+      ' >> ' +
+      setupHelper.setupFolderAbsolutePath() +
+      '/' +
+      setupHelper.utilityChainLogsFilesFolder() +
+      '/executables-' +
+      logFilename +
+      '.log'
+    );
   },
 
   /**
@@ -182,36 +312,70 @@ ServiceManagerKlass.prototype = {
    * @private
    */
   _startGethCommand: function(chain, purpose) {
-    const oThis = this
-      , chainDetails = setupConfig.chains[chain]
-      , networkId = chainDetails['network_id'].value
-      , chainPort = chainDetails['port'].value
-      , zeroGas = coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT
-      , gasLimit = {utility: coreConstants.OST_UTILITY_GAS_LIMIT, value: coreConstants.OST_VALUE_GAS_LIMIT}
-      , gasPrice = (purpose === 'deployment' && chain == 'utility') ? zeroGas : chainDetails.gas_price.value
-      , chainFolder = gethManager.getChainDataFolder(chain)
-      , chainDataDir = gethManager.getChainAbsoluteDataDir(chain)
-      , sealerAddr = setupConfig.addresses['sealer'].address.value
-      , sealerPassword = setupConfig.addresses['sealer'].passphrase.value
-      , rpcProviderHostPort = chainDetails.rpc_provider.value.replace("http://", "").split(":")
-      , rpcHost = rpcProviderHostPort[0]
-      , rpcPort = rpcProviderHostPort[1]
-      , wsProviderHostPort = chainDetails.ws_provider.value.replace("ws://", "").split(":")
-      , wsHost = wsProviderHostPort[0]
-      , wsPort = wsProviderHostPort[1]
-    ;
+    const oThis = this,
+      gethManager = oThis.ic().getSetupGethManager(),
+      coreConstants = oThis.ic().getCoreConstants(),
+      chainDetails = setupConfig.chains[chain],
+      networkId = chainDetails['network_id'].value,
+      chainPort = chainDetails['port'].value,
+      zeroGas = coreConstants.OST_UTILITY_GAS_PRICE_FOR_DEPLOYMENT,
+      gasLimit = { utility: coreConstants.OST_UTILITY_GAS_LIMIT, value: coreConstants.OST_VALUE_GAS_LIMIT },
+      gasPrice = purpose === 'deployment' && chain === 'utility' ? zeroGas : chainDetails.gas_price.value,
+      chainFolder = setupHelper.gethFolderFor(chain),
+      chainDataDir = setupHelper.setupFolderAbsolutePath() + '/' + setupHelper.gethFolderFor(chain),
+      sealerPassword = setupConfig.addresses['sealer'].passphrase.value,
+      rpcProviderHostPort = chainDetails.rpc_provider.value.replace('http://', '').split(':'),
+      rpcHost = rpcProviderHostPort[0],
+      rpcPort = rpcProviderHostPort[1],
+      wsProviderHostPort = chainDetails.ws_provider.value.replace('ws://', '').split(':'),
+      wsHost = wsProviderHostPort[0],
+      wsPort = wsProviderHostPort[1];
+
+    const sealerAddr = gethManager.getGeneratedAddressByName('sealer');
 
     // creating password file in a temp location
     fileManager.touch(chainFolder + '/' + sealerPassphraseFile, sealerPassword);
 
-    return "geth --networkid " + networkId + " --datadir " + chainDataDir + " --port " + chainPort +
-      " --rpc --rpcapi eth,net,web3,personal,txpool --wsapi eth,net,web3,personal,txpool --rpcport " + rpcPort + " --rpcaddr " + rpcHost + " --ws" +
-      " --wsport " + wsPort + " --wsorigins '*' --wsaddr " + wsHost + " --etherbase " + sealerAddr +
-      " --mine --minerthreads 1 --targetgaslimit " + gasLimit[chain] + "  --gasprice \"" + gasPrice + "\" --unlock " +
-      sealerAddr + " --password "+ chainDataDir + "/" + sealerPassphraseFile + " 2> " +
-      setupHelper.logsFolderAbsolutePath() + "/chain-" + chain + ".log";
+    return (
+      'geth --networkid ' +
+      networkId +
+      ' --datadir ' +
+      chainDataDir +
+      ' --port ' +
+      chainPort +
+      ' --rpc --rpcapi eth,net,web3,personal,txpool --wsapi eth,net,web3,personal,txpool --rpcport ' +
+      rpcPort +
+      ' --rpcaddr ' +
+      rpcHost +
+      ' --ws' +
+      ' --wsport ' +
+      wsPort +
+      " --wsorigins '*' --wsaddr " +
+      wsHost +
+      ' --etherbase ' +
+      sealerAddr +
+      ' --mine --minerthreads 1 --targetgaslimit ' +
+      gasLimit[chain] +
+      '  --gasprice "' +
+      gasPrice +
+      '" --unlock ' +
+      sealerAddr +
+      ' --password ' +
+      chainDataDir +
+      '/' +
+      sealerPassphraseFile +
+      ' 2> ' +
+      setupHelper.logsFolderAbsolutePath() +
+      '/' +
+      chain +
+      '-chain-' +
+      setupHelper.chainIdFor(chain) +
+      '.log'
+    );
   }
-
 };
 
-module.exports = new ServiceManagerKlass();
+//getSetupServiceManager
+InstanceComposer.register(ServiceManagerKlass, 'getSetupServiceManager', true);
+
+module.exports = ServiceManagerKlass;

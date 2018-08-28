@@ -1,26 +1,23 @@
-"use strict";
+'use strict';
 
 /**
  * Start the redeem process
  */
 
-const BigNumber = require('bignumber.js')
-;
+const BigNumber = require('bignumber.js');
 
-const rootPrefix = '../..'
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
-  , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
-  , OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility')
-  , coreConstants = require(rootPrefix + '/config/core_constants')
-;
+const rootPrefix = '../..',
+  coreAddresses = require(rootPrefix + '/config/core_addresses'),
+  OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value'),
+  OpenStUtilityKlass = require(rootPrefix + '/lib/contract_interact/openst_utility'),
+  coreConstants = require(rootPrefix + '/config/core_constants');
 
-const openSTValueContractName = 'openSTValue'
-  , openSTUtilityContractName = 'openSTUtility'
-  , openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName)
-  , openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName)
-  , openSTValueContractInteract = new OpenSTValueKlass(openSTValueContractAddress)
-  , openSTUtilityContractInteract = new OpenStUtilityKlass(openSTUtilityContractAddress)
-;
+const openSTValueContractName = 'openSTValue',
+  openSTUtilityContractName = 'openSTUtility',
+  openSTValueContractAddress = coreAddresses.getAddressForContract(openSTValueContractName),
+  openSTUtilityContractAddress = coreAddresses.getAddressForContract(openSTUtilityContractName),
+  openSTValueContractInteract = new OpenSTValueKlass(openSTValueContractAddress),
+  openSTUtilityContractInteract = new OpenStUtilityKlass(openSTUtilityContractAddress);
 
 /**
  * Get nonce for redeeming
@@ -30,7 +27,7 @@ const openSTValueContractName = 'openSTValue'
  * @return {promise<result>}
  *
  */
-const getNonceForRedeeming = function (redeemerAddress) {
+const getNonceForRedeeming = function(redeemerAddress) {
   return openSTValueContractInteract.getNextNonce(redeemerAddress);
 };
 
@@ -41,10 +38,10 @@ const getNonceForRedeeming = function (redeemerAddress) {
  *
  * @return {booelan} true when equal
  */
-String.prototype.equalsIgnoreCase = function (compareWith) {
-  const oThis = this
-    , _self = this.toLowerCase()
-    , _compareWith = String(compareWith).toLowerCase();
+String.prototype.equalsIgnoreCase = function(compareWith) {
+  const oThis = this,
+    _self = this.toLowerCase(),
+    _compareWith = String(compareWith).toLowerCase();
 
   return _self === _compareWith;
 };
@@ -58,16 +55,15 @@ String.prototype.equalsIgnoreCase = function (compareWith) {
  * @return {promise}
  *
  */
-const startRedeem = async function (beneficiary, toRedeemAmount, uuid) {
-
+const startRedeem = async function(beneficiary, toRedeemAmount, uuid) {
   toRedeemAmount = new BigNumber(toRedeemAmount);
 
-  const redeemerAddress = coreAddresses.getAddressForUser('redeemer')
-    , redeemerPassphrase = coreAddresses.getPassphraseForUser('redeemer');
+  const redeemerAddress = coreAddresses.getAddressForUser('redeemer'),
+    redeemerPassphrase = coreAddresses.getPassphraseForUser('redeemer');
 
   const redeemerNonceResponse = await getNonceForRedeeming(redeemerAddress);
   if (redeemerNonceResponse.isFailure()) {
-    throw "Get next nounce failed";
+    throw 'Get next nounce failed';
   }
   const redeemerNonce = redeemerNonceResponse.data.nextNounce;
 

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Approve for spending Branded Token
@@ -6,15 +6,15 @@
  * @module services/approve/branded_token
  */
 
-const BigNumber = require('bignumber.js')
-;
+const BigNumber = require('bignumber.js');
 
-const rootPrefix = '../..'
-  , BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
-  , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-;
+const rootPrefix = '../..',
+  responseHelper = require(rootPrefix + '/lib/formatter/response'),
+  basicHelper = require(rootPrefix + '/helpers/basic_helper'),
+  logger = require(rootPrefix + '/helpers/custom_console_logger'),
+  InstanceComposer = require(rootPrefix + '/instance_composer');
+
+require(rootPrefix + '/lib/contract_interact/branded_token');
 
 /**
  * Approve for spending Branded Token
@@ -29,7 +29,7 @@ const rootPrefix = '../..'
  *
  * @constructor
  */
-const ApproveForBrandedTokenKlass = function (params) {
+const ApproveForBrandedTokenKlass = function(params) {
   const oThis = this;
 
   params = params || {};
@@ -42,30 +42,28 @@ const ApproveForBrandedTokenKlass = function (params) {
 };
 
 ApproveForBrandedTokenKlass.prototype = {
-
   /**
    * Perform
    *
    * @return {promise<result>}
    */
-  perform: function () {
+  perform: function() {
     const oThis = this;
 
-    return oThis.asyncPerform()
-      .catch(function (error) {
-        if (responseHelper.isCustomResult(error)) {
-          return error;
-        } else {
-          logger.error('openst-platform::services/approve/branded_token.js::perform::catch');
-          logger.error(error);
+    return oThis.asyncPerform().catch(function(error) {
+      if (responseHelper.isCustomResult(error)) {
+        return error;
+      } else {
+        logger.error('openst-platform::services/approve/branded_token.js::perform::catch');
+        logger.error(error);
 
-          return responseHelper.error({
-            internal_error_identifier: 's_a_bt_1',
-            api_error_identifier: 'unhandled_error',
-            error_config: basicHelper.fetchErrorConfig()
-          });
-        }
-      });
+        return responseHelper.error({
+          internal_error_identifier: 's_a_bt_1',
+          api_error_identifier: 'unhandled_error',
+          error_config: basicHelper.fetchErrorConfig()
+        });
+      }
+    });
   },
 
   /**
@@ -73,9 +71,8 @@ ApproveForBrandedTokenKlass.prototype = {
    *
    * @return {promise<result>}
    */
-  asyncPerform: async function () {
-    const oThis = this
-    ;
+  asyncPerform: async function() {
+    const oThis = this;
 
     await oThis._validate();
 
@@ -89,9 +86,8 @@ ApproveForBrandedTokenKlass.prototype = {
    * @private
    * @ignore
    */
-  _validate: async function () {
-    const oThis = this
-    ;
+  _validate: async function() {
+    const oThis = this;
 
     //Validations
     if (!basicHelper.isAddressValid(oThis.erc20Address)) {
@@ -114,9 +110,19 @@ ApproveForBrandedTokenKlass.prototype = {
       return Promise.reject(errObj);
     }
 
-    if (oThis.toApproveAmount.lessThan(0)) {
+    if (!basicHelper.isAddressValid(oThis.approveeAddress)) {
       let errObj = responseHelper.error({
         internal_error_identifier: 's_a_bt_4',
+        api_error_identifier: 'invalid_address',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.reject(errObj);
+    }
+
+    if (oThis.toApproveAmount.lessThan(0)) {
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_a_bt_5',
         api_error_identifier: 'invalid_amount',
         error_config: basicHelper.fetchErrorConfig()
       });
@@ -134,11 +140,11 @@ ApproveForBrandedTokenKlass.prototype = {
    * @private
    * @ignore
    */
-  _approve: async function () {
-    const oThis = this
-      , brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address})
-      , isTxHashOnlyNeeded = (oThis.returnType === 'txHash')
-    ;
+  _approve: async function() {
+    const oThis = this,
+      BrandedTokenKlass = oThis.ic().getBrandedTokenInteractClass(),
+      brandedToken = new BrandedTokenKlass({ ERC20: oThis.erc20Address }),
+      isTxHashOnlyNeeded = oThis.returnType === 'txHash';
 
     const r = await brandedToken.approve(
       oThis.approverAddress,
@@ -150,7 +156,8 @@ ApproveForBrandedTokenKlass.prototype = {
 
     return Promise.resolve(r);
   }
-
 };
+
+InstanceComposer.registerShadowableClass(ApproveForBrandedTokenKlass, 'getApproveBrandedTokenService');
 
 module.exports = ApproveForBrandedTokenKlass;

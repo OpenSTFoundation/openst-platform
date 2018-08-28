@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Check the status of different services of platform
@@ -6,31 +6,54 @@
  * @module services/utils/platform_status
  */
 
-const rootPrefix = '../..'
-  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
-  , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-;
+const rootPrefix = '../..',
+  responseHelper = require(rootPrefix + '/lib/formatter/response'),
+  logger = require(rootPrefix + '/helpers/custom_console_logger'),
+  InstanceComposer = require(rootPrefix + '/instance_composer');
+
+require(rootPrefix + '/lib/web3/providers/factory');
 
 /**
  * Constructor for platform service status
  *
  * @constructor
  */
-const PlatformStatusKlass = function () {
-};
+const PlatformStatusKlass = function() {};
 
 PlatformStatusKlass.prototype = {
   /**
-   * Check status of all services
    *
-   * @return {promise<result>}
+   * Perform
+   *
+   * @return {Promise}
+   *
    */
-  perform: async function () {
+  perform: function() {
+    const oThis = this;
 
-    const oThis = this
-      , statusResponse = {chain: {value: false, utility: false}};
+    return oThis.asyncPerform().catch(function(error) {
+      if (responseHelper.isCustomResult(error)) {
+        return error;
+      } else {
+        logger.error('openst-platform::services/utils/platform_status.js::perform::catch');
+        logger.error(error);
+        return responseHelper.error({
+          internal_error_identifier: 's_u_ps_3',
+          api_error_identifier: 'something_went_wrong',
+          debug_options: {}
+        });
+      }
+    });
+  },
+
+  /**
+   * asyncPerform
+   *
+   * @return {Promise}
+   */
+  asyncPerform: async function() {
+    const oThis = this,
+      statusResponse = { chain: { value: false, utility: false } };
 
     // check geth status
     for (var chainName in statusResponse.chain) {
@@ -43,7 +66,6 @@ PlatformStatusKlass.prototype = {
     }
 
     return Promise.resolve(responseHelper.successWithData(statusResponse));
-
   },
 
   /**
@@ -55,16 +77,16 @@ PlatformStatusKlass.prototype = {
    * @private
    * @ignore
    */
-  _gethStatus: function (chain) {
-    // const web3Provider = web3ProviderFactory.getProvider(chain, web3ProviderFactory.typeWS)
-    const retryAttempts = 100
-      , timerInterval = 5000
-      , chainTimer = {timer: undefined, blockNumber: 0, retryCounter: 0}
-    ;
+  _gethStatus: function(chain) {
+    const oThis = this,
+      web3ProviderFactory = oThis.ic().getWeb3ProviderFactory(),
+      web3Provider = web3ProviderFactory.getProvider(chain, web3ProviderFactory.typeWS),
+      retryAttempts = 100,
+      timerInterval = 5000,
+      chainTimer = { timer: undefined, blockNumber: 0, retryCounter: 0 };
 
-    return new Promise(function (onResolve, onReject) {
-      chainTimer['timer'] = setInterval(async function () {
-        const web3Provider = web3ProviderFactory.getProvider(chain, web3ProviderFactory.typeWS);
+    return new Promise(function(onResolve, onReject) {
+      chainTimer['timer'] = setInterval(async function() {
         if (!web3Provider) {
           // this is a error scenario.
           let errObj = responseHelper.error({
@@ -79,7 +101,7 @@ PlatformStatusKlass.prototype = {
           let blockNumber = await web3Provider.eth.getBlockNumber();
 
           if (!(blockNumber > 0)) {
-            logger.error("Geth Checker - " + chain + " fetch block number failed.", err);
+            logger.error('Geth Checker - ' + chain + ' fetch block number failed.', err);
             chainTimer['retryCounter']++;
           } else {
             if (chainTimer['blockNumber'] != 0 && chainTimer['blockNumber'] != blockNumber) {
@@ -102,7 +124,7 @@ PlatformStatusKlass.prototype = {
           //   }
           // }
         } else {
-          logger.error("Geth Checker - " + chain + " chain has no new blocks.");
+          logger.error('Geth Checker - ' + chain + ' chain has no new blocks.');
 
           let errObj = responseHelper.error({
             internal_error_identifier: 's_u_ps_2_' + chain,
@@ -114,8 +136,9 @@ PlatformStatusKlass.prototype = {
         chainTimer['retryCounter']++;
       }, timerInterval);
     });
-
   }
 };
+
+InstanceComposer.registerShadowableClass(PlatformStatusKlass, 'getPlatformStatusService');
 
 module.exports = PlatformStatusKlass;

@@ -6,6 +6,7 @@ branches:
   - master
   - develop
   - release-0.9
+  - feature/config_strategy
 notifications:
   email:
     recipients:
@@ -37,10 +38,26 @@ before_script:
 script:
   - export OPENST_PLATFORM_PATH=$(pwd)
   - export OST_DEBUG_ENABLED=1
-  - node tools/setup/index.js
+  - node tools/setup/index.js -s fresh_setup
+  - node tools/setup/index.js -s generate_addresses
+  - node tools/setup/index.js -s init_value_chain
+  - node tools/setup/index.js -s st_contract
+  - node tools/setup/index.js -s fund_users_with_st
+  - node tools/setup/index.js -s deploy_value_chain
+  - node tools/setup/index.js -s dynamo_db_shard_management
+  - node tools/setup/index.js -s dynamo_db_register_shards
+  - node tools/setup/index.js -s init_utility_chain
+  - node tools/setup/index.js -s deploy_utility_chain
+  - node tools/setup/index.js -s snm_intercomm
+  - node tools/setup/index.js -s snmp_intercomm
+  - node tools/setup/index.js -s st_prime_mint
+  - node tools/setup/index.js -s stop_utility_services
+  - node tools/setup/index.js -s stop_value_services
   - source $HOME/openst-setup/openst_env_vars.sh
-  - nohup node tools/setup/start_services.js </dev/null >/dev/null 2>&1 &
-  - sleep 120
+  - nohup node tools/setup/start_value_services.js ~/openst-setup/openst_platform_config.json </dev/null >/dev/null 2>&1 &
+  - sleep 30
+  - nohup node tools/setup/start_utility_services.js ~/openst-setup/bin/utility-chain-1000/openst_platform_config.json </dev/null >/dev/null 2>&1 &
+  - sleep 30
   - source $HOME/openst-setup/openst_env_vars.sh
   - node tools/setup/branded_token/register.js "ACME Coin" "ACME" 10
   - node tools/setup/branded_token/mint.js "ACME" 1000000000000000000000
