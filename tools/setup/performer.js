@@ -34,6 +34,7 @@ require(rootPrefix + '/tools/deploy/value_core');
 require(rootPrefix + '/tools/deploy/st_prime');
 require(rootPrefix + '/tools/setup/simple_token_prime/mint');
 require(rootPrefix + '/tools/setup/fund_users_with_st_prime');
+require(rootPrefix + '/tools/setup/openst_value/set_admin_address');
 
 const OpenSTSetup = function(configStrategy, instanceComposer) {};
 
@@ -167,14 +168,11 @@ OpenSTSetup.prototype = {
       envManager.generateConfigFile();
 
       // Set Admin address for openST Value
-      logger.step('** Setting admin address for openst value');
-
-      const openSTValueSetAdminResponse = await runHelperService(rootPrefix + '/tools/setup/openst_value/set_admin_address');
-
-      envManager.generateConfigFile();
+      await oThis.performHelperService(oThis.openStValueDeployerAdminSetter);
 
       // Copy the config file to config folder
       fileManager.cp('.', setupHelper.configFolder(), setupConfig.openst_platform_config_file);
+
     }
 
     if (step === 'dynamo_db_shard_management' || step === 'all') {
@@ -406,6 +404,11 @@ Object.defineProperties(OpenSTSetup.prototype, {
   openStValueDeployer: {
     get: function() {
       return this.ic().getOpenStValueDeployer();
+    }
+  },
+  openStValueDeployerAdminSetter: {
+    get: function() {
+      return this.ic().getOstValueAdminAddrSetter();
     }
   },
   utilityRegistrarDeployer: {

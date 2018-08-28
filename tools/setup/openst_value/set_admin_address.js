@@ -9,9 +9,11 @@
 const rootPrefix = "../../.."
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , OpenSTValue = require(rootPrefix + '/lib/contract_interact/openst_value')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
+  , InstanceComposer = require(rootPrefix + '/instance_composer')
 ;
+
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/contract_interact/openst_value');
 
 /**
  * is equal ignoring case
@@ -49,6 +51,8 @@ SetAdminAddressKlass.prototype = {
   perform: async function () {
 
     const oThis = this
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , OpenSTValue = oThis.ic().getOpenSTValueInteractClass()
       , openSTValueAddr = coreAddresses.getAddressForContract('openSTValue')
       , valueDeployerAddr = coreAddresses.getAddressForUser('valueDeployer')
       , openSTValue = new OpenSTValue(openSTValueAddr)
@@ -59,6 +63,7 @@ SetAdminAddressKlass.prototype = {
       return Promise.reject('Admin Address to set is missing');
     }
 
+    logger.step('** Setting admin address for openst value');
     logger.step("** openSTValueAddr: ", openSTValueAddr);
     logger.step("** adminAddr would be set to: ", adminAddress);
     logger.step("** adminAddr would be set by : ", valueDeployerAddr);
@@ -80,4 +85,6 @@ SetAdminAddressKlass.prototype = {
 
 };
 
-module.exports = new SetAdminAddressKlass();
+InstanceComposer.register(SetAdminAddressKlass, 'getOstValueAdminAddrSetter', false);
+
+module.exports = SetAdminAddressKlass;

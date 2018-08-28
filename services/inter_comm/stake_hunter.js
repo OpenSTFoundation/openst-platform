@@ -21,15 +21,17 @@
 
 const rootPrefix = '../..'
   , logger = require(rootPrefix + '/helpers/custom_console_logger')
-  , coreConstants = require(rootPrefix + '/config/core_constants')
-  , coreAddresses = require(rootPrefix + '/config/core_addresses')
   , responseHelper = require(rootPrefix + '/lib/formatter/response')
   , IntercomBaseKlass = require(rootPrefix + '/services/inter_comm/base')
-  , EstimateGasKlass = require(rootPrefix + '/services/transaction/estimate_gas')
   , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
   , BigNumber = require('bignumber.js')
 ;
+
+require(rootPrefix + '/config/core_constants');
+require(rootPrefix + '/config/core_addresses');
+require(rootPrefix + '/lib/web3/providers/factory');
+require(rootPrefix + '/lib/contract_interact/value_registrar');
+require(rootPrefix + '/services/transaction/estimate_gas');
 
 /**
  * Inter comm process for stake hunter.
@@ -60,13 +62,17 @@ const StakeHunterInterCommKlassSpecificPrototype = {
    * Set contract object for listening to events
    */
   setContractObj: function () {
+
     const oThis = this
-      , web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , web3ProviderFactory = oThis.ic().getWeb3ProviderFactory()
+      , web3WsProvider = web3ProviderFactory.getProvider('utility', web3ProviderFactory.typeWS)
       , openSTUtilityContractAbi = coreAddresses.getAbiForContract('openSTUtility')
       , openSTUtilityContractAddr = coreAddresses.getAddressForContract('openSTUtility')
     ;
 
     oThis.completeContract = new web3WsProvider.eth.Contract(openSTUtilityContractAbi, openSTUtilityContractAddr);
+
   },
 
   /**
@@ -74,10 +80,10 @@ const StakeHunterInterCommKlassSpecificPrototype = {
    *
    */
   getChainHighestBlock: async function () {
-    const web3WsProvider = require(rootPrefix + '/lib/web3/providers/utility_ws')
-      , highestBlock = await web3WsProvider.eth.getBlockNumber()
-    ;
-    return highestBlock;
+    const oThis = this,
+      web3ProviderFactory = oThis.ic().getWeb3ProviderFactory(),
+      web3WsProvider = web3ProviderFactory.getProvider('utility', web3ProviderFactory.typeWS);
+    return web3WsProvider.eth.getBlockNumber();
   },
 
   /**
@@ -93,24 +99,21 @@ const StakeHunterInterCommKlassSpecificPrototype = {
    * @param {object} eventObj - event object
    */
   processEventObj: async function (eventObj) {
-    const returnValues = eventObj.returnValues
-      , uuid = returnValues._uuid
-      , stakingIntentHash = returnValues._stakingIntentHash
-      , token = returnValues._token
-      , staker = returnValues._staker
-      , beneficiary = returnValues._beneficiary
-      , amountUT = returnValues._amount
 
+    const oThis = this
+      , coreConstants = oThis.ic().getCoreConstants()
+      , coreAddresses = oThis.ic().getCoreAddresses()
+      , ValueRegistrarKlass = oThis.ic().getValueRegistrarInteractClass()
+      , EstimateGasKlass = oThis.ic().getEstimateGasService()
       , senderAddr = coreAddresses.getAddressForUser('valueRegistrar')
       , senderPassphrase = coreAddresses.getPassphraseForUser('valueRegistrar')
       , valueRegistrarContractAddress = coreAddresses.getAddressForContract('valueRegistrar')
       , openSTValueContractAddress = coreAddresses.getAddressForContract('openSTValue')
-      , OpenSTValueKlass = require(rootPrefix + '/lib/contract_interact/openst_value')
-      , openSTValueContractInteract = new OpenSTValueKlass()
+      , valueRegistrarContractInteract = new ValueRegistrarKlass(valueRegistrarContractAddress)
     ;
 
-    const ValueRegistrarKlass = require(rootPrefix + '/lib/contract_interact/value_registrar')
-      , valueRegistrarContractInteract = new ValueRegistrarKlass(valueRegistrarContractAddress)
+    const returnValues = eventObj.returnValues
+      , stakingIntentHash = returnValues._stakingIntentHash
     ;
 
     // estimating gas for the transaction
@@ -184,9 +187,16 @@ const StakeHunterInterCommKlassSpecificPrototype = {
     logger.win("I am Stake Hunter, do you want to see my gun ?");
 
     return Promise.resolve(responseHelper.successWithData({}));
+
   }
+
 };
 
 Object.assign(StakeHunterInterCommKlass.prototype, StakeHunterInterCommKlassSpecificPrototype);
+
+InstanceComposer.registerShadowableClass(
+  StakeHunterInterCommKlass,
+  'getStakeHunterInterCommService'
+);
 
 module.exports = StakeHunterInterCommKlass;
