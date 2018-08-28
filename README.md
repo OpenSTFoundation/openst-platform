@@ -42,4 +42,4 @@ Milestone 5 : Consolidation of OpenST as open platform (2019)
 [gitter]: https://gitter.im/OpenSTFoundation/SimpleToken
 [npm]: https://www.npmjs.com/package/@openstfoundation/openst-platform
 [travis]: https://travis-ci.org/OpenSTFoundation/openst-platform
-[api-docs]: http://docs.openst.org/
+[api-docs]: http://docs.openst.org/ 

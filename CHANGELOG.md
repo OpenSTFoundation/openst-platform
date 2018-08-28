@@ -1,3 +1,13 @@
+## OpenST-platform v0.9.5
+- Common style guide followed across all openst repos using prettier ([openst-platform#156](https://github.com/OpenSTFoundation/openst-platform/issues/156))
+- Environment variables were a hard dependency. The flexibility of creating two different instances of platform was not 
+    possible. For Example: If an application wants to interact with multiple utility chains. With environment variables 
+    they could only interact with the one set in the variables. Interacting with multiple utility chains was not possible.
+    To achieve this flexibility, we now take configuration as OpenST Platform constructor params and then use the config 
+    in place of environment variables, where-ever needed. This allows platform to connect to a configured set of services - Redis , Memcache, DynamoDB, Geth. 
+    After this change the application using OpenST Platform will create different configurations, instantiate platform for 
+    each configuration and then communicate with respective (appropriate) platform instance. ([openst-platform#152](https://github.com/OpenSTFoundation/openst-platform/issues/152))
+
 ## OpenST-platform v0.9.4
 #####OpenST-storage and dynamoDB integration for token balances ([openst-platform#136](https://github.com/OpenSTFoundation/openst-platform/issues/136))
 Now the balances (settled and unsettled debits) are being stored in DynamoDB.

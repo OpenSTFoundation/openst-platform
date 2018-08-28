@@ -1,21 +1,22 @@
-"use strict";
+'use strict';
 
 /**
  * Get Approval Status
  */
 
-const rootPrefix = '../..'
-  , web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory')
-  , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper')
-  , web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter')
-  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-;
+const rootPrefix = '../..',
+  web3ProviderFactory = require(rootPrefix + '/lib/web3/providers/factory'),
+  responseHelper = require(rootPrefix + '/lib/formatter/response'),
+  contractInteractHelper = require(rootPrefix + '/lib/contract_interact/helper'),
+  web3EventsFormatter = require(rootPrefix + '/lib/web3/events/formatter'),
+  basicHelper = require(rootPrefix + '/helpers/basic_helper');
 
-const getApprovalStatus = async function (approvalTransactionHash) {
+const getApprovalStatus = async function(approvalTransactionHash) {
   try {
-    const approvalTxReceipt = await contractInteractHelper
-      .waitAndGetTransactionReceipt(web3ProviderFactory.getProvider('utility','ws'), approvalTransactionHash);
+    const approvalTxReceipt = await contractInteractHelper.waitAndGetTransactionReceipt(
+      web3ProviderFactory.getProvider('utility', 'ws'),
+      approvalTransactionHash
+    );
 
     if (!approvalTxReceipt || !approvalTxReceipt.isSuccess()) {
       let errObj = responseHelper.error({
@@ -43,10 +44,8 @@ const getApprovalStatus = async function (approvalTransactionHash) {
     }
 
     return Promise.resolve(responseHelper.successWithData({}));
-
-
   } catch (err) {
-    return Promise.reject('Something went wrong. ' + err.message)
+    return Promise.reject('Something went wrong. ' + err.message);
   }
 };
 

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /**
  * Get Branded Token Balance of an address
@@ -6,11 +6,13 @@
  * @module services/balance/branded_token
  */
 
-const rootPrefix = '../..'
-  , BrandedTokenKlass = require(rootPrefix + '/lib/contract_interact/branded_token')
-  , responseHelper = require(rootPrefix + '/lib/formatter/response')
-  , basicHelper = require(rootPrefix + '/helpers/basic_helper')
-;
+const rootPrefix = '../..',
+  responseHelper = require(rootPrefix + '/lib/formatter/response'),
+  basicHelper = require(rootPrefix + '/helpers/basic_helper'),
+  InstanceComposer = require(rootPrefix + '/instance_composer'),
+  logger = require(rootPrefix + '/helpers/custom_console_logger');
+
+require(rootPrefix + '/lib/contract_interact/branded_token');
 
 /**
  * Branded Token balance
@@ -21,7 +23,7 @@ const rootPrefix = '../..'
  *
  * @constructor
  */
-const BrandedTokenBalanceKlass = function (params) {
+const BrandedTokenBalanceKlass = function(params) {
   const oThis = this;
 
   params = params || {};
@@ -30,48 +32,66 @@ const BrandedTokenBalanceKlass = function (params) {
 };
 
 BrandedTokenBalanceKlass.prototype = {
-
-  perform: function () {
+  /**
+   * Perform
+   *
+   * @return {promise<result>}
+   */
+  perform: function() {
     const oThis = this;
 
-    try {
-      //Validations
-      if (!basicHelper.isAddressValid(oThis.erc20Address)) {
-        let errObj = responseHelper.error({
-          internal_error_identifier: 's_b_bt_1',
-          api_error_identifier: 'invalid_address',
+    return oThis.asyncPerform().catch(function(error) {
+      logger.error('openst-platform::services/balance/branded_token.js::perform::catch');
+      logger.error(error);
+
+      if (responseHelper.isCustomResult(error)) {
+        return error;
+      } else {
+        return responseHelper.error({
+          internal_error_identifier: 's_b_bt_3',
+          api_error_identifier: 'something_went_wrong',
           error_config: basicHelper.fetchErrorConfig()
         });
-
-        return Promise.resolve(errObj);
       }
-      if (!basicHelper.isAddressValid(oThis.address)) {
-        let errObj = responseHelper.error({
-          internal_error_identifier: 's_b_bt_2',
-          api_error_identifier: 'invalid_address',
-          error_config: basicHelper.fetchErrorConfig()
-        });
+    });
+  },
 
-        return Promise.resolve(errObj);
-      }
+  /**
+   * Async Perform
+   *
+   * @return {promise<result>}
+   */
+  asyncPerform: async function() {
+    const oThis = this;
 
-      var brandedToken = new BrandedTokenKlass({ERC20: oThis.erc20Address});
-
-
-      return brandedToken.getBalanceOf(oThis.address);
-
-    } catch (err) {
+    //Validations
+    if (!basicHelper.isAddressValid(oThis.erc20Address)) {
       let errObj = responseHelper.error({
-        internal_error_identifier: 's_b_bt_3',
-        api_error_identifier: 'something_went_wrong',
+        internal_error_identifier: 's_b_bt_1',
+        api_error_identifier: 'invalid_address',
+        error_config: basicHelper.fetchErrorConfig()
+      });
+
+      return Promise.resolve(errObj);
+    }
+    if (!basicHelper.isAddressValid(oThis.address)) {
+      let errObj = responseHelper.error({
+        internal_error_identifier: 's_b_bt_2',
+        api_error_identifier: 'invalid_address',
         error_config: basicHelper.fetchErrorConfig()
       });
 
       return Promise.resolve(errObj);
     }
 
-  }
+    let BrandedTokenKlass = oThis.ic().getBrandedTokenInteractClass();
 
+    var brandedToken = new BrandedTokenKlass({ ERC20: oThis.erc20Address });
+
+    return brandedToken.getBalanceOf(oThis.address);
+  }
 };
+
+InstanceComposer.registerShadowableClass(BrandedTokenBalanceKlass, 'getBrandedTokenBalanceService');
 
 module.exports = BrandedTokenBalanceKlass;
